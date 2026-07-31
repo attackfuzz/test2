@@ -1,18 +1,8 @@
 const stars = [
     {
-        "starName": "星名１",
-        "raHour": "時",
-        "raMin": "分",
-        "raSec": "秒",
-        "decSign": "赤緯符号",
-        "decDeg": "時",
-        "decMin": "分",
-        "decSec": "秒",
-        "magnitude": "実視等級",
-        "constellation": "星座"
-    },
-    {
         "starName": "21αAnd",
+        "starLabel": "21α",
+        "constellation": "Andromeda (アンドロメダ座)",
         "raHour": "0",
         "raMin": "8",
         "raSec": "23.3",
@@ -20,11 +10,12 @@ const stars = [
         "decDeg": "29",
         "decMin": "5",
         "decSec": "26",
-        "magnitude": "2.06",
-        "constellation": "Andromeda (アンドロメダ座)"
+        "magnitude": "2.06"
     },
     {
         "starName": "24θAnd",
+        "starLabel": "24θ",
+        "constellation": "Andromeda (アンドロメダ座)",
         "raHour": "0",
         "raMin": "17",
         "raSec": "5.5",
@@ -32,11 +23,12 @@ const stars = [
         "decDeg": "38",
         "decMin": "40",
         "decSec": "54",
-        "magnitude": "4.61",
-        "constellation": "Andromeda (アンドロメダ座)"
+        "magnitude": "4.61"
     },
     {
         "starName": "29πAnd",
+        "starLabel": "29π",
+        "constellation": "Andromeda (アンドロメダ座)",
         "raHour": "0",
         "raMin": "36",
         "raSec": "52.9",
@@ -44,11 +36,12 @@ const stars = [
         "decDeg": "33",
         "decMin": "43",
         "decSec": "10",
-        "magnitude": "4.36",
-        "constellation": "Andromeda (アンドロメダ座)"
+        "magnitude": "4.36"
     },
     {
         "starName": "31δAnd",
+        "starLabel": "31δ",
+        "constellation": "Andromeda (アンドロメダ座)",
         "raHour": "0",
         "raMin": "39",
         "raSec": "19.7",
@@ -56,11 +49,12 @@ const stars = [
         "decDeg": "30",
         "decMin": "51",
         "decSec": "39",
-        "magnitude": "3.27",
-        "constellation": "Andromeda (アンドロメダ座)"
+        "magnitude": "3.27"
     },
     {
         "starName": "34ζAnd",
+        "starLabel": "34ζ",
+        "constellation": "Andromeda (アンドロメダ座)",
         "raHour": "0",
         "raMin": "47",
         "raSec": "20.3",
@@ -68,11 +62,12 @@ const stars = [
         "decDeg": "24",
         "decMin": "16",
         "decSec": "2",
-        "magnitude": "4.06",
-        "constellation": "Andromeda (アンドロメダ座)"
+        "magnitude": "4.06"
     },
     {
         "starName": "35νAnd",
+        "starLabel": "35ν",
+        "constellation": "Andromeda (アンドロメダ座)",
         "raHour": "0",
         "raMin": "49",
         "raSec": "48.8",
@@ -80,11 +75,12 @@ const stars = [
         "decDeg": "41",
         "decMin": "4",
         "decSec": "44",
-        "magnitude": "4.53",
-        "constellation": "Andromeda (アンドロメダ座)"
+        "magnitude": "4.53"
     },
     {
         "starName": "37μAnd",
+        "starLabel": "37μ",
+        "constellation": "Andromeda (アンドロメダ座)",
         "raHour": "0",
         "raMin": "56",
         "raSec": "45.2",
@@ -92,11 +88,12 @@ const stars = [
         "decDeg": "38",
         "decMin": "29",
         "decSec": "58",
-        "magnitude": "3.87",
-        "constellation": "Andromeda (アンドロメダ座)"
+        "magnitude": "3.87"
     },
     {
         "starName": "42φAnd",
+        "starLabel": "42φ",
+        "constellation": "Andromeda (アンドロメダ座)",
         "raHour": "1",
         "raMin": "9",
         "raSec": "30.2",
@@ -104,11 +101,12 @@ const stars = [
         "decDeg": "47",
         "decMin": "14",
         "decSec": "31",
-        "magnitude": "4.25",
-        "constellation": "Andromeda (アンドロメダ座)"
+        "magnitude": "4.25"
     },
     {
         "starName": "43βAnd",
+        "starLabel": "43β",
+        "constellation": "Andromeda (アンドロメダ座)",
         "raHour": "1",
         "raMin": "9",
         "raSec": "43.9",
@@ -116,11 +114,12 @@ const stars = [
         "decDeg": "35",
         "decMin": "37",
         "decSec": "14",
-        "magnitude": "2.06",
-        "constellation": "Andromeda (アンドロメダ座)"
+        "magnitude": "2.06"
     },
     {
         "starName": "50υAnd",
+        "starLabel": "50υ",
+        "constellation": "Andromeda (アンドロメダ座)",
         "raHour": "1",
         "raMin": "36",
         "raSec": "47.8",
@@ -128,11 +127,12 @@ const stars = [
         "decDeg": "41",
         "decMin": "24",
         "decSec": "20",
-        "magnitude": "4.09",
-        "constellation": "Andromeda (アンドロメダ座)"
+        "magnitude": "4.09"
     },
     {
         "starName": "51And",
+        "starLabel": "51",
+        "constellation": "Andromeda (アンドロメダ座)",
         "raHour": "1",
         "raMin": "37",
         "raSec": "59.6",
@@ -140,11 +140,12 @@ const stars = [
         "decDeg": "48",
         "decMin": "37",
         "decSec": "42",
-        "magnitude": "3.57",
-        "constellation": "Andromeda (アンドロメダ座)"
+        "magnitude": "3.57"
     },
     {
         "starName": "57γ1And",
+        "starLabel": "57γ1",
+        "constellation": "Andromeda (アンドロメダ座)",
         "raHour": "2",
         "raMin": "3",
         "raSec": "54",
@@ -152,11 +153,12 @@ const stars = [
         "decDeg": "42",
         "decMin": "19",
         "decSec": "47",
-        "magnitude": "2.26",
-        "constellation": "Andromeda (アンドロメダ座)"
+        "magnitude": "2.26"
     },
     {
         "starName": "1οAnd",
+        "starLabel": "1ο",
+        "constellation": "Andromeda (アンドロメダ座)",
         "raHour": "23",
         "raMin": "1",
         "raSec": "55.3",
@@ -164,11 +166,12 @@ const stars = [
         "decDeg": "42",
         "decMin": "19",
         "decSec": "34",
-        "magnitude": "3.62",
-        "constellation": "Andromeda (アンドロメダ座)"
+        "magnitude": "3.62"
     },
     {
         "starName": "16λAnd",
+        "starLabel": "16λ",
+        "constellation": "Andromeda (アンドロメダ座)",
         "raHour": "23",
         "raMin": "37",
         "raSec": "33.9",
@@ -176,11 +179,12 @@ const stars = [
         "decDeg": "46",
         "decMin": "27",
         "decSec": "29",
-        "magnitude": "3.82",
-        "constellation": "Andromeda (アンドロメダ座)"
+        "magnitude": "3.82"
     },
     {
         "starName": "17ιAnd",
+        "starLabel": "17ι",
+        "constellation": "Andromeda (アンドロメダ座)",
         "raHour": "23",
         "raMin": "38",
         "raSec": "8.2",
@@ -188,11 +192,12 @@ const stars = [
         "decDeg": "43",
         "decMin": "16",
         "decSec": "5",
-        "magnitude": "4.29",
-        "constellation": "Andromeda (アンドロメダ座)"
+        "magnitude": "4.29"
     },
     {
         "starName": "19κAnd",
+        "starLabel": "19κ",
+        "constellation": "Andromeda (アンドロメダ座)",
         "raHour": "23",
         "raMin": "40",
         "raSec": "24.5",
@@ -200,11 +205,12 @@ const stars = [
         "decDeg": "44",
         "decMin": "20",
         "decSec": "2",
-        "magnitude": "4.14",
-        "constellation": "Andromeda (アンドロメダ座)"
+        "magnitude": "4.14"
     },
     {
         "starName": "5γMon",
+        "starLabel": "5γ",
+        "constellation": "Monoceros (いっかくじゅう座)",
         "raHour": "6",
         "raMin": "14",
         "raSec": "51.3",
@@ -212,11 +218,12 @@ const stars = [
         "decDeg": "6",
         "decMin": "16",
         "decSec": "29",
-        "magnitude": "3.98",
-        "constellation": "Monoceros (いっかくじゅう座)"
+        "magnitude": "3.98"
     },
     {
         "starName": "8εMon",
+        "starLabel": "8ε",
+        "constellation": "Monoceros (いっかくじゅう座)",
         "raHour": "6",
         "raMin": "23",
         "raSec": "46.1",
@@ -224,11 +231,12 @@ const stars = [
         "decDeg": "4",
         "decMin": "35",
         "decSec": "34",
-        "magnitude": "4.44",
-        "constellation": "Monoceros (いっかくじゅう座)"
+        "magnitude": "4.44"
     },
     {
         "starName": "11βMon",
+        "starLabel": "11β",
+        "constellation": "Monoceros (いっかくじゅう座)",
         "raHour": "6",
         "raMin": "28",
         "raSec": "49",
@@ -236,11 +244,12 @@ const stars = [
         "decDeg": "7",
         "decMin": "1",
         "decSec": "58",
-        "magnitude": "4.6",
-        "constellation": "Monoceros (いっかくじゅう座)"
+        "magnitude": "4.6"
     },
     {
         "starName": "13Mon",
+        "starLabel": "13",
+        "constellation": "Monoceros (いっかくじゅう座)",
         "raHour": "6",
         "raMin": "32",
         "raSec": "54.2",
@@ -248,11 +257,12 @@ const stars = [
         "decDeg": "7",
         "decMin": "19",
         "decSec": "59",
-        "magnitude": "4.5",
-        "constellation": "Monoceros (いっかくじゅう座)"
+        "magnitude": "4.5"
     },
     {
         "starName": "18Mon",
+        "starLabel": "18",
+        "constellation": "Monoceros (いっかくじゅう座)",
         "raHour": "6",
         "raMin": "47",
         "raSec": "51.6",
@@ -260,11 +270,12 @@ const stars = [
         "decDeg": "2",
         "decMin": "24",
         "decSec": "44",
-        "magnitude": "4.47",
-        "constellation": "Monoceros (いっかくじゅう座)"
+        "magnitude": "4.47"
     },
     {
         "starName": "22δMon",
+        "starLabel": "22δ",
+        "constellation": "Monoceros (いっかくじゅう座)",
         "raHour": "7",
         "raMin": "11",
         "raSec": "51.9",
@@ -272,11 +283,12 @@ const stars = [
         "decDeg": "0",
         "decMin": "29",
         "decSec": "34",
-        "magnitude": "4.15",
-        "constellation": "Monoceros (いっかくじゅう座)"
+        "magnitude": "4.15"
     },
     {
         "starName": "26αMon",
+        "starLabel": "26α",
+        "constellation": "Monoceros (いっかくじゅう座)",
         "raHour": "7",
         "raMin": "41",
         "raSec": "14.8",
@@ -284,11 +296,12 @@ const stars = [
         "decDeg": "9",
         "decMin": "33",
         "decSec": "4",
-        "magnitude": "3.93",
-        "constellation": "Monoceros (いっかくじゅう座)"
+        "magnitude": "3.93"
     },
     {
         "starName": "10γ2Sgr",
+        "starLabel": "10γ2",
+        "constellation": "Sagittarius (いて座)",
         "raHour": "18",
         "raMin": "5",
         "raSec": "48.5",
@@ -296,11 +309,12 @@ const stars = [
         "decDeg": "30",
         "decMin": "25",
         "decSec": "27",
-        "magnitude": "2.99",
-        "constellation": "Sagittarius (いて座)"
+        "magnitude": "2.99"
     },
     {
         "starName": "13μSgr",
+        "starLabel": "13μ",
+        "constellation": "Sagittarius (いて座)",
         "raHour": "18",
         "raMin": "13",
         "raSec": "45.8",
@@ -308,11 +322,12 @@ const stars = [
         "decDeg": "21",
         "decMin": "3",
         "decSec": "32",
-        "magnitude": "3.86",
-        "constellation": "Sagittarius (いて座)"
+        "magnitude": "3.86"
     },
     {
         "starName": "ηSgr",
+        "starLabel": "η",
+        "constellation": "Sagittarius (いて座)",
         "raHour": "18",
         "raMin": "17",
         "raSec": "37.6",
@@ -320,11 +335,12 @@ const stars = [
         "decDeg": "36",
         "decMin": "45",
         "decSec": "42",
-        "magnitude": "3.11",
-        "constellation": "Sagittarius (いて座)"
+        "magnitude": "3.11"
     },
     {
         "starName": "19δSgr",
+        "starLabel": "19δ",
+        "constellation": "Sagittarius (いて座)",
         "raHour": "18",
         "raMin": "20",
         "raSec": "59.7",
@@ -332,11 +348,12 @@ const stars = [
         "decDeg": "29",
         "decMin": "49",
         "decSec": "41",
-        "magnitude": "2.7",
-        "constellation": "Sagittarius (いて座)"
+        "magnitude": "2.7"
     },
     {
         "starName": "20εSgr",
+        "starLabel": "20ε",
+        "constellation": "Sagittarius (いて座)",
         "raHour": "18",
         "raMin": "24",
         "raSec": "10.3",
@@ -344,11 +361,12 @@ const stars = [
         "decDeg": "34",
         "decMin": "23",
         "decSec": "5",
-        "magnitude": "1.85",
-        "constellation": "Sagittarius (いて座)"
+        "magnitude": "1.85"
     },
     {
         "starName": "22λSgr",
+        "starLabel": "22λ",
+        "constellation": "Sagittarius (いて座)",
         "raHour": "18",
         "raMin": "27",
         "raSec": "58.2",
@@ -356,11 +374,12 @@ const stars = [
         "decDeg": "25",
         "decMin": "25",
         "decSec": "18",
-        "magnitude": "2.81",
-        "constellation": "Sagittarius (いて座)"
+        "magnitude": "2.81"
     },
     {
         "starName": "27φSgr",
+        "starLabel": "27φ",
+        "constellation": "Sagittarius (いて座)",
         "raHour": "18",
         "raMin": "45",
         "raSec": "39.4",
@@ -368,11 +387,12 @@ const stars = [
         "decDeg": "26",
         "decMin": "59",
         "decSec": "27",
-        "magnitude": "3.17",
-        "constellation": "Sagittarius (いて座)"
+        "magnitude": "3.17"
     },
     {
         "starName": "34σSgr",
+        "starLabel": "34σ",
+        "constellation": "Sagittarius (いて座)",
         "raHour": "18",
         "raMin": "55",
         "raSec": "15.9",
@@ -380,11 +400,12 @@ const stars = [
         "decDeg": "26",
         "decMin": "17",
         "decSec": "48",
-        "magnitude": "2.02",
-        "constellation": "Sagittarius (いて座)"
+        "magnitude": "2.02"
     },
     {
         "starName": "37ξ2Sgr",
+        "starLabel": "37ξ 2",
+        "constellation": "Sagittarius (いて座)",
         "raHour": "18",
         "raMin": "57",
         "raSec": "43.8",
@@ -392,11 +413,12 @@ const stars = [
         "decDeg": "21",
         "decMin": "6",
         "decSec": "24",
-        "magnitude": "3.51",
-        "constellation": "Sagittarius (いて座)"
+        "magnitude": "3.51"
     },
     {
         "starName": "38ζSgr",
+        "starLabel": "38ζ",
+        "constellation": "Sagittarius (いて座)",
         "raHour": "19",
         "raMin": "2",
         "raSec": "36.7",
@@ -404,11 +426,12 @@ const stars = [
         "decDeg": "29",
         "decMin": "52",
         "decSec": "49",
-        "magnitude": "2.6",
-        "constellation": "Sagittarius (いて座)"
+        "magnitude": "2.6"
     },
     {
         "starName": "39οSgr",
+        "starLabel": "39ο",
+        "constellation": "Sagittarius (いて座)",
         "raHour": "19",
         "raMin": "4",
         "raSec": "41",
@@ -416,11 +439,12 @@ const stars = [
         "decDeg": "21",
         "decMin": "44",
         "decSec": "30",
-        "magnitude": "3.77",
-        "constellation": "Sagittarius (いて座)"
+        "magnitude": "3.77"
     },
     {
         "starName": "40τSgr",
+        "starLabel": "40τ",
+        "constellation": "Sagittarius (いて座)",
         "raHour": "19",
         "raMin": "6",
         "raSec": "56.4",
@@ -428,11 +452,12 @@ const stars = [
         "decDeg": "27",
         "decMin": "40",
         "decSec": "14",
-        "magnitude": "3.32",
-        "constellation": "Sagittarius (いて座)"
+        "magnitude": "3.32"
     },
     {
         "starName": "41πSgr",
+        "starLabel": "41π",
+        "constellation": "Sagittarius (いて座)",
         "raHour": "19",
         "raMin": "9",
         "raSec": "45.8",
@@ -440,11 +465,12 @@ const stars = [
         "decDeg": "21",
         "decMin": "1",
         "decSec": "25",
-        "magnitude": "2.89",
-        "constellation": "Sagittarius (いて座)"
+        "magnitude": "2.89"
     },
     {
         "starName": "43Sgr",
+        "starLabel": "43",
+        "constellation": "Sagittarius (いて座)",
         "raHour": "19",
         "raMin": "17",
         "raSec": "38.1",
@@ -452,11 +478,12 @@ const stars = [
         "decDeg": "18",
         "decMin": "57",
         "decSec": "11",
-        "magnitude": "4.96",
-        "constellation": "Sagittarius (いて座)"
+        "magnitude": "4.96"
     },
     {
         "starName": "β1Sgr",
+        "starLabel": "β1",
+        "constellation": "Sagittarius (いて座)",
         "raHour": "19",
         "raMin": "22",
         "raSec": "38.3",
@@ -464,11 +491,12 @@ const stars = [
         "decDeg": "44",
         "decMin": "27",
         "decSec": "32",
-        "magnitude": "4.01",
-        "constellation": "Sagittarius (いて座)"
+        "magnitude": "4.01"
     },
     {
         "starName": "44ρ1Sgr",
+        "starLabel": "44ρ1",
+        "constellation": "Sagittarius (いて座)",
         "raHour": "19",
         "raMin": "21",
         "raSec": "40.4",
@@ -476,11 +504,12 @@ const stars = [
         "decDeg": "17",
         "decMin": "50",
         "decSec": "50",
-        "magnitude": "3.93",
-        "constellation": "Sagittarius (いて座)"
+        "magnitude": "3.93"
     },
     {
         "starName": "αSgr",
+        "starLabel": "α",
+        "constellation": "Sagittarius (いて座)",
         "raHour": "19",
         "raMin": "23",
         "raSec": "53.2",
@@ -488,11 +517,12 @@ const stars = [
         "decDeg": "40",
         "decMin": "36",
         "decSec": "58",
-        "magnitude": "3.97",
-        "constellation": "Sagittarius (いて座)"
+        "magnitude": "3.97"
     },
     {
         "starName": "ιSgr",
+        "starLabel": "ι",
+        "constellation": "Sagittarius (いて座)",
         "raHour": "19",
         "raMin": "55",
         "raSec": "15.7",
@@ -500,11 +530,12 @@ const stars = [
         "decDeg": "41",
         "decMin": "52",
         "decSec": "6",
-        "magnitude": "4.13",
-        "constellation": "Sagittarius (いて座)"
+        "magnitude": "4.13"
     },
     {
         "starName": "58ωSgr",
+        "starLabel": "58ω",
+        "constellation": "Sagittarius (いて座)",
         "raHour": "19",
         "raMin": "55",
         "raSec": "50.4",
@@ -512,11 +543,12 @@ const stars = [
         "decDeg": "26",
         "decMin": "17",
         "decSec": "58",
-        "magnitude": "4.7",
-        "constellation": "Sagittarius (いて座)"
+        "magnitude": "4.7"
     },
     {
         "starName": "θ1Sgr",
+        "starLabel": "θ1",
+        "constellation": "Sagittarius (いて座)",
         "raHour": "19",
         "raMin": "59",
         "raSec": "44.2",
@@ -524,23 +556,12 @@ const stars = [
         "decDeg": "35",
         "decMin": "16",
         "decSec": "35",
-        "magnitude": "4.37",
-        "constellation": "Sagittarius (いて座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "4.37"
     },
     {
         "starName": "2εDel",
+        "starLabel": "2ε",
+        "constellation": "Delphinus (いるか座)",
         "raHour": "20",
         "raMin": "33",
         "raSec": "12.8",
@@ -548,11 +569,12 @@ const stars = [
         "decDeg": "11",
         "decMin": "18",
         "decSec": "12",
-        "magnitude": "4.03",
-        "constellation": "Delphinus (いるか座)"
+        "magnitude": "4.03"
     },
     {
         "starName": "6βDel",
+        "starLabel": "6β",
+        "constellation": "Delphinus (いるか座)",
         "raHour": "20",
         "raMin": "37",
         "raSec": "33",
@@ -560,11 +582,12 @@ const stars = [
         "decDeg": "14",
         "decMin": "35",
         "decSec": "43",
-        "magnitude": "3.63",
-        "constellation": "Delphinus (いるか座)"
+        "magnitude": "3.63"
     },
     {
         "starName": "9αDel",
+        "starLabel": "9α",
+        "constellation": "Delphinus (いるか座)",
         "raHour": "20",
         "raMin": "39",
         "raSec": "38.3",
@@ -572,11 +595,12 @@ const stars = [
         "decDeg": "15",
         "decMin": "54",
         "decSec": "43",
-        "magnitude": "3.77",
-        "constellation": "Delphinus (いるか座)"
+        "magnitude": "3.77"
     },
     {
         "starName": "11δDel",
+        "starLabel": "11δ",
+        "constellation": "Delphinus (いるか座)",
         "raHour": "20",
         "raMin": "43",
         "raSec": "27.5",
@@ -584,11 +608,12 @@ const stars = [
         "decDeg": "15",
         "decMin": "4",
         "decSec": "28",
-        "magnitude": "4.43",
-        "constellation": "Delphinus (いるか座)"
+        "magnitude": "4.43"
     },
     {
         "starName": "12γ2Del",
+        "starLabel": "12γ2",
+        "constellation": "Delphinus (いるか座)",
         "raHour": "20",
         "raMin": "46",
         "raSec": "39.5",
@@ -596,23 +621,12 @@ const stars = [
         "decDeg": "16",
         "decMin": "7",
         "decSec": "27",
-        "magnitude": "4.27",
-        "constellation": "Delphinus (いるか座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "4.27"
     },
     {
         "starName": "αInd",
+        "starLabel": "α",
+        "constellation": "Indus (インディアン座)",
         "raHour": "20",
         "raMin": "37",
         "raSec": "34",
@@ -620,11 +634,12 @@ const stars = [
         "decDeg": "47",
         "decMin": "17",
         "decSec": "29",
-        "magnitude": "3.11",
-        "constellation": "Indus (インディアン座)"
+        "magnitude": "3.11"
     },
     {
         "starName": "βInd",
+        "starLabel": "β",
+        "constellation": "Indus (インディアン座)",
         "raHour": "20",
         "raMin": "54",
         "raSec": "48.6",
@@ -632,11 +647,12 @@ const stars = [
         "decDeg": "58",
         "decMin": "27",
         "decSec": "15",
-        "magnitude": "3.65",
-        "constellation": "Indus (インディアン座)"
+        "magnitude": "3.65"
     },
     {
         "starName": "θInd",
+        "starLabel": "θ",
+        "constellation": "Indus (インディアン座)",
         "raHour": "21",
         "raMin": "19",
         "raSec": "52",
@@ -644,11 +660,12 @@ const stars = [
         "decDeg": "53",
         "decMin": "26",
         "decSec": "59",
-        "magnitude": "4.39",
-        "constellation": "Indus (インディアン座)"
+        "magnitude": "4.39"
     },
     {
         "starName": "δInd",
+        "starLabel": "δ",
+        "constellation": "Indus (インディアン座)",
         "raHour": "21",
         "raMin": "57",
         "raSec": "55.1",
@@ -656,11 +673,12 @@ const stars = [
         "decDeg": "54",
         "decMin": "59",
         "decSec": "33",
-        "magnitude": "4.4",
-        "constellation": "Indus (インディアン座)"
+        "magnitude": "4.4"
     },
     {
         "starName": "εInd",
+        "starLabel": "ε",
+        "constellation": "Indus (インディアン座)",
         "raHour": "22",
         "raMin": "3",
         "raSec": "21.6",
@@ -668,23 +686,12 @@ const stars = [
         "decDeg": "56",
         "decMin": "47",
         "decSec": "10",
-        "magnitude": "4.69",
-        "constellation": "Indus (インディアン座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "4.69"
     },
     {
         "starName": "63δPsc",
+        "starLabel": "63δ",
+        "constellation": "Pisces (うお座)",
         "raHour": "0",
         "raMin": "48",
         "raSec": "41",
@@ -692,11 +699,12 @@ const stars = [
         "decDeg": "7",
         "decMin": "35",
         "decSec": "6",
-        "magnitude": "4.43",
-        "constellation": "Pisces (うお座)"
+        "magnitude": "4.43"
     },
     {
         "starName": "71εPsc",
+        "starLabel": "71ε",
+        "constellation": "Pisces (うお座)",
         "raHour": "1",
         "raMin": "2",
         "raSec": "56.6",
@@ -704,11 +712,12 @@ const stars = [
         "decDeg": "7",
         "decMin": "53",
         "decSec": "24",
-        "magnitude": "4.28",
-        "constellation": "Pisces (うお座)"
+        "magnitude": "4.28"
     },
     {
         "starName": "84χPsc",
+        "starLabel": "84χ",
+        "constellation": "Pisces (うお座)",
         "raHour": "1",
         "raMin": "11",
         "raSec": "27.2",
@@ -716,11 +725,12 @@ const stars = [
         "decDeg": "21",
         "decMin": "2",
         "decSec": "5",
-        "magnitude": "4.66",
-        "constellation": "Pisces (うお座)"
+        "magnitude": "4.66"
     },
     {
         "starName": "83τPsc",
+        "starLabel": "83τ",
+        "constellation": "Pisces (うお座)",
         "raHour": "1",
         "raMin": "11",
         "raSec": "39.6",
@@ -728,11 +738,12 @@ const stars = [
         "decDeg": "30",
         "decMin": "5",
         "decSec": "23",
-        "magnitude": "4.51",
-        "constellation": "Pisces (うお座)"
+        "magnitude": "4.51"
     },
     {
         "starName": "85φPsc",
+        "starLabel": "85φ",
+        "constellation": "Pisces (うお座)",
         "raHour": "1",
         "raMin": "13",
         "raSec": "44.9",
@@ -740,11 +751,12 @@ const stars = [
         "decDeg": "24",
         "decMin": "35",
         "decSec": "1",
-        "magnitude": "4.65",
-        "constellation": "Pisces (うお座)"
+        "magnitude": "4.65"
     },
     {
         "starName": "86ζPsc",
+        "starLabel": "86ζ",
+        "constellation": "Pisces (うお座)",
         "raHour": "1",
         "raMin": "13",
         "raSec": "43.9",
@@ -752,11 +764,12 @@ const stars = [
         "decDeg": "7",
         "decMin": "34",
         "decSec": "31",
-        "magnitude": "5.24",
-        "constellation": "Pisces (うお座)"
+        "magnitude": "5.24"
     },
     {
         "starName": "90υPsc",
+        "starLabel": "90υ",
+        "constellation": "Pisces (うお座)",
         "raHour": "1",
         "raMin": "19",
         "raSec": "28",
@@ -764,11 +777,12 @@ const stars = [
         "decDeg": "27",
         "decMin": "15",
         "decSec": "51",
-        "magnitude": "4.76",
-        "constellation": "Pisces (うお座)"
+        "magnitude": "4.76"
     },
     {
         "starName": "98μPsc",
+        "starLabel": "98μ",
+        "constellation": "Pisces (うお座)",
         "raHour": "1",
         "raMin": "30",
         "raSec": "11.1",
@@ -776,11 +790,12 @@ const stars = [
         "decDeg": "6",
         "decMin": "8",
         "decSec": "38",
-        "magnitude": "4.84",
-        "constellation": "Pisces (うお座)"
+        "magnitude": "4.84"
     },
     {
         "starName": "99ηPsc",
+        "starLabel": "99η",
+        "constellation": "Pisces (うお座)",
         "raHour": "1",
         "raMin": "31",
         "raSec": "29",
@@ -788,11 +803,12 @@ const stars = [
         "decDeg": "15",
         "decMin": "20",
         "decSec": "45",
-        "magnitude": "3.62",
-        "constellation": "Pisces (うお座)"
+        "magnitude": "3.62"
     },
     {
         "starName": "106νPsc",
+        "starLabel": "106ν",
+        "constellation": "Pisces (うお座)",
         "raHour": "1",
         "raMin": "41",
         "raSec": "25.9",
@@ -800,11 +816,12 @@ const stars = [
         "decDeg": "5",
         "decMin": "29",
         "decSec": "15",
-        "magnitude": "4.44",
-        "constellation": "Pisces (うお座)"
+        "magnitude": "4.44"
     },
     {
         "starName": "110οPsc",
+        "starLabel": "110ο",
+        "constellation": "Pisces (うお座)",
         "raHour": "1",
         "raMin": "45",
         "raSec": "23.6",
@@ -812,11 +829,12 @@ const stars = [
         "decDeg": "9",
         "decMin": "9",
         "decSec": "28",
-        "magnitude": "4.26",
-        "constellation": "Pisces (うお座)"
+        "magnitude": "4.26"
     },
     {
         "starName": "113αPsc",
+        "starLabel": "113α",
+        "constellation": "Pisces (うお座)",
         "raHour": "2",
         "raMin": "2",
         "raSec": "2.8",
@@ -824,11 +842,12 @@ const stars = [
         "decDeg": "2",
         "decMin": "45",
         "decSec": "49",
-        "magnitude": "4.33",
-        "constellation": "Pisces (うお座)"
+        "magnitude": "4.33"
     },
     {
         "starName": "6γPsc",
+        "starLabel": "6γ",
+        "constellation": "Pisces (うお座)",
         "raHour": "23",
         "raMin": "17",
         "raSec": "9.9",
@@ -836,11 +855,12 @@ const stars = [
         "decDeg": "3",
         "decMin": "16",
         "decSec": "56",
-        "magnitude": "3.69",
-        "constellation": "Pisces (うお座)"
+        "magnitude": "3.69"
     },
     {
         "starName": "8κPsc",
+        "starLabel": "8κ",
+        "constellation": "Pisces (うお座)",
         "raHour": "23",
         "raMin": "26",
         "raSec": "56",
@@ -848,11 +868,12 @@ const stars = [
         "decDeg": "1",
         "decMin": "15",
         "decSec": "20",
-        "magnitude": "4.94",
-        "constellation": "Pisces (うお座)"
+        "magnitude": "4.94"
     },
     {
         "starName": "10θPsc",
+        "starLabel": "10θ",
+        "constellation": "Pisces (うお座)",
         "raHour": "23",
         "raMin": "27",
         "raSec": "58.1",
@@ -860,11 +881,12 @@ const stars = [
         "decDeg": "6",
         "decMin": "22",
         "decSec": "44",
-        "magnitude": "4.28",
-        "constellation": "Pisces (うお座)"
+        "magnitude": "4.28"
     },
     {
         "starName": "17ιPsc",
+        "starLabel": "17ι",
+        "constellation": "Pisces (うお座)",
         "raHour": "23",
         "raMin": "39",
         "raSec": "57",
@@ -872,11 +894,12 @@ const stars = [
         "decDeg": "5",
         "decMin": "37",
         "decSec": "35",
-        "magnitude": "4.13",
-        "constellation": "Pisces (うお座)"
+        "magnitude": "4.13"
     },
     {
         "starName": "18λPsc",
+        "starLabel": "18λ",
+        "constellation": "Pisces (うお座)",
         "raHour": "23",
         "raMin": "42",
         "raSec": "2.8",
@@ -884,11 +907,12 @@ const stars = [
         "decDeg": "1",
         "decMin": "46",
         "decSec": "48",
-        "magnitude": "4.5",
-        "constellation": "Pisces (うお座)"
+        "magnitude": "4.5"
     },
     {
         "starName": "28ωPsc",
+        "starLabel": "28ω",
+        "constellation": "Pisces (うお座)",
         "raHour": "23",
         "raMin": "59",
         "raSec": "18.7",
@@ -896,23 +920,12 @@ const stars = [
         "decDeg": "6",
         "decMin": "51",
         "decSec": "48",
-        "magnitude": "4.01",
-        "constellation": "Pisces (うお座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "4.01"
     },
     {
         "starName": "2εLep",
+        "starLabel": "2ε",
+        "constellation": "Lepus (うさぎ座)",
         "raHour": "5",
         "raMin": "5",
         "raSec": "27.7",
@@ -920,11 +933,12 @@ const stars = [
         "decDeg": "22",
         "decMin": "22",
         "decSec": "16",
-        "magnitude": "3.19",
-        "constellation": "Lepus (うさぎ座)"
+        "magnitude": "3.19"
     },
     {
         "starName": "3ιLep",
+        "starLabel": "3ι",
+        "constellation": "Lepus (うさぎ座)",
         "raHour": "5",
         "raMin": "12",
         "raSec": "17.9",
@@ -932,11 +946,12 @@ const stars = [
         "decDeg": "11",
         "decMin": "52",
         "decSec": "9",
-        "magnitude": "4.45",
-        "constellation": "Lepus (うさぎ座)"
+        "magnitude": "4.45"
     },
     {
         "starName": "5μLep",
+        "starLabel": "5μ",
+        "constellation": "Lepus (うさぎ座)",
         "raHour": "5",
         "raMin": "12",
         "raSec": "55.9",
@@ -944,11 +959,12 @@ const stars = [
         "decDeg": "16",
         "decMin": "12",
         "decSec": "20",
-        "magnitude": "3.31",
-        "constellation": "Lepus (うさぎ座)"
+        "magnitude": "3.31"
     },
     {
         "starName": "4κLep",
+        "starLabel": "4κ",
+        "constellation": "Lepus (うさぎ座)",
         "raHour": "5",
         "raMin": "13",
         "raSec": "13.9",
@@ -956,11 +972,12 @@ const stars = [
         "decDeg": "12",
         "decMin": "56",
         "decSec": "29",
-        "magnitude": "4.36",
-        "constellation": "Lepus (うさぎ座)"
+        "magnitude": "4.36"
     },
     {
         "starName": "6λLep",
+        "starLabel": "6λ",
+        "constellation": "Lepus (うさぎ座)",
         "raHour": "5",
         "raMin": "19",
         "raSec": "34.5",
@@ -968,11 +985,12 @@ const stars = [
         "decDeg": "13",
         "decMin": "10",
         "decSec": "36",
-        "magnitude": "4.29",
-        "constellation": "Lepus (うさぎ座)"
+        "magnitude": "4.29"
     },
     {
         "starName": "9βLep",
+        "starLabel": "9β",
+        "constellation": "Lepus (うさぎ座)",
         "raHour": "5",
         "raMin": "28",
         "raSec": "14.7",
@@ -980,11 +998,12 @@ const stars = [
         "decDeg": "20",
         "decMin": "45",
         "decSec": "34",
-        "magnitude": "2.84",
-        "constellation": "Lepus (うさぎ座)"
+        "magnitude": "2.84"
     },
     {
         "starName": "11αLep",
+        "starLabel": "11α",
+        "constellation": "Lepus (うさぎ座)",
         "raHour": "5",
         "raMin": "32",
         "raSec": "43.8",
@@ -992,11 +1011,12 @@ const stars = [
         "decDeg": "17",
         "decMin": "49",
         "decSec": "20",
-        "magnitude": "2.58",
-        "constellation": "Lepus (うさぎ座)"
+        "magnitude": "2.58"
     },
     {
         "starName": "13γLep",
+        "starLabel": "13γ",
+        "constellation": "Lepus (うさぎ座)",
         "raHour": "5",
         "raMin": "44",
         "raSec": "27.8",
@@ -1004,11 +1024,12 @@ const stars = [
         "decDeg": "22",
         "decMin": "26",
         "decSec": "54",
-        "magnitude": "3.6",
-        "constellation": "Lepus (うさぎ座)"
+        "magnitude": "3.6"
     },
     {
         "starName": "14ζLep",
+        "starLabel": "14ζ",
+        "constellation": "Lepus (うさぎ座)",
         "raHour": "5",
         "raMin": "46",
         "raSec": "57.3",
@@ -1016,11 +1037,12 @@ const stars = [
         "decDeg": "14",
         "decMin": "49",
         "decSec": "19",
-        "magnitude": "3.55",
-        "constellation": "Lepus (うさぎ座)"
+        "magnitude": "3.55"
     },
     {
         "starName": "15δLep",
+        "starLabel": "15δ",
+        "constellation": "Lepus (うさぎ座)",
         "raHour": "5",
         "raMin": "51",
         "raSec": "19.3",
@@ -1028,11 +1050,12 @@ const stars = [
         "decDeg": "20",
         "decMin": "52",
         "decSec": "45",
-        "magnitude": "3.81",
-        "constellation": "Lepus (うさぎ座)"
+        "magnitude": "3.81"
     },
     {
         "starName": "16ηLep",
+        "starLabel": "16η",
+        "constellation": "Lepus (うさぎ座)",
         "raHour": "5",
         "raMin": "56",
         "raSec": "24.3",
@@ -1040,23 +1063,12 @@ const stars = [
         "decDeg": "14",
         "decMin": "10",
         "decSec": "4",
-        "magnitude": "3.71",
-        "constellation": "Lepus (うさぎ座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "3.71"
     },
     {
         "starName": "5υBoo",
+        "starLabel": "5υ",
+        "constellation": "Bootes (うしかい座)",
         "raHour": "13",
         "raMin": "49",
         "raSec": "28.6",
@@ -1064,11 +1076,12 @@ const stars = [
         "decDeg": "15",
         "decMin": "47",
         "decSec": "52",
-        "magnitude": "4.07",
-        "constellation": "Bo?tes (うしかい座)"
+        "magnitude": "4.07"
     },
     {
         "starName": "8ηBoo",
+        "starLabel": "8η",
+        "constellation": "Bootes (うしかい座)",
         "raHour": "13",
         "raMin": "54",
         "raSec": "41.1",
@@ -1076,11 +1089,12 @@ const stars = [
         "decDeg": "18",
         "decMin": "23",
         "decSec": "52",
-        "magnitude": "2.68",
-        "constellation": "Bo?tes (うしかい座)"
+        "magnitude": "2.68"
     },
     {
         "starName": "16αBoo",
+        "starLabel": "16α",
+        "constellation": "Bootes (うしかい座)",
         "raHour": "14",
         "raMin": "15",
         "raSec": "39.7",
@@ -1088,11 +1102,12 @@ const stars = [
         "decDeg": "19",
         "decMin": "10",
         "decSec": "57",
-        "magnitude": "-0.04",
-        "constellation": "Bo?tes (うしかい座)"
+        "magnitude": "-0.04"
     },
     {
         "starName": "19λBoo",
+        "starLabel": "19λ",
+        "constellation": "Bootes (うしかい座)",
         "raHour": "14",
         "raMin": "16",
         "raSec": "23",
@@ -1100,11 +1115,12 @@ const stars = [
         "decDeg": "46",
         "decMin": "5",
         "decSec": "18",
-        "magnitude": "4.18",
-        "constellation": "Bo?tes (うしかい座)"
+        "magnitude": "4.18"
     },
     {
         "starName": "23θBoo",
+        "starLabel": "23θ",
+        "constellation": "Bootes (うしかい座)",
         "raHour": "14",
         "raMin": "25",
         "raSec": "11.8",
@@ -1112,11 +1128,12 @@ const stars = [
         "decDeg": "51",
         "decMin": "51",
         "decSec": "3",
-        "magnitude": "4.05",
-        "constellation": "Bo?tes (うしかい座)"
+        "magnitude": "4.05"
     },
     {
         "starName": "25ρBoo",
+        "starLabel": "25ρ",
+        "constellation": "Bootes (うしかい座)",
         "raHour": "14",
         "raMin": "31",
         "raSec": "49.8",
@@ -1124,11 +1141,12 @@ const stars = [
         "decDeg": "30",
         "decMin": "22",
         "decSec": "17",
-        "magnitude": "3.58",
-        "constellation": "Bo?tes (うしかい座)"
+        "magnitude": "3.58"
     },
     {
         "starName": "27γBoo",
+        "starLabel": "27γ",
+        "constellation": "Bootes (うしかい座)",
         "raHour": "14",
         "raMin": "32",
         "raSec": "4.7",
@@ -1136,11 +1154,12 @@ const stars = [
         "decDeg": "38",
         "decMin": "18",
         "decSec": "30",
-        "magnitude": "3.03",
-        "constellation": "Bo?tes (うしかい座)"
+        "magnitude": "3.03"
     },
     {
         "starName": "28σBoo",
+        "starLabel": "28σ",
+        "constellation": "Bootes (うしかい座)",
         "raHour": "14",
         "raMin": "34",
         "raSec": "40.8",
@@ -1148,11 +1167,12 @@ const stars = [
         "decDeg": "29",
         "decMin": "44",
         "decSec": "42",
-        "magnitude": "4.46",
-        "constellation": "Bo?tes (うしかい座)"
+        "magnitude": "4.46"
     },
     {
         "starName": "29π1Boo",
+        "starLabel": "29π 1",
+        "constellation": "Bootes (うしかい座)",
         "raHour": "14",
         "raMin": "40",
         "raSec": "43.6",
@@ -1160,11 +1180,12 @@ const stars = [
         "decDeg": "16",
         "decMin": "25",
         "decSec": "6",
-        "magnitude": "4.94",
-        "constellation": "Bo?tes (うしかい座)"
+        "magnitude": "4.94"
     },
     {
         "starName": "30ζBoo",
+        "starLabel": "30ζ",
+        "constellation": "Bootes (うしかい座)",
         "raHour": "14",
         "raMin": "41",
         "raSec": "8.9",
@@ -1172,11 +1193,12 @@ const stars = [
         "decDeg": "13",
         "decMin": "43",
         "decSec": "42",
-        "magnitude": "4.43",
-        "constellation": "Bo?tes (うしかい座)"
+        "magnitude": "4.43"
     },
     {
         "starName": "36εBoo",
+        "starLabel": "36ε",
+        "constellation": "Bootes (うしかい座)",
         "raHour": "14",
         "raMin": "44",
         "raSec": "59.2",
@@ -1184,11 +1206,12 @@ const stars = [
         "decDeg": "27",
         "decMin": "4",
         "decSec": "27",
-        "magnitude": "2.7",
-        "constellation": "Bo?tes (うしかい座)"
+        "magnitude": "2.7"
     },
     {
         "starName": "42βBoo",
+        "starLabel": "42β",
+        "constellation": "Bootes (うしかい座)",
         "raHour": "15",
         "raMin": "1",
         "raSec": "56.8",
@@ -1196,11 +1219,12 @@ const stars = [
         "decDeg": "40",
         "decMin": "23",
         "decSec": "26",
-        "magnitude": "3.5",
-        "constellation": "Bo?tes (うしかい座)"
+        "magnitude": "3.5"
     },
     {
         "starName": "49δBoo",
+        "starLabel": "49δ",
+        "constellation": "Bootes (うしかい座)",
         "raHour": "15",
         "raMin": "15",
         "raSec": "30.2",
@@ -1208,11 +1232,12 @@ const stars = [
         "decDeg": "33",
         "decMin": "18",
         "decSec": "53",
-        "magnitude": "3.47",
-        "constellation": "Bo?tes (うしかい座)"
+        "magnitude": "3.47"
     },
     {
         "starName": "51μ1Boo",
+        "starLabel": "51μ 1",
+        "constellation": "Bootes (うしかい座)",
         "raHour": "15",
         "raMin": "24",
         "raSec": "29.4",
@@ -1220,23 +1245,12 @@ const stars = [
         "decDeg": "37",
         "decMin": "22",
         "decSec": "38",
-        "magnitude": "4.31",
-        "constellation": "Bo?tes (うしかい座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "4.31"
     },
     {
         "starName": "4δHya",
+        "starLabel": "4δ",
+        "constellation": "Hydra (うみへび座)",
         "raHour": "8",
         "raMin": "37",
         "raSec": "39.4",
@@ -1244,11 +1258,12 @@ const stars = [
         "decDeg": "5",
         "decMin": "42",
         "decSec": "13",
-        "magnitude": "4.16",
-        "constellation": "Hydra (うみへび座)"
+        "magnitude": "4.16"
     },
     {
         "starName": "5σHya",
+        "starLabel": "5σ",
+        "constellation": "Hydra (うみへび座)",
         "raHour": "8",
         "raMin": "38",
         "raSec": "45.4",
@@ -1256,11 +1271,12 @@ const stars = [
         "decDeg": "3",
         "decMin": "20",
         "decSec": "29",
-        "magnitude": "4.44",
-        "constellation": "Hydra (うみへび座)"
+        "magnitude": "4.44"
     },
     {
         "starName": "7ηHya",
+        "starLabel": "7η",
+        "constellation": "Hydra (うみへび座)",
         "raHour": "8",
         "raMin": "43",
         "raSec": "13.5",
@@ -1268,11 +1284,12 @@ const stars = [
         "decDeg": "3",
         "decMin": "23",
         "decSec": "55",
-        "magnitude": "4.3",
-        "constellation": "Hydra (うみへび座)"
+        "magnitude": "4.3"
     },
     {
         "starName": "11εHya",
+        "starLabel": "11ε",
+        "constellation": "Hydra (うみへび座)",
         "raHour": "8",
         "raMin": "46",
         "raSec": "46.6",
@@ -1280,11 +1297,12 @@ const stars = [
         "decDeg": "6",
         "decMin": "25",
         "decSec": "8",
-        "magnitude": "3.38",
-        "constellation": "Hydra (うみへび座)"
+        "magnitude": "3.38"
     },
     {
         "starName": "13ρHya",
+        "starLabel": "13ρ",
+        "constellation": "Hydra (うみへび座)",
         "raHour": "8",
         "raMin": "48",
         "raSec": "26",
@@ -1292,11 +1310,12 @@ const stars = [
         "decDeg": "5",
         "decMin": "50",
         "decSec": "16",
-        "magnitude": "4.36",
-        "constellation": "Hydra (うみへび座)"
+        "magnitude": "4.36"
     },
     {
         "starName": "16ζHya",
+        "starLabel": "16ζ",
+        "constellation": "Hydra (うみへび座)",
         "raHour": "8",
         "raMin": "55",
         "raSec": "23.6",
@@ -1304,11 +1323,12 @@ const stars = [
         "decDeg": "5",
         "decMin": "56",
         "decSec": "44",
-        "magnitude": "3.11",
-        "constellation": "Hydra (うみへび座)"
+        "magnitude": "3.11"
     },
     {
         "starName": "22θHya",
+        "starLabel": "22θ",
+        "constellation": "Hydra (うみへび座)",
         "raHour": "9",
         "raMin": "14",
         "raSec": "21.9",
@@ -1316,11 +1336,12 @@ const stars = [
         "decDeg": "2",
         "decMin": "18",
         "decSec": "51",
-        "magnitude": "3.88",
-        "constellation": "Hydra (うみへび座)"
+        "magnitude": "3.88"
     },
     {
         "starName": "30αHya",
+        "starLabel": "30α",
+        "constellation": "Hydra (うみへび座)",
         "raHour": "9",
         "raMin": "27",
         "raSec": "35.2",
@@ -1328,11 +1349,12 @@ const stars = [
         "decDeg": "8",
         "decMin": "39",
         "decSec": "31",
-        "magnitude": "1.98",
-        "constellation": "Hydra (うみへび座)"
+        "magnitude": "1.98"
     },
     {
         "starName": "35ιHya",
+        "starLabel": "35ι",
+        "constellation": "Hydra (うみへび座)",
         "raHour": "9",
         "raMin": "39",
         "raSec": "51.4",
@@ -1340,11 +1362,12 @@ const stars = [
         "decDeg": "1",
         "decMin": "8",
         "decSec": "34",
-        "magnitude": "3.91",
-        "constellation": "Hydra (うみへび座)"
+        "magnitude": "3.91"
     },
     {
         "starName": "39υ1Hya",
+        "starLabel": "39υ1",
+        "constellation": "Hydra (うみへび座)",
         "raHour": "9",
         "raMin": "51",
         "raSec": "28.7",
@@ -1352,11 +1375,12 @@ const stars = [
         "decDeg": "14",
         "decMin": "50",
         "decSec": "48",
-        "magnitude": "4.12",
-        "constellation": "Hydra (うみへび座)"
+        "magnitude": "4.12"
     },
     {
         "starName": "40υ2Hya",
+        "starLabel": "40υ2",
+        "constellation": "Hydra (うみへび座)",
         "raHour": "10",
         "raMin": "5",
         "raSec": "7.5",
@@ -1364,11 +1388,12 @@ const stars = [
         "decDeg": "13",
         "decMin": "3",
         "decSec": "53",
-        "magnitude": "4.6",
-        "constellation": "Hydra (うみへび座)"
+        "magnitude": "4.6"
     },
     {
         "starName": "41λHya",
+        "starLabel": "41λ",
+        "constellation": "Hydra (うみへび座)",
         "raHour": "10",
         "raMin": "10",
         "raSec": "35.3",
@@ -1376,11 +1401,12 @@ const stars = [
         "decDeg": "12",
         "decMin": "21",
         "decSec": "15",
-        "magnitude": "3.61",
-        "constellation": "Hydra (うみへび座)"
+        "magnitude": "3.61"
     },
     {
         "starName": "42μHya",
+        "starLabel": "42μ",
+        "constellation": "Hydra (うみへび座)",
         "raHour": "10",
         "raMin": "26",
         "raSec": "5.4",
@@ -1388,11 +1414,12 @@ const stars = [
         "decDeg": "16",
         "decMin": "50",
         "decSec": "11",
-        "magnitude": "3.81",
-        "constellation": "Hydra (うみへび座)"
+        "magnitude": "3.81"
     },
     {
         "starName": "νHya",
+        "starLabel": "ν",
+        "constellation": "Hydra (うみへび座)",
         "raHour": "10",
         "raMin": "49",
         "raSec": "37.5",
@@ -1400,11 +1427,12 @@ const stars = [
         "decDeg": "16",
         "decMin": "11",
         "decSec": "37",
-        "magnitude": "3.11",
-        "constellation": "Hydra (うみへび座)"
+        "magnitude": "3.11"
     },
     {
         "starName": "χ1Hya",
+        "starLabel": "χ1",
+        "constellation": "Hydra (うみへび座)",
         "raHour": "11",
         "raMin": "5",
         "raSec": "19.9",
@@ -1412,11 +1440,12 @@ const stars = [
         "decDeg": "27",
         "decMin": "17",
         "decSec": "37",
-        "magnitude": "4.94",
-        "constellation": "Hydra (うみへび座)"
+        "magnitude": "4.94"
     },
     {
         "starName": "ξHya",
+        "starLabel": "ξ",
+        "constellation": "Hydra (うみへび座)",
         "raHour": "11",
         "raMin": "33",
         "raSec": "0.1",
@@ -1424,11 +1453,12 @@ const stars = [
         "decDeg": "31",
         "decMin": "51",
         "decSec": "28",
-        "magnitude": "3.54",
-        "constellation": "Hydra (うみへび座)"
+        "magnitude": "3.54"
     },
     {
         "starName": "βHya",
+        "starLabel": "β",
+        "constellation": "Hydra (うみへび座)",
         "raHour": "11",
         "raMin": "52",
         "raSec": "54.6",
@@ -1436,11 +1466,12 @@ const stars = [
         "decDeg": "33",
         "decMin": "54",
         "decSec": "29",
-        "magnitude": "4.28",
-        "constellation": "Hydra (うみへび座)"
+        "magnitude": "4.28"
     },
     {
         "starName": "46γHya",
+        "starLabel": "46γ",
+        "constellation": "Hydra (うみへび座)",
         "raHour": "13",
         "raMin": "18",
         "raSec": "55.3",
@@ -1448,11 +1479,12 @@ const stars = [
         "decDeg": "23",
         "decMin": "10",
         "decSec": "18",
-        "magnitude": "3",
-        "constellation": "Hydra (うみへび座)"
+        "magnitude": "3"
     },
     {
         "starName": "49πHya",
+        "starLabel": "49π",
+        "constellation": "Hydra (うみへび座)",
         "raHour": "14",
         "raMin": "6",
         "raSec": "22.3",
@@ -1460,11 +1492,12 @@ const stars = [
         "decDeg": "26",
         "decMin": "40",
         "decSec": "57",
-        "magnitude": "3.27",
-        "constellation": "Hydra (うみへび座)"
+        "magnitude": "3.27"
     },
     {
         "starName": "58Hya",
+        "starLabel": "58",
+        "constellation": "Hydra (うみへび座)",
         "raHour": "14",
         "raMin": "50",
         "raSec": "17.3",
@@ -1472,23 +1505,12 @@ const stars = [
         "decDeg": "27",
         "decMin": "57",
         "decSec": "37",
-        "magnitude": "4.41",
-        "constellation": "Hydra (うみへび座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "4.41"
     },
     {
         "starName": "αEri",
+        "starLabel": "α",
+        "constellation": "Eridanus (エリダヌス座)",
         "raHour": "1",
         "raMin": "37",
         "raSec": "42.9",
@@ -1496,11 +1518,12 @@ const stars = [
         "decDeg": "57",
         "decMin": "14",
         "decSec": "12",
-        "magnitude": "0.46",
-        "constellation": "Eridanus (エリダヌス座)"
+        "magnitude": "0.46"
     },
     {
         "starName": "χEri",
+        "starLabel": "χ",
+        "constellation": "Eridanus (エリダヌス座)",
         "raHour": "1",
         "raMin": "55",
         "raSec": "57.5",
@@ -1508,11 +1531,12 @@ const stars = [
         "decDeg": "51",
         "decMin": "36",
         "decSec": "32",
-        "magnitude": "3.7",
-        "constellation": "Eridanus (エリダヌス座)"
+        "magnitude": "3.7"
     },
     {
         "starName": "φEri",
+        "starLabel": "φ",
+        "constellation": "Eridanus (エリダヌス座)",
         "raHour": "2",
         "raMin": "16",
         "raSec": "30.6",
@@ -1520,11 +1544,12 @@ const stars = [
         "decDeg": "51",
         "decMin": "30",
         "decSec": "44",
-        "magnitude": "3.56",
-        "constellation": "Eridanus (エリダヌス座)"
+        "magnitude": "3.56"
     },
     {
         "starName": "κEri",
+        "starLabel": "κ",
+        "constellation": "Eridanus (エリダヌス座)",
         "raHour": "2",
         "raMin": "26",
         "raSec": "59.1",
@@ -1532,11 +1557,12 @@ const stars = [
         "decDeg": "47",
         "decMin": "42",
         "decSec": "14",
-        "magnitude": "4.25",
-        "constellation": "Eridanus (エリダヌス座)"
+        "magnitude": "4.25"
     },
     {
         "starName": "ιEri",
+        "starLabel": "ι",
+        "constellation": "Eridanus (エリダヌス座)",
         "raHour": "2",
         "raMin": "40",
         "raSec": "40",
@@ -1544,11 +1570,12 @@ const stars = [
         "decDeg": "39",
         "decMin": "51",
         "decSec": "20",
-        "magnitude": "4.11",
-        "constellation": "Eridanus (エリダヌス座)"
+        "magnitude": "4.11"
     },
     {
         "starName": "1τ1Eri",
+        "starLabel": "1τ1",
+        "constellation": "Eridanus (エリダヌス座)",
         "raHour": "2",
         "raMin": "45",
         "raSec": "6.2",
@@ -1556,11 +1583,12 @@ const stars = [
         "decDeg": "18",
         "decMin": "34",
         "decSec": "21",
-        "magnitude": "4.47",
-        "constellation": "Eridanus (エリダヌス座)"
+        "magnitude": "4.47"
     },
     {
         "starName": "2τ2Eri",
+        "starLabel": "2τ2",
+        "constellation": "Eridanus (エリダヌス座)",
         "raHour": "2",
         "raMin": "51",
         "raSec": "2.3",
@@ -1568,11 +1596,12 @@ const stars = [
         "decDeg": "21",
         "decMin": "0",
         "decSec": "15",
-        "magnitude": "4.75",
-        "constellation": "Eridanus (エリダヌス座)"
+        "magnitude": "4.75"
     },
     {
         "starName": "3ηEri",
+        "starLabel": "3η",
+        "constellation": "Eridanus (エリダヌス座)",
         "raHour": "2",
         "raMin": "56",
         "raSec": "25.7",
@@ -1580,11 +1609,12 @@ const stars = [
         "decDeg": "8",
         "decMin": "53",
         "decSec": "53",
-        "magnitude": "3.89",
-        "constellation": "Eridanus (エリダヌス座)"
+        "magnitude": "3.89"
     },
     {
         "starName": "θ1Eri",
+        "starLabel": "θ1",
+        "constellation": "Eridanus (エリダヌス座)",
         "raHour": "2",
         "raMin": "58",
         "raSec": "15.7",
@@ -1592,11 +1622,12 @@ const stars = [
         "decDeg": "40",
         "decMin": "18",
         "decSec": "17",
-        "magnitude": "3.24",
-        "constellation": "Eridanus (エリダヌス座)"
+        "magnitude": "3.24"
     },
     {
         "starName": "11τ3Eri",
+        "starLabel": "11τ3",
+        "constellation": "Eridanus (エリダヌス座)",
         "raHour": "3",
         "raMin": "2",
         "raSec": "23.5",
@@ -1604,11 +1635,12 @@ const stars = [
         "decDeg": "23",
         "decMin": "37",
         "decSec": "28",
-        "magnitude": "4.09",
-        "constellation": "Eridanus (エリダヌス座)"
+        "magnitude": "4.09"
     },
     {
         "starName": "13ζEri",
+        "starLabel": "13ζ",
+        "constellation": "Eridanus (エリダヌス座)",
         "raHour": "3",
         "raMin": "15",
         "raSec": "50",
@@ -1616,11 +1648,12 @@ const stars = [
         "decDeg": "8",
         "decMin": "49",
         "decSec": "11",
-        "magnitude": "4.8",
-        "constellation": "Eridanus (エリダヌス座)"
+        "magnitude": "4.8"
     },
     {
         "starName": "16τ4Eri",
+        "starLabel": "16τ4",
+        "constellation": "Eridanus (エリダヌス座)",
         "raHour": "3",
         "raMin": "19",
         "raSec": "31",
@@ -1628,11 +1661,12 @@ const stars = [
         "decDeg": "21",
         "decMin": "45",
         "decSec": "28",
-        "magnitude": "3.69",
-        "constellation": "Eridanus (エリダヌス座)"
+        "magnitude": "3.69"
     },
     {
         "starName": "HIP15510Eri",
+        "starLabel": "HIP15510",
+        "constellation": "Eridanus (エリダヌス座)",
         "raHour": "3",
         "raMin": "19",
         "raSec": "55.7",
@@ -1640,11 +1674,12 @@ const stars = [
         "decDeg": "43",
         "decMin": "4",
         "decSec": "11",
-        "magnitude": "4.27",
-        "constellation": "Eridanus (エリダヌス座)"
+        "magnitude": "4.27"
     },
     {
         "starName": "18εEri",
+        "starLabel": "18ε",
+        "constellation": "Eridanus (エリダヌス座)",
         "raHour": "3",
         "raMin": "32",
         "raSec": "55.8",
@@ -1652,11 +1687,12 @@ const stars = [
         "decDeg": "9",
         "decMin": "27",
         "decSec": "30",
-        "magnitude": "3.73",
-        "constellation": "Eridanus (エリダヌス座)"
+        "magnitude": "3.73"
     },
     {
         "starName": "19τ5Eri",
+        "starLabel": "19τ5",
+        "constellation": "Eridanus (エリダヌス座)",
         "raHour": "3",
         "raMin": "33",
         "raSec": "47.3",
@@ -1664,11 +1700,12 @@ const stars = [
         "decDeg": "21",
         "decMin": "37",
         "decSec": "58",
-        "magnitude": "4.27",
-        "constellation": "Eridanus (エリダヌス座)"
+        "magnitude": "4.27"
     },
     {
         "starName": "23δEri",
+        "starLabel": "23δ",
+        "constellation": "Eridanus (エリダヌス座)",
         "raHour": "3",
         "raMin": "43",
         "raSec": "14.9",
@@ -1676,11 +1713,12 @@ const stars = [
         "decDeg": "9",
         "decMin": "45",
         "decSec": "48",
-        "magnitude": "3.54",
-        "constellation": "Eridanus (エリダヌス座)"
+        "magnitude": "3.54"
     },
     {
         "starName": "27τ6Eri",
+        "starLabel": "27τ6",
+        "constellation": "Eridanus (エリダヌス座)",
         "raHour": "3",
         "raMin": "46",
         "raSec": "50.9",
@@ -1688,11 +1726,12 @@ const stars = [
         "decDeg": "23",
         "decMin": "14",
         "decSec": "59",
-        "magnitude": "4.23",
-        "constellation": "Eridanus (エリダヌス座)"
+        "magnitude": "4.23"
     },
     {
         "starName": "HIP17797Eri",
+        "starLabel": "HIP17797",
+        "constellation": "Eridanus (エリダヌス座)",
         "raHour": "3",
         "raMin": "48",
         "raSec": "35.4",
@@ -1700,11 +1739,12 @@ const stars = [
         "decDeg": "37",
         "decMin": "37",
         "decSec": "20",
-        "magnitude": "5.4",
-        "constellation": "Eridanus (エリダヌス座)"
+        "magnitude": "5.4"
     },
     {
         "starName": "HIP17874Eri",
+        "starLabel": "HIP17874",
+        "constellation": "Eridanus (エリダヌス座)",
         "raHour": "3",
         "raMin": "49",
         "raSec": "27.3",
@@ -1712,11 +1752,12 @@ const stars = [
         "decDeg": "36",
         "decMin": "12",
         "decSec": "1",
-        "magnitude": "4.17",
-        "constellation": "Eridanus (エリダヌス座)"
+        "magnitude": "4.17"
     },
     {
         "starName": "34γEri",
+        "starLabel": "34γ",
+        "constellation": "Eridanus (エリダヌス座)",
         "raHour": "3",
         "raMin": "58",
         "raSec": "1.8",
@@ -1724,11 +1765,12 @@ const stars = [
         "decDeg": "13",
         "decMin": "30",
         "decSec": "31",
-        "magnitude": "2.95",
-        "constellation": "Eridanus (エリダヌス座)"
+        "magnitude": "2.95"
     },
     {
         "starName": "38ο1Eri",
+        "starLabel": "38ο1",
+        "constellation": "Eridanus (エリダヌス座)",
         "raHour": "4",
         "raMin": "11",
         "raSec": "51.9",
@@ -1736,11 +1778,12 @@ const stars = [
         "decDeg": "6",
         "decMin": "50",
         "decSec": "15",
-        "magnitude": "4.04",
-        "constellation": "Eridanus (エリダヌス座)"
+        "magnitude": "4.04"
     },
     {
         "starName": "41υ4Eri",
+        "starLabel": "41υ4",
+        "constellation": "Eridanus (エリダヌス座)",
         "raHour": "4",
         "raMin": "17",
         "raSec": "53.7",
@@ -1748,11 +1791,12 @@ const stars = [
         "decDeg": "33",
         "decMin": "47",
         "decSec": "54",
-        "magnitude": "3.56",
-        "constellation": "Eridanus (エリダヌス座)"
+        "magnitude": "3.56"
     },
     {
         "starName": "43Eri",
+        "starLabel": "43",
+        "constellation": "Eridanus (エリダヌス座)",
         "raHour": "4",
         "raMin": "24",
         "raSec": "2.2",
@@ -1760,11 +1804,12 @@ const stars = [
         "decDeg": "34",
         "decMin": "1",
         "decSec": "1",
-        "magnitude": "3.96",
-        "constellation": "Eridanus (エリダヌス座)"
+        "magnitude": "3.96"
     },
     {
         "starName": "48νEri",
+        "starLabel": "48ν",
+        "constellation": "Eridanus (エリダヌス座)",
         "raHour": "4",
         "raMin": "36",
         "raSec": "19.1",
@@ -1772,11 +1817,12 @@ const stars = [
         "decDeg": "3",
         "decMin": "21",
         "decSec": "9",
-        "magnitude": "3.93",
-        "constellation": "Eridanus (エリダヌス座)"
+        "magnitude": "3.93"
     },
     {
         "starName": "52υ2Eri",
+        "starLabel": "52υ2",
+        "constellation": "Eridanus (エリダヌス座)",
         "raHour": "4",
         "raMin": "35",
         "raSec": "33",
@@ -1784,11 +1830,12 @@ const stars = [
         "decDeg": "30",
         "decMin": "33",
         "decSec": "44",
-        "magnitude": "3.82",
-        "constellation": "Eridanus (エリダヌス座)"
+        "magnitude": "3.82"
     },
     {
         "starName": "57μEri",
+        "starLabel": "57μ",
+        "constellation": "Eridanus (エリダヌス座)",
         "raHour": "4",
         "raMin": "45",
         "raSec": "30.1",
@@ -1796,11 +1843,12 @@ const stars = [
         "decDeg": "3",
         "decMin": "15",
         "decSec": "17",
-        "magnitude": "4.02",
-        "constellation": "Eridanus (エリダヌス座)"
+        "magnitude": "4.02"
     },
     {
         "starName": "61ωEri",
+        "starLabel": "61ω",
+        "constellation": "Eridanus (エリダヌス座)",
         "raHour": "4",
         "raMin": "52",
         "raSec": "53.7",
@@ -1808,11 +1856,12 @@ const stars = [
         "decDeg": "5",
         "decMin": "27",
         "decSec": "10",
-        "magnitude": "4.39",
-        "constellation": "Eridanus (エリダヌス座)"
+        "magnitude": "4.39"
     },
     {
         "starName": "67βEri",
+        "starLabel": "67β",
+        "constellation": "Eridanus (エリダヌス座)",
         "raHour": "5",
         "raMin": "7",
         "raSec": "51",
@@ -1820,23 +1869,12 @@ const stars = [
         "decDeg": "5",
         "decMin": "5",
         "decSec": "11",
-        "magnitude": "2.79",
-        "constellation": "Eridanus (エリダヌス座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "2.79"
     },
     {
         "starName": "1οTau",
+        "starLabel": "1ο",
+        "constellation": "Taurus (おうし座)",
         "raHour": "3",
         "raMin": "24",
         "raSec": "48.8",
@@ -1844,11 +1882,12 @@ const stars = [
         "decDeg": "9",
         "decMin": "1",
         "decSec": "44",
-        "magnitude": "3.6",
-        "constellation": "Taurus (おうし座)"
+        "magnitude": "3.6"
     },
     {
         "starName": "2ξTau",
+        "starLabel": "2ξ",
+        "constellation": "Taurus (おうし座)",
         "raHour": "3",
         "raMin": "27",
         "raSec": "10.2",
@@ -1856,11 +1895,12 @@ const stars = [
         "decDeg": "9",
         "decMin": "43",
         "decSec": "58",
-        "magnitude": "3.74",
-        "constellation": "Taurus (おうし座)"
+        "magnitude": "3.74"
     },
     {
         "starName": "5Tau",
+        "starLabel": "5",
+        "constellation": "Taurus (おうし座)",
         "raHour": "3",
         "raMin": "30",
         "raSec": "52.4",
@@ -1868,11 +1908,12 @@ const stars = [
         "decDeg": "12",
         "decMin": "56",
         "decSec": "12",
-        "magnitude": "4.11",
-        "constellation": "Taurus (おうし座)"
+        "magnitude": "4.11"
     },
     {
         "starName": "10Tau",
+        "starLabel": "10",
+        "constellation": "Taurus (おうし座)",
         "raHour": "3",
         "raMin": "36",
         "raSec": "52.4",
@@ -1880,11 +1921,12 @@ const stars = [
         "decDeg": "0",
         "decMin": "24",
         "decSec": "6",
-        "magnitude": "4.28",
-        "constellation": "Taurus (おうし座)"
+        "magnitude": "4.28"
     },
     {
         "starName": "25ηTau",
+        "starLabel": "25η",
+        "constellation": "Taurus (おうし座)",
         "raHour": "3",
         "raMin": "47",
         "raSec": "29.1",
@@ -1892,11 +1934,12 @@ const stars = [
         "decDeg": "24",
         "decMin": "6",
         "decSec": "18",
-        "magnitude": "2.87",
-        "constellation": "Taurus (おうし座)"
+        "magnitude": "2.87"
     },
     {
         "starName": "35λTau",
+        "starLabel": "35λ",
+        "constellation": "Taurus (おうし座)",
         "raHour": "4",
         "raMin": "0",
         "raSec": "40.8",
@@ -1904,11 +1947,12 @@ const stars = [
         "decDeg": "12",
         "decMin": "29",
         "decSec": "25",
-        "magnitude": "3.47",
-        "constellation": "Taurus (おうし座)"
+        "magnitude": "3.47"
     },
     {
         "starName": "38νTau",
+        "starLabel": "38ν",
+        "constellation": "Taurus (おうし座)",
         "raHour": "4",
         "raMin": "3",
         "raSec": "9.4",
@@ -1916,11 +1960,12 @@ const stars = [
         "decDeg": "5",
         "decMin": "59",
         "decSec": "21",
-        "magnitude": "3.91",
-        "constellation": "Taurus (おうし座)"
+        "magnitude": "3.91"
     },
     {
         "starName": "37Tau",
+        "starLabel": "37",
+        "constellation": "Taurus (おうし座)",
         "raHour": "4",
         "raMin": "4",
         "raSec": "41.7",
@@ -1928,11 +1973,12 @@ const stars = [
         "decDeg": "22",
         "decMin": "4",
         "decSec": "55",
-        "magnitude": "4.36",
-        "constellation": "Taurus (おうし座)"
+        "magnitude": "4.36"
     },
     {
         "starName": "49μTau",
+        "starLabel": "49μ",
+        "constellation": "Taurus (おうし座)",
         "raHour": "4",
         "raMin": "15",
         "raSec": "32.1",
@@ -1940,11 +1986,12 @@ const stars = [
         "decDeg": "8",
         "decMin": "53",
         "decSec": "32",
-        "magnitude": "4.29",
-        "constellation": "Taurus (おうし座)"
+        "magnitude": "4.29"
     },
     {
         "starName": "54γTau",
+        "starLabel": "54γ",
+        "constellation": "Taurus (おうし座)",
         "raHour": "4",
         "raMin": "19",
         "raSec": "47.6",
@@ -1952,11 +1999,12 @@ const stars = [
         "decDeg": "15",
         "decMin": "37",
         "decSec": "39",
-        "magnitude": "3.65",
-        "constellation": "Taurus (おうし座)"
+        "magnitude": "3.65"
     },
     {
         "starName": "61δ1Tau",
+        "starLabel": "61δ1",
+        "constellation": "Taurus (おうし座)",
         "raHour": "4",
         "raMin": "22",
         "raSec": "56.1",
@@ -1964,11 +2012,12 @@ const stars = [
         "decDeg": "17",
         "decMin": "32",
         "decSec": "33",
-        "magnitude": "3.76",
-        "constellation": "Taurus (おうし座)"
+        "magnitude": "3.76"
     },
     {
         "starName": "66Tau",
+        "starLabel": "66",
+        "constellation": "Taurus (おうし座)",
         "raHour": "4",
         "raMin": "23",
         "raSec": "51.9",
@@ -1976,11 +2025,12 @@ const stars = [
         "decDeg": "9",
         "decMin": "27",
         "decSec": "39",
-        "magnitude": "5.12",
-        "constellation": "Taurus (おうし座)"
+        "magnitude": "5.12"
     },
     {
         "starName": "65κ1Tau",
+        "starLabel": "65κ1",
+        "constellation": "Taurus (おうし座)",
         "raHour": "4",
         "raMin": "25",
         "raSec": "22.1",
@@ -1988,11 +2038,12 @@ const stars = [
         "decDeg": "22",
         "decMin": "17",
         "decSec": "38",
-        "magnitude": "4.22",
-        "constellation": "Taurus (おうし座)"
+        "magnitude": "4.22"
     },
     {
         "starName": "68δ3Tau",
+        "starLabel": "68δ3",
+        "constellation": "Taurus (おうし座)",
         "raHour": "4",
         "raMin": "25",
         "raSec": "29.4",
@@ -2000,11 +2051,12 @@ const stars = [
         "decDeg": "17",
         "decMin": "55",
         "decSec": "41",
-        "magnitude": "4.29",
-        "constellation": "Taurus (おうし座)"
+        "magnitude": "4.29"
     },
     {
         "starName": "74εTau",
+        "starLabel": "74ε",
+        "constellation": "Taurus (おうし座)",
         "raHour": "4",
         "raMin": "28",
         "raSec": "37",
@@ -2012,11 +2064,12 @@ const stars = [
         "decDeg": "19",
         "decMin": "10",
         "decSec": "49",
-        "magnitude": "3.53",
-        "constellation": "Taurus (おうし座)"
+        "magnitude": "3.53"
     },
     {
         "starName": "78θ2Tau",
+        "starLabel": "78θ2",
+        "constellation": "Taurus (おうし座)",
         "raHour": "4",
         "raMin": "28",
         "raSec": "39.7",
@@ -2024,11 +2077,12 @@ const stars = [
         "decDeg": "15",
         "decMin": "52",
         "decSec": "15",
-        "magnitude": "3.4",
-        "constellation": "Taurus (おうし座)"
+        "magnitude": "3.4"
     },
     {
         "starName": "87αTau",
+        "starLabel": "87α",
+        "constellation": "Taurus (おうし座)",
         "raHour": "4",
         "raMin": "35",
         "raSec": "55.2",
@@ -2036,11 +2090,12 @@ const stars = [
         "decDeg": "16",
         "decMin": "30",
         "decSec": "33",
-        "magnitude": "0.85",
-        "constellation": "Taurus (おうし座)"
+        "magnitude": "0.85"
     },
     {
         "starName": "88Tau",
+        "starLabel": "88",
+        "constellation": "Taurus (おうし座)",
         "raHour": "4",
         "raMin": "35",
         "raSec": "39.3",
@@ -2048,11 +2103,12 @@ const stars = [
         "decDeg": "10",
         "decMin": "9",
         "decSec": "39",
-        "magnitude": "4.25",
-        "constellation": "Taurus (おうし座)"
+        "magnitude": "4.25"
     },
     {
         "starName": "90Tau",
+        "starLabel": "90",
+        "constellation": "Taurus (おうし座)",
         "raHour": "4",
         "raMin": "38",
         "raSec": "9.5",
@@ -2060,11 +2116,12 @@ const stars = [
         "decDeg": "12",
         "decMin": "30",
         "decSec": "39",
-        "magnitude": "4.27",
-        "constellation": "Taurus (おうし座)"
+        "magnitude": "4.27"
     },
     {
         "starName": "94τTau",
+        "starLabel": "94τ",
+        "constellation": "Taurus (おうし座)",
         "raHour": "4",
         "raMin": "42",
         "raSec": "14.7",
@@ -2072,11 +2129,12 @@ const stars = [
         "decDeg": "22",
         "decMin": "57",
         "decSec": "25",
-        "magnitude": "4.28",
-        "constellation": "Taurus (おうし座)"
+        "magnitude": "4.28"
     },
     {
         "starName": "112βTau",
+        "starLabel": "112β",
+        "constellation": "Taurus (おうし座)",
         "raHour": "5",
         "raMin": "26",
         "raSec": "17.5",
@@ -2084,11 +2142,12 @@ const stars = [
         "decDeg": "28",
         "decMin": "36",
         "decSec": "27",
-        "magnitude": "1.65",
-        "constellation": "Taurus (おうし座)"
+        "magnitude": "1.65"
     },
     {
         "starName": "123ζTau",
+        "starLabel": "123ζ",
+        "constellation": "Taurus (おうし座)",
         "raHour": "5",
         "raMin": "37",
         "raSec": "38.7",
@@ -2096,23 +2155,12 @@ const stars = [
         "decDeg": "21",
         "decMin": "8",
         "decSec": "33",
-        "magnitude": "3",
-        "constellation": "Taurus (おうし座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "3"
     },
     {
         "starName": "1ζCMa",
+        "starLabel": "1ζ",
+        "constellation": "Canis Major (おおいぬ座)",
         "raHour": "6",
         "raMin": "20",
         "raSec": "18.8",
@@ -2120,11 +2168,12 @@ const stars = [
         "decDeg": "30",
         "decMin": "3",
         "decSec": "48",
-        "magnitude": "3.02",
-        "constellation": "Canis Major (おおいぬ座)"
+        "magnitude": "3.02"
     },
     {
         "starName": "2βCMa",
+        "starLabel": "2β",
+        "constellation": "Canis Major (おおいぬ座)",
         "raHour": "6",
         "raMin": "22",
         "raSec": "42",
@@ -2132,11 +2181,12 @@ const stars = [
         "decDeg": "17",
         "decMin": "57",
         "decSec": "21",
-        "magnitude": "1.98",
-        "constellation": "Canis Major (おおいぬ座)"
+        "magnitude": "1.98"
     },
     {
         "starName": "λCMa",
+        "starLabel": "λ",
+        "constellation": "Canis Major (おおいぬ座)",
         "raHour": "6",
         "raMin": "28",
         "raSec": "10.1",
@@ -2144,11 +2194,12 @@ const stars = [
         "decDeg": "32",
         "decMin": "34",
         "decSec": "48",
-        "magnitude": "4.48",
-        "constellation": "Canis Major (おおいぬ座)"
+        "magnitude": "4.48"
     },
     {
         "starName": "4ξ1CMa",
+        "starLabel": "4ξ 1",
+        "constellation": "Canis Major (おおいぬ座)",
         "raHour": "6",
         "raMin": "31",
         "raSec": "51.3",
@@ -2156,11 +2207,12 @@ const stars = [
         "decDeg": "23",
         "decMin": "25",
         "decSec": "6",
-        "magnitude": "4.33",
-        "constellation": "Canis Major (おおいぬ座)"
+        "magnitude": "4.33"
     },
     {
         "starName": "7ν2CMa",
+        "starLabel": "7ν 2",
+        "constellation": "Canis Major (おおいぬ座)",
         "raHour": "6",
         "raMin": "36",
         "raSec": "41",
@@ -2168,11 +2220,12 @@ const stars = [
         "decDeg": "19",
         "decMin": "15",
         "decSec": "21",
-        "magnitude": "3.95",
-        "constellation": "Canis Major (おおいぬ座)"
+        "magnitude": "3.95"
     },
     {
         "starName": "9αCMa",
+        "starLabel": "9α",
+        "constellation": "Canis Major (おおいぬ座)",
         "raHour": "6",
         "raMin": "45",
         "raSec": "8.9",
@@ -2180,11 +2233,12 @@ const stars = [
         "decDeg": "16",
         "decMin": "42",
         "decSec": "58",
-        "magnitude": "-1.46",
-        "constellation": "Canis Major (おおいぬ座)"
+        "magnitude": "-1.46"
     },
     {
         "starName": "13κCMa",
+        "starLabel": "13κ",
+        "constellation": "Canis Major (おおいぬ座)",
         "raHour": "6",
         "raMin": "49",
         "raSec": "50.5",
@@ -2192,11 +2246,12 @@ const stars = [
         "decDeg": "32",
         "decMin": "30",
         "decSec": "31",
-        "magnitude": "3.96",
-        "constellation": "Canis Major (おおいぬ座)"
+        "magnitude": "3.96"
     },
     {
         "starName": "14θCMa",
+        "starLabel": "14θ",
+        "constellation": "Canis Major (おおいぬ座)",
         "raHour": "6",
         "raMin": "54",
         "raSec": "11.4",
@@ -2204,11 +2259,12 @@ const stars = [
         "decDeg": "12",
         "decMin": "2",
         "decSec": "19",
-        "magnitude": "4.07",
-        "constellation": "Canis Major (おおいぬ座)"
+        "magnitude": "4.07"
     },
     {
         "starName": "16ο1CMa",
+        "starLabel": "16ο1",
+        "constellation": "Canis Major (おおいぬ座)",
         "raHour": "6",
         "raMin": "54",
         "raSec": "7.9",
@@ -2216,11 +2272,12 @@ const stars = [
         "decDeg": "24",
         "decMin": "11",
         "decSec": "2",
-        "magnitude": "3.87",
-        "constellation": "Canis Major (おおいぬ座)"
+        "magnitude": "3.87"
     },
     {
         "starName": "20ιCMa",
+        "starLabel": "20ι",
+        "constellation": "Canis Major (おおいぬ座)",
         "raHour": "6",
         "raMin": "56",
         "raSec": "8.2",
@@ -2228,11 +2285,12 @@ const stars = [
         "decDeg": "17",
         "decMin": "3",
         "decSec": "15",
-        "magnitude": "4.37",
-        "constellation": "Canis Major (おおいぬ座)"
+        "magnitude": "4.37"
     },
     {
         "starName": "21εCMa",
+        "starLabel": "21ε",
+        "constellation": "Canis Major (おおいぬ座)",
         "raHour": "6",
         "raMin": "58",
         "raSec": "37.5",
@@ -2240,11 +2298,12 @@ const stars = [
         "decDeg": "28",
         "decMin": "58",
         "decSec": "20",
-        "magnitude": "1.5",
-        "constellation": "Canis Major (おおいぬ座)"
+        "magnitude": "1.5"
     },
     {
         "starName": "22σCMa",
+        "starLabel": "22σ",
+        "constellation": "Canis Major (おおいぬ座)",
         "raHour": "7",
         "raMin": "1",
         "raSec": "43.1",
@@ -2252,11 +2311,12 @@ const stars = [
         "decDeg": "27",
         "decMin": "56",
         "decSec": "5",
-        "magnitude": "3.47",
-        "constellation": "Canis Major (おおいぬ座)"
+        "magnitude": "3.47"
     },
     {
         "starName": "24ο2CMa",
+        "starLabel": "24ο2",
+        "constellation": "Canis Major (おおいぬ座)",
         "raHour": "7",
         "raMin": "3",
         "raSec": "1.5",
@@ -2264,11 +2324,12 @@ const stars = [
         "decDeg": "23",
         "decMin": "50",
         "decSec": "0",
-        "magnitude": "3.02",
-        "constellation": "Canis Major (おおいぬ座)"
+        "magnitude": "3.02"
     },
     {
         "starName": "23γCMa",
+        "starLabel": "23γ",
+        "constellation": "Canis Major (おおいぬ座)",
         "raHour": "7",
         "raMin": "3",
         "raSec": "45.5",
@@ -2276,11 +2337,12 @@ const stars = [
         "decDeg": "15",
         "decMin": "38",
         "decSec": "0",
-        "magnitude": "4.12",
-        "constellation": "Canis Major (おおいぬ座)"
+        "magnitude": "4.12"
     },
     {
         "starName": "25δCMa",
+        "starLabel": "25δ",
+        "constellation": "Canis Major (おおいぬ座)",
         "raHour": "7",
         "raMin": "8",
         "raSec": "23.5",
@@ -2288,11 +2350,12 @@ const stars = [
         "decDeg": "26",
         "decMin": "23",
         "decSec": "36",
-        "magnitude": "1.84",
-        "constellation": "Canis Major (おおいぬ座)"
+        "magnitude": "1.84"
     },
     {
         "starName": "28ωCMa",
+        "starLabel": "28ω",
+        "constellation": "Canis Major (おおいぬ座)",
         "raHour": "7",
         "raMin": "14",
         "raSec": "48.7",
@@ -2300,11 +2363,12 @@ const stars = [
         "decDeg": "26",
         "decMin": "46",
         "decSec": "22",
-        "magnitude": "3.85",
-        "constellation": "Canis Major (おおいぬ座)"
+        "magnitude": "3.85"
     },
     {
         "starName": "31ηCMa",
+        "starLabel": "31η",
+        "constellation": "Canis Major (おおいぬ座)",
         "raHour": "7",
         "raMin": "24",
         "raSec": "5.7",
@@ -2312,23 +2376,12 @@ const stars = [
         "decDeg": "29",
         "decMin": "18",
         "decSec": "11",
-        "magnitude": "2.45",
-        "constellation": "Canis Major (おおいぬ座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "2.45"
     },
     {
         "starName": "ιLup",
+        "starLabel": "ι",
+        "constellation": "Lupus (おおかみ座)",
         "raHour": "14",
         "raMin": "19",
         "raSec": "24.2",
@@ -2336,11 +2389,12 @@ const stars = [
         "decDeg": "46",
         "decMin": "3",
         "decSec": "28",
-        "magnitude": "3.55",
-        "constellation": "Lupus (おおかみ座)"
+        "magnitude": "3.55"
     },
     {
         "starName": "ρLup",
+        "starLabel": "ρ",
+        "constellation": "Lupus (おおかみ座)",
         "raHour": "14",
         "raMin": "37",
         "raSec": "53.2",
@@ -2348,11 +2402,12 @@ const stars = [
         "decDeg": "49",
         "decMin": "25",
         "decSec": "33",
-        "magnitude": "4.05",
-        "constellation": "Lupus (おおかみ座)"
+        "magnitude": "4.05"
     },
     {
         "starName": "αLup",
+        "starLabel": "α",
+        "constellation": "Lupus (おおかみ座)",
         "raHour": "14",
         "raMin": "41",
         "raSec": "55.8",
@@ -2360,11 +2415,12 @@ const stars = [
         "decDeg": "47",
         "decMin": "23",
         "decSec": "18",
-        "magnitude": "2.3",
-        "constellation": "Lupus (おおかみ座)"
+        "magnitude": "2.3"
     },
     {
         "starName": "βLup",
+        "starLabel": "β",
+        "constellation": "Lupus (おおかみ座)",
         "raHour": "14",
         "raMin": "58",
         "raSec": "31.9",
@@ -2372,11 +2428,12 @@ const stars = [
         "decDeg": "43",
         "decMin": "8",
         "decSec": "2",
-        "magnitude": "2.68",
-        "constellation": "Lupus (おおかみ座)"
+        "magnitude": "2.68"
     },
     {
         "starName": "ζLup",
+        "starLabel": "ζ",
+        "constellation": "Lupus (おおかみ座)",
         "raHour": "15",
         "raMin": "12",
         "raSec": "17.1",
@@ -2384,11 +2441,12 @@ const stars = [
         "decDeg": "52",
         "decMin": "5",
         "decSec": "57",
-        "magnitude": "3.41",
-        "constellation": "Lupus (おおかみ座)"
+        "magnitude": "3.41"
     },
     {
         "starName": "μLup",
+        "starLabel": "μ",
+        "constellation": "Lupus (おおかみ座)",
         "raHour": "15",
         "raMin": "18",
         "raSec": "32",
@@ -2396,11 +2454,12 @@ const stars = [
         "decDeg": "47",
         "decMin": "52",
         "decSec": "30",
-        "magnitude": "4.27",
-        "constellation": "Lupus (おおかみ座)"
+        "magnitude": "4.27"
     },
     {
         "starName": "2Lup",
+        "starLabel": "2",
+        "constellation": "Lupus (おおかみ座)",
         "raHour": "15",
         "raMin": "17",
         "raSec": "49.9",
@@ -2408,11 +2467,12 @@ const stars = [
         "decDeg": "30",
         "decMin": "8",
         "decSec": "56",
-        "magnitude": "4.34",
-        "constellation": "Lupus (おおかみ座)"
+        "magnitude": "4.34"
     },
     {
         "starName": "δLup",
+        "starLabel": "δ",
+        "constellation": "Lupus (おおかみ座)",
         "raHour": "15",
         "raMin": "21",
         "raSec": "22.3",
@@ -2420,11 +2480,12 @@ const stars = [
         "decDeg": "40",
         "decMin": "38",
         "decSec": "51",
-        "magnitude": "3.22",
-        "constellation": "Lupus (おおかみ座)"
+        "magnitude": "3.22"
     },
     {
         "starName": "φ1Lup",
+        "starLabel": "φ1",
+        "constellation": "Lupus (おおかみ座)",
         "raHour": "15",
         "raMin": "21",
         "raSec": "48.4",
@@ -2432,11 +2493,12 @@ const stars = [
         "decDeg": "36",
         "decMin": "15",
         "decSec": "41",
-        "magnitude": "3.56",
-        "constellation": "Lupus (おおかみ座)"
+        "magnitude": "3.56"
     },
     {
         "starName": "εLup",
+        "starLabel": "ε",
+        "constellation": "Lupus (おおかみ座)",
         "raHour": "15",
         "raMin": "22",
         "raSec": "40.9",
@@ -2444,11 +2506,12 @@ const stars = [
         "decDeg": "44",
         "decMin": "41",
         "decSec": "22",
-        "magnitude": "3.37",
-        "constellation": "Lupus (おおかみ座)"
+        "magnitude": "3.37"
     },
     {
         "starName": "γLup",
+        "starLabel": "γ",
+        "constellation": "Lupus (おおかみ座)",
         "raHour": "15",
         "raMin": "35",
         "raSec": "8.5",
@@ -2456,11 +2519,12 @@ const stars = [
         "decDeg": "41",
         "decMin": "10",
         "decSec": "1",
-        "magnitude": "2.78",
-        "constellation": "Lupus (おおかみ座)"
+        "magnitude": "2.78"
     },
     {
         "starName": "5χLup",
+        "starLabel": "5χ",
+        "constellation": "Lupus (おおかみ座)",
         "raHour": "15",
         "raMin": "50",
         "raSec": "57.5",
@@ -2468,11 +2532,12 @@ const stars = [
         "decDeg": "33",
         "decMin": "37",
         "decSec": "38",
-        "magnitude": "3.95",
-        "constellation": "Lupus (おおかみ座)"
+        "magnitude": "3.95"
     },
     {
         "starName": "ηLup",
+        "starLabel": "η",
+        "constellation": "Lupus (おおかみ座)",
         "raHour": "16",
         "raMin": "0",
         "raSec": "7.3",
@@ -2480,11 +2545,12 @@ const stars = [
         "decDeg": "38",
         "decMin": "23",
         "decSec": "49",
-        "magnitude": "3.41",
-        "constellation": "Lupus (おおかみ座)"
+        "magnitude": "3.41"
     },
     {
         "starName": "θLup",
+        "starLabel": "θ",
+        "constellation": "Lupus (おおかみ座)",
         "raHour": "16",
         "raMin": "6",
         "raSec": "35.5",
@@ -2492,23 +2558,12 @@ const stars = [
         "decDeg": "36",
         "decMin": "48",
         "decSec": "8",
-        "magnitude": "4.23",
-        "constellation": "Lupus (おおかみ座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "4.23"
     },
     {
         "starName": "1οUMa",
+        "starLabel": "1ο",
+        "constellation": "Ursa Major (おおぐま座)",
         "raHour": "8",
         "raMin": "30",
         "raSec": "15.9",
@@ -2516,11 +2571,12 @@ const stars = [
         "decDeg": "60",
         "decMin": "43",
         "decSec": "5",
-        "magnitude": "3.36",
-        "constellation": "Ursa Major (おおぐま座)"
+        "magnitude": "3.36"
     },
     {
         "starName": "9ιUMa",
+        "starLabel": "9ι",
+        "constellation": "Ursa Major (おおぐま座)",
         "raHour": "8",
         "raMin": "59",
         "raSec": "12.4",
@@ -2528,11 +2584,12 @@ const stars = [
         "decDeg": "48",
         "decMin": "2",
         "decSec": "30",
-        "magnitude": "3.14",
-        "constellation": "Ursa Major (おおぐま座)"
+        "magnitude": "3.14"
     },
     {
         "starName": "12κUMa",
+        "starLabel": "12κ",
+        "constellation": "Ursa Major (おおぐま座)",
         "raHour": "9",
         "raMin": "3",
         "raSec": "37.5",
@@ -2540,11 +2597,12 @@ const stars = [
         "decDeg": "47",
         "decMin": "9",
         "decSec": "24",
-        "magnitude": "3.6",
-        "constellation": "Ursa Major (おおぐま座)"
+        "magnitude": "3.6"
     },
     {
         "starName": "13σ2UMa",
+        "starLabel": "13σ2",
+        "constellation": "Ursa Major (おおぐま座)",
         "raHour": "9",
         "raMin": "10",
         "raSec": "23.2",
@@ -2552,11 +2610,12 @@ const stars = [
         "decDeg": "67",
         "decMin": "8",
         "decSec": "5",
-        "magnitude": "4.8",
-        "constellation": "Ursa Major (おおぐま座)"
+        "magnitude": "4.8"
     },
     {
         "starName": "23UMa",
+        "starLabel": "23",
+        "constellation": "Ursa Major (おおぐま座)",
         "raHour": "9",
         "raMin": "31",
         "raSec": "31.7",
@@ -2564,11 +2623,12 @@ const stars = [
         "decDeg": "63",
         "decMin": "3",
         "decSec": "43",
-        "magnitude": "3.67",
-        "constellation": "Ursa Major (おおぐま座)"
+        "magnitude": "3.67"
     },
     {
         "starName": "25θUMa",
+        "starLabel": "25θ",
+        "constellation": "Ursa Major (おおぐま座)",
         "raHour": "9",
         "raMin": "32",
         "raSec": "51.4",
@@ -2576,11 +2636,12 @@ const stars = [
         "decDeg": "51",
         "decMin": "40",
         "decSec": "38",
-        "magnitude": "3.17",
-        "constellation": "Ursa Major (おおぐま座)"
+        "magnitude": "3.17"
     },
     {
         "starName": "29υUMa",
+        "starLabel": "29υ",
+        "constellation": "Ursa Major (おおぐま座)",
         "raHour": "9",
         "raMin": "50",
         "raSec": "59.4",
@@ -2588,11 +2649,12 @@ const stars = [
         "decDeg": "59",
         "decMin": "2",
         "decSec": "19",
-        "magnitude": "3.8",
-        "constellation": "Ursa Major (おおぐま座)"
+        "magnitude": "3.8"
     },
     {
         "starName": "30φUMa",
+        "starLabel": "30φ",
+        "constellation": "Ursa Major (おおぐま座)",
         "raHour": "9",
         "raMin": "52",
         "raSec": "6.4",
@@ -2600,11 +2662,12 @@ const stars = [
         "decDeg": "54",
         "decMin": "3",
         "decSec": "52",
-        "magnitude": "4.59",
-        "constellation": "Ursa Major (おおぐま座)"
+        "magnitude": "4.59"
     },
     {
         "starName": "33λUMa",
+        "starLabel": "33λ",
+        "constellation": "Ursa Major (おおぐま座)",
         "raHour": "10",
         "raMin": "17",
         "raSec": "5.8",
@@ -2612,11 +2675,12 @@ const stars = [
         "decDeg": "42",
         "decMin": "54",
         "decSec": "52",
-        "magnitude": "3.45",
-        "constellation": "Ursa Major (おおぐま座)"
+        "magnitude": "3.45"
     },
     {
         "starName": "34μUMa",
+        "starLabel": "34μ",
+        "constellation": "Ursa Major (おおぐま座)",
         "raHour": "10",
         "raMin": "22",
         "raSec": "19.7",
@@ -2624,11 +2688,12 @@ const stars = [
         "decDeg": "41",
         "decMin": "29",
         "decSec": "58",
-        "magnitude": "3.05",
-        "constellation": "Ursa Major (おおぐま座)"
+        "magnitude": "3.05"
     },
     {
         "starName": "48βUMa",
+        "starLabel": "48β",
+        "constellation": "Ursa Major (おおぐま座)",
         "raHour": "11",
         "raMin": "1",
         "raSec": "50.5",
@@ -2636,11 +2701,12 @@ const stars = [
         "decDeg": "56",
         "decMin": "22",
         "decSec": "57",
-        "magnitude": "2.37",
-        "constellation": "Ursa Major (おおぐま座)"
+        "magnitude": "2.37"
     },
     {
         "starName": "50αUMa",
+        "starLabel": "50α",
+        "constellation": "Ursa Major (おおぐま座)",
         "raHour": "11",
         "raMin": "3",
         "raSec": "43.7",
@@ -2648,11 +2714,12 @@ const stars = [
         "decDeg": "61",
         "decMin": "45",
         "decSec": "3",
-        "magnitude": "1.79",
-        "constellation": "Ursa Major (おおぐま座)"
+        "magnitude": "1.79"
     },
     {
         "starName": "52ψUMa",
+        "starLabel": "52ψ",
+        "constellation": "Ursa Major (おおぐま座)",
         "raHour": "11",
         "raMin": "9",
         "raSec": "39.8",
@@ -2660,11 +2727,12 @@ const stars = [
         "decDeg": "44",
         "decMin": "29",
         "decSec": "55",
-        "magnitude": "3.01",
-        "constellation": "Ursa Major (おおぐま座)"
+        "magnitude": "3.01"
     },
     {
         "starName": "53ξUMa",
+        "starLabel": "53ξ",
+        "constellation": "Ursa Major (おおぐま座)",
         "raHour": "11",
         "raMin": "18",
         "raSec": "11",
@@ -2672,11 +2740,12 @@ const stars = [
         "decDeg": "31",
         "decMin": "31",
         "decSec": "45",
-        "magnitude": "4.41",
-        "constellation": "Ursa Major (おおぐま座)"
+        "magnitude": "4.41"
     },
     {
         "starName": "54νUMa",
+        "starLabel": "54ν",
+        "constellation": "Ursa Major (おおぐま座)",
         "raHour": "11",
         "raMin": "18",
         "raSec": "28.7",
@@ -2684,11 +2753,12 @@ const stars = [
         "decDeg": "33",
         "decMin": "5",
         "decSec": "39",
-        "magnitude": "3.48",
-        "constellation": "Ursa Major (おおぐま座)"
+        "magnitude": "3.48"
     },
     {
         "starName": "57UMa",
+        "starLabel": "57",
+        "constellation": "Ursa Major (おおぐま座)",
         "raHour": "11",
         "raMin": "29",
         "raSec": "4.2",
@@ -2696,11 +2766,12 @@ const stars = [
         "decDeg": "39",
         "decMin": "20",
         "decSec": "13",
-        "magnitude": "5.31",
-        "constellation": "Ursa Major (おおぐま座)"
+        "magnitude": "5.31"
     },
     {
         "starName": "63χUMa",
+        "starLabel": "63χ",
+        "constellation": "Ursa Major (おおぐま座)",
         "raHour": "11",
         "raMin": "46",
         "raSec": "3",
@@ -2708,11 +2779,12 @@ const stars = [
         "decDeg": "47",
         "decMin": "46",
         "decSec": "46",
-        "magnitude": "3.71",
-        "constellation": "Ursa Major (おおぐま座)"
+        "magnitude": "3.71"
     },
     {
         "starName": "64γUMa",
+        "starLabel": "64γ",
+        "constellation": "Ursa Major (おおぐま座)",
         "raHour": "11",
         "raMin": "53",
         "raSec": "49.8",
@@ -2720,11 +2792,12 @@ const stars = [
         "decDeg": "53",
         "decMin": "41",
         "decSec": "41",
-        "magnitude": "2.44",
-        "constellation": "Ursa Major (おおぐま座)"
+        "magnitude": "2.44"
     },
     {
         "starName": "69δUMa",
+        "starLabel": "69δ",
+        "constellation": "Ursa Major (おおぐま座)",
         "raHour": "12",
         "raMin": "15",
         "raSec": "25.6",
@@ -2732,11 +2805,12 @@ const stars = [
         "decDeg": "57",
         "decMin": "1",
         "decSec": "57",
-        "magnitude": "3.31",
-        "constellation": "Ursa Major (おおぐま座)"
+        "magnitude": "3.31"
     },
     {
         "starName": "77εUMa",
+        "starLabel": "77ε",
+        "constellation": "Ursa Major (おおぐま座)",
         "raHour": "12",
         "raMin": "54",
         "raSec": "1.7",
@@ -2744,11 +2818,12 @@ const stars = [
         "decDeg": "55",
         "decMin": "57",
         "decSec": "35",
-        "magnitude": "1.77",
-        "constellation": "Ursa Major (おおぐま座)"
+        "magnitude": "1.77"
     },
     {
         "starName": "79ζUMa",
+        "starLabel": "79ζ",
+        "constellation": "Ursa Major (おおぐま座)",
         "raHour": "13",
         "raMin": "23",
         "raSec": "55.5",
@@ -2756,11 +2831,12 @@ const stars = [
         "decDeg": "54",
         "decMin": "55",
         "decSec": "31",
-        "magnitude": "2.27",
-        "constellation": "Ursa Major (おおぐま座)"
+        "magnitude": "2.27"
     },
     {
         "starName": "85ηUMa",
+        "starLabel": "85η",
+        "constellation": "Ursa Major (おおぐま座)",
         "raHour": "13",
         "raMin": "47",
         "raSec": "32.4",
@@ -2768,23 +2844,12 @@ const stars = [
         "decDeg": "49",
         "decMin": "18",
         "decSec": "48",
-        "magnitude": "1.86",
-        "constellation": "Ursa Major (おおぐま座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "1.86"
     },
     {
         "starName": "3νVir",
+        "starLabel": "3ν",
+        "constellation": "Virgo (おとめ座)",
         "raHour": "11",
         "raMin": "45",
         "raSec": "51.6",
@@ -2792,11 +2857,12 @@ const stars = [
         "decDeg": "6",
         "decMin": "31",
         "decSec": "46",
-        "magnitude": "4.03",
-        "constellation": "Virgo (おとめ座)"
+        "magnitude": "4.03"
     },
     {
         "starName": "5βVir",
+        "starLabel": "5β",
+        "constellation": "Virgo (おとめ座)",
         "raHour": "11",
         "raMin": "50",
         "raSec": "41.7",
@@ -2804,11 +2870,12 @@ const stars = [
         "decDeg": "1",
         "decMin": "45",
         "decSec": "53",
-        "magnitude": "3.61",
-        "constellation": "Virgo (おとめ座)"
+        "magnitude": "3.61"
     },
     {
         "starName": "9οVir",
+        "starLabel": "9ο",
+        "constellation": "Virgo (おとめ座)",
         "raHour": "12",
         "raMin": "5",
         "raSec": "12.5",
@@ -2816,11 +2883,12 @@ const stars = [
         "decDeg": "8",
         "decMin": "43",
         "decSec": "59",
-        "magnitude": "4.12",
-        "constellation": "Virgo (おとめ座)"
+        "magnitude": "4.12"
     },
     {
         "starName": "15ηVir",
+        "starLabel": "15η",
+        "constellation": "Virgo (おとめ座)",
         "raHour": "12",
         "raMin": "19",
         "raSec": "54.4",
@@ -2828,11 +2896,12 @@ const stars = [
         "decDeg": "0",
         "decMin": "40",
         "decSec": "1",
-        "magnitude": "3.89",
-        "constellation": "Virgo (おとめ座)"
+        "magnitude": "3.89"
     },
     {
         "starName": "29γVir",
+        "starLabel": "29γ",
+        "constellation": "Virgo (おとめ座)",
         "raHour": "12",
         "raMin": "41",
         "raSec": "39.6",
@@ -2840,11 +2909,12 @@ const stars = [
         "decDeg": "1",
         "decMin": "26",
         "decSec": "58",
-        "magnitude": "3.65",
-        "constellation": "Virgo (おとめ座)"
+        "magnitude": "3.65"
     },
     {
         "starName": "30ρVir",
+        "starLabel": "30ρ",
+        "constellation": "Virgo (おとめ座)",
         "raHour": "12",
         "raMin": "41",
         "raSec": "53.1",
@@ -2852,11 +2922,12 @@ const stars = [
         "decDeg": "10",
         "decMin": "14",
         "decSec": "8",
-        "magnitude": "4.88",
-        "constellation": "Virgo (おとめ座)"
+        "magnitude": "4.88"
     },
     {
         "starName": "43δVir",
+        "starLabel": "43δ",
+        "constellation": "Virgo (おとめ座)",
         "raHour": "12",
         "raMin": "55",
         "raSec": "36.2",
@@ -2864,11 +2935,12 @@ const stars = [
         "decDeg": "3",
         "decMin": "23",
         "decSec": "51",
-        "magnitude": "3.38",
-        "constellation": "Virgo (おとめ座)"
+        "magnitude": "3.38"
     },
     {
         "starName": "47εVir",
+        "starLabel": "47ε",
+        "constellation": "Virgo (おとめ座)",
         "raHour": "13",
         "raMin": "2",
         "raSec": "10.6",
@@ -2876,11 +2948,12 @@ const stars = [
         "decDeg": "10",
         "decMin": "57",
         "decSec": "33",
-        "magnitude": "2.83",
-        "constellation": "Virgo (おとめ座)"
+        "magnitude": "2.83"
     },
     {
         "starName": "51θVir",
+        "starLabel": "51θ",
+        "constellation": "Virgo (おとめ座)",
         "raHour": "13",
         "raMin": "9",
         "raSec": "57",
@@ -2888,11 +2961,12 @@ const stars = [
         "decDeg": "5",
         "decMin": "32",
         "decSec": "20",
-        "magnitude": "4.38",
-        "constellation": "Virgo (おとめ座)"
+        "magnitude": "4.38"
     },
     {
         "starName": "67αVir",
+        "starLabel": "67α",
+        "constellation": "Virgo (おとめ座)",
         "raHour": "13",
         "raMin": "25",
         "raSec": "11.6",
@@ -2900,11 +2974,12 @@ const stars = [
         "decDeg": "11",
         "decMin": "9",
         "decSec": "41",
-        "magnitude": "0.98",
-        "constellation": "Virgo (おとめ座)"
+        "magnitude": "0.98"
     },
     {
         "starName": "79ζVir",
+        "starLabel": "79ζ",
+        "constellation": "Virgo (おとめ座)",
         "raHour": "13",
         "raMin": "34",
         "raSec": "41.6",
@@ -2912,11 +2987,12 @@ const stars = [
         "decDeg": "0",
         "decMin": "35",
         "decSec": "45",
-        "magnitude": "3.37",
-        "constellation": "Virgo (おとめ座)"
+        "magnitude": "3.37"
     },
     {
         "starName": "93τVir",
+        "starLabel": "93τ",
+        "constellation": "Virgo (おとめ座)",
         "raHour": "14",
         "raMin": "1",
         "raSec": "38.8",
@@ -2924,11 +3000,12 @@ const stars = [
         "decDeg": "1",
         "decMin": "32",
         "decSec": "40",
-        "magnitude": "4.26",
-        "constellation": "Virgo (おとめ座)"
+        "magnitude": "4.26"
     },
     {
         "starName": "98κVir",
+        "starLabel": "98κ",
+        "constellation": "Virgo (おとめ座)",
         "raHour": "14",
         "raMin": "12",
         "raSec": "53.8",
@@ -2936,11 +3013,12 @@ const stars = [
         "decDeg": "10",
         "decMin": "16",
         "decSec": "25",
-        "magnitude": "4.19",
-        "constellation": "Virgo (おとめ座)"
+        "magnitude": "4.19"
     },
     {
         "starName": "99ιVir",
+        "starLabel": "99ι",
+        "constellation": "Virgo (おとめ座)",
         "raHour": "14",
         "raMin": "16",
         "raSec": "0.9",
@@ -2948,11 +3026,12 @@ const stars = [
         "decDeg": "6",
         "decMin": "0",
         "decSec": "2",
-        "magnitude": "4.08",
-        "constellation": "Virgo (おとめ座)"
+        "magnitude": "4.08"
     },
     {
         "starName": "107μVir",
+        "starLabel": "107μ",
+        "constellation": "Virgo (おとめ座)",
         "raHour": "14",
         "raMin": "43",
         "raSec": "3.6",
@@ -2960,11 +3039,12 @@ const stars = [
         "decDeg": "5",
         "decMin": "39",
         "decSec": "30",
-        "magnitude": "3.88",
-        "constellation": "Virgo (おとめ座)"
+        "magnitude": "3.88"
     },
     {
         "starName": "109Vir",
+        "starLabel": "109",
+        "constellation": "Virgo (おとめ座)",
         "raHour": "14",
         "raMin": "46",
         "raSec": "14.9",
@@ -2972,23 +3052,12 @@ const stars = [
         "decDeg": "1",
         "decMin": "53",
         "decSec": "34",
-        "magnitude": "3.72",
-        "constellation": "Virgo (おとめ座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "3.72"
     },
     {
         "starName": "5γ2Ari",
+        "starLabel": "5γ2",
+        "constellation": "Aries (おひつじ座)",
         "raHour": "1",
         "raMin": "53",
         "raSec": "31.8",
@@ -2996,11 +3065,12 @@ const stars = [
         "decDeg": "19",
         "decMin": "17",
         "decSec": "37",
-        "magnitude": "4.75",
-        "constellation": "Aries (おひつじ座)"
+        "magnitude": "4.75"
     },
     {
         "starName": "6βAri",
+        "starLabel": "6β",
+        "constellation": "Aries (おひつじ座)",
         "raHour": "1",
         "raMin": "54",
         "raSec": "38.4",
@@ -3008,11 +3078,12 @@ const stars = [
         "decDeg": "20",
         "decMin": "48",
         "decSec": "29",
-        "magnitude": "2.64",
-        "constellation": "Aries (おひつじ座)"
+        "magnitude": "2.64"
     },
     {
         "starName": "13αAri",
+        "starLabel": "13α",
+        "constellation": "Aries (おひつじ座)",
         "raHour": "2",
         "raMin": "7",
         "raSec": "10.4",
@@ -3020,11 +3091,12 @@ const stars = [
         "decDeg": "23",
         "decMin": "27",
         "decSec": "45",
-        "magnitude": "2",
-        "constellation": "Aries (おひつじ座)"
+        "magnitude": "2"
     },
     {
         "starName": "57δAri",
+        "starLabel": "57δ",
+        "constellation": "Aries (おひつじ座)",
         "raHour": "3",
         "raMin": "11",
         "raSec": "37.8",
@@ -3032,23 +3104,12 @@ const stars = [
         "decDeg": "19",
         "decMin": "43",
         "decSec": "36",
-        "magnitude": "4.35",
-        "constellation": "Aries (おひつじ座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "4.35"
     },
     {
         "starName": "1π3Ori",
+        "starLabel": "1π 3",
+        "constellation": "Orion (オリオン座)",
         "raHour": "4",
         "raMin": "49",
         "raSec": "50.4",
@@ -3056,11 +3117,12 @@ const stars = [
         "decDeg": "6",
         "decMin": "57",
         "decSec": "41",
-        "magnitude": "3.19",
-        "constellation": "Orion (オリオン座)"
+        "magnitude": "3.19"
     },
     {
         "starName": "2π2Ori",
+        "starLabel": "2π 2",
+        "constellation": "Orion (オリオン座)",
         "raHour": "4",
         "raMin": "50",
         "raSec": "36.7",
@@ -3068,11 +3130,12 @@ const stars = [
         "decDeg": "8",
         "decMin": "54",
         "decSec": "1",
-        "magnitude": "4.36",
-        "constellation": "Orion (オリオン座)"
+        "magnitude": "4.36"
     },
     {
         "starName": "3π4Ori",
+        "starLabel": "3π 4",
+        "constellation": "Orion (オリオン座)",
         "raHour": "4",
         "raMin": "51",
         "raSec": "12.4",
@@ -3080,11 +3143,12 @@ const stars = [
         "decDeg": "5",
         "decMin": "36",
         "decSec": "18",
-        "magnitude": "3.69",
-        "constellation": "Orion (オリオン座)"
+        "magnitude": "3.69"
     },
     {
         "starName": "8π5Ori",
+        "starLabel": "8π 5",
+        "constellation": "Orion (オリオン座)",
         "raHour": "4",
         "raMin": "54",
         "raSec": "15.1",
@@ -3092,11 +3156,12 @@ const stars = [
         "decDeg": "2",
         "decMin": "26",
         "decSec": "26",
-        "magnitude": "3.72",
-        "constellation": "Orion (オリオン座)"
+        "magnitude": "3.72"
     },
     {
         "starName": "9ο2Ori",
+        "starLabel": "9ο2",
+        "constellation": "Orion (オリオン座)",
         "raHour": "4",
         "raMin": "56",
         "raSec": "22.3",
@@ -3104,11 +3169,12 @@ const stars = [
         "decDeg": "13",
         "decMin": "30",
         "decSec": "52",
-        "magnitude": "4.07",
-        "constellation": "Orion (オリオン座)"
+        "magnitude": "4.07"
     },
     {
         "starName": "19βOri",
+        "starLabel": "19β",
+        "constellation": "Orion (オリオン座)",
         "raHour": "5",
         "raMin": "14",
         "raSec": "32.3",
@@ -3116,11 +3182,12 @@ const stars = [
         "decDeg": "8",
         "decMin": "12",
         "decSec": "6",
-        "magnitude": "0.12",
-        "constellation": "Orion (オリオン座)"
+        "magnitude": "0.12"
     },
     {
         "starName": "24γOri",
+        "starLabel": "24γ",
+        "constellation": "Orion (オリオン座)",
         "raHour": "5",
         "raMin": "25",
         "raSec": "7.9",
@@ -3128,11 +3195,12 @@ const stars = [
         "decDeg": "6",
         "decMin": "20",
         "decSec": "59",
-        "magnitude": "1.64",
-        "constellation": "Orion (オリオン座)"
+        "magnitude": "1.64"
     },
     {
         "starName": "34δOri",
+        "starLabel": "34δ",
+        "constellation": "Orion (オリオン座)",
         "raHour": "5",
         "raMin": "32",
         "raSec": "0.4",
@@ -3140,11 +3208,12 @@ const stars = [
         "decDeg": "0",
         "decMin": "17",
         "decSec": "57",
-        "magnitude": "2.23",
-        "constellation": "Orion (オリオン座)"
+        "magnitude": "2.23"
     },
     {
         "starName": "39λOri",
+        "starLabel": "39λ",
+        "constellation": "Orion (オリオン座)",
         "raHour": "5",
         "raMin": "35",
         "raSec": "8.3",
@@ -3152,11 +3221,12 @@ const stars = [
         "decDeg": "9",
         "decMin": "56",
         "decSec": "3",
-        "magnitude": "3.54",
-        "constellation": "Orion (オリオン座)"
+        "magnitude": "3.54"
     },
     {
         "starName": "50ζOri",
+        "starLabel": "50ζ",
+        "constellation": "Orion (オリオン座)",
         "raHour": "5",
         "raMin": "40",
         "raSec": "45.5",
@@ -3164,11 +3234,12 @@ const stars = [
         "decDeg": "1",
         "decMin": "56",
         "decSec": "34",
-        "magnitude": "2.05",
-        "constellation": "Orion (オリオン座)"
+        "magnitude": "2.05"
     },
     {
         "starName": "53κOri",
+        "starLabel": "53κ",
+        "constellation": "Orion (オリオン座)",
         "raHour": "5",
         "raMin": "47",
         "raSec": "45.4",
@@ -3176,11 +3247,12 @@ const stars = [
         "decDeg": "9",
         "decMin": "40",
         "decSec": "11",
-        "magnitude": "2.06",
-        "constellation": "Orion (オリオン座)"
+        "magnitude": "2.06"
     },
     {
         "starName": "54χ1Ori",
+        "starLabel": "54χ1",
+        "constellation": "Orion (オリオン座)",
         "raHour": "5",
         "raMin": "54",
         "raSec": "22.9",
@@ -3188,11 +3260,12 @@ const stars = [
         "decDeg": "20",
         "decMin": "16",
         "decSec": "34",
-        "magnitude": "4.41",
-        "constellation": "Orion (オリオン座)"
+        "magnitude": "4.41"
     },
     {
         "starName": "58αOri",
+        "starLabel": "58α",
+        "constellation": "Orion (オリオン座)",
         "raHour": "5",
         "raMin": "55",
         "raSec": "10.3",
@@ -3200,11 +3273,12 @@ const stars = [
         "decDeg": "7",
         "decMin": "24",
         "decSec": "25",
-        "magnitude": "0.5",
-        "constellation": "Orion (オリオン座)"
+        "magnitude": "0.5"
     },
     {
         "starName": "61μOri",
+        "starLabel": "61μ",
+        "constellation": "Orion (オリオン座)",
         "raHour": "6",
         "raMin": "2",
         "raSec": "23",
@@ -3212,11 +3286,12 @@ const stars = [
         "decDeg": "9",
         "decMin": "38",
         "decSec": "51",
-        "magnitude": "4.12",
-        "constellation": "Orion (オリオン座)"
+        "magnitude": "4.12"
     },
     {
         "starName": "67νOri",
+        "starLabel": "67ν",
+        "constellation": "Orion (オリオン座)",
         "raHour": "6",
         "raMin": "7",
         "raSec": "34.3",
@@ -3224,11 +3299,12 @@ const stars = [
         "decDeg": "14",
         "decMin": "46",
         "decSec": "6",
-        "magnitude": "4.42",
-        "constellation": "Orion (オリオン座)"
+        "magnitude": "4.42"
     },
     {
         "starName": "70ξOri",
+        "starLabel": "70ξ",
+        "constellation": "Orion (オリオン座)",
         "raHour": "6",
         "raMin": "11",
         "raSec": "56.4",
@@ -3236,23 +3312,12 @@ const stars = [
         "decDeg": "14",
         "decMin": "12",
         "decSec": "32",
-        "magnitude": "4.48",
-        "constellation": "Orion (オリオン座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "4.48"
     },
     {
         "starName": "11βCas",
+        "starLabel": "11β",
+        "constellation": "Cassiopeia (カシオペヤ座)",
         "raHour": "0",
         "raMin": "9",
         "raSec": "10.7",
@@ -3260,11 +3325,12 @@ const stars = [
         "decDeg": "59",
         "decMin": "8",
         "decSec": "59",
-        "magnitude": "2.27",
-        "constellation": "Cassiopeia (カシオペヤ座)"
+        "magnitude": "2.27"
     },
     {
         "starName": "18αCas",
+        "starLabel": "18α",
+        "constellation": "Cassiopeia (カシオペヤ座)",
         "raHour": "0",
         "raMin": "40",
         "raSec": "30.5",
@@ -3272,11 +3338,12 @@ const stars = [
         "decDeg": "56",
         "decMin": "32",
         "decSec": "14",
-        "magnitude": "2.23",
-        "constellation": "Cassiopeia (カシオペヤ座)"
+        "magnitude": "2.23"
     },
     {
         "starName": "27γCas",
+        "starLabel": "27γ",
+        "constellation": "Cassiopeia (カシオペヤ座)",
         "raHour": "0",
         "raMin": "56",
         "raSec": "42.5",
@@ -3284,11 +3351,12 @@ const stars = [
         "decDeg": "60",
         "decMin": "43",
         "decSec": "0",
-        "magnitude": "2.47",
-        "constellation": "Cassiopeia (カシオペヤ座)"
+        "magnitude": "2.47"
     },
     {
         "starName": "37δCas",
+        "starLabel": "37δ",
+        "constellation": "Cassiopeia (カシオペヤ座)",
         "raHour": "1",
         "raMin": "25",
         "raSec": "49",
@@ -3296,11 +3364,12 @@ const stars = [
         "decDeg": "60",
         "decMin": "14",
         "decSec": "7",
-        "magnitude": "2.68",
-        "constellation": "Cassiopeia (カシオペヤ座)"
+        "magnitude": "2.68"
     },
     {
         "starName": "45εCas",
+        "starLabel": "45ε",
+        "constellation": "Cassiopeia (カシオペヤ座)",
         "raHour": "1",
         "raMin": "54",
         "raSec": "23.7",
@@ -3308,23 +3377,12 @@ const stars = [
         "decDeg": "63",
         "decMin": "40",
         "decSec": "12",
-        "magnitude": "3.38",
-        "constellation": "Cassiopeia (カシオペヤ座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "3.38"
     },
     {
         "starName": "γDor",
+        "starLabel": "γ",
+        "constellation": "Dorado (かじき座)",
         "raHour": "4",
         "raMin": "16",
         "raSec": "1.6",
@@ -3332,11 +3390,12 @@ const stars = [
         "decDeg": "51",
         "decMin": "29",
         "decSec": "12",
-        "magnitude": "4.25",
-        "constellation": "Dorado (かじき座)"
+        "magnitude": "4.25"
     },
     {
         "starName": "αDor",
+        "starLabel": "α",
+        "constellation": "Dorado (かじき座)",
         "raHour": "4",
         "raMin": "33",
         "raSec": "59.8",
@@ -3344,11 +3403,12 @@ const stars = [
         "decDeg": "55",
         "decMin": "2",
         "decSec": "42",
-        "magnitude": "3.27",
-        "constellation": "Dorado (かじき座)"
+        "magnitude": "3.27"
     },
     {
         "starName": "βDor",
+        "starLabel": "β",
+        "constellation": "Dorado (かじき座)",
         "raHour": "5",
         "raMin": "33",
         "raSec": "37.5",
@@ -3356,11 +3416,12 @@ const stars = [
         "decDeg": "62",
         "decMin": "29",
         "decSec": "23",
-        "magnitude": "3.76",
-        "constellation": "Dorado (かじき座)"
+        "magnitude": "3.76"
     },
     {
         "starName": "δDor",
+        "starLabel": "δ",
+        "constellation": "Dorado (かじき座)",
         "raHour": "5",
         "raMin": "44",
         "raSec": "46.4",
@@ -3368,23 +3429,12 @@ const stars = [
         "decDeg": "65",
         "decMin": "44",
         "decSec": "8",
-        "magnitude": "4.35",
-        "constellation": "Dorado (かじき座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "4.35"
     },
     {
         "starName": "17βCnc",
+        "starLabel": "17β",
+        "constellation": "Cancer (かに座)",
         "raHour": "8",
         "raMin": "16",
         "raSec": "30.9",
@@ -3392,11 +3442,12 @@ const stars = [
         "decDeg": "9",
         "decMin": "11",
         "decSec": "8",
-        "magnitude": "3.52",
-        "constellation": "Cancer (かに座)"
+        "magnitude": "3.52"
     },
     {
         "starName": "31θCnc",
+        "starLabel": "31θ",
+        "constellation": "Cancer (かに座)",
         "raHour": "8",
         "raMin": "31",
         "raSec": "35.7",
@@ -3404,11 +3455,12 @@ const stars = [
         "decDeg": "18",
         "decMin": "5",
         "decSec": "40",
-        "magnitude": "5.35",
-        "constellation": "Cancer (かに座)"
+        "magnitude": "5.35"
     },
     {
         "starName": "33ηCnc",
+        "starLabel": "33η",
+        "constellation": "Cancer (かに座)",
         "raHour": "8",
         "raMin": "32",
         "raSec": "42.5",
@@ -3416,11 +3468,12 @@ const stars = [
         "decDeg": "20",
         "decMin": "26",
         "decSec": "28",
-        "magnitude": "5.33",
-        "constellation": "Cancer (かに座)"
+        "magnitude": "5.33"
     },
     {
         "starName": "43γCnc",
+        "starLabel": "43γ",
+        "constellation": "Cancer (かに座)",
         "raHour": "8",
         "raMin": "43",
         "raSec": "17.1",
@@ -3428,11 +3481,12 @@ const stars = [
         "decDeg": "21",
         "decMin": "28",
         "decSec": "7",
-        "magnitude": "4.66",
-        "constellation": "Cancer (かに座)"
+        "magnitude": "4.66"
     },
     {
         "starName": "47δCnc",
+        "starLabel": "47δ",
+        "constellation": "Cancer (かに座)",
         "raHour": "8",
         "raMin": "44",
         "raSec": "41.1",
@@ -3440,11 +3494,12 @@ const stars = [
         "decDeg": "18",
         "decMin": "9",
         "decSec": "15",
-        "magnitude": "3.94",
-        "constellation": "Cancer (かに座)"
+        "magnitude": "3.94"
     },
     {
         "starName": "48ιCnc",
+        "starLabel": "48ι",
+        "constellation": "Cancer (かに座)",
         "raHour": "8",
         "raMin": "46",
         "raSec": "41.8",
@@ -3452,11 +3507,12 @@ const stars = [
         "decDeg": "28",
         "decMin": "45",
         "decSec": "36",
-        "magnitude": "4.02",
-        "constellation": "Cancer (かに座)"
+        "magnitude": "4.02"
     },
     {
         "starName": "65αCnc",
+        "starLabel": "65α",
+        "constellation": "Cancer (かに座)",
         "raHour": "8",
         "raMin": "58",
         "raSec": "29.2",
@@ -3464,23 +3520,12 @@ const stars = [
         "decDeg": "11",
         "decMin": "51",
         "decSec": "28",
-        "magnitude": "4.25",
-        "constellation": "Cancer (かに座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "4.25"
     },
     {
         "starName": "15γCom",
+        "starLabel": "15γ",
+        "constellation": "Coma Berenices (かみのけ座)",
         "raHour": "12",
         "raMin": "26",
         "raSec": "56.3",
@@ -3488,11 +3533,12 @@ const stars = [
         "decDeg": "28",
         "decMin": "16",
         "decSec": "6",
-        "magnitude": "4.36",
-        "constellation": "Coma Berenices (かみのけ座)"
+        "magnitude": "4.36"
     },
     {
         "starName": "42αCom",
+        "starLabel": "42α",
+        "constellation": "Coma Berenices (かみのけ座)",
         "raHour": "13",
         "raMin": "9",
         "raSec": "59.3",
@@ -3500,11 +3546,12 @@ const stars = [
         "decDeg": "17",
         "decMin": "31",
         "decSec": "46",
-        "magnitude": "5.22",
-        "constellation": "Coma Berenices (かみのけ座)"
+        "magnitude": "5.22"
     },
     {
         "starName": "43βCom",
+        "starLabel": "43β",
+        "constellation": "Coma Berenices (かみのけ座)",
         "raHour": "13",
         "raMin": "11",
         "raSec": "52.4",
@@ -3512,23 +3559,12 @@ const stars = [
         "decDeg": "27",
         "decMin": "52",
         "decSec": "41",
-        "magnitude": "4.26",
-        "constellation": "Coma Berenices (かみのけ座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "4.26"
     },
     {
         "starName": "αCha",
+        "starLabel": "α",
+        "constellation": "Chamaeleon (カメレオン座)",
         "raHour": "8",
         "raMin": "18",
         "raSec": "31.6",
@@ -3536,11 +3572,12 @@ const stars = [
         "decDeg": "76",
         "decMin": "55",
         "decSec": "11",
-        "magnitude": "4.07",
-        "constellation": "Chamaeleon (カメレオン座)"
+        "magnitude": "4.07"
     },
     {
         "starName": "θCha",
+        "starLabel": "θ",
+        "constellation": "Chamaeleon (カメレオン座)",
         "raHour": "8",
         "raMin": "20",
         "raSec": "38.5",
@@ -3548,11 +3585,12 @@ const stars = [
         "decDeg": "77",
         "decMin": "29",
         "decSec": "4",
-        "magnitude": "4.35",
-        "constellation": "Chamaeleon (カメレオン座)"
+        "magnitude": "4.35"
     },
     {
         "starName": "γCha",
+        "starLabel": "γ",
+        "constellation": "Chamaeleon (カメレオン座)",
         "raHour": "10",
         "raMin": "35",
         "raSec": "28.1",
@@ -3560,11 +3598,12 @@ const stars = [
         "decDeg": "78",
         "decMin": "36",
         "decSec": "28",
-        "magnitude": "4.11",
-        "constellation": "Chamaeleon (カメレオン座)"
+        "magnitude": "4.11"
     },
     {
         "starName": "δ2Cha",
+        "starLabel": "δ2",
+        "constellation": "Chamaeleon (カメレオン座)",
         "raHour": "10",
         "raMin": "45",
         "raSec": "46.8",
@@ -3572,11 +3611,12 @@ const stars = [
         "decDeg": "80",
         "decMin": "32",
         "decSec": "25",
-        "magnitude": "4.45",
-        "constellation": "Chamaeleon (カメレオン座)"
+        "magnitude": "4.45"
     },
     {
         "starName": "βCha",
+        "starLabel": "β",
+        "constellation": "Chamaeleon (カメレオン座)",
         "raHour": "12",
         "raMin": "18",
         "raSec": "20.7",
@@ -3584,23 +3624,12 @@ const stars = [
         "decDeg": "79",
         "decMin": "18",
         "decSec": "44",
-        "magnitude": "4.26",
-        "constellation": "Chamaeleon (カメレオン座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "4.26"
     },
     {
         "starName": "1αCrv",
+        "starLabel": "1α",
+        "constellation": "Corvus (からす座)",
         "raHour": "12",
         "raMin": "8",
         "raSec": "24.8",
@@ -3608,11 +3637,12 @@ const stars = [
         "decDeg": "24",
         "decMin": "43",
         "decSec": "44",
-        "magnitude": "4.02",
-        "constellation": "Corvus (からす座)"
+        "magnitude": "4.02"
     },
     {
         "starName": "2εCrv",
+        "starLabel": "2ε",
+        "constellation": "Corvus (からす座)",
         "raHour": "12",
         "raMin": "10",
         "raSec": "7.5",
@@ -3620,11 +3650,12 @@ const stars = [
         "decDeg": "22",
         "decMin": "37",
         "decSec": "11",
-        "magnitude": "3",
-        "constellation": "Corvus (からす座)"
+        "magnitude": "3"
     },
     {
         "starName": "4γCrv",
+        "starLabel": "4γ",
+        "constellation": "Corvus (からす座)",
         "raHour": "12",
         "raMin": "15",
         "raSec": "48.4",
@@ -3632,11 +3663,12 @@ const stars = [
         "decDeg": "17",
         "decMin": "32",
         "decSec": "31",
-        "magnitude": "2.59",
-        "constellation": "Corvus (からす座)"
+        "magnitude": "2.59"
     },
     {
         "starName": "7δCrv",
+        "starLabel": "7δ",
+        "constellation": "Corvus (からす座)",
         "raHour": "12",
         "raMin": "29",
         "raSec": "51.9",
@@ -3644,11 +3676,12 @@ const stars = [
         "decDeg": "16",
         "decMin": "30",
         "decSec": "56",
-        "magnitude": "2.95",
-        "constellation": "Corvus (からす座)"
+        "magnitude": "2.95"
     },
     {
         "starName": "9βCrv",
+        "starLabel": "9β",
+        "constellation": "Corvus (からす座)",
         "raHour": "12",
         "raMin": "34",
         "raSec": "23.2",
@@ -3656,23 +3689,12 @@ const stars = [
         "decDeg": "23",
         "decMin": "23",
         "decSec": "48",
-        "magnitude": "2.65",
-        "constellation": "Corvus (からす座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "2.65"
     },
     {
         "starName": "3βCrB",
+        "starLabel": "3β",
+        "constellation": "Corona Borealis (かんむり座)",
         "raHour": "15",
         "raMin": "27",
         "raSec": "49.7",
@@ -3680,11 +3702,12 @@ const stars = [
         "decDeg": "29",
         "decMin": "6",
         "decSec": "21",
-        "magnitude": "3.68",
-        "constellation": "Corona Borealis (かんむり座)"
+        "magnitude": "3.68"
     },
     {
         "starName": "4θCrB",
+        "starLabel": "4θ",
+        "constellation": "Corona Borealis (かんむり座)",
         "raHour": "15",
         "raMin": "32",
         "raSec": "55.8",
@@ -3692,11 +3715,12 @@ const stars = [
         "decDeg": "31",
         "decMin": "21",
         "decSec": "33",
-        "magnitude": "4.14",
-        "constellation": "Corona Borealis (かんむり座)"
+        "magnitude": "4.14"
     },
     {
         "starName": "5αCrB",
+        "starLabel": "5α",
+        "constellation": "Corona Borealis (かんむり座)",
         "raHour": "15",
         "raMin": "34",
         "raSec": "41.3",
@@ -3704,11 +3728,12 @@ const stars = [
         "decDeg": "26",
         "decMin": "42",
         "decSec": "53",
-        "magnitude": "2.23",
-        "constellation": "Corona Borealis (かんむり座)"
+        "magnitude": "2.23"
     },
     {
         "starName": "8γCrB",
+        "starLabel": "8γ",
+        "constellation": "Corona Borealis (かんむり座)",
         "raHour": "15",
         "raMin": "42",
         "raSec": "44.6",
@@ -3716,11 +3741,12 @@ const stars = [
         "decDeg": "26",
         "decMin": "17",
         "decSec": "44",
-        "magnitude": "3.84",
-        "constellation": "Corona Borealis (かんむり座)"
+        "magnitude": "3.84"
     },
     {
         "starName": "10δCrB",
+        "starLabel": "10δ",
+        "constellation": "Corona Borealis (かんむり座)",
         "raHour": "15",
         "raMin": "49",
         "raSec": "35.7",
@@ -3728,11 +3754,12 @@ const stars = [
         "decDeg": "26",
         "decMin": "4",
         "decSec": "6",
-        "magnitude": "4.63",
-        "constellation": "Corona Borealis (かんむり座)"
+        "magnitude": "4.63"
     },
     {
         "starName": "13εCrB",
+        "starLabel": "13ε",
+        "constellation": "Corona Borealis (かんむり座)",
         "raHour": "15",
         "raMin": "57",
         "raSec": "35.3",
@@ -3740,11 +3767,12 @@ const stars = [
         "decDeg": "26",
         "decMin": "52",
         "decSec": "40",
-        "magnitude": "4.15",
-        "constellation": "Corona Borealis (かんむり座)"
+        "magnitude": "4.15"
     },
     {
         "starName": "14ιCrB",
+        "starLabel": "14ι",
+        "constellation": "Corona Borealis (かんむり座)",
         "raHour": "16",
         "raMin": "1",
         "raSec": "26.6",
@@ -3752,23 +3780,12 @@ const stars = [
         "decDeg": "29",
         "decMin": "51",
         "decSec": "4",
-        "magnitude": "4.99",
-        "constellation": "Corona Borealis (かんむり座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "4.99"
     },
     {
         "starName": "η2Pic",
+        "starLabel": "η2",
+        "constellation": "Pictor (がか座)",
         "raHour": "5",
         "raMin": "4",
         "raSec": "58",
@@ -3776,11 +3793,12 @@ const stars = [
         "decDeg": "49",
         "decMin": "34",
         "decSec": "40",
-        "magnitude": "5.03",
-        "constellation": "Pictor (がか座)"
+        "magnitude": "5.03"
     },
     {
         "starName": "βPic",
+        "starLabel": "β",
+        "constellation": "Pictor (がか座)",
         "raHour": "5",
         "raMin": "47",
         "raSec": "17.1",
@@ -3788,11 +3806,12 @@ const stars = [
         "decDeg": "51",
         "decMin": "3",
         "decSec": "59",
-        "magnitude": "3.85",
-        "constellation": "Pictor (がか座)"
+        "magnitude": "3.85"
     },
     {
         "starName": "γPic",
+        "starLabel": "γ",
+        "constellation": "Pictor (がか座)",
         "raHour": "5",
         "raMin": "49",
         "raSec": "49.7",
@@ -3800,11 +3819,12 @@ const stars = [
         "decDeg": "56",
         "decMin": "10",
         "decSec": "0",
-        "magnitude": "4.51",
-        "constellation": "Pictor (がか座)"
+        "magnitude": "4.51"
     },
     {
         "starName": "αPic",
+        "starLabel": "α",
+        "constellation": "Pictor (がか座)",
         "raHour": "6",
         "raMin": "48",
         "raSec": "11.4",
@@ -3812,23 +3832,12 @@ const stars = [
         "decDeg": "61",
         "decMin": "56",
         "decSec": "29",
-        "magnitude": "3.27",
-        "constellation": "Pictor (がか座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "3.27"
     },
     {
         "starName": "ζTuc",
+        "starLabel": "ζ",
+        "constellation": "Tucana (きょしちょう座)",
         "raHour": "0",
         "raMin": "20",
         "raSec": "4.3",
@@ -3836,11 +3845,12 @@ const stars = [
         "decDeg": "64",
         "decMin": "52",
         "decSec": "29",
-        "magnitude": "4.23",
-        "constellation": "Tucana (きょしちょう座)"
+        "magnitude": "4.23"
     },
     {
         "starName": "β1Tuc",
+        "starLabel": "β1",
+        "constellation": "Tucana (きょしちょう座)",
         "raHour": "0",
         "raMin": "31",
         "raSec": "32.7",
@@ -3848,11 +3858,12 @@ const stars = [
         "decDeg": "62",
         "decMin": "57",
         "decSec": "29",
-        "magnitude": "4.37",
-        "constellation": "Tucana (きょしちょう座)"
+        "magnitude": "4.37"
     },
     {
         "starName": "αTuc",
+        "starLabel": "α",
+        "constellation": "Tucana (きょしちょう座)",
         "raHour": "22",
         "raMin": "18",
         "raSec": "30.1",
@@ -3860,11 +3871,12 @@ const stars = [
         "decDeg": "60",
         "decMin": "15",
         "decSec": "35",
-        "magnitude": "2.86",
-        "constellation": "Tucana (きょしちょう座)"
+        "magnitude": "2.86"
     },
     {
         "starName": "δTuc",
+        "starLabel": "δ",
+        "constellation": "Tucana (きょしちょう座)",
         "raHour": "22",
         "raMin": "27",
         "raSec": "20",
@@ -3872,11 +3884,12 @@ const stars = [
         "decDeg": "64",
         "decMin": "57",
         "decSec": "59",
-        "magnitude": "4.48",
-        "constellation": "Tucana (きょしちょう座)"
+        "magnitude": "4.48"
     },
     {
         "starName": "γTuc",
+        "starLabel": "γ",
+        "constellation": "Tucana (きょしちょう座)",
         "raHour": "23",
         "raMin": "17",
         "raSec": "25.8",
@@ -3884,11 +3897,12 @@ const stars = [
         "decDeg": "58",
         "decMin": "14",
         "decSec": "9",
-        "magnitude": "3.99",
-        "constellation": "Tucana (きょしちょう座)"
+        "magnitude": "3.99"
     },
     {
         "starName": "εTuc",
+        "starLabel": "ε",
+        "constellation": "Tucana (きょしちょう座)",
         "raHour": "23",
         "raMin": "59",
         "raSec": "55",
@@ -3896,23 +3910,12 @@ const stars = [
         "decDeg": "65",
         "decMin": "34",
         "decSec": "38",
-        "magnitude": "4.5",
-        "constellation": "Tucana (きょしちょう座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "4.5"
     },
     {
         "starName": "HIP16228Cam",
+        "starLabel": "HIP16228",
+        "constellation": "Camelopardalis (きりん座)",
         "raHour": "3",
         "raMin": "29",
         "raSec": "4.1",
@@ -3920,11 +3923,12 @@ const stars = [
         "decDeg": "59",
         "decMin": "56",
         "decSec": "25",
-        "magnitude": "4.21",
-        "constellation": "Camelopardalis (きりん座)"
+        "magnitude": "4.21"
     },
     {
         "starName": "γCam",
+        "starLabel": "γ",
+        "constellation": "Camelopardalis (きりん座)",
         "raHour": "3",
         "raMin": "50",
         "raSec": "21.5",
@@ -3932,11 +3936,12 @@ const stars = [
         "decDeg": "71",
         "decMin": "19",
         "decSec": "56",
-        "magnitude": "4.63",
-        "constellation": "Camelopardalis (きりん座)"
+        "magnitude": "4.63"
     },
     {
         "starName": "9αCam",
+        "starLabel": "9α",
+        "constellation": "Camelopardalis (きりん座)",
         "raHour": "4",
         "raMin": "54",
         "raSec": "3",
@@ -3944,11 +3949,12 @@ const stars = [
         "decDeg": "66",
         "decMin": "20",
         "decSec": "34",
-        "magnitude": "4.29",
-        "constellation": "Camelopardalis (きりん座)"
+        "magnitude": "4.29"
     },
     {
         "starName": "7Cam",
+        "starLabel": "7",
+        "constellation": "Camelopardalis (きりん座)",
         "raHour": "4",
         "raMin": "57",
         "raSec": "17.2",
@@ -3956,11 +3962,12 @@ const stars = [
         "decDeg": "53",
         "decMin": "45",
         "decSec": "8",
-        "magnitude": "4.47",
-        "constellation": "Camelopardalis (きりん座)"
+        "magnitude": "4.47"
     },
     {
         "starName": "10βCam",
+        "starLabel": "10β",
+        "constellation": "Camelopardalis (きりん座)",
         "raHour": "5",
         "raMin": "3",
         "raSec": "25.1",
@@ -3968,11 +3975,12 @@ const stars = [
         "decDeg": "60",
         "decMin": "26",
         "decSec": "32",
-        "magnitude": "4.03",
-        "constellation": "Camelopardalis (きりん座)"
+        "magnitude": "4.03"
     },
     {
         "starName": "HIP29997Cam",
+        "starLabel": "HIP29997",
+        "constellation": "Camelopardalis (きりん座)",
         "raHour": "6",
         "raMin": "18",
         "raSec": "50.8",
@@ -3980,11 +3988,12 @@ const stars = [
         "decDeg": "69",
         "decMin": "19",
         "decSec": "11",
-        "magnitude": "4.8",
-        "constellation": "Camelopardalis (きりん座)"
+        "magnitude": "4.8"
     },
     {
         "starName": "HIP62572Cam",
+        "starLabel": "HIP62572",
+        "constellation": "Camelopardalis (きりん座)",
         "raHour": "12",
         "raMin": "49",
         "raSec": "13.6",
@@ -3992,23 +4001,12 @@ const stars = [
         "decDeg": "83",
         "decMin": "24",
         "decSec": "46",
-        "magnitude": "5.28",
-        "constellation": "Camelopardalis (きりん座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "5.28"
     },
     {
         "starName": "3ιAur",
+        "starLabel": "3ι",
+        "constellation": "Auriga (ぎょしゃ座)",
         "raHour": "4",
         "raMin": "56",
         "raSec": "59.6",
@@ -4016,11 +4014,12 @@ const stars = [
         "decDeg": "33",
         "decMin": "9",
         "decSec": "58",
-        "magnitude": "2.69",
-        "constellation": "Auriga (ぎょしゃ座)"
+        "magnitude": "2.69"
     },
     {
         "starName": "7εAur",
+        "starLabel": "7ε",
+        "constellation": "Auriga (ぎょしゃ座)",
         "raHour": "5",
         "raMin": "1",
         "raSec": "58.1",
@@ -4028,11 +4027,12 @@ const stars = [
         "decDeg": "43",
         "decMin": "49",
         "decSec": "24",
-        "magnitude": "2.99",
-        "constellation": "Auriga (ぎょしゃ座)"
+        "magnitude": "2.99"
     },
     {
         "starName": "8ζAur",
+        "starLabel": "8ζ",
+        "constellation": "Auriga (ぎょしゃ座)",
         "raHour": "5",
         "raMin": "2",
         "raSec": "28.7",
@@ -4040,11 +4040,12 @@ const stars = [
         "decDeg": "41",
         "decMin": "4",
         "decSec": "33",
-        "magnitude": "3.75",
-        "constellation": "Auriga (ぎょしゃ座)"
+        "magnitude": "3.75"
     },
     {
         "starName": "10ηAur",
+        "starLabel": "10η",
+        "constellation": "Auriga (ぎょしゃ座)",
         "raHour": "5",
         "raMin": "6",
         "raSec": "30.9",
@@ -4052,11 +4053,12 @@ const stars = [
         "decDeg": "41",
         "decMin": "14",
         "decSec": "4",
-        "magnitude": "3.17",
-        "constellation": "Auriga (ぎょしゃ座)"
+        "magnitude": "3.17"
     },
     {
         "starName": "13αAur",
+        "starLabel": "13α",
+        "constellation": "Auriga (ぎょしゃ座)",
         "raHour": "5",
         "raMin": "16",
         "raSec": "41.4",
@@ -4064,11 +4066,12 @@ const stars = [
         "decDeg": "45",
         "decMin": "59",
         "decSec": "53",
-        "magnitude": "0.08",
-        "constellation": "Auriga (ぎょしゃ座)"
+        "magnitude": "0.08"
     },
     {
         "starName": "34βAur",
+        "starLabel": "34β",
+        "constellation": "Auriga (ぎょしゃ座)",
         "raHour": "5",
         "raMin": "59",
         "raSec": "31.7",
@@ -4076,11 +4079,12 @@ const stars = [
         "decDeg": "44",
         "decMin": "56",
         "decSec": "51",
-        "magnitude": "1.9",
-        "constellation": "Auriga (ぎょしゃ座)"
+        "magnitude": "1.9"
     },
     {
         "starName": "37θAur",
+        "starLabel": "37θ",
+        "constellation": "Auriga (ぎょしゃ座)",
         "raHour": "5",
         "raMin": "59",
         "raSec": "43.3",
@@ -4088,23 +4092,12 @@ const stars = [
         "decDeg": "37",
         "decMin": "12",
         "decSec": "45",
-        "magnitude": "2.62",
-        "constellation": "Auriga (ぎょしゃ座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "2.62"
     },
     {
         "starName": "ηPav",
+        "starLabel": "η",
+        "constellation": "Pavo (くじゃく座)",
         "raHour": "17",
         "raMin": "45",
         "raSec": "44",
@@ -4112,11 +4105,12 @@ const stars = [
         "decDeg": "64",
         "decMin": "43",
         "decSec": "26",
-        "magnitude": "3.62",
-        "constellation": "Pavo (くじゃく座)"
+        "magnitude": "3.62"
     },
     {
         "starName": "ξPav",
+        "starLabel": "ξ",
+        "constellation": "Pavo (くじゃく座)",
         "raHour": "18",
         "raMin": "23",
         "raSec": "13.6",
@@ -4124,11 +4118,12 @@ const stars = [
         "decDeg": "61",
         "decMin": "29",
         "decSec": "38",
-        "magnitude": "4.36",
-        "constellation": "Pavo (くじゃく座)"
+        "magnitude": "4.36"
     },
     {
         "starName": "ζPav",
+        "starLabel": "ζ",
+        "constellation": "Pavo (くじゃく座)",
         "raHour": "18",
         "raMin": "43",
         "raSec": "2.1",
@@ -4136,11 +4131,12 @@ const stars = [
         "decDeg": "71",
         "decMin": "25",
         "decSec": "41",
-        "magnitude": "4.01",
-        "constellation": "Pavo (くじゃく座)"
+        "magnitude": "4.01"
     },
     {
         "starName": "λPav",
+        "starLabel": "λ",
+        "constellation": "Pavo (くじゃく座)",
         "raHour": "18",
         "raMin": "52",
         "raSec": "13",
@@ -4148,11 +4144,12 @@ const stars = [
         "decDeg": "62",
         "decMin": "11",
         "decSec": "15",
-        "magnitude": "4.22",
-        "constellation": "Pavo (くじゃく座)"
+        "magnitude": "4.22"
     },
     {
         "starName": "εPav",
+        "starLabel": "ε",
+        "constellation": "Pavo (くじゃく座)",
         "raHour": "20",
         "raMin": "0",
         "raSec": "35.5",
@@ -4160,11 +4157,12 @@ const stars = [
         "decDeg": "72",
         "decMin": "54",
         "decSec": "38",
-        "magnitude": "3.96",
-        "constellation": "Pavo (くじゃく座)"
+        "magnitude": "3.96"
     },
     {
         "starName": "δPav",
+        "starLabel": "δ",
+        "constellation": "Pavo (くじゃく座)",
         "raHour": "20",
         "raMin": "8",
         "raSec": "43.6",
@@ -4172,11 +4170,12 @@ const stars = [
         "decDeg": "66",
         "decMin": "10",
         "decSec": "55",
-        "magnitude": "3.56",
-        "constellation": "Pavo (くじゃく座)"
+        "magnitude": "3.56"
     },
     {
         "starName": "αPav",
+        "starLabel": "α",
+        "constellation": "Pavo (くじゃく座)",
         "raHour": "20",
         "raMin": "25",
         "raSec": "38.9",
@@ -4184,11 +4183,12 @@ const stars = [
         "decDeg": "56",
         "decMin": "44",
         "decSec": "6",
-        "magnitude": "1.94",
-        "constellation": "Pavo (くじゃく座)"
+        "magnitude": "1.94"
     },
     {
         "starName": "βPav",
+        "starLabel": "β",
+        "constellation": "Pavo (くじゃく座)",
         "raHour": "20",
         "raMin": "44",
         "raSec": "57.5",
@@ -4196,11 +4196,12 @@ const stars = [
         "decDeg": "66",
         "decMin": "12",
         "decSec": "11",
-        "magnitude": "3.42",
-        "constellation": "Pavo (くじゃく座)"
+        "magnitude": "3.42"
     },
     {
         "starName": "γPav",
+        "starLabel": "γ",
+        "constellation": "Pavo (くじゃく座)",
         "raHour": "21",
         "raMin": "26",
         "raSec": "26.6",
@@ -4208,23 +4209,12 @@ const stars = [
         "decDeg": "65",
         "decMin": "21",
         "decSec": "58",
-        "magnitude": "4.22",
-        "constellation": "Pavo (くじゃく座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "4.22"
     },
     {
         "starName": "8ιCet",
+        "starLabel": "8ι",
+        "constellation": "Cetus (くじら座)",
         "raHour": "0",
         "raMin": "19",
         "raSec": "25.7",
@@ -4232,11 +4222,12 @@ const stars = [
         "decDeg": "8",
         "decMin": "49",
         "decSec": "26",
-        "magnitude": "3.56",
-        "constellation": "Cetus (くじら座)"
+        "magnitude": "3.56"
     },
     {
         "starName": "16βCet",
+        "starLabel": "16β",
+        "constellation": "Cetus (くじら座)",
         "raHour": "0",
         "raMin": "43",
         "raSec": "35.4",
@@ -4244,11 +4235,12 @@ const stars = [
         "decDeg": "17",
         "decMin": "59",
         "decSec": "12",
-        "magnitude": "2.04",
-        "constellation": "Cetus (くじら座)"
+        "magnitude": "2.04"
     },
     {
         "starName": "31ηCet",
+        "starLabel": "31η",
+        "constellation": "Cetus (くじら座)",
         "raHour": "1",
         "raMin": "8",
         "raSec": "35.4",
@@ -4256,11 +4248,12 @@ const stars = [
         "decDeg": "10",
         "decMin": "10",
         "decSec": "56",
-        "magnitude": "3.45",
-        "constellation": "Cetus (くじら座)"
+        "magnitude": "3.45"
     },
     {
         "starName": "45θCet",
+        "starLabel": "45θ",
+        "constellation": "Cetus (くじら座)",
         "raHour": "1",
         "raMin": "24",
         "raSec": "1.4",
@@ -4268,11 +4261,12 @@ const stars = [
         "decDeg": "8",
         "decMin": "11",
         "decSec": "0",
-        "magnitude": "3.6",
-        "constellation": "Cetus (くじら座)"
+        "magnitude": "3.6"
     },
     {
         "starName": "52τCet",
+        "starLabel": "52τ",
+        "constellation": "Cetus (くじら座)",
         "raHour": "1",
         "raMin": "44",
         "raSec": "4.1",
@@ -4280,11 +4274,12 @@ const stars = [
         "decDeg": "15",
         "decMin": "56",
         "decSec": "15",
-        "magnitude": "3.5",
-        "constellation": "Cetus (くじら座)"
+        "magnitude": "3.5"
     },
     {
         "starName": "55ζCet",
+        "starLabel": "55ζ",
+        "constellation": "Cetus (くじら座)",
         "raHour": "1",
         "raMin": "51",
         "raSec": "27.6",
@@ -4292,11 +4287,12 @@ const stars = [
         "decDeg": "10",
         "decMin": "20",
         "decSec": "6",
-        "magnitude": "3.73",
-        "constellation": "Cetus (くじら座)"
+        "magnitude": "3.73"
     },
     {
         "starName": "59υCet",
+        "starLabel": "59υ",
+        "constellation": "Cetus (くじら座)",
         "raHour": "2",
         "raMin": "0",
         "raSec": "0.3",
@@ -4304,11 +4300,12 @@ const stars = [
         "decDeg": "21",
         "decMin": "4",
         "decSec": "40",
-        "magnitude": "4",
-        "constellation": "Cetus (くじら座)"
+        "magnitude": "4"
     },
     {
         "starName": "68οCet",
+        "starLabel": "68ο",
+        "constellation": "Cetus (くじら座)",
         "raHour": "2",
         "raMin": "19",
         "raSec": "20.7",
@@ -4316,11 +4313,12 @@ const stars = [
         "decDeg": "2",
         "decMin": "58",
         "decSec": "39",
-        "magnitude": "3.04",
-        "constellation": "Cetus (くじら座)"
+        "magnitude": "3.04"
     },
     {
         "starName": "73ξ2Cet",
+        "starLabel": "73ξ 2",
+        "constellation": "Cetus (くじら座)",
         "raHour": "2",
         "raMin": "28",
         "raSec": "9.5",
@@ -4328,11 +4326,12 @@ const stars = [
         "decDeg": "8",
         "decMin": "27",
         "decSec": "36",
-        "magnitude": "4.28",
-        "constellation": "Cetus (くじら座)"
+        "magnitude": "4.28"
     },
     {
         "starName": "82δCet",
+        "starLabel": "82δ",
+        "constellation": "Cetus (くじら座)",
         "raHour": "2",
         "raMin": "39",
         "raSec": "29",
@@ -4340,11 +4339,12 @@ const stars = [
         "decDeg": "0",
         "decMin": "19",
         "decSec": "43",
-        "magnitude": "4.07",
-        "constellation": "Cetus (くじら座)"
+        "magnitude": "4.07"
     },
     {
         "starName": "86γCet",
+        "starLabel": "86γ",
+        "constellation": "Cetus (くじら座)",
         "raHour": "2",
         "raMin": "43",
         "raSec": "18",
@@ -4352,11 +4352,12 @@ const stars = [
         "decDeg": "3",
         "decMin": "14",
         "decSec": "9",
-        "magnitude": "3.47",
-        "constellation": "Cetus (くじら座)"
+        "magnitude": "3.47"
     },
     {
         "starName": "89πCet",
+        "starLabel": "89π",
+        "constellation": "Cetus (くじら座)",
         "raHour": "2",
         "raMin": "44",
         "raSec": "7.4",
@@ -4364,11 +4365,12 @@ const stars = [
         "decDeg": "13",
         "decMin": "51",
         "decSec": "31",
-        "magnitude": "4.25",
-        "constellation": "Cetus (くじら座)"
+        "magnitude": "4.25"
     },
     {
         "starName": "87μCet",
+        "starLabel": "87μ",
+        "constellation": "Cetus (くじら座)",
         "raHour": "2",
         "raMin": "44",
         "raSec": "56.5",
@@ -4376,11 +4378,12 @@ const stars = [
         "decDeg": "10",
         "decMin": "6",
         "decSec": "51",
-        "magnitude": "4.27",
-        "constellation": "Cetus (くじら座)"
+        "magnitude": "4.27"
     },
     {
         "starName": "91λCet",
+        "starLabel": "91λ",
+        "constellation": "Cetus (くじら座)",
         "raHour": "2",
         "raMin": "59",
         "raSec": "42.9",
@@ -4388,11 +4391,12 @@ const stars = [
         "decDeg": "8",
         "decMin": "54",
         "decSec": "27",
-        "magnitude": "4.7",
-        "constellation": "Cetus (くじら座)"
+        "magnitude": "4.7"
     },
     {
         "starName": "92αCet",
+        "starLabel": "92α",
+        "constellation": "Cetus (くじら座)",
         "raHour": "3",
         "raMin": "2",
         "raSec": "16.8",
@@ -4400,23 +4404,12 @@ const stars = [
         "decDeg": "4",
         "decMin": "5",
         "decSec": "23",
-        "magnitude": "2.53",
-        "constellation": "Cetus (くじら座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "2.53"
     },
     {
         "starName": "2θCep",
+        "starLabel": "2θ",
+        "constellation": "Cepheus (ケフェウス座)",
         "raHour": "20",
         "raMin": "29",
         "raSec": "34.9",
@@ -4424,11 +4417,12 @@ const stars = [
         "decDeg": "62",
         "decMin": "59",
         "decSec": "39",
-        "magnitude": "4.22",
-        "constellation": "Cepheus (ケフェウス座)"
+        "magnitude": "4.22"
     },
     {
         "starName": "3ηCep",
+        "starLabel": "3η",
+        "constellation": "Cepheus (ケフェウス座)",
         "raHour": "20",
         "raMin": "45",
         "raSec": "17.4",
@@ -4436,11 +4430,12 @@ const stars = [
         "decDeg": "61",
         "decMin": "50",
         "decSec": "20",
-        "magnitude": "3.43",
-        "constellation": "Cepheus (ケフェウス座)"
+        "magnitude": "3.43"
     },
     {
         "starName": "5αCep",
+        "starLabel": "5α",
+        "constellation": "Cepheus (ケフェウス座)",
         "raHour": "21",
         "raMin": "18",
         "raSec": "34.8",
@@ -4448,11 +4443,12 @@ const stars = [
         "decDeg": "62",
         "decMin": "35",
         "decSec": "8",
-        "magnitude": "2.44",
-        "constellation": "Cepheus (ケフェウス座)"
+        "magnitude": "2.44"
     },
     {
         "starName": "8βCep",
+        "starLabel": "8β",
+        "constellation": "Cepheus (ケフェウス座)",
         "raHour": "21",
         "raMin": "28",
         "raSec": "39.6",
@@ -4460,11 +4456,12 @@ const stars = [
         "decDeg": "70",
         "decMin": "33",
         "decSec": "39",
-        "magnitude": "3.23",
-        "constellation": "Cepheus (ケフェウス座)"
+        "magnitude": "3.23"
     },
     {
         "starName": "21ζCep",
+        "starLabel": "21ζ",
+        "constellation": "Cepheus (ケフェウス座)",
         "raHour": "22",
         "raMin": "10",
         "raSec": "51.3",
@@ -4472,11 +4469,12 @@ const stars = [
         "decDeg": "58",
         "decMin": "12",
         "decSec": "4",
-        "magnitude": "3.35",
-        "constellation": "Cepheus (ケフェウス座)"
+        "magnitude": "3.35"
     },
     {
         "starName": "23εCep",
+        "starLabel": "23ε",
+        "constellation": "Cepheus (ケフェウス座)",
         "raHour": "22",
         "raMin": "15",
         "raSec": "2",
@@ -4484,11 +4482,12 @@ const stars = [
         "decDeg": "57",
         "decMin": "2",
         "decSec": "37",
-        "magnitude": "4.19",
-        "constellation": "Cepheus (ケフェウス座)"
+        "magnitude": "4.19"
     },
     {
         "starName": "27δCep",
+        "starLabel": "27δ",
+        "constellation": "Cepheus (ケフェウス座)",
         "raHour": "22",
         "raMin": "29",
         "raSec": "10.3",
@@ -4496,11 +4495,12 @@ const stars = [
         "decDeg": "58",
         "decMin": "24",
         "decSec": "55",
-        "magnitude": "3.75",
-        "constellation": "Cepheus (ケフェウス座)"
+        "magnitude": "3.75"
     },
     {
         "starName": "32ιCep",
+        "starLabel": "32ι",
+        "constellation": "Cepheus (ケフェウス座)",
         "raHour": "22",
         "raMin": "49",
         "raSec": "40.8",
@@ -4508,11 +4508,12 @@ const stars = [
         "decDeg": "66",
         "decMin": "12",
         "decSec": "2",
-        "magnitude": "3.52",
-        "constellation": "Cepheus (ケフェウス座)"
+        "magnitude": "3.52"
     },
     {
         "starName": "35γCep",
+        "starLabel": "35γ",
+        "constellation": "Cepheus (ケフェウス座)",
         "raHour": "23",
         "raMin": "39",
         "raSec": "20.8",
@@ -4520,23 +4521,12 @@ const stars = [
         "decDeg": "77",
         "decMin": "37",
         "decSec": "57",
-        "magnitude": "3.21",
-        "constellation": "Cepheus (ケフェウス座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "3.21"
     },
     {
         "starName": "πCen",
+        "starLabel": "π",
+        "constellation": "Centaurus (ケンタウルス座)",
         "raHour": "11",
         "raMin": "21",
         "raSec": "0.4",
@@ -4544,11 +4534,12 @@ const stars = [
         "decDeg": "54",
         "decMin": "29",
         "decSec": "28",
-        "magnitude": "3.89",
-        "constellation": "Centaurus (ケンタウルス座)"
+        "magnitude": "3.89"
     },
     {
         "starName": "λCen",
+        "starLabel": "λ",
+        "constellation": "Centaurus (ケンタウルス座)",
         "raHour": "11",
         "raMin": "35",
         "raSec": "46.8",
@@ -4556,11 +4547,12 @@ const stars = [
         "decDeg": "63",
         "decMin": "1",
         "decSec": "11",
-        "magnitude": "3.13",
-        "constellation": "Centaurus (ケンタウルス座)"
+        "magnitude": "3.13"
     },
     {
         "starName": "δCen",
+        "starLabel": "δ",
+        "constellation": "Centaurus (ケンタウルス座)",
         "raHour": "12",
         "raMin": "8",
         "raSec": "21.5",
@@ -4568,11 +4560,12 @@ const stars = [
         "decDeg": "50",
         "decMin": "43",
         "decSec": "21",
-        "magnitude": "2.6",
-        "constellation": "Centaurus (ケンタウルス座)"
+        "magnitude": "2.6"
     },
     {
         "starName": "σCen",
+        "starLabel": "σ",
+        "constellation": "Centaurus (ケンタウルス座)",
         "raHour": "12",
         "raMin": "28",
         "raSec": "2.4",
@@ -4580,11 +4573,12 @@ const stars = [
         "decDeg": "50",
         "decMin": "13",
         "decSec": "50",
-        "magnitude": "3.91",
-        "constellation": "Centaurus (ケンタウルス座)"
+        "magnitude": "3.91"
     },
     {
         "starName": "γCen",
+        "starLabel": "γ",
+        "constellation": "Centaurus (ケンタウルス座)",
         "raHour": "12",
         "raMin": "41",
         "raSec": "31",
@@ -4592,11 +4586,12 @@ const stars = [
         "decDeg": "48",
         "decMin": "57",
         "decSec": "35",
-        "magnitude": "2.17",
-        "constellation": "Centaurus (ケンタウルス座)"
+        "magnitude": "2.17"
     },
     {
         "starName": "HIP62867Cen",
+        "starLabel": "HIP62867",
+        "constellation": "Centaurus (ケンタウルス座)",
         "raHour": "12",
         "raMin": "53",
         "raSec": "6.9",
@@ -4604,11 +4599,12 @@ const stars = [
         "decDeg": "48",
         "decMin": "56",
         "decSec": "36",
-        "magnitude": "4.33",
-        "constellation": "Centaurus (ケンタウルス座)"
+        "magnitude": "4.33"
     },
     {
         "starName": "HIP62896Cen",
+        "starLabel": "HIP62896",
+        "constellation": "Centaurus (ケンタウルス座)",
         "raHour": "12",
         "raMin": "53",
         "raSec": "26.2",
@@ -4616,11 +4612,12 @@ const stars = [
         "decDeg": "40",
         "decMin": "10",
         "decSec": "44",
-        "magnitude": "4.27",
-        "constellation": "Centaurus (ケンタウルス座)"
+        "magnitude": "4.27"
     },
     {
         "starName": "ιCen",
+        "starLabel": "ι",
+        "constellation": "Centaurus (ケンタウルス座)",
         "raHour": "13",
         "raMin": "20",
         "raSec": "35.8",
@@ -4628,11 +4625,12 @@ const stars = [
         "decDeg": "36",
         "decMin": "42",
         "decSec": "44",
-        "magnitude": "2.75",
-        "constellation": "Centaurus (ケンタウルス座)"
+        "magnitude": "2.75"
     },
     {
         "starName": "NGC5139Cen",
+        "starLabel": "NGC5139",
+        "constellation": "Centaurus (ケンタウルス座)",
         "raHour": "13",
         "raMin": "26",
         "raSec": "48",
@@ -4640,11 +4638,12 @@ const stars = [
         "decDeg": "47",
         "decMin": "29",
         "decSec": "0",
-        "magnitude": "3.7",
-        "constellation": "Centaurus (ケンタウルス座)"
+        "magnitude": "3.7"
     },
     {
         "starName": "HIP65936Cen",
+        "starLabel": "HIP65936",
+        "constellation": "Centaurus (ケンタウルス座)",
         "raHour": "13",
         "raMin": "31",
         "raSec": "2.7",
@@ -4652,11 +4651,12 @@ const stars = [
         "decDeg": "39",
         "decMin": "24",
         "decSec": "27",
-        "magnitude": "3.88",
-        "constellation": "Centaurus (ケンタウルス座)"
+        "magnitude": "3.88"
     },
     {
         "starName": "εCen",
+        "starLabel": "ε",
+        "constellation": "Centaurus (ケンタウルス座)",
         "raHour": "13",
         "raMin": "39",
         "raSec": "53.2",
@@ -4664,11 +4664,12 @@ const stars = [
         "decDeg": "53",
         "decMin": "27",
         "decSec": "59",
-        "magnitude": "2.3",
-        "constellation": "Centaurus (ケンタウルス座)"
+        "magnitude": "2.3"
     },
     {
         "starName": "νCen",
+        "starLabel": "ν",
+        "constellation": "Centaurus (ケンタウルス座)",
         "raHour": "13",
         "raMin": "49",
         "raSec": "30.3",
@@ -4676,11 +4677,12 @@ const stars = [
         "decDeg": "41",
         "decMin": "41",
         "decSec": "16",
-        "magnitude": "3.41",
-        "constellation": "Centaurus (ケンタウルス座)"
+        "magnitude": "3.41"
     },
     {
         "starName": "μCen",
+        "starLabel": "μ",
+        "constellation": "Centaurus (ケンタウルス座)",
         "raHour": "13",
         "raMin": "49",
         "raSec": "37",
@@ -4688,11 +4690,12 @@ const stars = [
         "decDeg": "42",
         "decMin": "28",
         "decSec": "26",
-        "magnitude": "3.04",
-        "constellation": "Centaurus (ケンタウルス座)"
+        "magnitude": "3.04"
     },
     {
         "starName": "ζCen",
+        "starLabel": "ζ",
+        "constellation": "Centaurus (ケンタウルス座)",
         "raHour": "13",
         "raMin": "55",
         "raSec": "32.4",
@@ -4700,11 +4703,12 @@ const stars = [
         "decDeg": "47",
         "decMin": "17",
         "decSec": "18",
-        "magnitude": "2.55",
-        "constellation": "Centaurus (ケンタウルス座)"
+        "magnitude": "2.55"
     },
     {
         "starName": "φCen",
+        "starLabel": "φ",
+        "constellation": "Centaurus (ケンタウルス座)",
         "raHour": "13",
         "raMin": "58",
         "raSec": "16.3",
@@ -4712,11 +4716,12 @@ const stars = [
         "decDeg": "42",
         "decMin": "6",
         "decSec": "3",
-        "magnitude": "3.83",
-        "constellation": "Centaurus (ケンタウルス座)"
+        "magnitude": "3.83"
     },
     {
         "starName": "υ1Cen",
+        "starLabel": "υ1",
+        "constellation": "Centaurus (ケンタウルス座)",
         "raHour": "13",
         "raMin": "58",
         "raSec": "40.8",
@@ -4724,11 +4729,12 @@ const stars = [
         "decDeg": "44",
         "decMin": "48",
         "decSec": "13",
-        "magnitude": "3.87",
-        "constellation": "Centaurus (ケンタウルス座)"
+        "magnitude": "3.87"
     },
     {
         "starName": "υ2Cen",
+        "starLabel": "υ2",
+        "constellation": "Centaurus (ケンタウルス座)",
         "raHour": "14",
         "raMin": "1",
         "raSec": "43.4",
@@ -4736,11 +4742,12 @@ const stars = [
         "decDeg": "45",
         "decMin": "36",
         "decSec": "13",
-        "magnitude": "4.34",
-        "constellation": "Centaurus (ケンタウルス座)"
+        "magnitude": "4.34"
     },
     {
         "starName": "βCen",
+        "starLabel": "β",
+        "constellation": "Centaurus (ケンタウルス座)",
         "raHour": "14",
         "raMin": "3",
         "raSec": "49.4",
@@ -4748,11 +4755,12 @@ const stars = [
         "decDeg": "60",
         "decMin": "22",
         "decSec": "23",
-        "magnitude": "0.61",
-        "constellation": "Centaurus (ケンタウルス座)"
+        "magnitude": "0.61"
     },
     {
         "starName": "χCen",
+        "starLabel": "χ",
+        "constellation": "Centaurus (ケンタウルス座)",
         "raHour": "14",
         "raMin": "6",
         "raSec": "2.8",
@@ -4760,11 +4768,12 @@ const stars = [
         "decDeg": "41",
         "decMin": "10",
         "decSec": "47",
-        "magnitude": "4.36",
-        "constellation": "Centaurus (ケンタウルス座)"
+        "magnitude": "4.36"
     },
     {
         "starName": "5θCen",
+        "starLabel": "5θ",
+        "constellation": "Centaurus (ケンタウルス座)",
         "raHour": "14",
         "raMin": "6",
         "raSec": "41",
@@ -4772,11 +4781,12 @@ const stars = [
         "decDeg": "36",
         "decMin": "22",
         "decSec": "12",
-        "magnitude": "2.06",
-        "constellation": "Centaurus (ケンタウルス座)"
+        "magnitude": "2.06"
     },
     {
         "starName": "HIP70300Cen",
+        "starLabel": "HIP70300",
+        "constellation": "Centaurus (ケンタウルス座)",
         "raHour": "14",
         "raMin": "23",
         "raSec": "2.2",
@@ -4784,11 +4794,12 @@ const stars = [
         "decDeg": "39",
         "decMin": "30",
         "decSec": "44",
-        "magnitude": "4.42",
-        "constellation": "Centaurus (ケンタウルス座)"
+        "magnitude": "4.42"
     },
     {
         "starName": "ηCen",
+        "starLabel": "η",
+        "constellation": "Centaurus (ケンタウルス座)",
         "raHour": "14",
         "raMin": "35",
         "raSec": "30.4",
@@ -4796,11 +4807,12 @@ const stars = [
         "decDeg": "42",
         "decMin": "9",
         "decSec": "28",
-        "magnitude": "2.31",
-        "constellation": "Centaurus (ケンタウルス座)"
+        "magnitude": "2.31"
     },
     {
         "starName": "α1Cen",
+        "starLabel": "α1",
+        "constellation": "Centaurus (ケンタウルス座)",
         "raHour": "14",
         "raMin": "39",
         "raSec": "35.9",
@@ -4808,11 +4820,12 @@ const stars = [
         "decDeg": "60",
         "decMin": "50",
         "decSec": "7",
-        "magnitude": "-0.01",
-        "constellation": "Centaurus (ケンタウルス座)"
+        "magnitude": "-0.01"
     },
     {
         "starName": "HIP71865Cen",
+        "starLabel": "HIP71865",
+        "constellation": "Centaurus (ケンタウルス座)",
         "raHour": "14",
         "raMin": "41",
         "raSec": "57.6",
@@ -4820,11 +4833,12 @@ const stars = [
         "decDeg": "37",
         "decMin": "47",
         "decSec": "37",
-        "magnitude": "4",
-        "constellation": "Centaurus (ケンタウルス座)"
+        "magnitude": "4"
     },
     {
         "starName": "HIP72010Cen",
+        "starLabel": "HIP72010",
+        "constellation": "Centaurus (ケンタウルス座)",
         "raHour": "14",
         "raMin": "43",
         "raSec": "39.4",
@@ -4832,11 +4846,12 @@ const stars = [
         "decDeg": "35",
         "decMin": "10",
         "decSec": "25",
-        "magnitude": "4.05",
-        "constellation": "Centaurus (ケンタウルス座)"
+        "magnitude": "4.05"
     },
     {
         "starName": "κCen",
+        "starLabel": "κ",
+        "constellation": "Centaurus (ケンタウルス座)",
         "raHour": "14",
         "raMin": "59",
         "raSec": "9.7",
@@ -4844,23 +4859,12 @@ const stars = [
         "decDeg": "42",
         "decMin": "6",
         "decSec": "15",
-        "magnitude": "3.13",
-        "constellation": "Centaurus (ケンタウルス座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "3.13"
     },
     {
         "starName": "ιMic",
+        "starLabel": "ι",
+        "constellation": "Microscopium (けんびきょう座)",
         "raHour": "20",
         "raMin": "48",
         "raSec": "29.2",
@@ -4868,11 +4872,12 @@ const stars = [
         "decDeg": "43",
         "decMin": "59",
         "decSec": "19",
-        "magnitude": "5.11",
-        "constellation": "Microscopium (けんびきょう座)"
+        "magnitude": "5.11"
     },
     {
         "starName": "αMic",
+        "starLabel": "α",
+        "constellation": "Microscopium (けんびきょう座)",
         "raHour": "20",
         "raMin": "49",
         "raSec": "58.1",
@@ -4880,11 +4885,12 @@ const stars = [
         "decDeg": "33",
         "decMin": "46",
         "decSec": "47",
-        "magnitude": "4.9",
-        "constellation": "Microscopium (けんびきょう座)"
+        "magnitude": "4.9"
     },
     {
         "starName": "γMic",
+        "starLabel": "γ",
+        "constellation": "Microscopium (けんびきょう座)",
         "raHour": "21",
         "raMin": "1",
         "raSec": "17.5",
@@ -4892,11 +4898,12 @@ const stars = [
         "decDeg": "32",
         "decMin": "15",
         "decSec": "28",
-        "magnitude": "4.67",
-        "constellation": "Microscopium (けんびきょう座)"
+        "magnitude": "4.67"
     },
     {
         "starName": "εMic",
+        "starLabel": "ε",
+        "constellation": "Microscopium (けんびきょう座)",
         "raHour": "21",
         "raMin": "17",
         "raSec": "56.3",
@@ -4904,11 +4911,12 @@ const stars = [
         "decDeg": "32",
         "decMin": "10",
         "decSec": "21",
-        "magnitude": "4.71",
-        "constellation": "Microscopium (けんびきょう座)"
+        "magnitude": "4.71"
     },
     {
         "starName": "θ1Mic",
+        "starLabel": "θ1",
+        "constellation": "Microscopium (けんびきょう座)",
         "raHour": "21",
         "raMin": "20",
         "raSec": "45.6",
@@ -4916,23 +4924,12 @@ const stars = [
         "decDeg": "40",
         "decMin": "48",
         "decSec": "35",
-        "magnitude": "4.82",
-        "constellation": "Microscopium (けんびきょう座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "4.82"
     },
     {
         "starName": "3βCMi",
+        "starLabel": "3β",
+        "constellation": "Canis Minor (こいぬ座)",
         "raHour": "7",
         "raMin": "27",
         "raSec": "9",
@@ -4940,11 +4937,12 @@ const stars = [
         "decDeg": "8",
         "decMin": "17",
         "decSec": "22",
-        "magnitude": "2.9",
-        "constellation": "Canis Minor (こいぬ座)"
+        "magnitude": "2.9"
     },
     {
         "starName": "10αCMi",
+        "starLabel": "10α",
+        "constellation": "Canis Minor (こいぬ座)",
         "raHour": "7",
         "raMin": "39",
         "raSec": "18.1",
@@ -4952,23 +4950,12 @@ const stars = [
         "decDeg": "5",
         "decMin": "13",
         "decSec": "30",
-        "magnitude": "0.38",
-        "constellation": "Canis Minor (こいぬ座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "0.38"
     },
     {
         "starName": "5γEqu",
+        "starLabel": "5γ",
+        "constellation": "Equuleus (こうま座)",
         "raHour": "21",
         "raMin": "10",
         "raSec": "20.5",
@@ -4976,11 +4963,12 @@ const stars = [
         "decDeg": "10",
         "decMin": "7",
         "decSec": "54",
-        "magnitude": "4.69",
-        "constellation": "Equuleus (こうま座)"
+        "magnitude": "4.69"
     },
     {
         "starName": "7δEqu",
+        "starLabel": "7δ",
+        "constellation": "Equuleus (こうま座)",
         "raHour": "21",
         "raMin": "14",
         "raSec": "28.9",
@@ -4988,11 +4976,12 @@ const stars = [
         "decDeg": "10",
         "decMin": "0",
         "decSec": "25",
-        "magnitude": "4.49",
-        "constellation": "Equuleus (こうま座)"
+        "magnitude": "4.49"
     },
     {
         "starName": "8αEqu",
+        "starLabel": "8α",
+        "constellation": "Equuleus (こうま座)",
         "raHour": "21",
         "raMin": "15",
         "raSec": "49.4",
@@ -5000,11 +4989,12 @@ const stars = [
         "decDeg": "5",
         "decMin": "14",
         "decSec": "52",
-        "magnitude": "3.92",
-        "constellation": "Equuleus (こうま座)"
+        "magnitude": "3.92"
     },
     {
         "starName": "10βEqu",
+        "starLabel": "10β",
+        "constellation": "Equuleus (こうま座)",
         "raHour": "21",
         "raMin": "22",
         "raSec": "53.6",
@@ -5012,23 +5002,12 @@ const stars = [
         "decDeg": "6",
         "decMin": "48",
         "decSec": "40",
-        "magnitude": "5.16",
-        "constellation": "Equuleus (こうま座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "5.16"
     },
     {
         "starName": "6αVul",
+        "starLabel": "6α",
+        "constellation": "Vulpecula (こぎつね座)",
         "raHour": "19",
         "raMin": "28",
         "raSec": "42.3",
@@ -5036,11 +5015,12 @@ const stars = [
         "decDeg": "24",
         "decMin": "39",
         "decSec": "54",
-        "magnitude": "4.44",
-        "constellation": "Vulpecula (こぎつね座)"
+        "magnitude": "4.44"
     },
     {
         "starName": "13Vul",
+        "starLabel": "13",
+        "constellation": "Vulpecula (こぎつね座)",
         "raHour": "19",
         "raMin": "53",
         "raSec": "27.7",
@@ -5048,11 +5028,12 @@ const stars = [
         "decDeg": "24",
         "decMin": "4",
         "decSec": "47",
-        "magnitude": "4.58",
-        "constellation": "Vulpecula (こぎつね座)"
+        "magnitude": "4.58"
     },
     {
         "starName": "31Vul",
+        "starLabel": "31",
+        "constellation": "Vulpecula (こぎつね座)",
         "raHour": "20",
         "raMin": "52",
         "raSec": "7.7",
@@ -5060,23 +5041,12 @@ const stars = [
         "decDeg": "27",
         "decMin": "5",
         "decSec": "49",
-        "magnitude": "4.59",
-        "constellation": "Vulpecula (こぎつね座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "4.59"
     },
     {
         "starName": "1αUMi",
+        "starLabel": "1α",
+        "constellation": "Ursa Minor (こぐま座)",
         "raHour": "2",
         "raMin": "31",
         "raSec": "48.7",
@@ -5084,11 +5054,12 @@ const stars = [
         "decDeg": "89",
         "decMin": "15",
         "decSec": "51",
-        "magnitude": "2.02",
-        "constellation": "Ursa Minor (こぐま座)"
+        "magnitude": "2.02"
     },
     {
         "starName": "7βUMi",
+        "starLabel": "7β",
+        "constellation": "Ursa Minor (こぐま座)",
         "raHour": "14",
         "raMin": "50",
         "raSec": "42.3",
@@ -5096,11 +5067,12 @@ const stars = [
         "decDeg": "74",
         "decMin": "9",
         "decSec": "20",
-        "magnitude": "2.08",
-        "constellation": "Ursa Minor (こぐま座)"
+        "magnitude": "2.08"
     },
     {
         "starName": "13γUMi",
+        "starLabel": "13γ",
+        "constellation": "Ursa Minor (こぐま座)",
         "raHour": "15",
         "raMin": "20",
         "raSec": "43.7",
@@ -5108,11 +5080,12 @@ const stars = [
         "decDeg": "71",
         "decMin": "50",
         "decSec": "2",
-        "magnitude": "3.05",
-        "constellation": "Ursa Minor (こぐま座)"
+        "magnitude": "3.05"
     },
     {
         "starName": "16ζUMi",
+        "starLabel": "16ζ",
+        "constellation": "Ursa Minor (こぐま座)",
         "raHour": "15",
         "raMin": "44",
         "raSec": "3.5",
@@ -5120,11 +5093,12 @@ const stars = [
         "decDeg": "77",
         "decMin": "47",
         "decSec": "40",
-        "magnitude": "4.32",
-        "constellation": "Ursa Minor (こぐま座)"
+        "magnitude": "4.32"
     },
     {
         "starName": "21ηUMi",
+        "starLabel": "21η",
+        "constellation": "Ursa Minor (こぐま座)",
         "raHour": "16",
         "raMin": "17",
         "raSec": "30.3",
@@ -5132,11 +5106,12 @@ const stars = [
         "decDeg": "75",
         "decMin": "45",
         "decSec": "19",
-        "magnitude": "4.95",
-        "constellation": "Ursa Minor (こぐま座)"
+        "magnitude": "4.95"
     },
     {
         "starName": "22εUMi",
+        "starLabel": "22ε",
+        "constellation": "Ursa Minor (こぐま座)",
         "raHour": "16",
         "raMin": "45",
         "raSec": "58.1",
@@ -5144,11 +5119,12 @@ const stars = [
         "decDeg": "82",
         "decMin": "2",
         "decSec": "14",
-        "magnitude": "4.23",
-        "constellation": "Ursa Minor (こぐま座)"
+        "magnitude": "4.23"
     },
     {
         "starName": "23δUMi",
+        "starLabel": "23δ",
+        "constellation": "Ursa Minor (こぐま座)",
         "raHour": "17",
         "raMin": "32",
         "raSec": "12.9",
@@ -5156,23 +5132,12 @@ const stars = [
         "decDeg": "86",
         "decMin": "35",
         "decSec": "11",
-        "magnitude": "4.36",
-        "constellation": "Ursa Minor (こぐま座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "4.36"
     },
     {
         "starName": "10LMi",
+        "starLabel": "10",
+        "constellation": "Leo Minor (こじし座)",
         "raHour": "9",
         "raMin": "34",
         "raSec": "13.4",
@@ -5180,11 +5145,12 @@ const stars = [
         "decDeg": "36",
         "decMin": "23",
         "decSec": "51",
-        "magnitude": "4.55",
-        "constellation": "Leo Minor (こじし座)"
+        "magnitude": "4.55"
     },
     {
         "starName": "21LMi",
+        "starLabel": "21",
+        "constellation": "Leo Minor (こじし座)",
         "raHour": "10",
         "raMin": "7",
         "raSec": "25.8",
@@ -5192,11 +5158,12 @@ const stars = [
         "decDeg": "35",
         "decMin": "14",
         "decSec": "41",
-        "magnitude": "4.48",
-        "constellation": "Leo Minor (こじし座)"
+        "magnitude": "4.48"
     },
     {
         "starName": "31βLMi",
+        "starLabel": "31β",
+        "constellation": "Leo Minor (こじし座)",
         "raHour": "10",
         "raMin": "27",
         "raSec": "53",
@@ -5204,11 +5171,12 @@ const stars = [
         "decDeg": "36",
         "decMin": "42",
         "decSec": "26",
-        "magnitude": "4.21",
-        "constellation": "Leo Minor (こじし座)"
+        "magnitude": "4.21"
     },
     {
         "starName": "46LMi",
+        "starLabel": "46",
+        "constellation": "Leo Minor (こじし座)",
         "raHour": "10",
         "raMin": "53",
         "raSec": "18.7",
@@ -5216,23 +5184,12 @@ const stars = [
         "decDeg": "34",
         "decMin": "12",
         "decSec": "54",
-        "magnitude": "3.83",
-        "constellation": "Leo Minor (こじし座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "3.83"
     },
     {
         "starName": "7αCrt",
+        "starLabel": "7α",
+        "constellation": "Crater (コップ座)",
         "raHour": "10",
         "raMin": "59",
         "raSec": "46.5",
@@ -5240,11 +5197,12 @@ const stars = [
         "decDeg": "18",
         "decMin": "17",
         "decSec": "56",
-        "magnitude": "4.08",
-        "constellation": "Crater (コップ座)"
+        "magnitude": "4.08"
     },
     {
         "starName": "11βCrt",
+        "starLabel": "11β",
+        "constellation": "Crater (コップ座)",
         "raHour": "11",
         "raMin": "11",
         "raSec": "39.5",
@@ -5252,11 +5210,12 @@ const stars = [
         "decDeg": "22",
         "decMin": "49",
         "decSec": "33",
-        "magnitude": "4.48",
-        "constellation": "Crater (コップ座)"
+        "magnitude": "4.48"
     },
     {
         "starName": "12δCrt",
+        "starLabel": "12δ",
+        "constellation": "Crater (コップ座)",
         "raHour": "11",
         "raMin": "19",
         "raSec": "20.5",
@@ -5264,11 +5223,12 @@ const stars = [
         "decDeg": "14",
         "decMin": "46",
         "decSec": "43",
-        "magnitude": "3.56",
-        "constellation": "Crater (コップ座)"
+        "magnitude": "3.56"
     },
     {
         "starName": "14εCrt",
+        "starLabel": "14ε",
+        "constellation": "Crater (コップ座)",
         "raHour": "11",
         "raMin": "24",
         "raSec": "36.6",
@@ -5276,11 +5236,12 @@ const stars = [
         "decDeg": "10",
         "decMin": "51",
         "decSec": "34",
-        "magnitude": "4.83",
-        "constellation": "Crater (コップ座)"
+        "magnitude": "4.83"
     },
     {
         "starName": "15γCrt",
+        "starLabel": "15γ",
+        "constellation": "Crater (コップ座)",
         "raHour": "11",
         "raMin": "24",
         "raSec": "52.9",
@@ -5288,11 +5249,12 @@ const stars = [
         "decDeg": "17",
         "decMin": "41",
         "decSec": "2",
-        "magnitude": "4.08",
-        "constellation": "Crater (コップ座)"
+        "magnitude": "4.08"
     },
     {
         "starName": "21θCrt",
+        "starLabel": "21θ",
+        "constellation": "Crater (コップ座)",
         "raHour": "11",
         "raMin": "36",
         "raSec": "40.9",
@@ -5300,11 +5262,12 @@ const stars = [
         "decDeg": "9",
         "decMin": "48",
         "decSec": "8",
-        "magnitude": "4.7",
-        "constellation": "Crater (コップ座)"
+        "magnitude": "4.7"
     },
     {
         "starName": "27ζCrt",
+        "starLabel": "27ζ",
+        "constellation": "Crater (コップ座)",
         "raHour": "11",
         "raMin": "44",
         "raSec": "45.8",
@@ -5312,11 +5275,12 @@ const stars = [
         "decDeg": "18",
         "decMin": "21",
         "decSec": "3",
-        "magnitude": "4.73",
-        "constellation": "Crater (コップ座)"
+        "magnitude": "4.73"
     },
     {
         "starName": "30ηCrt",
+        "starLabel": "30η",
+        "constellation": "Crater (コップ座)",
         "raHour": "11",
         "raMin": "56",
         "raSec": "0.9",
@@ -5324,23 +5288,12 @@ const stars = [
         "decDeg": "17",
         "decMin": "9",
         "decSec": "3",
-        "magnitude": "5.18",
-        "constellation": "Crater (コップ座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "5.18"
     },
     {
         "starName": "3αLyr",
+        "starLabel": "3α",
+        "constellation": "Lyra (こと座)",
         "raHour": "18",
         "raMin": "36",
         "raSec": "56.3",
@@ -5348,11 +5301,12 @@ const stars = [
         "decDeg": "38",
         "decMin": "47",
         "decSec": "1",
-        "magnitude": "0.03",
-        "constellation": "Lyra (こと座)"
+        "magnitude": "0.03"
     },
     {
         "starName": "4ε1Lyr",
+        "starLabel": "4ε1",
+        "constellation": "Lyra (こと座)",
         "raHour": "18",
         "raMin": "44",
         "raSec": "20.4",
@@ -5360,11 +5314,12 @@ const stars = [
         "decDeg": "39",
         "decMin": "40",
         "decSec": "12",
-        "magnitude": "5.06",
-        "constellation": "Lyra (こと座)"
+        "magnitude": "5.06"
     },
     {
         "starName": "6ζ1Lyr",
+        "starLabel": "6ζ1",
+        "constellation": "Lyra (こと座)",
         "raHour": "18",
         "raMin": "44",
         "raSec": "46.4",
@@ -5372,11 +5327,12 @@ const stars = [
         "decDeg": "37",
         "decMin": "36",
         "decSec": "18",
-        "magnitude": "4.36",
-        "constellation": "Lyra (こと座)"
+        "magnitude": "4.36"
     },
     {
         "starName": "10βLyr",
+        "starLabel": "10β",
+        "constellation": "Lyra (こと座)",
         "raHour": "18",
         "raMin": "50",
         "raSec": "4.8",
@@ -5384,11 +5340,12 @@ const stars = [
         "decDeg": "33",
         "decMin": "21",
         "decSec": "46",
-        "magnitude": "3.45",
-        "constellation": "Lyra (こと座)"
+        "magnitude": "3.45"
     },
     {
         "starName": "12δ2Lyr",
+        "starLabel": "12δ2",
+        "constellation": "Lyra (こと座)",
         "raHour": "18",
         "raMin": "54",
         "raSec": "30.2",
@@ -5396,11 +5353,12 @@ const stars = [
         "decDeg": "36",
         "decMin": "53",
         "decSec": "56",
-        "magnitude": "4.3",
-        "constellation": "Lyra (こと座)"
+        "magnitude": "4.3"
     },
     {
         "starName": "14γLyr",
+        "starLabel": "14γ",
+        "constellation": "Lyra (こと座)",
         "raHour": "18",
         "raMin": "58",
         "raSec": "56.6",
@@ -5408,23 +5366,12 @@ const stars = [
         "decDeg": "32",
         "decMin": "41",
         "decSec": "22",
-        "magnitude": "3.24",
-        "constellation": "Lyra (こと座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "3.24"
     },
     {
         "starName": "αCir",
+        "starLabel": "α",
+        "constellation": "Circinus (コンパス座)",
         "raHour": "14",
         "raMin": "42",
         "raSec": "30.4",
@@ -5432,11 +5379,12 @@ const stars = [
         "decDeg": "64",
         "decMin": "58",
         "decSec": "31",
-        "magnitude": "3.19",
-        "constellation": "Circinus (コンパス座)"
+        "magnitude": "3.19"
     },
     {
         "starName": "βCir",
+        "starLabel": "β",
+        "constellation": "Circinus (コンパス座)",
         "raHour": "15",
         "raMin": "17",
         "raSec": "30.8",
@@ -5444,11 +5392,12 @@ const stars = [
         "decDeg": "58",
         "decMin": "48",
         "decSec": "4",
-        "magnitude": "4.07",
-        "constellation": "Circinus (コンパス座)"
+        "magnitude": "4.07"
     },
     {
         "starName": "γCir",
+        "starLabel": "γ",
+        "constellation": "Circinus (コンパス座)",
         "raHour": "15",
         "raMin": "23",
         "raSec": "22.7",
@@ -5456,23 +5405,12 @@ const stars = [
         "decDeg": "59",
         "decMin": "19",
         "decSec": "15",
-        "magnitude": "4.51",
-        "constellation": "Circinus (コンパス座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "4.51"
     },
     {
         "starName": "ηAra",
+        "starLabel": "η",
+        "constellation": "Ara (さいだん座)",
         "raHour": "16",
         "raMin": "49",
         "raSec": "47.1",
@@ -5480,11 +5418,12 @@ const stars = [
         "decDeg": "59",
         "decMin": "2",
         "decSec": "29",
-        "magnitude": "3.76",
-        "constellation": "Ara (さいだん座)"
+        "magnitude": "3.76"
     },
     {
         "starName": "ζAra",
+        "starLabel": "ζ",
+        "constellation": "Ara (さいだん座)",
         "raHour": "16",
         "raMin": "58",
         "raSec": "37.2",
@@ -5492,11 +5431,12 @@ const stars = [
         "decDeg": "55",
         "decMin": "59",
         "decSec": "25",
-        "magnitude": "3.13",
-        "constellation": "Ara (さいだん座)"
+        "magnitude": "3.13"
     },
     {
         "starName": "ε1Ara",
+        "starLabel": "ε1",
+        "constellation": "Ara (さいだん座)",
         "raHour": "16",
         "raMin": "59",
         "raSec": "35.1",
@@ -5504,11 +5444,12 @@ const stars = [
         "decDeg": "53",
         "decMin": "9",
         "decSec": "38",
-        "magnitude": "4.06",
-        "constellation": "Ara (さいだん座)"
+        "magnitude": "4.06"
     },
     {
         "starName": "βAra",
+        "starLabel": "β",
+        "constellation": "Ara (さいだん座)",
         "raHour": "17",
         "raMin": "25",
         "raSec": "18",
@@ -5516,11 +5457,12 @@ const stars = [
         "decDeg": "55",
         "decMin": "31",
         "decSec": "48",
-        "magnitude": "2.85",
-        "constellation": "Ara (さいだん座)"
+        "magnitude": "2.85"
     },
     {
         "starName": "γAra",
+        "starLabel": "γ",
+        "constellation": "Ara (さいだん座)",
         "raHour": "17",
         "raMin": "25",
         "raSec": "23.6",
@@ -5528,11 +5470,12 @@ const stars = [
         "decDeg": "56",
         "decMin": "22",
         "decSec": "39",
-        "magnitude": "3.34",
-        "constellation": "Ara (さいだん座)"
+        "magnitude": "3.34"
     },
     {
         "starName": "δAra",
+        "starLabel": "δ",
+        "constellation": "Ara (さいだん座)",
         "raHour": "17",
         "raMin": "31",
         "raSec": "5.9",
@@ -5540,11 +5483,12 @@ const stars = [
         "decDeg": "60",
         "decMin": "41",
         "decSec": "2",
-        "magnitude": "3.62",
-        "constellation": "Ara (さいだん座)"
+        "magnitude": "3.62"
     },
     {
         "starName": "αAra",
+        "starLabel": "α",
+        "constellation": "Ara (さいだん座)",
         "raHour": "17",
         "raMin": "31",
         "raSec": "50.5",
@@ -5552,11 +5496,12 @@ const stars = [
         "decDeg": "49",
         "decMin": "52",
         "decSec": "34",
-        "magnitude": "2.95",
-        "constellation": "Ara (さいだん座)"
+        "magnitude": "2.95"
     },
     {
         "starName": "θAra",
+        "starLabel": "θ",
+        "constellation": "Ara (さいだん座)",
         "raHour": "18",
         "raMin": "6",
         "raSec": "37.9",
@@ -5564,23 +5509,12 @@ const stars = [
         "decDeg": "50",
         "decMin": "5",
         "decSec": "30",
-        "magnitude": "3.66",
-        "constellation": "Ara (さいだん座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "3.66"
     },
     {
         "starName": "5ρSco",
+        "starLabel": "5ρ",
+        "constellation": "Scorpius (さそり座)",
         "raHour": "15",
         "raMin": "56",
         "raSec": "53.1",
@@ -5588,11 +5522,12 @@ const stars = [
         "decDeg": "29",
         "decMin": "12",
         "decSec": "51",
-        "magnitude": "3.88",
-        "constellation": "Scorpius (さそり座)"
+        "magnitude": "3.88"
     },
     {
         "starName": "6πSco",
+        "starLabel": "6π",
+        "constellation": "Scorpius (さそり座)",
         "raHour": "15",
         "raMin": "58",
         "raSec": "51.1",
@@ -5600,11 +5535,12 @@ const stars = [
         "decDeg": "26",
         "decMin": "6",
         "decSec": "51",
-        "magnitude": "2.89",
-        "constellation": "Scorpius (さそり座)"
+        "magnitude": "2.89"
     },
     {
         "starName": "7δSco",
+        "starLabel": "7δ",
+        "constellation": "Scorpius (さそり座)",
         "raHour": "16",
         "raMin": "0",
         "raSec": "20",
@@ -5612,11 +5548,12 @@ const stars = [
         "decDeg": "22",
         "decMin": "37",
         "decSec": "18",
-        "magnitude": "2.32",
-        "constellation": "Scorpius (さそり座)"
+        "magnitude": "2.32"
     },
     {
         "starName": "8β1Sco",
+        "starLabel": "8β1",
+        "constellation": "Scorpius (さそり座)",
         "raHour": "16",
         "raMin": "5",
         "raSec": "26.2",
@@ -5624,11 +5561,12 @@ const stars = [
         "decDeg": "19",
         "decMin": "48",
         "decSec": "20",
-        "magnitude": "2.62",
-        "constellation": "Scorpius (さそり座)"
+        "magnitude": "2.62"
     },
     {
         "starName": "20σSco",
+        "starLabel": "20σ",
+        "constellation": "Scorpius (さそり座)",
         "raHour": "16",
         "raMin": "21",
         "raSec": "11.3",
@@ -5636,11 +5574,12 @@ const stars = [
         "decDeg": "25",
         "decMin": "35",
         "decSec": "34",
-        "magnitude": "2.89",
-        "constellation": "Scorpius (さそり座)"
+        "magnitude": "2.89"
     },
     {
         "starName": "21αSco",
+        "starLabel": "21α",
+        "constellation": "Scorpius (さそり座)",
         "raHour": "16",
         "raMin": "29",
         "raSec": "24.4",
@@ -5648,11 +5587,12 @@ const stars = [
         "decDeg": "26",
         "decMin": "25",
         "decSec": "55",
-        "magnitude": "0.96",
-        "constellation": "Scorpius (さそり座)"
+        "magnitude": "0.96"
     },
     {
         "starName": "23τSco",
+        "starLabel": "23τ",
+        "constellation": "Scorpius (さそり座)",
         "raHour": "16",
         "raMin": "35",
         "raSec": "53",
@@ -5660,11 +5600,12 @@ const stars = [
         "decDeg": "28",
         "decMin": "12",
         "decSec": "58",
-        "magnitude": "2.82",
-        "constellation": "Scorpius (さそり座)"
+        "magnitude": "2.82"
     },
     {
         "starName": "26εSco",
+        "starLabel": "26ε",
+        "constellation": "Scorpius (さそり座)",
         "raHour": "16",
         "raMin": "50",
         "raSec": "9.8",
@@ -5672,11 +5613,12 @@ const stars = [
         "decDeg": "34",
         "decMin": "17",
         "decSec": "36",
-        "magnitude": "2.29",
-        "constellation": "Scorpius (さそり座)"
+        "magnitude": "2.29"
     },
     {
         "starName": "μ1Sco",
+        "starLabel": "μ 1",
+        "constellation": "Scorpius (さそり座)",
         "raHour": "16",
         "raMin": "51",
         "raSec": "52.2",
@@ -5684,11 +5626,12 @@ const stars = [
         "decDeg": "38",
         "decMin": "2",
         "decSec": "51",
-        "magnitude": "3.08",
-        "constellation": "Scorpius (さそり座)"
+        "magnitude": "3.08"
     },
     {
         "starName": "ζ2Sco",
+        "starLabel": "ζ2",
+        "constellation": "Scorpius (さそり座)",
         "raHour": "16",
         "raMin": "54",
         "raSec": "35",
@@ -5696,11 +5639,12 @@ const stars = [
         "decDeg": "42",
         "decMin": "21",
         "decSec": "41",
-        "magnitude": "3.62",
-        "constellation": "Scorpius (さそり座)"
+        "magnitude": "3.62"
     },
     {
         "starName": "ηSco",
+        "starLabel": "η",
+        "constellation": "Scorpius (さそり座)",
         "raHour": "17",
         "raMin": "12",
         "raSec": "9.2",
@@ -5708,11 +5652,12 @@ const stars = [
         "decDeg": "43",
         "decMin": "14",
         "decSec": "21",
-        "magnitude": "3.33",
-        "constellation": "Scorpius (さそり座)"
+        "magnitude": "3.33"
     },
     {
         "starName": "35λSco",
+        "starLabel": "35λ",
+        "constellation": "Scorpius (さそり座)",
         "raHour": "17",
         "raMin": "33",
         "raSec": "36.5",
@@ -5720,11 +5665,12 @@ const stars = [
         "decDeg": "37",
         "decMin": "6",
         "decSec": "14",
-        "magnitude": "1.63",
-        "constellation": "Scorpius (さそり座)"
+        "magnitude": "1.63"
     },
     {
         "starName": "θSco",
+        "starLabel": "θ",
+        "constellation": "Scorpius (さそり座)",
         "raHour": "17",
         "raMin": "37",
         "raSec": "19.2",
@@ -5732,11 +5678,12 @@ const stars = [
         "decDeg": "42",
         "decMin": "59",
         "decSec": "52",
-        "magnitude": "1.87",
-        "constellation": "Scorpius (さそり座)"
+        "magnitude": "1.87"
     },
     {
         "starName": "κSco",
+        "starLabel": "κ",
+        "constellation": "Scorpius (さそり座)",
         "raHour": "17",
         "raMin": "42",
         "raSec": "29.3",
@@ -5744,11 +5691,12 @@ const stars = [
         "decDeg": "39",
         "decMin": "1",
         "decSec": "48",
-        "magnitude": "2.41",
-        "constellation": "Scorpius (さそり座)"
+        "magnitude": "2.41"
     },
     {
         "starName": "ι1Sco",
+        "starLabel": "ι1",
+        "constellation": "Scorpius (さそり座)",
         "raHour": "17",
         "raMin": "47",
         "raSec": "35.1",
@@ -5756,11 +5704,12 @@ const stars = [
         "decDeg": "40",
         "decMin": "7",
         "decSec": "37",
-        "magnitude": "3.03",
-        "constellation": "Scorpius (さそり座)"
+        "magnitude": "3.03"
     },
     {
         "starName": "HIP87261Sco",
+        "starLabel": "HIP87261",
+        "constellation": "Scorpius (さそり座)",
         "raHour": "17",
         "raMin": "49",
         "raSec": "51.5",
@@ -5768,23 +5717,12 @@ const stars = [
         "decDeg": "37",
         "decMin": "2",
         "decSec": "36",
-        "magnitude": "3.21",
-        "constellation": "Scorpius (さそり座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "3.21"
     },
     {
         "starName": "2αTri",
+        "starLabel": "2α",
+        "constellation": "Triangulum (さんかく座)",
         "raHour": "1",
         "raMin": "53",
         "raSec": "4.9",
@@ -5792,11 +5730,12 @@ const stars = [
         "decDeg": "29",
         "decMin": "34",
         "decSec": "44",
-        "magnitude": "3.41",
-        "constellation": "Triangulum (さんかく座)"
+        "magnitude": "3.41"
     },
     {
         "starName": "4βTri",
+        "starLabel": "4β",
+        "constellation": "Triangulum (さんかく座)",
         "raHour": "2",
         "raMin": "9",
         "raSec": "32.6",
@@ -5804,11 +5743,12 @@ const stars = [
         "decDeg": "34",
         "decMin": "59",
         "decSec": "14",
-        "magnitude": "3",
-        "constellation": "Triangulum (さんかく座)"
+        "magnitude": "3"
     },
     {
         "starName": "9γTri",
+        "starLabel": "9γ",
+        "constellation": "Triangulum (さんかく座)",
         "raHour": "2",
         "raMin": "17",
         "raSec": "18.9",
@@ -5816,23 +5756,12 @@ const stars = [
         "decDeg": "33",
         "decMin": "50",
         "decSec": "50",
-        "magnitude": "4.01",
-        "constellation": "Triangulum (さんかく座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "4.01"
     },
     {
         "starName": "4λLeo",
+        "starLabel": "4λ",
+        "constellation": "Leo (しし座)",
         "raHour": "9",
         "raMin": "31",
         "raSec": "43.2",
@@ -5840,11 +5769,12 @@ const stars = [
         "decDeg": "22",
         "decMin": "58",
         "decSec": "5",
-        "magnitude": "4.31",
-        "constellation": "Leo (しし座)"
+        "magnitude": "4.31"
     },
     {
         "starName": "14οLeo",
+        "starLabel": "14ο",
+        "constellation": "Leo (しし座)",
         "raHour": "9",
         "raMin": "41",
         "raSec": "9",
@@ -5852,11 +5782,12 @@ const stars = [
         "decDeg": "9",
         "decMin": "53",
         "decSec": "32",
-        "magnitude": "3.52",
-        "constellation": "Leo (しし座)"
+        "magnitude": "3.52"
     },
     {
         "starName": "17εLeo",
+        "starLabel": "17ε",
+        "constellation": "Leo (しし座)",
         "raHour": "9",
         "raMin": "45",
         "raSec": "51.1",
@@ -5864,11 +5795,12 @@ const stars = [
         "decDeg": "23",
         "decMin": "46",
         "decSec": "27",
-        "magnitude": "2.98",
-        "constellation": "Leo (しし座)"
+        "magnitude": "2.98"
     },
     {
         "starName": "24μLeo",
+        "starLabel": "24μ",
+        "constellation": "Leo (しし座)",
         "raHour": "9",
         "raMin": "52",
         "raSec": "45.8",
@@ -5876,11 +5808,12 @@ const stars = [
         "decDeg": "26",
         "decMin": "0",
         "decSec": "25",
-        "magnitude": "3.88",
-        "constellation": "Leo (しし座)"
+        "magnitude": "3.88"
     },
     {
         "starName": "30ηLeo",
+        "starLabel": "30η",
+        "constellation": "Leo (しし座)",
         "raHour": "10",
         "raMin": "7",
         "raSec": "20",
@@ -5888,11 +5821,12 @@ const stars = [
         "decDeg": "16",
         "decMin": "45",
         "decSec": "46",
-        "magnitude": "3.52",
-        "constellation": "Leo (しし座)"
+        "magnitude": "3.52"
     },
     {
         "starName": "31Leo",
+        "starLabel": "31",
+        "constellation": "Leo (しし座)",
         "raHour": "10",
         "raMin": "7",
         "raSec": "54.3",
@@ -5900,11 +5834,12 @@ const stars = [
         "decDeg": "9",
         "decMin": "59",
         "decSec": "51",
-        "magnitude": "4.37",
-        "constellation": "Leo (しし座)"
+        "magnitude": "4.37"
     },
     {
         "starName": "32αLeo",
+        "starLabel": "32α",
+        "constellation": "Leo (しし座)",
         "raHour": "10",
         "raMin": "8",
         "raSec": "22.3",
@@ -5912,11 +5847,12 @@ const stars = [
         "decDeg": "11",
         "decMin": "58",
         "decSec": "2",
-        "magnitude": "1.35",
-        "constellation": "Leo (しし座)"
+        "magnitude": "1.35"
     },
     {
         "starName": "36ζLeo",
+        "starLabel": "36ζ",
+        "constellation": "Leo (しし座)",
         "raHour": "10",
         "raMin": "16",
         "raSec": "41.4",
@@ -5924,11 +5860,12 @@ const stars = [
         "decDeg": "23",
         "decMin": "25",
         "decSec": "2",
-        "magnitude": "3.44",
-        "constellation": "Leo (しし座)"
+        "magnitude": "3.44"
     },
     {
         "starName": "41γ1Leo",
+        "starLabel": "41γ1",
+        "constellation": "Leo (しし座)",
         "raHour": "10",
         "raMin": "19",
         "raSec": "58.3",
@@ -5936,11 +5873,12 @@ const stars = [
         "decDeg": "19",
         "decMin": "50",
         "decSec": "30",
-        "magnitude": "2.61",
-        "constellation": "Leo (しし座)"
+        "magnitude": "2.61"
     },
     {
         "starName": "47ρLeo",
+        "starLabel": "47ρ",
+        "constellation": "Leo (しし座)",
         "raHour": "10",
         "raMin": "32",
         "raSec": "48.7",
@@ -5948,11 +5886,12 @@ const stars = [
         "decDeg": "9",
         "decMin": "18",
         "decSec": "24",
-        "magnitude": "3.85",
-        "constellation": "Leo (しし座)"
+        "magnitude": "3.85"
     },
     {
         "starName": "52Leo",
+        "starLabel": "52",
+        "constellation": "Leo (しし座)",
         "raHour": "10",
         "raMin": "46",
         "raSec": "25.3",
@@ -5960,11 +5899,12 @@ const stars = [
         "decDeg": "14",
         "decMin": "11",
         "decSec": "41",
-        "magnitude": "5.48",
-        "constellation": "Leo (しし座)"
+        "magnitude": "5.48"
     },
     {
         "starName": "60Leo",
+        "starLabel": "60",
+        "constellation": "Leo (しし座)",
         "raHour": "11",
         "raMin": "2",
         "raSec": "19.8",
@@ -5972,11 +5912,12 @@ const stars = [
         "decDeg": "20",
         "decMin": "10",
         "decSec": "47",
-        "magnitude": "4.42",
-        "constellation": "Leo (しし座)"
+        "magnitude": "4.42"
     },
     {
         "starName": "68δLeo",
+        "starLabel": "68δ",
+        "constellation": "Leo (しし座)",
         "raHour": "11",
         "raMin": "14",
         "raSec": "6.5",
@@ -5984,11 +5925,12 @@ const stars = [
         "decDeg": "20",
         "decMin": "31",
         "decSec": "25",
-        "magnitude": "2.56",
-        "constellation": "Leo (しし座)"
+        "magnitude": "2.56"
     },
     {
         "starName": "70θLeo",
+        "starLabel": "70θ",
+        "constellation": "Leo (しし座)",
         "raHour": "11",
         "raMin": "14",
         "raSec": "14.4",
@@ -5996,11 +5938,12 @@ const stars = [
         "decDeg": "15",
         "decMin": "25",
         "decSec": "46",
-        "magnitude": "3.34",
-        "constellation": "Leo (しし座)"
+        "magnitude": "3.34"
     },
     {
         "starName": "77σLeo",
+        "starLabel": "77σ",
+        "constellation": "Leo (しし座)",
         "raHour": "11",
         "raMin": "21",
         "raSec": "8.2",
@@ -6008,11 +5951,12 @@ const stars = [
         "decDeg": "6",
         "decMin": "1",
         "decSec": "46",
-        "magnitude": "4.05",
-        "constellation": "Leo (しし座)"
+        "magnitude": "4.05"
     },
     {
         "starName": "78ιLeo",
+        "starLabel": "78ι",
+        "constellation": "Leo (しし座)",
         "raHour": "11",
         "raMin": "23",
         "raSec": "55.5",
@@ -6020,11 +5964,12 @@ const stars = [
         "decDeg": "10",
         "decMin": "31",
         "decSec": "45",
-        "magnitude": "3.94",
-        "constellation": "Leo (しし座)"
+        "magnitude": "3.94"
     },
     {
         "starName": "84τLeo",
+        "starLabel": "84τ",
+        "constellation": "Leo (しし座)",
         "raHour": "11",
         "raMin": "27",
         "raSec": "56.2",
@@ -6032,11 +5977,12 @@ const stars = [
         "decDeg": "2",
         "decMin": "51",
         "decSec": "22",
-        "magnitude": "4.95",
-        "constellation": "Leo (しし座)"
+        "magnitude": "4.95"
     },
     {
         "starName": "91υLeo",
+        "starLabel": "91υ",
+        "constellation": "Leo (しし座)",
         "raHour": "11",
         "raMin": "36",
         "raSec": "56.9",
@@ -6044,11 +5990,12 @@ const stars = [
         "decDeg": "0",
         "decMin": "49",
         "decSec": "26",
-        "magnitude": "4.3",
-        "constellation": "Leo (しし座)"
+        "magnitude": "4.3"
     },
     {
         "starName": "94βLeo",
+        "starLabel": "94β",
+        "constellation": "Leo (しし座)",
         "raHour": "11",
         "raMin": "49",
         "raSec": "3.6",
@@ -6056,23 +6003,12 @@ const stars = [
         "decDeg": "14",
         "decMin": "34",
         "decSec": "19",
-        "magnitude": "2.14",
-        "constellation": "Leo (しし座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "2.14"
     },
     {
         "starName": "ι1Nor",
+        "starLabel": "ι1",
+        "constellation": "Norma (定規座)",
         "raHour": "16",
         "raMin": "3",
         "raSec": "31.9",
@@ -6080,11 +6016,12 @@ const stars = [
         "decDeg": "57",
         "decMin": "46",
         "decSec": "31",
-        "magnitude": "4.63",
-        "constellation": "Norma (定規座)"
+        "magnitude": "4.63"
     },
     {
         "starName": "ηNor",
+        "starLabel": "η",
+        "constellation": "Norma (定規座)",
         "raHour": "16",
         "raMin": "3",
         "raSec": "12.9",
@@ -6092,11 +6029,12 @@ const stars = [
         "decDeg": "49",
         "decMin": "13",
         "decSec": "47",
-        "magnitude": "4.65",
-        "constellation": "Norma (定規座)"
+        "magnitude": "4.65"
     },
     {
         "starName": "δNor",
+        "starLabel": "δ",
+        "constellation": "Norma (定規座)",
         "raHour": "16",
         "raMin": "6",
         "raSec": "29.4",
@@ -6104,11 +6042,12 @@ const stars = [
         "decDeg": "45",
         "decMin": "10",
         "decSec": "24",
-        "magnitude": "4.72",
-        "constellation": "Norma (定規座)"
+        "magnitude": "4.72"
     },
     {
         "starName": "κNor",
+        "starLabel": "κ",
+        "constellation": "Norma (定規座)",
         "raHour": "16",
         "raMin": "13",
         "raSec": "28.7",
@@ -6116,11 +6055,12 @@ const stars = [
         "decDeg": "54",
         "decMin": "37",
         "decSec": "50",
-        "magnitude": "4.94",
-        "constellation": "Norma (定規座)"
+        "magnitude": "4.94"
     },
     {
         "starName": "γ2Nor",
+        "starLabel": "γ2",
+        "constellation": "Norma (定規座)",
         "raHour": "16",
         "raMin": "19",
         "raSec": "50.4",
@@ -6128,11 +6068,12 @@ const stars = [
         "decDeg": "50",
         "decMin": "9",
         "decSec": "20",
-        "magnitude": "4.02",
-        "constellation": "Norma (定規座)"
+        "magnitude": "4.02"
     },
     {
         "starName": "εNor",
+        "starLabel": "ε",
+        "constellation": "Norma (定規座)",
         "raHour": "16",
         "raMin": "27",
         "raSec": "11.1",
@@ -6140,23 +6081,12 @@ const stars = [
         "decDeg": "47",
         "decMin": "33",
         "decSec": "18",
-        "magnitude": "4.47",
-        "constellation": "Norma (定規座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "4.47"
     },
     {
         "starName": "γSct",
+        "starLabel": "γ",
+        "constellation": "Scutum (たて座)",
         "raHour": "18",
         "raMin": "29",
         "raSec": "11.9",
@@ -6164,11 +6094,12 @@ const stars = [
         "decDeg": "14",
         "decMin": "33",
         "decSec": "57",
-        "magnitude": "4.7",
-        "constellation": "Scutum (たて座)"
+        "magnitude": "4.7"
     },
     {
         "starName": "αSct",
+        "starLabel": "α",
+        "constellation": "Scutum (たて座)",
         "raHour": "18",
         "raMin": "35",
         "raSec": "12.4",
@@ -6176,11 +6107,12 @@ const stars = [
         "decDeg": "8",
         "decMin": "14",
         "decSec": "39",
-        "magnitude": "3.85",
-        "constellation": "Scutum (たて座)"
+        "magnitude": "3.85"
     },
     {
         "starName": "βSct",
+        "starLabel": "β",
+        "constellation": "Scutum (たて座)",
         "raHour": "18",
         "raMin": "47",
         "raSec": "10.5",
@@ -6188,23 +6120,12 @@ const stars = [
         "decDeg": "4",
         "decMin": "44",
         "decSec": "52",
-        "magnitude": "4.22",
-        "constellation": "Scutum (たて座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "4.22"
     },
     {
         "starName": "δCae",
+        "starLabel": "δ",
+        "constellation": "Caelum (ちょうこくぐ座)",
         "raHour": "4",
         "raMin": "30",
         "raSec": "50.1",
@@ -6212,11 +6133,12 @@ const stars = [
         "decDeg": "44",
         "decMin": "57",
         "decSec": "14",
-        "magnitude": "5.07",
-        "constellation": "Caelum (ちょうこくぐ座)"
+        "magnitude": "5.07"
     },
     {
         "starName": "αCae",
+        "starLabel": "α",
+        "constellation": "Caelum (ちょうこくぐ座)",
         "raHour": "4",
         "raMin": "40",
         "raSec": "33.7",
@@ -6224,11 +6146,12 @@ const stars = [
         "decDeg": "41",
         "decMin": "51",
         "decSec": "50",
-        "magnitude": "4.45",
-        "constellation": "Caelum (ちょうこくぐ座)"
+        "magnitude": "4.45"
     },
     {
         "starName": "βCae",
+        "starLabel": "β",
+        "constellation": "Caelum (ちょうこくぐ座)",
         "raHour": "4",
         "raMin": "42",
         "raSec": "3.5",
@@ -6236,11 +6159,12 @@ const stars = [
         "decDeg": "37",
         "decMin": "8",
         "decSec": "40",
-        "magnitude": "5.05",
-        "constellation": "Caelum (ちょうこくぐ座)"
+        "magnitude": "5.05"
     },
     {
         "starName": "γ1Cae",
+        "starLabel": "γ1",
+        "constellation": "Caelum (ちょうこくぐ座)",
         "raHour": "5",
         "raMin": "4",
         "raSec": "24.4",
@@ -6248,23 +6172,12 @@ const stars = [
         "decDeg": "35",
         "decMin": "29",
         "decSec": "0",
-        "magnitude": "4.55",
-        "constellation": "Caelum (ちょうこくぐ座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "4.55"
     },
     {
         "starName": "θScl",
+        "starLabel": "θ",
+        "constellation": "Sculptor (ちょうこくしつ座)",
         "raHour": "0",
         "raMin": "11",
         "raSec": "44",
@@ -6272,11 +6185,12 @@ const stars = [
         "decDeg": "35",
         "decMin": "7",
         "decSec": "59",
-        "magnitude": "5.25",
-        "constellation": "Sculptor (ちょうこくしつ座)"
+        "magnitude": "5.25"
     },
     {
         "starName": "ιScl",
+        "starLabel": "ι",
+        "constellation": "Sculptor (ちょうこくしつ座)",
         "raHour": "0",
         "raMin": "21",
         "raSec": "31.2",
@@ -6284,11 +6198,12 @@ const stars = [
         "decDeg": "28",
         "decMin": "58",
         "decSec": "54",
-        "magnitude": "5.18",
-        "constellation": "Sculptor (ちょうこくしつ座)"
+        "magnitude": "5.18"
     },
     {
         "starName": "αScl",
+        "starLabel": "α",
+        "constellation": "Sculptor (ちょうこくしつ座)",
         "raHour": "0",
         "raMin": "58",
         "raSec": "36.4",
@@ -6296,11 +6211,12 @@ const stars = [
         "decDeg": "29",
         "decMin": "21",
         "decSec": "27",
-        "magnitude": "4.31",
-        "constellation": "Sculptor (ちょうこくしつ座)"
+        "magnitude": "4.31"
     },
     {
         "starName": "πScl",
+        "starLabel": "π",
+        "constellation": "Sculptor (ちょうこくしつ座)",
         "raHour": "1",
         "raMin": "42",
         "raSec": "8.6",
@@ -6308,11 +6224,12 @@ const stars = [
         "decDeg": "32",
         "decMin": "19",
         "decSec": "37",
-        "magnitude": "5.25",
-        "constellation": "Sculptor (ちょうこくしつ座)"
+        "magnitude": "5.25"
     },
     {
         "starName": "γScl",
+        "starLabel": "γ",
+        "constellation": "Sculptor (ちょうこくしつ座)",
         "raHour": "23",
         "raMin": "18",
         "raSec": "49.4",
@@ -6320,11 +6237,12 @@ const stars = [
         "decDeg": "32",
         "decMin": "31",
         "decSec": "55",
-        "magnitude": "4.41",
-        "constellation": "Sculptor (ちょうこくしつ座)"
+        "magnitude": "4.41"
     },
     {
         "starName": "βScl",
+        "starLabel": "β",
+        "constellation": "Sculptor (ちょうこくしつ座)",
         "raHour": "23",
         "raMin": "32",
         "raSec": "58.3",
@@ -6332,11 +6250,12 @@ const stars = [
         "decDeg": "37",
         "decMin": "49",
         "decSec": "6",
-        "magnitude": "4.37",
-        "constellation": "Sculptor (ちょうこくしつ座)"
+        "magnitude": "4.37"
     },
     {
         "starName": "δScl",
+        "starLabel": "δ",
+        "constellation": "Sculptor (ちょうこくしつ座)",
         "raHour": "23",
         "raMin": "48",
         "raSec": "55.6",
@@ -6344,23 +6263,12 @@ const stars = [
         "decDeg": "28",
         "decMin": "7",
         "decSec": "49",
-        "magnitude": "4.57",
-        "constellation": "Sculptor (ちょうこくしつ座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "4.57"
     },
     {
         "starName": "γGru",
+        "starLabel": "γ",
+        "constellation": "Grus (つる座)",
         "raHour": "21",
         "raMin": "53",
         "raSec": "55.7",
@@ -6368,11 +6276,12 @@ const stars = [
         "decDeg": "37",
         "decMin": "21",
         "decSec": "54",
-        "magnitude": "3.01",
-        "constellation": "Grus (つる座)"
+        "magnitude": "3.01"
     },
     {
         "starName": "λGru",
+        "starLabel": "λ",
+        "constellation": "Grus (つる座)",
         "raHour": "22",
         "raMin": "6",
         "raSec": "6.9",
@@ -6380,11 +6289,12 @@ const stars = [
         "decDeg": "39",
         "decMin": "32",
         "decSec": "36",
-        "magnitude": "4.46",
-        "constellation": "Grus (つる座)"
+        "magnitude": "4.46"
     },
     {
         "starName": "αGru",
+        "starLabel": "α",
+        "constellation": "Grus (つる座)",
         "raHour": "22",
         "raMin": "8",
         "raSec": "14",
@@ -6392,11 +6302,12 @@ const stars = [
         "decDeg": "46",
         "decMin": "57",
         "decSec": "40",
-        "magnitude": "1.74",
-        "constellation": "Grus (つる座)"
+        "magnitude": "1.74"
     },
     {
         "starName": "μ1Gru",
+        "starLabel": "μ 1",
+        "constellation": "Grus (つる座)",
         "raHour": "22",
         "raMin": "15",
         "raSec": "36.9",
@@ -6404,11 +6315,12 @@ const stars = [
         "decDeg": "41",
         "decMin": "20",
         "decSec": "48",
-        "magnitude": "4.79",
-        "constellation": "Grus (つる座)"
+        "magnitude": "4.79"
     },
     {
         "starName": "μ2Gru",
+        "starLabel": "μ 2",
+        "constellation": "Grus (つる座)",
         "raHour": "22",
         "raMin": "16",
         "raSec": "26.6",
@@ -6416,11 +6328,12 @@ const stars = [
         "decDeg": "41",
         "decMin": "37",
         "decSec": "39",
-        "magnitude": "5.1",
-        "constellation": "Grus (つる座)"
+        "magnitude": "5.1"
     },
     {
         "starName": "δ1Gru",
+        "starLabel": "δ1",
+        "constellation": "Grus (つる座)",
         "raHour": "22",
         "raMin": "29",
         "raSec": "16.2",
@@ -6428,11 +6341,12 @@ const stars = [
         "decDeg": "43",
         "decMin": "29",
         "decSec": "44",
-        "magnitude": "3.97",
-        "constellation": "Grus (つる座)"
+        "magnitude": "3.97"
     },
     {
         "starName": "δ2Gru",
+        "starLabel": "δ2",
+        "constellation": "Grus (つる座)",
         "raHour": "22",
         "raMin": "29",
         "raSec": "45.5",
@@ -6440,11 +6354,12 @@ const stars = [
         "decDeg": "43",
         "decMin": "44",
         "decSec": "58",
-        "magnitude": "4.11",
-        "constellation": "Grus (つる座)"
+        "magnitude": "4.11"
     },
     {
         "starName": "βGru",
+        "starLabel": "β",
+        "constellation": "Grus (つる座)",
         "raHour": "22",
         "raMin": "42",
         "raSec": "40.1",
@@ -6452,11 +6367,12 @@ const stars = [
         "decDeg": "46",
         "decMin": "53",
         "decSec": "5",
-        "magnitude": "2.1",
-        "constellation": "Grus (つる座)"
+        "magnitude": "2.1"
     },
     {
         "starName": "εGru",
+        "starLabel": "ε",
+        "constellation": "Grus (つる座)",
         "raHour": "22",
         "raMin": "48",
         "raSec": "33.3",
@@ -6464,11 +6380,12 @@ const stars = [
         "decDeg": "51",
         "decMin": "19",
         "decSec": "1",
-        "magnitude": "3.49",
-        "constellation": "Grus (つる座)"
+        "magnitude": "3.49"
     },
     {
         "starName": "ζGru",
+        "starLabel": "ζ",
+        "constellation": "Grus (つる座)",
         "raHour": "23",
         "raMin": "0",
         "raSec": "52.8",
@@ -6476,11 +6393,12 @@ const stars = [
         "decDeg": "52",
         "decMin": "45",
         "decSec": "15",
-        "magnitude": "4.12",
-        "constellation": "Grus (つる座)"
+        "magnitude": "4.12"
     },
     {
         "starName": "ιGru",
+        "starLabel": "ι",
+        "constellation": "Grus (つる座)",
         "raHour": "23",
         "raMin": "10",
         "raSec": "21.6",
@@ -6488,23 +6406,12 @@ const stars = [
         "decDeg": "45",
         "decMin": "14",
         "decSec": "48",
-        "magnitude": "3.9",
-        "constellation": "Grus (つる座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "3.9"
     },
     {
         "starName": "ηMen",
+        "starLabel": "η",
+        "constellation": "Mensa (テーブル山座)",
         "raHour": "4",
         "raMin": "55",
         "raSec": "11.2",
@@ -6512,11 +6419,12 @@ const stars = [
         "decDeg": "74",
         "decMin": "56",
         "decSec": "13",
-        "magnitude": "5.47",
-        "constellation": "Mensa (テーブル山座)"
+        "magnitude": "5.47"
     },
     {
         "starName": "βMen",
+        "starLabel": "β",
+        "constellation": "Mensa (テーブル山座)",
         "raHour": "5",
         "raMin": "2",
         "raSec": "43",
@@ -6524,11 +6432,12 @@ const stars = [
         "decDeg": "71",
         "decMin": "18",
         "decSec": "52",
-        "magnitude": "5.31",
-        "constellation": "Mensa (テーブル山座)"
+        "magnitude": "5.31"
     },
     {
         "starName": "γMen",
+        "starLabel": "γ",
+        "constellation": "Mensa (テーブル山座)",
         "raHour": "5",
         "raMin": "31",
         "raSec": "52.9",
@@ -6536,11 +6445,12 @@ const stars = [
         "decDeg": "76",
         "decMin": "20",
         "decSec": "28",
-        "magnitude": "5.19",
-        "constellation": "Mensa (テーブル山座)"
+        "magnitude": "5.19"
     },
     {
         "starName": "κMen",
+        "starLabel": "κ",
+        "constellation": "Mensa (テーブル山座)",
         "raHour": "5",
         "raMin": "50",
         "raSec": "16.7",
@@ -6548,11 +6458,12 @@ const stars = [
         "decDeg": "79",
         "decMin": "21",
         "decSec": "41",
-        "magnitude": "5.47",
-        "constellation": "Mensa (テーブル山座)"
+        "magnitude": "5.47"
     },
     {
         "starName": "αMen",
+        "starLabel": "α",
+        "constellation": "Mensa (テーブル山座)",
         "raHour": "6",
         "raMin": "10",
         "raSec": "14.4",
@@ -6560,11 +6471,12 @@ const stars = [
         "decDeg": "74",
         "decMin": "45",
         "decSec": "11",
-        "magnitude": "5.09",
-        "constellation": "Mensa (テーブル山座)"
+        "magnitude": "5.09"
     },
     {
         "starName": "θMen",
+        "starLabel": "θ",
+        "constellation": "Mensa (テーブル山座)",
         "raHour": "6",
         "raMin": "56",
         "raSec": "34.4",
@@ -6572,23 +6484,12 @@ const stars = [
         "decDeg": "79",
         "decMin": "25",
         "decSec": "13",
-        "magnitude": "5.45",
-        "constellation": "Mensa (テーブル山座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "5.45"
     },
     {
         "starName": "9α2Lib",
+        "starLabel": "9α2",
+        "constellation": "Libra (てんびん座)",
         "raHour": "14",
         "raMin": "50",
         "raSec": "52.7",
@@ -6596,11 +6497,12 @@ const stars = [
         "decDeg": "16",
         "decMin": "2",
         "decSec": "30",
-        "magnitude": "2.75",
-        "constellation": "Libra (てんびん座)"
+        "magnitude": "2.75"
     },
     {
         "starName": "20σLib",
+        "starLabel": "20σ",
+        "constellation": "Libra (てんびん座)",
         "raHour": "15",
         "raMin": "4",
         "raSec": "4.2",
@@ -6608,11 +6510,12 @@ const stars = [
         "decDeg": "25",
         "decMin": "16",
         "decSec": "55",
-        "magnitude": "3.29",
-        "constellation": "Libra (てんびん座)"
+        "magnitude": "3.29"
     },
     {
         "starName": "24ι1Lib",
+        "starLabel": "24ι1",
+        "constellation": "Libra (てんびん座)",
         "raHour": "15",
         "raMin": "12",
         "raSec": "13.3",
@@ -6620,11 +6523,12 @@ const stars = [
         "decDeg": "19",
         "decMin": "47",
         "decSec": "30",
-        "magnitude": "4.54",
-        "constellation": "Libra (てんびん座)"
+        "magnitude": "4.54"
     },
     {
         "starName": "27βLib",
+        "starLabel": "27β",
+        "constellation": "Libra (てんびん座)",
         "raHour": "15",
         "raMin": "17",
         "raSec": "0.4",
@@ -6632,11 +6536,12 @@ const stars = [
         "decDeg": "9",
         "decMin": "22",
         "decSec": "59",
-        "magnitude": "2.61",
-        "constellation": "Libra (てんびん座)"
+        "magnitude": "2.61"
     },
     {
         "starName": "38γLib",
+        "starLabel": "38γ",
+        "constellation": "Libra (てんびん座)",
         "raHour": "15",
         "raMin": "35",
         "raSec": "31.6",
@@ -6644,11 +6549,12 @@ const stars = [
         "decDeg": "14",
         "decMin": "47",
         "decSec": "22",
-        "magnitude": "3.91",
-        "constellation": "Libra (てんびん座)"
+        "magnitude": "3.91"
     },
     {
         "starName": "44ηLib",
+        "starLabel": "44η",
+        "constellation": "Libra (てんびん座)",
         "raHour": "15",
         "raMin": "44",
         "raSec": "4.4",
@@ -6656,11 +6562,12 @@ const stars = [
         "decDeg": "15",
         "decMin": "40",
         "decSec": "22",
-        "magnitude": "5.41",
-        "constellation": "Libra (てんびん座)"
+        "magnitude": "5.41"
     },
     {
         "starName": "46θLib",
+        "starLabel": "46θ",
+        "constellation": "Libra (てんびん座)",
         "raHour": "15",
         "raMin": "53",
         "raSec": "49.5",
@@ -6668,23 +6575,12 @@ const stars = [
         "decDeg": "16",
         "decMin": "43",
         "decSec": "46",
-        "magnitude": "4.15",
-        "constellation": "Libra (てんびん座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "4.15"
     },
     {
         "starName": "HIP109754Lac",
+        "starLabel": "HIP109754",
+        "constellation": "Lacerta (とかげ座)",
         "raHour": "22",
         "raMin": "13",
         "raSec": "52.7",
@@ -6692,11 +6588,12 @@ const stars = [
         "decDeg": "39",
         "decMin": "42",
         "decSec": "54",
-        "magnitude": "4.49",
-        "constellation": "Lacerta (とかげ座)"
+        "magnitude": "4.49"
     },
     {
         "starName": "1Lac",
+        "starLabel": "1",
+        "constellation": "Lacerta (とかげ座)",
         "raHour": "22",
         "raMin": "15",
         "raSec": "58.2",
@@ -6704,11 +6601,12 @@ const stars = [
         "decDeg": "37",
         "decMin": "44",
         "decSec": "56",
-        "magnitude": "4.13",
-        "constellation": "Lacerta (とかげ座)"
+        "magnitude": "4.13"
     },
     {
         "starName": "2Lac",
+        "starLabel": "2",
+        "constellation": "Lacerta (とかげ座)",
         "raHour": "22",
         "raMin": "21",
         "raSec": "1.6",
@@ -6716,11 +6614,12 @@ const stars = [
         "decDeg": "46",
         "decMin": "32",
         "decSec": "12",
-        "magnitude": "4.57",
-        "constellation": "Lacerta (とかげ座)"
+        "magnitude": "4.57"
     },
     {
         "starName": "3βLac",
+        "starLabel": "3β",
+        "constellation": "Lacerta (とかげ座)",
         "raHour": "22",
         "raMin": "23",
         "raSec": "33.6",
@@ -6728,11 +6627,12 @@ const stars = [
         "decDeg": "52",
         "decMin": "13",
         "decSec": "45",
-        "magnitude": "4.43",
-        "constellation": "Lacerta (とかげ座)"
+        "magnitude": "4.43"
     },
     {
         "starName": "4Lac",
+        "starLabel": "4",
+        "constellation": "Lacerta (とかげ座)",
         "raHour": "22",
         "raMin": "24",
         "raSec": "31",
@@ -6740,11 +6640,12 @@ const stars = [
         "decDeg": "49",
         "decMin": "28",
         "decSec": "35",
-        "magnitude": "4.57",
-        "constellation": "Lacerta (とかげ座)"
+        "magnitude": "4.57"
     },
     {
         "starName": "5Lac",
+        "starLabel": "5",
+        "constellation": "Lacerta (とかげ座)",
         "raHour": "22",
         "raMin": "29",
         "raSec": "31.8",
@@ -6752,11 +6653,12 @@ const stars = [
         "decDeg": "47",
         "decMin": "42",
         "decSec": "25",
-        "magnitude": "4.36",
-        "constellation": "Lacerta (とかげ座)"
+        "magnitude": "4.36"
     },
     {
         "starName": "6Lac",
+        "starLabel": "6",
+        "constellation": "Lacerta (とかげ座)",
         "raHour": "22",
         "raMin": "30",
         "raSec": "29.3",
@@ -6764,11 +6666,12 @@ const stars = [
         "decDeg": "43",
         "decMin": "7",
         "decSec": "24",
-        "magnitude": "4.51",
-        "constellation": "Lacerta (とかげ座)"
+        "magnitude": "4.51"
     },
     {
         "starName": "7αLac",
+        "starLabel": "7α",
+        "constellation": "Lacerta (とかげ座)",
         "raHour": "22",
         "raMin": "31",
         "raSec": "17.5",
@@ -6776,23 +6679,12 @@ const stars = [
         "decDeg": "50",
         "decMin": "16",
         "decSec": "57",
-        "magnitude": "3.77",
-        "constellation": "Lacerta (とかげ座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "3.77"
     },
     {
         "starName": "ηHor",
+        "starLabel": "η",
+        "constellation": "Horologium (とけい座)",
         "raHour": "2",
         "raMin": "37",
         "raSec": "24.4",
@@ -6800,11 +6692,12 @@ const stars = [
         "decDeg": "52",
         "decMin": "32",
         "decSec": "35",
-        "magnitude": "5.31",
-        "constellation": "Horologium (とけい座)"
+        "magnitude": "5.31"
     },
     {
         "starName": "ζHor",
+        "starLabel": "ζ",
+        "constellation": "Horologium (とけい座)",
         "raHour": "2",
         "raMin": "40",
         "raSec": "39.6",
@@ -6812,11 +6705,12 @@ const stars = [
         "decDeg": "54",
         "decMin": "33",
         "decSec": "0",
-        "magnitude": "5.21",
-        "constellation": "Horologium (とけい座)"
+        "magnitude": "5.21"
     },
     {
         "starName": "ιHor",
+        "starLabel": "ι",
+        "constellation": "Horologium (とけい座)",
         "raHour": "2",
         "raMin": "42",
         "raSec": "33.5",
@@ -6824,11 +6718,12 @@ const stars = [
         "decDeg": "50",
         "decMin": "48",
         "decSec": "1",
-        "magnitude": "5.41",
-        "constellation": "Horologium (とけい座)"
+        "magnitude": "5.41"
     },
     {
         "starName": "βHor",
+        "starLabel": "β",
+        "constellation": "Horologium (とけい座)",
         "raHour": "2",
         "raMin": "58",
         "raSec": "47.8",
@@ -6836,11 +6731,12 @@ const stars = [
         "decDeg": "64",
         "decMin": "4",
         "decSec": "17",
-        "magnitude": "4.99",
-        "constellation": "Horologium (とけい座)"
+        "magnitude": "4.99"
     },
     {
         "starName": "μHor",
+        "starLabel": "μ",
+        "constellation": "Horologium (とけい座)",
         "raHour": "3",
         "raMin": "3",
         "raSec": "36.8",
@@ -6848,11 +6744,12 @@ const stars = [
         "decDeg": "59",
         "decMin": "44",
         "decSec": "16",
-        "magnitude": "5.11",
-        "constellation": "Horologium (とけい座)"
+        "magnitude": "5.11"
     },
     {
         "starName": "αHor",
+        "starLabel": "α",
+        "constellation": "Horologium (とけい座)",
         "raHour": "4",
         "raMin": "14",
         "raSec": "0.1",
@@ -6860,23 +6757,12 @@ const stars = [
         "decDeg": "42",
         "decMin": "17",
         "decSec": "40",
-        "magnitude": "3.86",
-        "constellation": "Horologium (とけい座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "3.86"
     },
     {
         "starName": "γ2Vol",
+        "starLabel": "γ2",
+        "constellation": "Volans (とびうお座)",
         "raHour": "7",
         "raMin": "8",
         "raSec": "44.9",
@@ -6884,11 +6770,12 @@ const stars = [
         "decDeg": "70",
         "decMin": "29",
         "decSec": "56",
-        "magnitude": "3.78",
-        "constellation": "Volans (とびうお座)"
+        "magnitude": "3.78"
     },
     {
         "starName": "δVol",
+        "starLabel": "δ",
+        "constellation": "Volans (とびうお座)",
         "raHour": "7",
         "raMin": "16",
         "raSec": "49.8",
@@ -6896,11 +6783,12 @@ const stars = [
         "decDeg": "67",
         "decMin": "57",
         "decSec": "26",
-        "magnitude": "3.98",
-        "constellation": "Volans (とびうお座)"
+        "magnitude": "3.98"
     },
     {
         "starName": "ζVol",
+        "starLabel": "ζ",
+        "constellation": "Volans (とびうお座)",
         "raHour": "7",
         "raMin": "41",
         "raSec": "49.2",
@@ -6908,11 +6796,12 @@ const stars = [
         "decDeg": "72",
         "decMin": "36",
         "decSec": "22",
-        "magnitude": "3.95",
-        "constellation": "Volans (とびうお座)"
+        "magnitude": "3.95"
     },
     {
         "starName": "εVol",
+        "starLabel": "ε",
+        "constellation": "Volans (とびうお座)",
         "raHour": "8",
         "raMin": "7",
         "raSec": "55.8",
@@ -6920,11 +6809,12 @@ const stars = [
         "decDeg": "68",
         "decMin": "37",
         "decSec": "2",
-        "magnitude": "4.35",
-        "constellation": "Volans (とびうお座)"
+        "magnitude": "4.35"
     },
     {
         "starName": "βVol",
+        "starLabel": "β",
+        "constellation": "Volans (とびうお座)",
         "raHour": "8",
         "raMin": "25",
         "raSec": "44.2",
@@ -6932,11 +6822,12 @@ const stars = [
         "decDeg": "66",
         "decMin": "8",
         "decSec": "13",
-        "magnitude": "3.77",
-        "constellation": "Volans (とびうお座)"
+        "magnitude": "3.77"
     },
     {
         "starName": "αVol",
+        "starLabel": "α",
+        "constellation": "Volans (とびうお座)",
         "raHour": "9",
         "raMin": "2",
         "raSec": "26.8",
@@ -6944,23 +6835,12 @@ const stars = [
         "decDeg": "66",
         "decMin": "23",
         "decSec": "46",
-        "magnitude": "4",
-        "constellation": "Volans (とびうお座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "4"
     },
     {
         "starName": "νPup",
+        "starLabel": "ν",
+        "constellation": "Puppis (とも座)",
         "raHour": "6",
         "raMin": "37",
         "raSec": "45.7",
@@ -6968,11 +6848,12 @@ const stars = [
         "decDeg": "43",
         "decMin": "11",
         "decSec": "46",
-        "magnitude": "3.17",
-        "constellation": "Puppis (とも座)"
+        "magnitude": "3.17"
     },
     {
         "starName": "τPup",
+        "starLabel": "τ",
+        "constellation": "Puppis (とも座)",
         "raHour": "6",
         "raMin": "49",
         "raSec": "56.2",
@@ -6980,11 +6861,12 @@ const stars = [
         "decDeg": "50",
         "decMin": "36",
         "decSec": "53",
-        "magnitude": "2.93",
-        "constellation": "Puppis (とも座)"
+        "magnitude": "2.93"
     },
     {
         "starName": "πPup",
+        "starLabel": "π",
+        "constellation": "Puppis (とも座)",
         "raHour": "7",
         "raMin": "17",
         "raSec": "8.6",
@@ -6992,11 +6874,12 @@ const stars = [
         "decDeg": "37",
         "decMin": "5",
         "decSec": "51",
-        "magnitude": "2.7",
-        "constellation": "Puppis (とも座)"
+        "magnitude": "2.7"
     },
     {
         "starName": "σPup",
+        "starLabel": "σ",
+        "constellation": "Puppis (とも座)",
         "raHour": "7",
         "raMin": "29",
         "raSec": "13.8",
@@ -7004,11 +6887,12 @@ const stars = [
         "decDeg": "43",
         "decMin": "18",
         "decSec": "5",
-        "magnitude": "3.25",
-        "constellation": "Puppis (とも座)"
+        "magnitude": "3.25"
     },
     {
         "starName": "7ξPup",
+        "starLabel": "7ξ",
+        "constellation": "Puppis (とも座)",
         "raHour": "7",
         "raMin": "49",
         "raSec": "17.7",
@@ -7016,11 +6900,12 @@ const stars = [
         "decDeg": "24",
         "decMin": "51",
         "decSec": "35",
-        "magnitude": "3.34",
-        "constellation": "Puppis (とも座)"
+        "magnitude": "3.34"
     },
     {
         "starName": "ζPup",
+        "starLabel": "ζ",
+        "constellation": "Puppis (とも座)",
         "raHour": "8",
         "raMin": "3",
         "raSec": "35.1",
@@ -7028,11 +6913,12 @@ const stars = [
         "decDeg": "40",
         "decMin": "0",
         "decSec": "12",
-        "magnitude": "2.25",
-        "constellation": "Puppis (とも座)"
+        "magnitude": "2.25"
     },
     {
         "starName": "15ρPup",
+        "starLabel": "15ρ",
+        "constellation": "Puppis (とも座)",
         "raHour": "8",
         "raMin": "7",
         "raSec": "32.6",
@@ -7040,23 +6926,12 @@ const stars = [
         "decDeg": "24",
         "decMin": "18",
         "decSec": "15",
-        "magnitude": "2.81",
-        "constellation": "Puppis (とも座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "2.81"
     },
     {
         "starName": "λMus",
+        "starLabel": "λ",
+        "constellation": "Musca (はえ座)",
         "raHour": "11",
         "raMin": "45",
         "raSec": "36.4",
@@ -7064,11 +6939,12 @@ const stars = [
         "decDeg": "66",
         "decMin": "43",
         "decSec": "43",
-        "magnitude": "3.64",
-        "constellation": "Musca (はえ座)"
+        "magnitude": "3.64"
     },
     {
         "starName": "εMus",
+        "starLabel": "ε",
+        "constellation": "Musca (はえ座)",
         "raHour": "12",
         "raMin": "17",
         "raSec": "34.1",
@@ -7076,11 +6952,12 @@ const stars = [
         "decDeg": "67",
         "decMin": "57",
         "decSec": "39",
-        "magnitude": "4.11",
-        "constellation": "Musca (はえ座)"
+        "magnitude": "4.11"
     },
     {
         "starName": "γMus",
+        "starLabel": "γ",
+        "constellation": "Musca (はえ座)",
         "raHour": "12",
         "raMin": "32",
         "raSec": "28",
@@ -7088,11 +6965,12 @@ const stars = [
         "decDeg": "72",
         "decMin": "7",
         "decSec": "59",
-        "magnitude": "3.87",
-        "constellation": "Musca (はえ座)"
+        "magnitude": "3.87"
     },
     {
         "starName": "αMus",
+        "starLabel": "α",
+        "constellation": "Musca (はえ座)",
         "raHour": "12",
         "raMin": "37",
         "raSec": "11",
@@ -7100,11 +6978,12 @@ const stars = [
         "decDeg": "69",
         "decMin": "8",
         "decSec": "8",
-        "magnitude": "2.69",
-        "constellation": "Musca (はえ座)"
+        "magnitude": "2.69"
     },
     {
         "starName": "βMus",
+        "starLabel": "β",
+        "constellation": "Musca (はえ座)",
         "raHour": "12",
         "raMin": "46",
         "raSec": "16.9",
@@ -7112,11 +6991,12 @@ const stars = [
         "decDeg": "68",
         "decMin": "6",
         "decSec": "29",
-        "magnitude": "3.05",
-        "constellation": "Musca (はえ座)"
+        "magnitude": "3.05"
     },
     {
         "starName": "δMus",
+        "starLabel": "δ",
+        "constellation": "Musca (はえ座)",
         "raHour": "13",
         "raMin": "2",
         "raSec": "16.2",
@@ -7124,23 +7004,12 @@ const stars = [
         "decDeg": "71",
         "decMin": "32",
         "decSec": "56",
-        "magnitude": "3.62",
-        "constellation": "Musca (はえ座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "3.62"
     },
     {
         "starName": "1κCyg",
+        "starLabel": "1κ",
+        "constellation": "Cygnus (はくちょう座)",
         "raHour": "19",
         "raMin": "17",
         "raSec": "6.2",
@@ -7148,11 +7017,12 @@ const stars = [
         "decDeg": "53",
         "decMin": "22",
         "decSec": "7",
-        "magnitude": "3.77",
-        "constellation": "Cygnus (はくちょう座)"
+        "magnitude": "3.77"
     },
     {
         "starName": "6β1Cyg",
+        "starLabel": "6β1",
+        "constellation": "Cygnus (はくちょう座)",
         "raHour": "19",
         "raMin": "30",
         "raSec": "43.3",
@@ -7160,11 +7030,12 @@ const stars = [
         "decDeg": "27",
         "decMin": "57",
         "decSec": "35",
-        "magnitude": "3.08",
-        "constellation": "Cygnus (はくちょう座)"
+        "magnitude": "3.08"
     },
     {
         "starName": "10ι2Cyg",
+        "starLabel": "10ι2",
+        "constellation": "Cygnus (はくちょう座)",
         "raHour": "19",
         "raMin": "29",
         "raSec": "42.3",
@@ -7172,11 +7043,12 @@ const stars = [
         "decDeg": "51",
         "decMin": "43",
         "decSec": "47",
-        "magnitude": "3.79",
-        "constellation": "Cygnus (はくちょう座)"
+        "magnitude": "3.79"
     },
     {
         "starName": "13θCyg",
+        "starLabel": "13θ",
+        "constellation": "Cygnus (はくちょう座)",
         "raHour": "19",
         "raMin": "36",
         "raSec": "26.5",
@@ -7184,11 +7056,12 @@ const stars = [
         "decDeg": "50",
         "decMin": "13",
         "decSec": "16",
-        "magnitude": "4.48",
-        "constellation": "Cygnus (はくちょう座)"
+        "magnitude": "4.48"
     },
     {
         "starName": "12φCyg",
+        "starLabel": "12φ",
+        "constellation": "Cygnus (はくちょう座)",
         "raHour": "19",
         "raMin": "39",
         "raSec": "22.6",
@@ -7196,11 +7069,12 @@ const stars = [
         "decDeg": "30",
         "decMin": "9",
         "decSec": "12",
-        "magnitude": "4.69",
-        "constellation": "Cygnus (はくちょう座)"
+        "magnitude": "4.69"
     },
     {
         "starName": "18δCyg",
+        "starLabel": "18δ",
+        "constellation": "Cygnus (はくちょう座)",
         "raHour": "19",
         "raMin": "44",
         "raSec": "58.5",
@@ -7208,11 +7082,12 @@ const stars = [
         "decDeg": "45",
         "decMin": "7",
         "decSec": "51",
-        "magnitude": "2.87",
-        "constellation": "Cygnus (はくちょう座)"
+        "magnitude": "2.87"
     },
     {
         "starName": "χCyg",
+        "starLabel": "χ",
+        "constellation": "Cygnus (はくちょう座)",
         "raHour": "19",
         "raMin": "50",
         "raSec": "33.9",
@@ -7220,11 +7095,12 @@ const stars = [
         "decDeg": "32",
         "decMin": "54",
         "decSec": "51",
-        "magnitude": "4.23",
-        "constellation": "Cygnus (はくちょう座)"
+        "magnitude": "4.23"
     },
     {
         "starName": "21ηCyg",
+        "starLabel": "21η",
+        "constellation": "Cygnus (はくちょう座)",
         "raHour": "19",
         "raMin": "56",
         "raSec": "18.4",
@@ -7232,11 +7108,12 @@ const stars = [
         "decDeg": "35",
         "decMin": "5",
         "decSec": "0",
-        "magnitude": "3.89",
-        "constellation": "Cygnus (はくちょう座)"
+        "magnitude": "3.89"
     },
     {
         "starName": "37γCyg",
+        "starLabel": "37γ",
+        "constellation": "Cygnus (はくちょう座)",
         "raHour": "20",
         "raMin": "22",
         "raSec": "13.7",
@@ -7244,11 +7121,12 @@ const stars = [
         "decDeg": "40",
         "decMin": "15",
         "decSec": "24",
-        "magnitude": "2.2",
-        "constellation": "Cygnus (はくちょう座)"
+        "magnitude": "2.2"
     },
     {
         "starName": "50αCyg",
+        "starLabel": "50α",
+        "constellation": "Cygnus (はくちょう座)",
         "raHour": "20",
         "raMin": "41",
         "raSec": "25.9",
@@ -7256,11 +7134,12 @@ const stars = [
         "decDeg": "45",
         "decMin": "16",
         "decSec": "49",
-        "magnitude": "1.25",
-        "constellation": "Cygnus (はくちょう座)"
+        "magnitude": "1.25"
     },
     {
         "starName": "53εCyg",
+        "starLabel": "53ε",
+        "constellation": "Cygnus (はくちょう座)",
         "raHour": "20",
         "raMin": "46",
         "raSec": "12.7",
@@ -7268,11 +7147,12 @@ const stars = [
         "decDeg": "33",
         "decMin": "58",
         "decSec": "13",
-        "magnitude": "2.46",
-        "constellation": "Cygnus (はくちょう座)"
+        "magnitude": "2.46"
     },
     {
         "starName": "64ζCyg",
+        "starLabel": "64ζ",
+        "constellation": "Cygnus (はくちょう座)",
         "raHour": "21",
         "raMin": "12",
         "raSec": "56.2",
@@ -7280,23 +7160,12 @@ const stars = [
         "decDeg": "30",
         "decMin": "13",
         "decSec": "37",
-        "magnitude": "3.2",
-        "constellation": "Cygnus (はくちょう座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "3.2"
     },
     {
         "starName": "δOct",
+        "starLabel": "δ",
+        "constellation": "Octans (はちぶんぎ座)",
         "raHour": "14",
         "raMin": "26",
         "raSec": "54.9",
@@ -7304,11 +7173,12 @@ const stars = [
         "decDeg": "83",
         "decMin": "40",
         "decSec": "4",
-        "magnitude": "4.32",
-        "constellation": "Octans (はちぶんぎ座)"
+        "magnitude": "4.32"
     },
     {
         "starName": "νOct",
+        "starLabel": "ν",
+        "constellation": "Octans (はちぶんぎ座)",
         "raHour": "21",
         "raMin": "41",
         "raSec": "28.5",
@@ -7316,11 +7186,12 @@ const stars = [
         "decDeg": "77",
         "decMin": "23",
         "decSec": "24",
-        "magnitude": "3.76",
-        "constellation": "Octans (はちぶんぎ座)"
+        "magnitude": "3.76"
     },
     {
         "starName": "βOct",
+        "starLabel": "β",
+        "constellation": "Octans (はちぶんぎ座)",
         "raHour": "22",
         "raMin": "46",
         "raSec": "3.3",
@@ -7328,23 +7199,12 @@ const stars = [
         "decDeg": "81",
         "decMin": "22",
         "decSec": "54",
-        "magnitude": "4.15",
-        "constellation": "Octans (はちぶんぎ座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "4.15"
     },
     {
         "starName": "εCol",
+        "starLabel": "ε",
+        "constellation": "Columba (はと座)",
         "raHour": "5",
         "raMin": "31",
         "raSec": "12.7",
@@ -7352,11 +7212,12 @@ const stars = [
         "decDeg": "35",
         "decMin": "28",
         "decSec": "14",
-        "magnitude": "3.87",
-        "constellation": "Columba (はと座)"
+        "magnitude": "3.87"
     },
     {
         "starName": "αCol",
+        "starLabel": "α",
+        "constellation": "Columba (はと座)",
         "raHour": "5",
         "raMin": "39",
         "raSec": "38.9",
@@ -7364,11 +7225,12 @@ const stars = [
         "decDeg": "34",
         "decMin": "4",
         "decSec": "27",
-        "magnitude": "2.64",
-        "constellation": "Columba (はと座)"
+        "magnitude": "2.64"
     },
     {
         "starName": "HIP26868Col",
+        "starLabel": "HIP26868",
+        "constellation": "Columba (はと座)",
         "raHour": "5",
         "raMin": "42",
         "raSec": "15.1",
@@ -7376,11 +7238,12 @@ const stars = [
         "decDeg": "34",
         "decMin": "40",
         "decSec": "4",
-        "magnitude": "5.29",
-        "constellation": "Columba (はと座)"
+        "magnitude": "5.29"
     },
     {
         "starName": "βCol",
+        "starLabel": "β",
+        "constellation": "Columba (はと座)",
         "raHour": "5",
         "raMin": "50",
         "raSec": "57.6",
@@ -7388,11 +7251,12 @@ const stars = [
         "decDeg": "35",
         "decMin": "46",
         "decSec": "6",
-        "magnitude": "3.12",
-        "constellation": "Columba (はと座)"
+        "magnitude": "3.12"
     },
     {
         "starName": "γCol",
+        "starLabel": "γ",
+        "constellation": "Columba (はと座)",
         "raHour": "5",
         "raMin": "57",
         "raSec": "32.2",
@@ -7400,11 +7264,12 @@ const stars = [
         "decDeg": "35",
         "decMin": "17",
         "decSec": "0",
-        "magnitude": "4.36",
-        "constellation": "Columba (はと座)"
+        "magnitude": "4.36"
     },
     {
         "starName": "ηCol",
+        "starLabel": "η",
+        "constellation": "Columba (はと座)",
         "raHour": "5",
         "raMin": "59",
         "raSec": "8.8",
@@ -7412,11 +7277,12 @@ const stars = [
         "decDeg": "42",
         "decMin": "48",
         "decSec": "55",
-        "magnitude": "3.96",
-        "constellation": "Columba (はと座)"
+        "magnitude": "3.96"
     },
     {
         "starName": "κCol",
+        "starLabel": "κ",
+        "constellation": "Columba (はと座)",
         "raHour": "6",
         "raMin": "16",
         "raSec": "33.1",
@@ -7424,11 +7290,12 @@ const stars = [
         "decDeg": "35",
         "decMin": "8",
         "decSec": "26",
-        "magnitude": "4.37",
-        "constellation": "Columba (はと座)"
+        "magnitude": "4.37"
     },
     {
         "starName": "δCol",
+        "starLabel": "δ",
+        "constellation": "Columba (はと座)",
         "raHour": "6",
         "raMin": "22",
         "raSec": "6.8",
@@ -7436,23 +7303,12 @@ const stars = [
         "decDeg": "33",
         "decMin": "26",
         "decSec": "11",
-        "magnitude": "3.85",
-        "constellation": "Columba (はと座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "3.85"
     },
     {
         "starName": "αAps",
+        "starLabel": "α",
+        "constellation": "Apus (ふうちょう座)",
         "raHour": "14",
         "raMin": "47",
         "raSec": "51.6",
@@ -7460,11 +7316,12 @@ const stars = [
         "decDeg": "79",
         "decMin": "2",
         "decSec": "41",
-        "magnitude": "3.83",
-        "constellation": "Apus (ふうちょう座)"
+        "magnitude": "3.83"
     },
     {
         "starName": "δ1Aps",
+        "starLabel": "δ1",
+        "constellation": "Apus (ふうちょう座)",
         "raHour": "16",
         "raMin": "20",
         "raSec": "20.8",
@@ -7472,11 +7329,12 @@ const stars = [
         "decDeg": "78",
         "decMin": "41",
         "decSec": "45",
-        "magnitude": "4.68",
-        "constellation": "Apus (ふうちょう座)"
+        "magnitude": "4.68"
     },
     {
         "starName": "γAps",
+        "starLabel": "γ",
+        "constellation": "Apus (ふうちょう座)",
         "raHour": "16",
         "raMin": "33",
         "raSec": "27",
@@ -7484,11 +7342,12 @@ const stars = [
         "decDeg": "78",
         "decMin": "53",
         "decSec": "50",
-        "magnitude": "3.89",
-        "constellation": "Apus (ふうちょう座)"
+        "magnitude": "3.89"
     },
     {
         "starName": "βAps",
+        "starLabel": "β",
+        "constellation": "Apus (ふうちょう座)",
         "raHour": "16",
         "raMin": "43",
         "raSec": "4.6",
@@ -7496,23 +7355,12 @@ const stars = [
         "decDeg": "77",
         "decMin": "31",
         "decSec": "3",
-        "magnitude": "4.24",
-        "constellation": "Apus (ふうちょう座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "4.24"
     },
     {
         "starName": "1Gem",
+        "starLabel": "1",
+        "constellation": "Gemini (ふたご座)",
         "raHour": "6",
         "raMin": "4",
         "raSec": "7.2",
@@ -7520,11 +7368,12 @@ const stars = [
         "decDeg": "23",
         "decMin": "15",
         "decSec": "48",
-        "magnitude": "4.16",
-        "constellation": "Gemini (ふたご座)"
+        "magnitude": "4.16"
     },
     {
         "starName": "7ηGem",
+        "starLabel": "7η",
+        "constellation": "Gemini (ふたご座)",
         "raHour": "6",
         "raMin": "14",
         "raSec": "52.6",
@@ -7532,11 +7381,12 @@ const stars = [
         "decDeg": "22",
         "decMin": "30",
         "decSec": "24",
-        "magnitude": "3.28",
-        "constellation": "Gemini (ふたご座)"
+        "magnitude": "3.28"
     },
     {
         "starName": "13μGem",
+        "starLabel": "13μ",
+        "constellation": "Gemini (ふたご座)",
         "raHour": "6",
         "raMin": "22",
         "raSec": "57.6",
@@ -7544,11 +7394,12 @@ const stars = [
         "decDeg": "22",
         "decMin": "30",
         "decSec": "49",
-        "magnitude": "2.88",
-        "constellation": "Gemini (ふたご座)"
+        "magnitude": "2.88"
     },
     {
         "starName": "24γGem",
+        "starLabel": "24γ",
+        "constellation": "Gemini (ふたご座)",
         "raHour": "6",
         "raMin": "37",
         "raSec": "42.7",
@@ -7556,11 +7407,12 @@ const stars = [
         "decDeg": "16",
         "decMin": "23",
         "decSec": "57",
-        "magnitude": "1.93",
-        "constellation": "Gemini (ふたご座)"
+        "magnitude": "1.93"
     },
     {
         "starName": "27εGem",
+        "starLabel": "27ε",
+        "constellation": "Gemini (ふたご座)",
         "raHour": "6",
         "raMin": "43",
         "raSec": "55.9",
@@ -7568,11 +7420,12 @@ const stars = [
         "decDeg": "25",
         "decMin": "7",
         "decSec": "52",
-        "magnitude": "2.98",
-        "constellation": "Gemini (ふたご座)"
+        "magnitude": "2.98"
     },
     {
         "starName": "31ξGem",
+        "starLabel": "31ξ",
+        "constellation": "Gemini (ふたご座)",
         "raHour": "6",
         "raMin": "45",
         "raSec": "17.4",
@@ -7580,11 +7433,12 @@ const stars = [
         "decDeg": "12",
         "decMin": "53",
         "decSec": "44",
-        "magnitude": "3.36",
-        "constellation": "Gemini (ふたご座)"
+        "magnitude": "3.36"
     },
     {
         "starName": "34θGem",
+        "starLabel": "34θ",
+        "constellation": "Gemini (ふたご座)",
         "raHour": "6",
         "raMin": "52",
         "raSec": "47.3",
@@ -7592,11 +7446,12 @@ const stars = [
         "decDeg": "33",
         "decMin": "57",
         "decSec": "40",
-        "magnitude": "3.6",
-        "constellation": "Gemini (ふたご座)"
+        "magnitude": "3.6"
     },
     {
         "starName": "43ζGem",
+        "starLabel": "43ζ",
+        "constellation": "Gemini (ふたご座)",
         "raHour": "7",
         "raMin": "4",
         "raSec": "6.5",
@@ -7604,11 +7459,12 @@ const stars = [
         "decDeg": "20",
         "decMin": "34",
         "decSec": "13",
-        "magnitude": "3.79",
-        "constellation": "Gemini (ふたご座)"
+        "magnitude": "3.79"
     },
     {
         "starName": "46τGem",
+        "starLabel": "46τ",
+        "constellation": "Gemini (ふたご座)",
         "raHour": "7",
         "raMin": "11",
         "raSec": "8.4",
@@ -7616,11 +7472,12 @@ const stars = [
         "decDeg": "30",
         "decMin": "14",
         "decSec": "43",
-        "magnitude": "4.41",
-        "constellation": "Gemini (ふたご座)"
+        "magnitude": "4.41"
     },
     {
         "starName": "54λGem",
+        "starLabel": "54λ",
+        "constellation": "Gemini (ふたご座)",
         "raHour": "7",
         "raMin": "18",
         "raSec": "5.6",
@@ -7628,11 +7485,12 @@ const stars = [
         "decDeg": "16",
         "decMin": "32",
         "decSec": "25",
-        "magnitude": "3.58",
-        "constellation": "Gemini (ふたご座)"
+        "magnitude": "3.58"
     },
     {
         "starName": "55δGem",
+        "starLabel": "55δ",
+        "constellation": "Gemini (ふたご座)",
         "raHour": "7",
         "raMin": "20",
         "raSec": "7.4",
@@ -7640,11 +7498,12 @@ const stars = [
         "decDeg": "21",
         "decMin": "58",
         "decSec": "56",
-        "magnitude": "3.53",
-        "constellation": "Gemini (ふたご座)"
+        "magnitude": "3.53"
     },
     {
         "starName": "66αGem",
+        "starLabel": "66α",
+        "constellation": "Gemini (ふたご座)",
         "raHour": "7",
         "raMin": "34",
         "raSec": "36",
@@ -7652,11 +7511,12 @@ const stars = [
         "decDeg": "31",
         "decMin": "53",
         "decSec": "18",
-        "magnitude": "1.98",
-        "constellation": "Gemini (ふたご座)"
+        "magnitude": "1.98"
     },
     {
         "starName": "78βGem",
+        "starLabel": "78β",
+        "constellation": "Gemini (ふたご座)",
         "raHour": "7",
         "raMin": "45",
         "raSec": "18.9",
@@ -7664,23 +7524,12 @@ const stars = [
         "decDeg": "28",
         "decMin": "1",
         "decSec": "34",
-        "magnitude": "1.14",
-        "constellation": "Gemini (ふたご座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "1.14"
     },
     {
         "starName": "88γPeg",
+        "starLabel": "88γ",
+        "constellation": "Pegasus (ペガスス座)",
         "raHour": "0",
         "raMin": "13",
         "raSec": "14.2",
@@ -7688,11 +7537,12 @@ const stars = [
         "decDeg": "15",
         "decMin": "11",
         "decSec": "1",
-        "magnitude": "2.83",
-        "constellation": "Pegasus (ペガスス座)"
+        "magnitude": "2.83"
     },
     {
         "starName": "8εPeg",
+        "starLabel": "8ε",
+        "constellation": "Pegasus (ペガスス座)",
         "raHour": "21",
         "raMin": "44",
         "raSec": "11.2",
@@ -7700,11 +7550,12 @@ const stars = [
         "decDeg": "9",
         "decMin": "52",
         "decSec": "30",
-        "magnitude": "2.39",
-        "constellation": "Pegasus (ペガスス座)"
+        "magnitude": "2.39"
     },
     {
         "starName": "10κPeg",
+        "starLabel": "10κ",
+        "constellation": "Pegasus (ペガスス座)",
         "raHour": "21",
         "raMin": "44",
         "raSec": "38.7",
@@ -7712,11 +7563,12 @@ const stars = [
         "decDeg": "25",
         "decMin": "38",
         "decSec": "42",
-        "magnitude": "4.13",
-        "constellation": "Pegasus (ペガスス座)"
+        "magnitude": "4.13"
     },
     {
         "starName": "24ιPeg",
+        "starLabel": "24ι",
+        "constellation": "Pegasus (ペガスス座)",
         "raHour": "22",
         "raMin": "7",
         "raSec": "0.7",
@@ -7724,11 +7576,12 @@ const stars = [
         "decDeg": "25",
         "decMin": "20",
         "decSec": "42",
-        "magnitude": "3.76",
-        "constellation": "Pegasus (ペガスス座)"
+        "magnitude": "3.76"
     },
     {
         "starName": "26θPeg",
+        "starLabel": "26θ",
+        "constellation": "Pegasus (ペガスス座)",
         "raHour": "22",
         "raMin": "10",
         "raSec": "12",
@@ -7736,11 +7589,12 @@ const stars = [
         "decDeg": "6",
         "decMin": "11",
         "decSec": "52",
-        "magnitude": "3.53",
-        "constellation": "Pegasus (ペガスス座)"
+        "magnitude": "3.53"
     },
     {
         "starName": "29π2Peg",
+        "starLabel": "29π 2",
+        "constellation": "Pegasus (ペガスス座)",
         "raHour": "22",
         "raMin": "9",
         "raSec": "59.2",
@@ -7748,11 +7602,12 @@ const stars = [
         "decDeg": "33",
         "decMin": "10",
         "decSec": "42",
-        "magnitude": "4.29",
-        "constellation": "Pegasus (ペガスス座)"
+        "magnitude": "4.29"
     },
     {
         "starName": "42ζPeg",
+        "starLabel": "42ζ",
+        "constellation": "Pegasus (ペガスス座)",
         "raHour": "22",
         "raMin": "41",
         "raSec": "27.7",
@@ -7760,11 +7615,12 @@ const stars = [
         "decDeg": "10",
         "decMin": "49",
         "decSec": "53",
-        "magnitude": "3.4",
-        "constellation": "Pegasus (ペガスス座)"
+        "magnitude": "3.4"
     },
     {
         "starName": "44ηPeg",
+        "starLabel": "44η",
+        "constellation": "Pegasus (ペガスス座)",
         "raHour": "22",
         "raMin": "43",
         "raSec": "0.1",
@@ -7772,11 +7628,12 @@ const stars = [
         "decDeg": "30",
         "decMin": "13",
         "decSec": "17",
-        "magnitude": "2.94",
-        "constellation": "Pegasus (ペガスス座)"
+        "magnitude": "2.94"
     },
     {
         "starName": "46ξPeg",
+        "starLabel": "46ξ",
+        "constellation": "Pegasus (ペガスス座)",
         "raHour": "22",
         "raMin": "46",
         "raSec": "41.6",
@@ -7784,11 +7641,12 @@ const stars = [
         "decDeg": "12",
         "decMin": "10",
         "decSec": "22",
-        "magnitude": "4.19",
-        "constellation": "Pegasus (ペガスス座)"
+        "magnitude": "4.19"
     },
     {
         "starName": "47λPeg",
+        "starLabel": "47λ",
+        "constellation": "Pegasus (ペガスス座)",
         "raHour": "22",
         "raMin": "46",
         "raSec": "31.9",
@@ -7796,11 +7654,12 @@ const stars = [
         "decDeg": "23",
         "decMin": "33",
         "decSec": "56",
-        "magnitude": "3.95",
-        "constellation": "Pegasus (ペガスス座)"
+        "magnitude": "3.95"
     },
     {
         "starName": "48μPeg",
+        "starLabel": "48μ",
+        "constellation": "Pegasus (ペガスス座)",
         "raHour": "22",
         "raMin": "50",
         "raSec": "0.2",
@@ -7808,11 +7667,12 @@ const stars = [
         "decDeg": "24",
         "decMin": "36",
         "decSec": "6",
-        "magnitude": "3.48",
-        "constellation": "Pegasus (ペガスス座)"
+        "magnitude": "3.48"
     },
     {
         "starName": "53βPeg",
+        "starLabel": "53β",
+        "constellation": "Pegasus (ペガスス座)",
         "raHour": "23",
         "raMin": "3",
         "raSec": "46.5",
@@ -7820,11 +7680,12 @@ const stars = [
         "decDeg": "28",
         "decMin": "4",
         "decSec": "58",
-        "magnitude": "2.42",
-        "constellation": "Pegasus (ペガスス座)"
+        "magnitude": "2.42"
     },
     {
         "starName": "54αPeg",
+        "starLabel": "54α",
+        "constellation": "Pegasus (ペガスス座)",
         "raHour": "23",
         "raMin": "4",
         "raSec": "45.7",
@@ -7832,23 +7693,12 @@ const stars = [
         "decDeg": "15",
         "decMin": "12",
         "decSec": "19",
-        "magnitude": "2.49",
-        "constellation": "Pegasus (ペガスス座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "2.49"
     },
     {
         "starName": "13δSer",
+        "starLabel": "13δ",
+        "constellation": "Serpens (へび座)",
         "raHour": "15",
         "raMin": "34",
         "raSec": "48.1",
@@ -7856,11 +7706,12 @@ const stars = [
         "decDeg": "10",
         "decMin": "32",
         "decSec": "21",
-        "magnitude": "3.8",
-        "constellation": "Serpens (へび座)"
+        "magnitude": "3.8"
     },
     {
         "starName": "24αSer",
+        "starLabel": "24α",
+        "constellation": "Serpens (へび座)",
         "raHour": "15",
         "raMin": "44",
         "raSec": "16.1",
@@ -7868,11 +7719,12 @@ const stars = [
         "decDeg": "6",
         "decMin": "25",
         "decSec": "32",
-        "magnitude": "2.65",
-        "constellation": "Serpens (へび座)"
+        "magnitude": "2.65"
     },
     {
         "starName": "28βSer",
+        "starLabel": "28β",
+        "constellation": "Serpens (へび座)",
         "raHour": "15",
         "raMin": "46",
         "raSec": "11.3",
@@ -7880,11 +7732,12 @@ const stars = [
         "decDeg": "15",
         "decMin": "25",
         "decSec": "19",
-        "magnitude": "3.67",
-        "constellation": "Serpens (へび座)"
+        "magnitude": "3.67"
     },
     {
         "starName": "35κSer",
+        "starLabel": "35κ",
+        "constellation": "Serpens (へび座)",
         "raHour": "15",
         "raMin": "48",
         "raSec": "44.4",
@@ -7892,11 +7745,12 @@ const stars = [
         "decDeg": "18",
         "decMin": "8",
         "decSec": "30",
-        "magnitude": "4.09",
-        "constellation": "Serpens (へび座)"
+        "magnitude": "4.09"
     },
     {
         "starName": "32μSer",
+        "starLabel": "32μ",
+        "constellation": "Serpens (へび座)",
         "raHour": "15",
         "raMin": "49",
         "raSec": "37.2",
@@ -7904,11 +7758,12 @@ const stars = [
         "decDeg": "3",
         "decMin": "25",
         "decSec": "49",
-        "magnitude": "3.53",
-        "constellation": "Serpens (へび座)"
+        "magnitude": "3.53"
     },
     {
         "starName": "34ωSer",
+        "starLabel": "34ω",
+        "constellation": "Serpens (へび座)",
         "raHour": "15",
         "raMin": "50",
         "raSec": "17.5",
@@ -7916,11 +7771,12 @@ const stars = [
         "decDeg": "2",
         "decMin": "11",
         "decSec": "47",
-        "magnitude": "5.23",
-        "constellation": "Serpens (へび座)"
+        "magnitude": "5.23"
     },
     {
         "starName": "37εSer",
+        "starLabel": "37ε",
+        "constellation": "Serpens (へび座)",
         "raHour": "15",
         "raMin": "50",
         "raSec": "49",
@@ -7928,11 +7784,12 @@ const stars = [
         "decDeg": "4",
         "decMin": "28",
         "decSec": "40",
-        "magnitude": "3.71",
-        "constellation": "Serpens (へび座)"
+        "magnitude": "3.71"
     },
     {
         "starName": "41γSer",
+        "starLabel": "41γ",
+        "constellation": "Serpens (へび座)",
         "raHour": "15",
         "raMin": "56",
         "raSec": "27.2",
@@ -7940,23 +7797,12 @@ const stars = [
         "decDeg": "15",
         "decMin": "39",
         "decSec": "42",
-        "magnitude": "3.85",
-        "constellation": "Serpens (へび座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "3.85"
     },
     {
         "starName": "53νSer",
+        "starLabel": "53ν",
+        "constellation": "Serpens (へび座)",
         "raHour": "17",
         "raMin": "20",
         "raSec": "49.7",
@@ -7964,11 +7810,12 @@ const stars = [
         "decDeg": "12",
         "decMin": "50",
         "decSec": "49",
-        "magnitude": "4.33",
-        "constellation": "Serpens (へび座)"
+        "magnitude": "4.33"
     },
     {
         "starName": "55ξSer",
+        "starLabel": "55ξ",
+        "constellation": "Serpens (へび座)",
         "raHour": "17",
         "raMin": "37",
         "raSec": "35.2",
@@ -7976,11 +7823,12 @@ const stars = [
         "decDeg": "15",
         "decMin": "23",
         "decSec": "55",
-        "magnitude": "3.54",
-        "constellation": "Serpens (へび座)"
+        "magnitude": "3.54"
     },
     {
         "starName": "56οSer",
+        "starLabel": "56ο",
+        "constellation": "Serpens (へび座)",
         "raHour": "17",
         "raMin": "41",
         "raSec": "24.9",
@@ -7988,11 +7836,12 @@ const stars = [
         "decDeg": "12",
         "decMin": "52",
         "decSec": "31",
-        "magnitude": "4.26",
-        "constellation": "Serpens (へび座)"
+        "magnitude": "4.26"
     },
     {
         "starName": "58ηSer",
+        "starLabel": "58η",
+        "constellation": "Serpens (へび座)",
         "raHour": "18",
         "raMin": "21",
         "raSec": "18.6",
@@ -8000,11 +7849,12 @@ const stars = [
         "decDeg": "2",
         "decMin": "53",
         "decSec": "56",
-        "magnitude": "3.26",
-        "constellation": "Serpens (へび座)"
+        "magnitude": "3.26"
     },
     {
         "starName": "63θ1Ser",
+        "starLabel": "63θ1",
+        "constellation": "Serpens (へび座)",
         "raHour": "18",
         "raMin": "56",
         "raSec": "13.2",
@@ -8012,23 +7862,12 @@ const stars = [
         "decDeg": "4",
         "decMin": "12",
         "decSec": "13",
-        "magnitude": "4.62",
-        "constellation": "Serpens (へび座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "4.62"
     },
     {
         "starName": "1δOph",
+        "starLabel": "1δ",
+        "constellation": "Ophiuchus (へびつかい座)",
         "raHour": "16",
         "raMin": "14",
         "raSec": "20.7",
@@ -8036,11 +7875,12 @@ const stars = [
         "decDeg": "3",
         "decMin": "41",
         "decSec": "40",
-        "magnitude": "2.74",
-        "constellation": "Ophiuchus (へびつかい座)"
+        "magnitude": "2.74"
     },
     {
         "starName": "2εOph",
+        "starLabel": "2ε",
+        "constellation": "Ophiuchus (へびつかい座)",
         "raHour": "16",
         "raMin": "18",
         "raSec": "19.3",
@@ -8048,11 +7888,12 @@ const stars = [
         "decDeg": "4",
         "decMin": "41",
         "decSec": "33",
-        "magnitude": "3.24",
-        "constellation": "Ophiuchus (へびつかい座)"
+        "magnitude": "3.24"
     },
     {
         "starName": "8φOph",
+        "starLabel": "8φ",
+        "constellation": "Ophiuchus (へびつかい座)",
         "raHour": "16",
         "raMin": "31",
         "raSec": "8.3",
@@ -8060,11 +7901,12 @@ const stars = [
         "decDeg": "16",
         "decMin": "36",
         "decSec": "46",
-        "magnitude": "4.28",
-        "constellation": "Ophiuchus (へびつかい座)"
+        "magnitude": "4.28"
     },
     {
         "starName": "10λOph",
+        "starLabel": "10λ",
+        "constellation": "Ophiuchus (へびつかい座)",
         "raHour": "16",
         "raMin": "30",
         "raSec": "54.8",
@@ -8072,11 +7914,12 @@ const stars = [
         "decDeg": "1",
         "decMin": "59",
         "decSec": "2",
-        "magnitude": "3.82",
-        "constellation": "Ophiuchus (へびつかい座)"
+        "magnitude": "3.82"
     },
     {
         "starName": "9ωOph",
+        "starLabel": "9ω",
+        "constellation": "Ophiuchus (へびつかい座)",
         "raHour": "16",
         "raMin": "32",
         "raSec": "8.2",
@@ -8084,11 +7927,12 @@ const stars = [
         "decDeg": "21",
         "decMin": "27",
         "decSec": "59",
-        "magnitude": "4.45",
-        "constellation": "Ophiuchus (へびつかい座)"
+        "magnitude": "4.45"
     },
     {
         "starName": "13ζOph",
+        "starLabel": "13ζ",
+        "constellation": "Ophiuchus (へびつかい座)",
         "raHour": "16",
         "raMin": "37",
         "raSec": "9.5",
@@ -8096,11 +7940,12 @@ const stars = [
         "decDeg": "10",
         "decMin": "34",
         "decSec": "2",
-        "magnitude": "2.56",
-        "constellation": "Ophiuchus (へびつかい座)"
+        "magnitude": "2.56"
     },
     {
         "starName": "27κOph",
+        "starLabel": "27κ",
+        "constellation": "Ophiuchus (へびつかい座)",
         "raHour": "16",
         "raMin": "57",
         "raSec": "40.1",
@@ -8108,11 +7953,12 @@ const stars = [
         "decDeg": "9",
         "decMin": "22",
         "decSec": "30",
-        "magnitude": "3.2",
-        "constellation": "Ophiuchus (へびつかい座)"
+        "magnitude": "3.2"
     },
     {
         "starName": "35ηOph",
+        "starLabel": "35η",
+        "constellation": "Ophiuchus (へびつかい座)",
         "raHour": "17",
         "raMin": "10",
         "raSec": "22.7",
@@ -8120,11 +7966,12 @@ const stars = [
         "decDeg": "15",
         "decMin": "43",
         "decSec": "29",
-        "magnitude": "2.43",
-        "constellation": "Ophiuchus (へびつかい座)"
+        "magnitude": "2.43"
     },
     {
         "starName": "42θOph",
+        "starLabel": "42θ",
+        "constellation": "Ophiuchus (へびつかい座)",
         "raHour": "17",
         "raMin": "22",
         "raSec": "0.6",
@@ -8132,11 +7979,12 @@ const stars = [
         "decDeg": "24",
         "decMin": "59",
         "decSec": "58",
-        "magnitude": "3.27",
-        "constellation": "Ophiuchus (へびつかい座)"
+        "magnitude": "3.27"
     },
     {
         "starName": "55αOph",
+        "starLabel": "55α",
+        "constellation": "Ophiuchus (へびつかい座)",
         "raHour": "17",
         "raMin": "34",
         "raSec": "56.1",
@@ -8144,11 +7992,12 @@ const stars = [
         "decDeg": "12",
         "decMin": "33",
         "decSec": "36",
-        "magnitude": "2.08",
-        "constellation": "Ophiuchus (へびつかい座)"
+        "magnitude": "2.08"
     },
     {
         "starName": "57μOph",
+        "starLabel": "57μ",
+        "constellation": "Ophiuchus (へびつかい座)",
         "raHour": "17",
         "raMin": "37",
         "raSec": "50.7",
@@ -8156,11 +8005,12 @@ const stars = [
         "decDeg": "8",
         "decMin": "7",
         "decSec": "8",
-        "magnitude": "4.62",
-        "constellation": "Ophiuchus (へびつかい座)"
+        "magnitude": "4.62"
     },
     {
         "starName": "60βOph",
+        "starLabel": "60β",
+        "constellation": "Ophiuchus (へびつかい座)",
         "raHour": "17",
         "raMin": "43",
         "raSec": "28.4",
@@ -8168,11 +8018,12 @@ const stars = [
         "decDeg": "4",
         "decMin": "34",
         "decSec": "2",
-        "magnitude": "2.77",
-        "constellation": "Ophiuchus (へびつかい座)"
+        "magnitude": "2.77"
     },
     {
         "starName": "62γOph",
+        "starLabel": "62γ",
+        "constellation": "Ophiuchus (へびつかい座)",
         "raHour": "17",
         "raMin": "47",
         "raSec": "53.6",
@@ -8180,11 +8031,12 @@ const stars = [
         "decDeg": "2",
         "decMin": "42",
         "decSec": "26",
-        "magnitude": "3.75",
-        "constellation": "Ophiuchus (へびつかい座)"
+        "magnitude": "3.75"
     },
     {
         "starName": "64νOph",
+        "starLabel": "64ν",
+        "constellation": "Ophiuchus (へびつかい座)",
         "raHour": "17",
         "raMin": "59",
         "raSec": "1.6",
@@ -8192,23 +8044,12 @@ const stars = [
         "decDeg": "9",
         "decMin": "46",
         "decSec": "25",
-        "magnitude": "3.34",
-        "constellation": "Ophiuchus (へびつかい座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "3.34"
     },
     {
         "starName": "7κHer",
+        "starLabel": "7κ",
+        "constellation": "Hercules (ヘルクレス座)",
         "raHour": "16",
         "raMin": "8",
         "raSec": "4.5",
@@ -8216,11 +8057,12 @@ const stars = [
         "decDeg": "17",
         "decMin": "2",
         "decSec": "49",
-        "magnitude": "5",
-        "constellation": "Hercules (ヘルクレス座)"
+        "magnitude": "5"
     },
     {
         "starName": "11φHer",
+        "starLabel": "11φ",
+        "constellation": "Hercules (ヘルクレス座)",
         "raHour": "16",
         "raMin": "8",
         "raSec": "46.2",
@@ -8228,11 +8070,12 @@ const stars = [
         "decDeg": "44",
         "decMin": "56",
         "decSec": "6",
-        "magnitude": "4.26",
-        "constellation": "Hercules (ヘルクレス座)"
+        "magnitude": "4.26"
     },
     {
         "starName": "22τHer",
+        "starLabel": "22τ",
+        "constellation": "Hercules (ヘルクレス座)",
         "raHour": "16",
         "raMin": "19",
         "raSec": "44.4",
@@ -8240,11 +8083,12 @@ const stars = [
         "decDeg": "46",
         "decMin": "18",
         "decSec": "48",
-        "magnitude": "3.89",
-        "constellation": "Hercules (ヘルクレス座)"
+        "magnitude": "3.89"
     },
     {
         "starName": "20γHer",
+        "starLabel": "20γ",
+        "constellation": "Hercules (ヘルクレス座)",
         "raHour": "16",
         "raMin": "21",
         "raSec": "55.2",
@@ -8252,11 +8096,12 @@ const stars = [
         "decDeg": "19",
         "decMin": "9",
         "decSec": "11",
-        "magnitude": "3.75",
-        "constellation": "Hercules (ヘルクレス座)"
+        "magnitude": "3.75"
     },
     {
         "starName": "24ωHer",
+        "starLabel": "24ω",
+        "constellation": "Hercules (ヘルクレス座)",
         "raHour": "16",
         "raMin": "25",
         "raSec": "25",
@@ -8264,11 +8109,12 @@ const stars = [
         "decDeg": "14",
         "decMin": "2",
         "decSec": "0",
-        "magnitude": "4.57",
-        "constellation": "Hercules (ヘルクレス座)"
+        "magnitude": "4.57"
     },
     {
         "starName": "27βHer",
+        "starLabel": "27β",
+        "constellation": "Hercules (ヘルクレス座)",
         "raHour": "16",
         "raMin": "30",
         "raSec": "13.2",
@@ -8276,11 +8122,12 @@ const stars = [
         "decDeg": "21",
         "decMin": "29",
         "decSec": "23",
-        "magnitude": "2.77",
-        "constellation": "Hercules (ヘルクレス座)"
+        "magnitude": "2.77"
     },
     {
         "starName": "35σHer",
+        "starLabel": "35σ",
+        "constellation": "Hercules (ヘルクレス座)",
         "raHour": "16",
         "raMin": "34",
         "raSec": "6.2",
@@ -8288,11 +8135,12 @@ const stars = [
         "decDeg": "42",
         "decMin": "26",
         "decSec": "13",
-        "magnitude": "4.2",
-        "constellation": "Hercules (ヘルクレス座)"
+        "magnitude": "4.2"
     },
     {
         "starName": "40ζHer",
+        "starLabel": "40ζ",
+        "constellation": "Hercules (ヘルクレス座)",
         "raHour": "16",
         "raMin": "41",
         "raSec": "17.2",
@@ -8300,11 +8148,12 @@ const stars = [
         "decDeg": "31",
         "decMin": "36",
         "decSec": "11",
-        "magnitude": "2.81",
-        "constellation": "Hercules (ヘルクレス座)"
+        "magnitude": "2.81"
     },
     {
         "starName": "44ηHer",
+        "starLabel": "44η",
+        "constellation": "Hercules (ヘルクレス座)",
         "raHour": "16",
         "raMin": "42",
         "raSec": "53.8",
@@ -8312,11 +8161,12 @@ const stars = [
         "decDeg": "38",
         "decMin": "55",
         "decSec": "20",
-        "magnitude": "3.53",
-        "constellation": "Hercules (ヘルクレス座)"
+        "magnitude": "3.53"
     },
     {
         "starName": "58εHer",
+        "starLabel": "58ε",
+        "constellation": "Hercules (ヘルクレス座)",
         "raHour": "17",
         "raMin": "0",
         "raSec": "17.4",
@@ -8324,11 +8174,12 @@ const stars = [
         "decDeg": "30",
         "decMin": "55",
         "decSec": "35",
-        "magnitude": "3.92",
-        "constellation": "Hercules (ヘルクレス座)"
+        "magnitude": "3.92"
     },
     {
         "starName": "64α1Her",
+        "starLabel": "64α1",
+        "constellation": "Hercules (ヘルクレス座)",
         "raHour": "17",
         "raMin": "14",
         "raSec": "38.9",
@@ -8336,11 +8187,12 @@ const stars = [
         "decDeg": "14",
         "decMin": "23",
         "decSec": "25",
-        "magnitude": "3.48",
-        "constellation": "Hercules (ヘルクレス座)"
+        "magnitude": "3.48"
     },
     {
         "starName": "65δHer",
+        "starLabel": "65δ",
+        "constellation": "Hercules (ヘルクレス座)",
         "raHour": "17",
         "raMin": "15",
         "raSec": "1.9",
@@ -8348,11 +8200,12 @@ const stars = [
         "decDeg": "24",
         "decMin": "50",
         "decSec": "21",
-        "magnitude": "3.14",
-        "constellation": "Hercules (ヘルクレス座)"
+        "magnitude": "3.14"
     },
     {
         "starName": "67πHer",
+        "starLabel": "67π",
+        "constellation": "Hercules (ヘルクレス座)",
         "raHour": "17",
         "raMin": "15",
         "raSec": "2.8",
@@ -8360,11 +8213,12 @@ const stars = [
         "decDeg": "36",
         "decMin": "48",
         "decSec": "33",
-        "magnitude": "3.16",
-        "constellation": "Hercules (ヘルクレス座)"
+        "magnitude": "3.16"
     },
     {
         "starName": "75ρHer",
+        "starLabel": "75ρ",
+        "constellation": "Hercules (ヘルクレス座)",
         "raHour": "17",
         "raMin": "23",
         "raSec": "41",
@@ -8372,11 +8226,12 @@ const stars = [
         "decDeg": "37",
         "decMin": "8",
         "decSec": "45",
-        "magnitude": "4.52",
-        "constellation": "Hercules (ヘルクレス座)"
+        "magnitude": "4.52"
     },
     {
         "starName": "76λHer",
+        "starLabel": "76λ",
+        "constellation": "Hercules (ヘルクレス座)",
         "raHour": "17",
         "raMin": "30",
         "raSec": "44.3",
@@ -8384,11 +8239,12 @@ const stars = [
         "decDeg": "26",
         "decMin": "6",
         "decSec": "38",
-        "magnitude": "4.41",
-        "constellation": "Hercules (ヘルクレス座)"
+        "magnitude": "4.41"
     },
     {
         "starName": "85ιHer",
+        "starLabel": "85ι",
+        "constellation": "Hercules (ヘルクレス座)",
         "raHour": "17",
         "raMin": "39",
         "raSec": "27.9",
@@ -8396,11 +8252,12 @@ const stars = [
         "decDeg": "46",
         "decMin": "0",
         "decSec": "23",
-        "magnitude": "3.8",
-        "constellation": "Hercules (ヘルクレス座)"
+        "magnitude": "3.8"
     },
     {
         "starName": "86μHer",
+        "starLabel": "86μ",
+        "constellation": "Hercules (ヘルクレス座)",
         "raHour": "17",
         "raMin": "46",
         "raSec": "27.5",
@@ -8408,11 +8265,12 @@ const stars = [
         "decDeg": "27",
         "decMin": "43",
         "decSec": "14",
-        "magnitude": "3.42",
-        "constellation": "Hercules (ヘルクレス座)"
+        "magnitude": "3.42"
     },
     {
         "starName": "91θHer",
+        "starLabel": "91θ",
+        "constellation": "Hercules (ヘルクレス座)",
         "raHour": "17",
         "raMin": "56",
         "raSec": "15.2",
@@ -8420,11 +8278,12 @@ const stars = [
         "decDeg": "37",
         "decMin": "15",
         "decSec": "2",
-        "magnitude": "3.86",
-        "constellation": "Hercules (ヘルクレス座)"
+        "magnitude": "3.86"
     },
     {
         "starName": "92ξHer",
+        "starLabel": "92ξ",
+        "constellation": "Hercules (ヘルクレス座)",
         "raHour": "17",
         "raMin": "57",
         "raSec": "45.9",
@@ -8432,11 +8291,12 @@ const stars = [
         "decDeg": "29",
         "decMin": "14",
         "decSec": "52",
-        "magnitude": "3.7",
-        "constellation": "Hercules (ヘルクレス座)"
+        "magnitude": "3.7"
     },
     {
         "starName": "94νHer",
+        "starLabel": "94ν",
+        "constellation": "Hercules (ヘルクレス座)",
         "raHour": "17",
         "raMin": "58",
         "raSec": "30.2",
@@ -8444,11 +8304,12 @@ const stars = [
         "decDeg": "30",
         "decMin": "11",
         "decSec": "22",
-        "magnitude": "4.41",
-        "constellation": "Hercules (ヘルクレス座)"
+        "magnitude": "4.41"
     },
     {
         "starName": "103οHer",
+        "starLabel": "103ο",
+        "constellation": "Hercules (ヘルクレス座)",
         "raHour": "18",
         "raMin": "7",
         "raSec": "32.6",
@@ -8456,11 +8317,12 @@ const stars = [
         "decDeg": "28",
         "decMin": "45",
         "decSec": "45",
-        "magnitude": "3.83",
-        "constellation": "Hercules (ヘルクレス座)"
+        "magnitude": "3.83"
     },
     {
         "starName": "102Her",
+        "starLabel": "102",
+        "constellation": "Hercules (ヘルクレス座)",
         "raHour": "18",
         "raMin": "8",
         "raSec": "45.5",
@@ -8468,23 +8330,12 @@ const stars = [
         "decDeg": "20",
         "decMin": "48",
         "decSec": "52",
-        "magnitude": "4.36",
-        "constellation": "Hercules (ヘルクレス座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "4.36"
     },
     {
         "starName": "φPer",
+        "starLabel": "φ",
+        "constellation": "Perseus (ペルセウス座)",
         "raHour": "1",
         "raMin": "43",
         "raSec": "39.6",
@@ -8492,11 +8343,12 @@ const stars = [
         "decDeg": "50",
         "decMin": "41",
         "decSec": "19",
-        "magnitude": "4.07",
-        "constellation": "Perseus (ペルセウス座)"
+        "magnitude": "4.07"
     },
     {
         "starName": "13θPer",
+        "starLabel": "13θ",
+        "constellation": "Perseus (ペルセウス座)",
         "raHour": "2",
         "raMin": "44",
         "raSec": "12",
@@ -8504,11 +8356,12 @@ const stars = [
         "decDeg": "49",
         "decMin": "13",
         "decSec": "42",
-        "magnitude": "4.12",
-        "constellation": "Perseus (ペルセウス座)"
+        "magnitude": "4.12"
     },
     {
         "starName": "15ηPer",
+        "starLabel": "15η",
+        "constellation": "Perseus (ペルセウス座)",
         "raHour": "2",
         "raMin": "50",
         "raSec": "41.8",
@@ -8516,11 +8369,12 @@ const stars = [
         "decDeg": "55",
         "decMin": "53",
         "decSec": "44",
-        "magnitude": "3.76",
-        "constellation": "Perseus (ペルセウス座)"
+        "magnitude": "3.76"
     },
     {
         "starName": "16Per",
+        "starLabel": "16",
+        "constellation": "Perseus (ペルセウス座)",
         "raHour": "2",
         "raMin": "50",
         "raSec": "35.1",
@@ -8528,11 +8382,12 @@ const stars = [
         "decDeg": "38",
         "decMin": "19",
         "decSec": "7",
-        "magnitude": "4.23",
-        "constellation": "Perseus (ペルセウス座)"
+        "magnitude": "4.23"
     },
     {
         "starName": "18τPer",
+        "starLabel": "18τ",
+        "constellation": "Perseus (ペルセウス座)",
         "raHour": "2",
         "raMin": "54",
         "raSec": "15.5",
@@ -8540,11 +8395,12 @@ const stars = [
         "decDeg": "52",
         "decMin": "45",
         "decSec": "45",
-        "magnitude": "3.95",
-        "constellation": "Perseus (ペルセウス座)"
+        "magnitude": "3.95"
     },
     {
         "starName": "23γPer",
+        "starLabel": "23γ",
+        "constellation": "Perseus (ペルセウス座)",
         "raHour": "3",
         "raMin": "4",
         "raSec": "47.8",
@@ -8552,11 +8408,12 @@ const stars = [
         "decDeg": "53",
         "decMin": "30",
         "decSec": "23",
-        "magnitude": "2.93",
-        "constellation": "Perseus (ペルセウス座)"
+        "magnitude": "2.93"
     },
     {
         "starName": "25ρPer",
+        "starLabel": "25ρ",
+        "constellation": "Perseus (ペルセウス座)",
         "raHour": "3",
         "raMin": "5",
         "raSec": "10.6",
@@ -8564,11 +8421,12 @@ const stars = [
         "decDeg": "38",
         "decMin": "50",
         "decSec": "25",
-        "magnitude": "3.39",
-        "constellation": "Perseus (ペルセウス座)"
+        "magnitude": "3.39"
     },
     {
         "starName": "26βPer",
+        "starLabel": "26β",
+        "constellation": "Perseus (ペルセウス座)",
         "raHour": "3",
         "raMin": "8",
         "raSec": "10.1",
@@ -8576,11 +8434,12 @@ const stars = [
         "decDeg": "40",
         "decMin": "57",
         "decSec": "20",
-        "magnitude": "2.12",
-        "constellation": "Perseus (ペルセウス座)"
+        "magnitude": "2.12"
     },
     {
         "starName": "27κPer",
+        "starLabel": "27κ",
+        "constellation": "Perseus (ペルセウス座)",
         "raHour": "3",
         "raMin": "9",
         "raSec": "29.8",
@@ -8588,11 +8447,12 @@ const stars = [
         "decDeg": "44",
         "decMin": "51",
         "decSec": "26",
-        "magnitude": "3.8",
-        "constellation": "Perseus (ペルセウス座)"
+        "magnitude": "3.8"
     },
     {
         "starName": "32Per",
+        "starLabel": "32",
+        "constellation": "Perseus (ペルセウス座)",
         "raHour": "3",
         "raMin": "21",
         "raSec": "26.5",
@@ -8600,11 +8460,12 @@ const stars = [
         "decDeg": "43",
         "decMin": "19",
         "decSec": "46",
-        "magnitude": "4.95",
-        "constellation": "Perseus (ペルセウス座)"
+        "magnitude": "4.95"
     },
     {
         "starName": "33αPer",
+        "starLabel": "33α",
+        "constellation": "Perseus (ペルセウス座)",
         "raHour": "3",
         "raMin": "24",
         "raSec": "19.4",
@@ -8612,11 +8473,12 @@ const stars = [
         "decDeg": "49",
         "decMin": "51",
         "decSec": "40",
-        "magnitude": "1.79",
-        "constellation": "Perseus (ペルセウス座)"
+        "magnitude": "1.79"
     },
     {
         "starName": "37ψPer",
+        "starLabel": "37ψ",
+        "constellation": "Perseus (ペルセウス座)",
         "raHour": "3",
         "raMin": "36",
         "raSec": "29.4",
@@ -8624,11 +8486,12 @@ const stars = [
         "decDeg": "48",
         "decMin": "11",
         "decSec": "34",
-        "magnitude": "4.23",
-        "constellation": "Perseus (ペルセウス座)"
+        "magnitude": "4.23"
     },
     {
         "starName": "39δPer",
+        "starLabel": "39δ",
+        "constellation": "Perseus (ペルセウス座)",
         "raHour": "3",
         "raMin": "42",
         "raSec": "55.5",
@@ -8636,11 +8499,12 @@ const stars = [
         "decDeg": "47",
         "decMin": "47",
         "decSec": "15",
-        "magnitude": "3.01",
-        "constellation": "Perseus (ペルセウス座)"
+        "magnitude": "3.01"
     },
     {
         "starName": "38οPer",
+        "starLabel": "38ο",
+        "constellation": "Perseus (ペルセウス座)",
         "raHour": "3",
         "raMin": "44",
         "raSec": "19.1",
@@ -8648,11 +8512,12 @@ const stars = [
         "decDeg": "32",
         "decMin": "17",
         "decSec": "18",
-        "magnitude": "3.83",
-        "constellation": "Perseus (ペルセウス座)"
+        "magnitude": "3.83"
     },
     {
         "starName": "41νPer",
+        "starLabel": "41ν",
+        "constellation": "Perseus (ペルセウス座)",
         "raHour": "3",
         "raMin": "45",
         "raSec": "11.6",
@@ -8660,11 +8525,12 @@ const stars = [
         "decDeg": "42",
         "decMin": "34",
         "decSec": "43",
-        "magnitude": "3.77",
-        "constellation": "Perseus (ペルセウス座)"
+        "magnitude": "3.77"
     },
     {
         "starName": "44ζPer",
+        "starLabel": "44ζ",
+        "constellation": "Perseus (ペルセウス座)",
         "raHour": "3",
         "raMin": "54",
         "raSec": "7.9",
@@ -8672,11 +8538,12 @@ const stars = [
         "decDeg": "31",
         "decMin": "53",
         "decSec": "1",
-        "magnitude": "2.85",
-        "constellation": "Perseus (ペルセウス座)"
+        "magnitude": "2.85"
     },
     {
         "starName": "45εPer",
+        "starLabel": "45ε",
+        "constellation": "Perseus (ペルセウス座)",
         "raHour": "3",
         "raMin": "57",
         "raSec": "51.2",
@@ -8684,11 +8551,12 @@ const stars = [
         "decDeg": "40",
         "decMin": "0",
         "decSec": "37",
-        "magnitude": "2.89",
-        "constellation": "Perseus (ペルセウス座)"
+        "magnitude": "2.89"
     },
     {
         "starName": "46ξPer",
+        "starLabel": "46ξ",
+        "constellation": "Perseus (ペルセウス座)",
         "raHour": "3",
         "raMin": "58",
         "raSec": "57.9",
@@ -8696,11 +8564,12 @@ const stars = [
         "decDeg": "35",
         "decMin": "47",
         "decSec": "28",
-        "magnitude": "4.04",
-        "constellation": "Perseus (ペルセウス座)"
+        "magnitude": "4.04"
     },
     {
         "starName": "47λPer",
+        "starLabel": "47λ",
+        "constellation": "Perseus (ペルセウス座)",
         "raHour": "4",
         "raMin": "6",
         "raSec": "35",
@@ -8708,11 +8577,12 @@ const stars = [
         "decDeg": "50",
         "decMin": "21",
         "decSec": "5",
-        "magnitude": "4.29",
-        "constellation": "Perseus (ペルセウス座)"
+        "magnitude": "4.29"
     },
     {
         "starName": "48Per",
+        "starLabel": "48",
+        "constellation": "Perseus (ペルセウス座)",
         "raHour": "4",
         "raMin": "8",
         "raSec": "39.7",
@@ -8720,11 +8590,12 @@ const stars = [
         "decDeg": "47",
         "decMin": "42",
         "decSec": "45",
-        "magnitude": "4.04",
-        "constellation": "Perseus (ペルセウス座)"
+        "magnitude": "4.04"
     },
     {
         "starName": "51μPer",
+        "starLabel": "51μ",
+        "constellation": "Perseus (ペルセウス座)",
         "raHour": "4",
         "raMin": "14",
         "raSec": "53.9",
@@ -8732,23 +8603,12 @@ const stars = [
         "decDeg": "48",
         "decMin": "24",
         "decSec": "34",
-        "magnitude": "4.14",
-        "constellation": "Perseus (ペルセウス座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "4.14"
     },
     {
         "starName": "γ2Vel",
+        "starLabel": "γ2",
+        "constellation": "Vela (ほ座)",
         "raHour": "8",
         "raMin": "9",
         "raSec": "32",
@@ -8756,11 +8616,12 @@ const stars = [
         "decDeg": "47",
         "decMin": "20",
         "decSec": "12",
-        "magnitude": "1.78",
-        "constellation": "Vela (ほ座)"
+        "magnitude": "1.78"
     },
     {
         "starName": "δVel",
+        "starLabel": "δ",
+        "constellation": "Vela (ほ座)",
         "raHour": "8",
         "raMin": "44",
         "raSec": "42.2",
@@ -8768,11 +8629,12 @@ const stars = [
         "decDeg": "54",
         "decMin": "42",
         "decSec": "30",
-        "magnitude": "1.96",
-        "constellation": "Vela (ほ座)"
+        "magnitude": "1.96"
     },
     {
         "starName": "λVel",
+        "starLabel": "λ",
+        "constellation": "Vela (ほ座)",
         "raHour": "9",
         "raMin": "7",
         "raSec": "59.8",
@@ -8780,11 +8642,12 @@ const stars = [
         "decDeg": "43",
         "decMin": "25",
         "decSec": "57",
-        "magnitude": "2.21",
-        "constellation": "Vela (ほ座)"
+        "magnitude": "2.21"
     },
     {
         "starName": "κVel",
+        "starLabel": "κ",
+        "constellation": "Vela (ほ座)",
         "raHour": "9",
         "raMin": "22",
         "raSec": "6.8",
@@ -8792,11 +8655,12 @@ const stars = [
         "decDeg": "55",
         "decMin": "0",
         "decSec": "39",
-        "magnitude": "2.5",
-        "constellation": "Vela (ほ座)"
+        "magnitude": "2.5"
     },
     {
         "starName": "ψVel",
+        "starLabel": "ψ",
+        "constellation": "Vela (ほ座)",
         "raHour": "9",
         "raMin": "30",
         "raSec": "42",
@@ -8804,11 +8668,12 @@ const stars = [
         "decDeg": "40",
         "decMin": "28",
         "decSec": "0",
-        "magnitude": "3.6",
-        "constellation": "Vela (ほ座)"
+        "magnitude": "3.6"
     },
     {
         "starName": "φVel",
+        "starLabel": "φ",
+        "constellation": "Vela (ほ座)",
         "raHour": "9",
         "raMin": "56",
         "raSec": "51.8",
@@ -8816,11 +8681,12 @@ const stars = [
         "decDeg": "54",
         "decMin": "34",
         "decSec": "4",
-        "magnitude": "3.54",
-        "constellation": "Vela (ほ座)"
+        "magnitude": "3.54"
     },
     {
         "starName": "HIP50191Vel",
+        "starLabel": "HIP50191",
+        "constellation": "Vela (ほ座)",
         "raHour": "10",
         "raMin": "14",
         "raSec": "44.2",
@@ -8828,11 +8694,12 @@ const stars = [
         "decDeg": "42",
         "decMin": "7",
         "decSec": "19",
-        "magnitude": "3.85",
-        "constellation": "Vela (ほ座)"
+        "magnitude": "3.85"
     },
     {
         "starName": "HIP51635Vel",
+        "starLabel": "HIP51635",
+        "constellation": "Vela (ほ座)",
         "raHour": "10",
         "raMin": "32",
         "raSec": "56.9",
@@ -8840,11 +8707,12 @@ const stars = [
         "decDeg": "47",
         "decMin": "0",
         "decSec": "12",
-        "magnitude": "5.02",
-        "constellation": "Vela (ほ座)"
+        "magnitude": "5.02"
     },
     {
         "starName": "HIP51986Vel",
+        "starLabel": "HIP51986",
+        "constellation": "Vela (ほ座)",
         "raHour": "10",
         "raMin": "37",
         "raSec": "18.1",
@@ -8852,11 +8720,12 @@ const stars = [
         "decDeg": "48",
         "decMin": "13",
         "decSec": "33",
-        "magnitude": "3.84",
-        "constellation": "Vela (ほ座)"
+        "magnitude": "3.84"
     },
     {
         "starName": "μVel",
+        "starLabel": "μ",
+        "constellation": "Vela (ほ座)",
         "raHour": "10",
         "raMin": "46",
         "raSec": "46.2",
@@ -8864,23 +8733,12 @@ const stars = [
         "decDeg": "49",
         "decMin": "25",
         "decSec": "12",
-        "magnitude": "2.69",
-        "constellation": "Vela (ほ座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "2.69"
     },
     {
         "starName": "εPhe",
+        "starLabel": "ε",
+        "constellation": "Phoenix (ほうおう座)",
         "raHour": "0",
         "raMin": "9",
         "raSec": "24.7",
@@ -8888,11 +8746,12 @@ const stars = [
         "decDeg": "45",
         "decMin": "44",
         "decSec": "51",
-        "magnitude": "3.88",
-        "constellation": "Phoenix (ほうおう座)"
+        "magnitude": "3.88"
     },
     {
         "starName": "αPhe",
+        "starLabel": "α",
+        "constellation": "Phoenix (ほうおう座)",
         "raHour": "0",
         "raMin": "26",
         "raSec": "17",
@@ -8900,11 +8759,12 @@ const stars = [
         "decDeg": "42",
         "decMin": "18",
         "decSec": "22",
-        "magnitude": "2.39",
-        "constellation": "Phoenix (ほうおう座)"
+        "magnitude": "2.39"
     },
     {
         "starName": "βPhe",
+        "starLabel": "β",
+        "constellation": "Phoenix (ほうおう座)",
         "raHour": "1",
         "raMin": "6",
         "raSec": "5",
@@ -8912,11 +8772,12 @@ const stars = [
         "decDeg": "46",
         "decMin": "43",
         "decSec": "7",
-        "magnitude": "3.31",
-        "constellation": "Phoenix (ほうおう座)"
+        "magnitude": "3.31"
     },
     {
         "starName": "ζPhe",
+        "starLabel": "ζ",
+        "constellation": "Phoenix (ほうおう座)",
         "raHour": "1",
         "raMin": "8",
         "raSec": "23.1",
@@ -8924,11 +8785,12 @@ const stars = [
         "decDeg": "55",
         "decMin": "14",
         "decSec": "45",
-        "magnitude": "3.92",
-        "constellation": "Phoenix (ほうおう座)"
+        "magnitude": "3.92"
     },
     {
         "starName": "γPhe",
+        "starLabel": "γ",
+        "constellation": "Phoenix (ほうおう座)",
         "raHour": "1",
         "raMin": "28",
         "raSec": "21.9",
@@ -8936,11 +8798,12 @@ const stars = [
         "decDeg": "43",
         "decMin": "19",
         "decSec": "6",
-        "magnitude": "3.41",
-        "constellation": "Phoenix (ほうおう座)"
+        "magnitude": "3.41"
     },
     {
         "starName": "δPhe",
+        "starLabel": "δ",
+        "constellation": "Phoenix (ほうおう座)",
         "raHour": "1",
         "raMin": "31",
         "raSec": "15.1",
@@ -8948,11 +8811,12 @@ const stars = [
         "decDeg": "49",
         "decMin": "4",
         "decSec": "22",
-        "magnitude": "3.95",
-        "constellation": "Phoenix (ほうおう座)"
+        "magnitude": "3.95"
     },
     {
         "starName": "ψPhe",
+        "starLabel": "ψ",
+        "constellation": "Phoenix (ほうおう座)",
         "raHour": "1",
         "raMin": "53",
         "raSec": "38.8",
@@ -8960,23 +8824,12 @@ const stars = [
         "decDeg": "46",
         "decMin": "18",
         "decSec": "9",
-        "magnitude": "4.41",
-        "constellation": "Phoenix (ほうおう座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "4.41"
     },
     {
         "starName": "εTel",
+        "starLabel": "ε",
+        "constellation": "Telescopium (ぼうえんきょう座)",
         "raHour": "18",
         "raMin": "11",
         "raSec": "13.8",
@@ -8984,11 +8837,12 @@ const stars = [
         "decDeg": "45",
         "decMin": "57",
         "decSec": "16",
-        "magnitude": "4.53",
-        "constellation": "Telescopium (ぼうえんきょう座)"
+        "magnitude": "4.53"
     },
     {
         "starName": "αTel",
+        "starLabel": "α",
+        "constellation": "Telescopium (ぼうえんきょう座)",
         "raHour": "18",
         "raMin": "26",
         "raSec": "58.4",
@@ -8996,11 +8850,12 @@ const stars = [
         "decDeg": "45",
         "decMin": "58",
         "decSec": "6",
-        "magnitude": "3.51",
-        "constellation": "Telescopium (ぼうえんきょう座)"
+        "magnitude": "3.51"
     },
     {
         "starName": "ζTel",
+        "starLabel": "ζ",
+        "constellation": "Telescopium (ぼうえんきょう座)",
         "raHour": "18",
         "raMin": "28",
         "raSec": "49.9",
@@ -9008,11 +8863,12 @@ const stars = [
         "decDeg": "49",
         "decMin": "4",
         "decSec": "15",
-        "magnitude": "4.13",
-        "constellation": "Telescopium (ぼうえんきょう座)"
+        "magnitude": "4.13"
     },
     {
         "starName": "κTel",
+        "starLabel": "κ",
+        "constellation": "Telescopium (ぼうえんきょう座)",
         "raHour": "18",
         "raMin": "52",
         "raSec": "39.6",
@@ -9020,11 +8876,12 @@ const stars = [
         "decDeg": "52",
         "decMin": "6",
         "decSec": "27",
-        "magnitude": "5.17",
-        "constellation": "Telescopium (ぼうえんきょう座)"
+        "magnitude": "5.17"
     },
     {
         "starName": "ηTel",
+        "starLabel": "η",
+        "constellation": "Telescopium (ぼうえんきょう座)",
         "raHour": "19",
         "raMin": "22",
         "raSec": "51.1",
@@ -9032,11 +8889,12 @@ const stars = [
         "decDeg": "54",
         "decMin": "25",
         "decSec": "25",
-        "magnitude": "5.05",
-        "constellation": "Telescopium (ぼうえんきょう座)"
+        "magnitude": "5.05"
     },
     {
         "starName": "ξTel",
+        "starLabel": "ξ",
+        "constellation": "Telescopium (ぼうえんきょう座)",
         "raHour": "20",
         "raMin": "7",
         "raSec": "23.2",
@@ -9044,23 +8902,12 @@ const stars = [
         "decDeg": "52",
         "decMin": "52",
         "decSec": "51",
-        "magnitude": "4.94",
-        "constellation": "Telescopium (ぼうえんきょう座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "4.94"
     },
     {
         "starName": "εAnt",
+        "starLabel": "ε",
+        "constellation": "Antlia (ポンプ座)",
         "raHour": "9",
         "raMin": "29",
         "raSec": "14.7",
@@ -9068,11 +8915,12 @@ const stars = [
         "decDeg": "35",
         "decMin": "57",
         "decSec": "5",
-        "magnitude": "4.51",
-        "constellation": "Antlia (ポンプ座)"
+        "magnitude": "4.51"
     },
     {
         "starName": "ηAnt",
+        "starLabel": "η",
+        "constellation": "Antlia (ポンプ座)",
         "raHour": "9",
         "raMin": "58",
         "raSec": "52.3",
@@ -9080,11 +8928,12 @@ const stars = [
         "decDeg": "35",
         "decMin": "53",
         "decSec": "28",
-        "magnitude": "5.23",
-        "constellation": "Antlia (ポンプ座)"
+        "magnitude": "5.23"
     },
     {
         "starName": "αAnt",
+        "starLabel": "α",
+        "constellation": "Antlia (ポンプ座)",
         "raHour": "10",
         "raMin": "27",
         "raSec": "9.1",
@@ -9092,11 +8941,12 @@ const stars = [
         "decDeg": "31",
         "decMin": "4",
         "decSec": "4",
-        "magnitude": "4.25",
-        "constellation": "Antlia (ポンプ座)"
+        "magnitude": "4.25"
     },
     {
         "starName": "ιAnt",
+        "starLabel": "ι",
+        "constellation": "Antlia (ポンプ座)",
         "raHour": "10",
         "raMin": "56",
         "raSec": "43.1",
@@ -9104,23 +8954,12 @@ const stars = [
         "decDeg": "37",
         "decMin": "8",
         "decSec": "16",
-        "magnitude": "4.6",
-        "constellation": "Antlia (ポンプ座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "4.6"
     },
     {
         "starName": "2εAqr",
+        "starLabel": "2ε",
+        "constellation": "Aquarius (みずがめ座)",
         "raHour": "20",
         "raMin": "47",
         "raSec": "40.6",
@@ -9128,11 +8967,12 @@ const stars = [
         "decDeg": "9",
         "decMin": "29",
         "decSec": "45",
-        "magnitude": "3.77",
-        "constellation": "Aquarius (みずがめ座)"
+        "magnitude": "3.77"
     },
     {
         "starName": "22βAqr",
+        "starLabel": "22β",
+        "constellation": "Aquarius (みずがめ座)",
         "raHour": "21",
         "raMin": "31",
         "raSec": "33.5",
@@ -9140,11 +8980,12 @@ const stars = [
         "decDeg": "5",
         "decMin": "34",
         "decSec": "16",
-        "magnitude": "2.91",
-        "constellation": "Aquarius (みずがめ座)"
+        "magnitude": "2.91"
     },
     {
         "starName": "34αAqr",
+        "starLabel": "34α",
+        "constellation": "Aquarius (みずがめ座)",
         "raHour": "22",
         "raMin": "5",
         "raSec": "47",
@@ -9152,11 +8993,12 @@ const stars = [
         "decDeg": "0",
         "decMin": "19",
         "decSec": "11",
-        "magnitude": "2.96",
-        "constellation": "Aquarius (みずがめ座)"
+        "magnitude": "2.96"
     },
     {
         "starName": "33ιAqr",
+        "starLabel": "33ι",
+        "constellation": "Aquarius (みずがめ座)",
         "raHour": "22",
         "raMin": "6",
         "raSec": "26.2",
@@ -9164,11 +9006,12 @@ const stars = [
         "decDeg": "13",
         "decMin": "52",
         "decSec": "11",
-        "magnitude": "4.27",
-        "constellation": "Aquarius (みずがめ座)"
+        "magnitude": "4.27"
     },
     {
         "starName": "43θAqr",
+        "starLabel": "43θ",
+        "constellation": "Aquarius (みずがめ座)",
         "raHour": "22",
         "raMin": "16",
         "raSec": "50",
@@ -9176,11 +9019,12 @@ const stars = [
         "decDeg": "7",
         "decMin": "47",
         "decSec": "0",
-        "magnitude": "4.16",
-        "constellation": "Aquarius (みずがめ座)"
+        "magnitude": "4.16"
     },
     {
         "starName": "48γAqr",
+        "starLabel": "48γ",
+        "constellation": "Aquarius (みずがめ座)",
         "raHour": "22",
         "raMin": "21",
         "raSec": "39.4",
@@ -9188,11 +9032,12 @@ const stars = [
         "decDeg": "1",
         "decMin": "23",
         "decSec": "14",
-        "magnitude": "3.84",
-        "constellation": "Aquarius (みずがめ座)"
+        "magnitude": "3.84"
     },
     {
         "starName": "52πAqr",
+        "starLabel": "52π",
+        "constellation": "Aquarius (みずがめ座)",
         "raHour": "22",
         "raMin": "25",
         "raSec": "16.6",
@@ -9200,11 +9045,12 @@ const stars = [
         "decDeg": "1",
         "decMin": "22",
         "decSec": "39",
-        "magnitude": "4.66",
-        "constellation": "Aquarius (みずがめ座)"
+        "magnitude": "4.66"
     },
     {
         "starName": "55ζ2Aqr",
+        "starLabel": "55ζ2",
+        "constellation": "Aquarius (みずがめ座)",
         "raHour": "22",
         "raMin": "28",
         "raSec": "50.1",
@@ -9212,11 +9058,12 @@ const stars = [
         "decDeg": "0",
         "decMin": "1",
         "decSec": "12",
-        "magnitude": "4.42",
-        "constellation": "Aquarius (みずがめ座)"
+        "magnitude": "4.42"
     },
     {
         "starName": "62ηAqr",
+        "starLabel": "62η",
+        "constellation": "Aquarius (みずがめ座)",
         "raHour": "22",
         "raMin": "35",
         "raSec": "21.4",
@@ -9224,11 +9071,12 @@ const stars = [
         "decDeg": "0",
         "decMin": "7",
         "decSec": "3",
-        "magnitude": "4.02",
-        "constellation": "Aquarius (みずがめ座)"
+        "magnitude": "4.02"
     },
     {
         "starName": "73λAqr",
+        "starLabel": "73λ",
+        "constellation": "Aquarius (みずがめ座)",
         "raHour": "22",
         "raMin": "52",
         "raSec": "36.9",
@@ -9236,11 +9084,12 @@ const stars = [
         "decDeg": "7",
         "decMin": "34",
         "decSec": "47",
-        "magnitude": "3.74",
-        "constellation": "Aquarius (みずがめ座)"
+        "magnitude": "3.74"
     },
     {
         "starName": "76δAqr",
+        "starLabel": "76δ",
+        "constellation": "Aquarius (みずがめ座)",
         "raHour": "22",
         "raMin": "54",
         "raSec": "39",
@@ -9248,11 +9097,12 @@ const stars = [
         "decDeg": "15",
         "decMin": "49",
         "decSec": "15",
-        "magnitude": "3.27",
-        "constellation": "Aquarius (みずがめ座)"
+        "magnitude": "3.27"
     },
     {
         "starName": "86Aqr",
+        "starLabel": "86",
+        "constellation": "Aquarius (みずがめ座)",
         "raHour": "23",
         "raMin": "6",
         "raSec": "40.9",
@@ -9260,11 +9110,12 @@ const stars = [
         "decDeg": "23",
         "decMin": "44",
         "decSec": "35",
-        "magnitude": "4.47",
-        "constellation": "Aquarius (みずがめ座)"
+        "magnitude": "4.47"
     },
     {
         "starName": "88Aqr",
+        "starLabel": "88",
+        "constellation": "Aquarius (みずがめ座)",
         "raHour": "23",
         "raMin": "9",
         "raSec": "26.8",
@@ -9272,11 +9123,12 @@ const stars = [
         "decDeg": "21",
         "decMin": "10",
         "decSec": "21",
-        "magnitude": "3.66",
-        "constellation": "Aquarius (みずがめ座)"
+        "magnitude": "3.66"
     },
     {
         "starName": "90φAqr",
+        "starLabel": "90φ",
+        "constellation": "Aquarius (みずがめ座)",
         "raHour": "23",
         "raMin": "14",
         "raSec": "19.4",
@@ -9284,11 +9136,12 @@ const stars = [
         "decDeg": "6",
         "decMin": "2",
         "decSec": "56",
-        "magnitude": "4.22",
-        "constellation": "Aquarius (みずがめ座)"
+        "magnitude": "4.22"
     },
     {
         "starName": "99Aqr",
+        "starLabel": "99",
+        "constellation": "Aquarius (みずがめ座)",
         "raHour": "23",
         "raMin": "26",
         "raSec": "2.8",
@@ -9296,11 +9149,12 @@ const stars = [
         "decDeg": "20",
         "decMin": "38",
         "decSec": "31",
-        "magnitude": "4.39",
-        "constellation": "Aquarius (みずがめ座)"
+        "magnitude": "4.39"
     },
     {
         "starName": "105ω2Aqr",
+        "starLabel": "105ω2",
+        "constellation": "Aquarius (みずがめ座)",
         "raHour": "23",
         "raMin": "42",
         "raSec": "43.3",
@@ -9308,23 +9162,12 @@ const stars = [
         "decDeg": "14",
         "decMin": "32",
         "decSec": "42",
-        "magnitude": "4.49",
-        "constellation": "Aquarius (みずがめ座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "4.49"
     },
     {
         "starName": "βHyi",
+        "starLabel": "β",
+        "constellation": "Hydrus (みずへび座)",
         "raHour": "0",
         "raMin": "25",
         "raSec": "45.1",
@@ -9332,11 +9175,12 @@ const stars = [
         "decDeg": "77",
         "decMin": "15",
         "decSec": "15",
-        "magnitude": "2.8",
-        "constellation": "Hydrus (みずへび座)"
+        "magnitude": "2.8"
     },
     {
         "starName": "αHyi",
+        "starLabel": "α",
+        "constellation": "Hydrus (みずへび座)",
         "raHour": "1",
         "raMin": "58",
         "raSec": "46.2",
@@ -9344,11 +9188,12 @@ const stars = [
         "decDeg": "61",
         "decMin": "34",
         "decSec": "11",
-        "magnitude": "2.86",
-        "constellation": "Hydrus (みずへび座)"
+        "magnitude": "2.86"
     },
     {
         "starName": "εHyi",
+        "starLabel": "ε",
+        "constellation": "Hydrus (みずへび座)",
         "raHour": "2",
         "raMin": "39",
         "raSec": "35.4",
@@ -9356,11 +9201,12 @@ const stars = [
         "decDeg": "68",
         "decMin": "16",
         "decSec": "1",
-        "magnitude": "4.11",
-        "constellation": "Hydrus (みずへび座)"
+        "magnitude": "4.11"
     },
     {
         "starName": "γHyi",
+        "starLabel": "γ",
+        "constellation": "Hydrus (みずへび座)",
         "raHour": "3",
         "raMin": "47",
         "raSec": "14.3",
@@ -9368,23 +9214,12 @@ const stars = [
         "decDeg": "74",
         "decMin": "14",
         "decSec": "20",
-        "magnitude": "3.24",
-        "constellation": "Hydrus (みずへび座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "3.24"
     },
     {
         "starName": "δCru",
+        "starLabel": "δ",
+        "constellation": "Crux (みなみじゅうじ座)",
         "raHour": "12",
         "raMin": "15",
         "raSec": "8.7",
@@ -9392,11 +9227,12 @@ const stars = [
         "decDeg": "58",
         "decMin": "44",
         "decSec": "56",
-        "magnitude": "2.8",
-        "constellation": "Crux (みなみじゅうじ座)"
+        "magnitude": "2.8"
     },
     {
         "starName": "α1Cru",
+        "starLabel": "α1",
+        "constellation": "Crux (みなみじゅうじ座)",
         "raHour": "12",
         "raMin": "26",
         "raSec": "35.9",
@@ -9404,11 +9240,12 @@ const stars = [
         "decDeg": "63",
         "decMin": "5",
         "decSec": "57",
-        "magnitude": "1.33",
-        "constellation": "Crux (みなみじゅうじ座)"
+        "magnitude": "1.33"
     },
     {
         "starName": "γCru",
+        "starLabel": "γ",
+        "constellation": "Crux (みなみじゅうじ座)",
         "raHour": "12",
         "raMin": "31",
         "raSec": "9.9",
@@ -9416,11 +9253,12 @@ const stars = [
         "decDeg": "57",
         "decMin": "6",
         "decSec": "48",
-        "magnitude": "1.63",
-        "constellation": "Crux (みなみじゅうじ座)"
+        "magnitude": "1.63"
     },
     {
         "starName": "βCru",
+        "starLabel": "β",
+        "constellation": "Crux (みなみじゅうじ座)",
         "raHour": "12",
         "raMin": "47",
         "raSec": "43.2",
@@ -9428,23 +9266,12 @@ const stars = [
         "decDeg": "59",
         "decMin": "41",
         "decSec": "19",
-        "magnitude": "1.25",
-        "constellation": "Crux (みなみじゅうじ座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "1.25"
     },
     {
         "starName": "9ιPsA",
+        "starLabel": "9ι",
+        "constellation": "Piscis Austrinus (みなみのうお座)",
         "raHour": "21",
         "raMin": "44",
         "raSec": "56.8",
@@ -9452,11 +9279,12 @@ const stars = [
         "decDeg": "33",
         "decMin": "1",
         "decSec": "33",
-        "magnitude": "4.34",
-        "constellation": "Piscis Austrinus (みなみのうお座)"
+        "magnitude": "4.34"
     },
     {
         "starName": "14μPsA",
+        "starLabel": "14μ",
+        "constellation": "Piscis Austrinus (みなみのうお座)",
         "raHour": "22",
         "raMin": "8",
         "raSec": "23",
@@ -9464,11 +9292,12 @@ const stars = [
         "decDeg": "32",
         "decMin": "59",
         "decSec": "19",
-        "magnitude": "4.5",
-        "constellation": "Piscis Austrinus (みなみのうお座)"
+        "magnitude": "4.5"
     },
     {
         "starName": "16λPsA",
+        "starLabel": "16λ",
+        "constellation": "Piscis Austrinus (みなみのうお座)",
         "raHour": "22",
         "raMin": "14",
         "raSec": "18.8",
@@ -9476,11 +9305,12 @@ const stars = [
         "decDeg": "27",
         "decMin": "46",
         "decSec": "1",
-        "magnitude": "5.43",
-        "constellation": "Piscis Austrinus (みなみのうお座)"
+        "magnitude": "5.43"
     },
     {
         "starName": "17βPsA",
+        "starLabel": "17β",
+        "constellation": "Piscis Austrinus (みなみのうお座)",
         "raHour": "22",
         "raMin": "31",
         "raSec": "30.3",
@@ -9488,11 +9318,12 @@ const stars = [
         "decDeg": "32",
         "decMin": "20",
         "decSec": "46",
-        "magnitude": "4.29",
-        "constellation": "Piscis Austrinus (みなみのうお座)"
+        "magnitude": "4.29"
     },
     {
         "starName": "18εPsA",
+        "starLabel": "18ε",
+        "constellation": "Piscis Austrinus (みなみのうお座)",
         "raHour": "22",
         "raMin": "40",
         "raSec": "39.4",
@@ -9500,11 +9331,12 @@ const stars = [
         "decDeg": "27",
         "decMin": "2",
         "decSec": "37",
-        "magnitude": "4.17",
-        "constellation": "Piscis Austrinus (みなみのうお座)"
+        "magnitude": "4.17"
     },
     {
         "starName": "23δPsA",
+        "starLabel": "23δ",
+        "constellation": "Piscis Austrinus (みなみのうお座)",
         "raHour": "22",
         "raMin": "55",
         "raSec": "56.9",
@@ -9512,11 +9344,12 @@ const stars = [
         "decDeg": "32",
         "decMin": "32",
         "decSec": "23",
-        "magnitude": "4.21",
-        "constellation": "Piscis Austrinus (みなみのうお座)"
+        "magnitude": "4.21"
     },
     {
         "starName": "24αPsA",
+        "starLabel": "24α",
+        "constellation": "Piscis Austrinus (みなみのうお座)",
         "raHour": "22",
         "raMin": "57",
         "raSec": "39.1",
@@ -9524,23 +9357,12 @@ const stars = [
         "decDeg": "29",
         "decMin": "37",
         "decSec": "20",
-        "magnitude": "1.16",
-        "constellation": "Piscis Austrinus (みなみのうお座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "1.16"
     },
     {
         "starName": "λCrA",
+        "starLabel": "λ",
+        "constellation": "Corona Australis (みなみのかんむり座)",
         "raHour": "18",
         "raMin": "43",
         "raSec": "46.9",
@@ -9548,11 +9370,12 @@ const stars = [
         "decDeg": "38",
         "decMin": "19",
         "decSec": "25",
-        "magnitude": "5.13",
-        "constellation": "Corona Australis (みなみのかんむり座)"
+        "magnitude": "5.13"
     },
     {
         "starName": "εCrA",
+        "starLabel": "ε",
+        "constellation": "Corona Australis (みなみのかんむり座)",
         "raHour": "18",
         "raMin": "58",
         "raSec": "43.4",
@@ -9560,11 +9383,12 @@ const stars = [
         "decDeg": "37",
         "decMin": "6",
         "decSec": "27",
-        "magnitude": "4.87",
-        "constellation": "Corona Australis (みなみのかんむり座)"
+        "magnitude": "4.87"
     },
     {
         "starName": "ζCrA",
+        "starLabel": "ζ",
+        "constellation": "Corona Australis (みなみのかんむり座)",
         "raHour": "19",
         "raMin": "3",
         "raSec": "6.9",
@@ -9572,11 +9396,12 @@ const stars = [
         "decDeg": "42",
         "decMin": "5",
         "decSec": "43",
-        "magnitude": "4.75",
-        "constellation": "Corona Australis (みなみのかんむり座)"
+        "magnitude": "4.75"
     },
     {
         "starName": "γCrA",
+        "starLabel": "γ",
+        "constellation": "Corona Australis (みなみのかんむり座)",
         "raHour": "19",
         "raMin": "6",
         "raSec": "25.1",
@@ -9584,11 +9409,12 @@ const stars = [
         "decDeg": "37",
         "decMin": "3",
         "decSec": "48",
-        "magnitude": "4.93",
-        "constellation": "Corona Australis (みなみのかんむり座)"
+        "magnitude": "4.93"
     },
     {
         "starName": "δCrA",
+        "starLabel": "δ",
+        "constellation": "Corona Australis (みなみのかんむり座)",
         "raHour": "19",
         "raMin": "8",
         "raSec": "20.9",
@@ -9596,11 +9422,12 @@ const stars = [
         "decDeg": "40",
         "decMin": "29",
         "decSec": "48",
-        "magnitude": "4.59",
-        "constellation": "Corona Australis (みなみのかんむり座)"
+        "magnitude": "4.59"
     },
     {
         "starName": "αCrA",
+        "starLabel": "α",
+        "constellation": "Corona Australis (みなみのかんむり座)",
         "raHour": "19",
         "raMin": "9",
         "raSec": "28.3",
@@ -9608,11 +9435,12 @@ const stars = [
         "decDeg": "37",
         "decMin": "54",
         "decSec": "16",
-        "magnitude": "4.11",
-        "constellation": "Corona Australis (みなみのかんむり座)"
+        "magnitude": "4.11"
     },
     {
         "starName": "βCrA",
+        "starLabel": "β",
+        "constellation": "Corona Australis (みなみのかんむり座)",
         "raHour": "19",
         "raMin": "10",
         "raSec": "1.7",
@@ -9620,23 +9448,12 @@ const stars = [
         "decDeg": "39",
         "decMin": "20",
         "decSec": "27",
-        "magnitude": "4.11",
-        "constellation": "Corona Australis (みなみのかんむり座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "4.11"
     },
     {
         "starName": "γTrA",
+        "starLabel": "γ",
+        "constellation": "Triangulum Australe (みなみのさんかく座)",
         "raHour": "15",
         "raMin": "18",
         "raSec": "54.6",
@@ -9644,11 +9461,12 @@ const stars = [
         "decDeg": "68",
         "decMin": "40",
         "decSec": "46",
-        "magnitude": "2.89",
-        "constellation": "Triangulum Australe (みなみのさんかく座)"
+        "magnitude": "2.89"
     },
     {
         "starName": "βTrA",
+        "starLabel": "β",
+        "constellation": "Triangulum Australe (みなみのさんかく座)",
         "raHour": "15",
         "raMin": "55",
         "raSec": "8.5",
@@ -9656,11 +9474,12 @@ const stars = [
         "decDeg": "63",
         "decMin": "25",
         "decSec": "50",
-        "magnitude": "2.85",
-        "constellation": "Triangulum Australe (みなみのさんかく座)"
+        "magnitude": "2.85"
     },
     {
         "starName": "αTrA",
+        "starLabel": "α",
+        "constellation": "Triangulum Australe (みなみのさんかく座)",
         "raHour": "16",
         "raMin": "48",
         "raSec": "39.9",
@@ -9668,23 +9487,12 @@ const stars = [
         "decDeg": "69",
         "decMin": "1",
         "decSec": "40",
-        "magnitude": "1.92",
-        "constellation": "Triangulum Australe (みなみのさんかく座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "1.92"
     },
     {
         "starName": "5αSge",
+        "starLabel": "5α",
+        "constellation": "Sagitta (や座)",
         "raHour": "19",
         "raMin": "40",
         "raSec": "5.8",
@@ -9692,11 +9500,12 @@ const stars = [
         "decDeg": "18",
         "decMin": "0",
         "decSec": "50",
-        "magnitude": "4.37",
-        "constellation": "Sagitta (や座)"
+        "magnitude": "4.37"
     },
     {
         "starName": "6βSge",
+        "starLabel": "6β",
+        "constellation": "Sagitta (や座)",
         "raHour": "19",
         "raMin": "41",
         "raSec": "2.9",
@@ -9704,11 +9513,12 @@ const stars = [
         "decDeg": "17",
         "decMin": "28",
         "decSec": "34",
-        "magnitude": "4.37",
-        "constellation": "Sagitta (や座)"
+        "magnitude": "4.37"
     },
     {
         "starName": "7δSge",
+        "starLabel": "7δ",
+        "constellation": "Sagitta (や座)",
         "raHour": "19",
         "raMin": "47",
         "raSec": "23.3",
@@ -9716,11 +9526,12 @@ const stars = [
         "decDeg": "18",
         "decMin": "32",
         "decSec": "3",
-        "magnitude": "3.82",
-        "constellation": "Sagitta (や座)"
+        "magnitude": "3.82"
     },
     {
         "starName": "12γSge",
+        "starLabel": "12γ",
+        "constellation": "Sagitta (や座)",
         "raHour": "19",
         "raMin": "58",
         "raSec": "45.4",
@@ -9728,23 +9539,12 @@ const stars = [
         "decDeg": "19",
         "decMin": "29",
         "decSec": "32",
-        "magnitude": "3.47",
-        "constellation": "Sagitta (や座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "3.47"
     },
     {
         "starName": "6α2Cap",
+        "starLabel": "6α2",
+        "constellation": "Capricornus (やぎ座)",
         "raHour": "20",
         "raMin": "18",
         "raSec": "3.3",
@@ -9752,11 +9552,12 @@ const stars = [
         "decDeg": "12",
         "decMin": "32",
         "decSec": "41",
-        "magnitude": "3.57",
-        "constellation": "Capricornus (やぎ座)"
+        "magnitude": "3.57"
     },
     {
         "starName": "9βCap",
+        "starLabel": "9β",
+        "constellation": "Capricornus (やぎ座)",
         "raHour": "20",
         "raMin": "21",
         "raSec": "0.7",
@@ -9764,11 +9565,12 @@ const stars = [
         "decDeg": "14",
         "decMin": "46",
         "decSec": "53",
-        "magnitude": "3.08",
-        "constellation": "Capricornus (やぎ座)"
+        "magnitude": "3.08"
     },
     {
         "starName": "10πCap",
+        "starLabel": "10π",
+        "constellation": "Capricornus (やぎ座)",
         "raHour": "20",
         "raMin": "27",
         "raSec": "19.2",
@@ -9776,11 +9578,12 @@ const stars = [
         "decDeg": "18",
         "decMin": "12",
         "decSec": "42",
-        "magnitude": "5.25",
-        "constellation": "Capricornus (やぎ座)"
+        "magnitude": "5.25"
     },
     {
         "starName": "16ψCap",
+        "starLabel": "16ψ",
+        "constellation": "Capricornus (やぎ座)",
         "raHour": "20",
         "raMin": "46",
         "raSec": "5.7",
@@ -9788,11 +9591,12 @@ const stars = [
         "decDeg": "25",
         "decMin": "16",
         "decSec": "15",
-        "magnitude": "4.14",
-        "constellation": "Capricornus (やぎ座)"
+        "magnitude": "4.14"
     },
     {
         "starName": "18ωCap",
+        "starLabel": "18ω",
+        "constellation": "Capricornus (やぎ座)",
         "raHour": "20",
         "raMin": "51",
         "raSec": "49.3",
@@ -9800,11 +9604,12 @@ const stars = [
         "decDeg": "26",
         "decMin": "55",
         "decSec": "9",
-        "magnitude": "4.11",
-        "constellation": "Capricornus (やぎ座)"
+        "magnitude": "4.11"
     },
     {
         "starName": "23θCap",
+        "starLabel": "23θ",
+        "constellation": "Capricornus (やぎ座)",
         "raHour": "21",
         "raMin": "5",
         "raSec": "56.8",
@@ -9812,11 +9617,12 @@ const stars = [
         "decDeg": "17",
         "decMin": "13",
         "decSec": "58",
-        "magnitude": "4.07",
-        "constellation": "Capricornus (やぎ座)"
+        "magnitude": "4.07"
     },
     {
         "starName": "24Cap",
+        "starLabel": "24",
+        "constellation": "Capricornus (やぎ座)",
         "raHour": "21",
         "raMin": "7",
         "raSec": "7.7",
@@ -9824,11 +9630,12 @@ const stars = [
         "decDeg": "25",
         "decMin": "0",
         "decSec": "21",
-        "magnitude": "4.5",
-        "constellation": "Capricornus (やぎ座)"
+        "magnitude": "4.5"
     },
     {
         "starName": "32ιCap",
+        "starLabel": "32ι",
+        "constellation": "Capricornus (やぎ座)",
         "raHour": "21",
         "raMin": "22",
         "raSec": "14.8",
@@ -9836,11 +9643,12 @@ const stars = [
         "decDeg": "16",
         "decMin": "50",
         "decSec": "4",
-        "magnitude": "4.28",
-        "constellation": "Capricornus (やぎ座)"
+        "magnitude": "4.28"
     },
     {
         "starName": "34ζCap",
+        "starLabel": "34ζ",
+        "constellation": "Capricornus (やぎ座)",
         "raHour": "21",
         "raMin": "26",
         "raSec": "40",
@@ -9848,11 +9656,12 @@ const stars = [
         "decDeg": "22",
         "decMin": "24",
         "decSec": "41",
-        "magnitude": "3.74",
-        "constellation": "Capricornus (やぎ座)"
+        "magnitude": "3.74"
     },
     {
         "starName": "36Cap",
+        "starLabel": "36",
+        "constellation": "Capricornus (やぎ座)",
         "raHour": "21",
         "raMin": "28",
         "raSec": "43.4",
@@ -9860,11 +9669,12 @@ const stars = [
         "decDeg": "21",
         "decMin": "48",
         "decSec": "26",
-        "magnitude": "4.51",
-        "constellation": "Capricornus (やぎ座)"
+        "magnitude": "4.51"
     },
     {
         "starName": "39εCap",
+        "starLabel": "39ε",
+        "constellation": "Capricornus (やぎ座)",
         "raHour": "21",
         "raMin": "37",
         "raSec": "4.8",
@@ -9872,11 +9682,12 @@ const stars = [
         "decDeg": "19",
         "decMin": "27",
         "decSec": "58",
-        "magnitude": "4.68",
-        "constellation": "Capricornus (やぎ座)"
+        "magnitude": "4.68"
     },
     {
         "starName": "40γCap",
+        "starLabel": "40γ",
+        "constellation": "Capricornus (やぎ座)",
         "raHour": "21",
         "raMin": "40",
         "raSec": "5.5",
@@ -9884,11 +9695,12 @@ const stars = [
         "decDeg": "16",
         "decMin": "39",
         "decSec": "44",
-        "magnitude": "3.68",
-        "constellation": "Capricornus (やぎ座)"
+        "magnitude": "3.68"
     },
     {
         "starName": "49δCap",
+        "starLabel": "49δ",
+        "constellation": "Capricornus (やぎ座)",
         "raHour": "21",
         "raMin": "47",
         "raSec": "2.4",
@@ -9896,23 +9708,12 @@ const stars = [
         "decDeg": "16",
         "decMin": "7",
         "decSec": "38",
-        "magnitude": "2.87",
-        "constellation": "Capricornus (やぎ座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "2.87"
     },
     {
         "starName": "2Lyn",
+        "starLabel": "2",
+        "constellation": "Lynx (やまねこ座)",
         "raHour": "6",
         "raMin": "19",
         "raSec": "37.4",
@@ -9920,11 +9721,12 @@ const stars = [
         "decDeg": "59",
         "decMin": "0",
         "decSec": "39",
-        "magnitude": "4.48",
-        "constellation": "Lynx (やまねこ座)"
+        "magnitude": "4.48"
     },
     {
         "starName": "21Lyn",
+        "starLabel": "21",
+        "constellation": "Lynx (やまねこ座)",
         "raHour": "7",
         "raMin": "26",
         "raSec": "42.8",
@@ -9932,11 +9734,12 @@ const stars = [
         "decDeg": "49",
         "decMin": "12",
         "decSec": "41",
-        "magnitude": "4.64",
-        "constellation": "Lynx (やまねこ座)"
+        "magnitude": "4.64"
     },
     {
         "starName": "31Lyn",
+        "starLabel": "31",
+        "constellation": "Lynx (やまねこ座)",
         "raHour": "8",
         "raMin": "22",
         "raSec": "50.1",
@@ -9944,11 +9747,12 @@ const stars = [
         "decDeg": "43",
         "decMin": "11",
         "decSec": "17",
-        "magnitude": "4.25",
-        "constellation": "Lynx (やまねこ座)"
+        "magnitude": "4.25"
     },
     {
         "starName": "HIP44248Lyn",
+        "starLabel": "HIP44248",
+        "constellation": "Lynx (やまねこ座)",
         "raHour": "9",
         "raMin": "0",
         "raSec": "38.4",
@@ -9956,11 +9760,12 @@ const stars = [
         "decDeg": "41",
         "decMin": "46",
         "decSec": "58",
-        "magnitude": "3.97",
-        "constellation": "Lynx (やまねこ座)"
+        "magnitude": "3.97"
     },
     {
         "starName": "HIP44700Lyn",
+        "starLabel": "HIP44700",
+        "constellation": "Lynx (やまねこ座)",
         "raHour": "9",
         "raMin": "6",
         "raSec": "31.8",
@@ -9968,11 +9773,12 @@ const stars = [
         "decDeg": "38",
         "decMin": "27",
         "decSec": "8",
-        "magnitude": "4.56",
-        "constellation": "Lynx (やまねこ座)"
+        "magnitude": "4.56"
     },
     {
         "starName": "38Lyn",
+        "starLabel": "38",
+        "constellation": "Lynx (やまねこ座)",
         "raHour": "9",
         "raMin": "18",
         "raSec": "50.7",
@@ -9980,11 +9786,12 @@ const stars = [
         "decDeg": "36",
         "decMin": "48",
         "decSec": "9",
-        "magnitude": "3.82",
-        "constellation": "Lynx (やまねこ座)"
+        "magnitude": "3.82"
     },
     {
         "starName": "40αLyn",
+        "starLabel": "40α",
+        "constellation": "Lynx (やまねこ座)",
         "raHour": "9",
         "raMin": "21",
         "raSec": "3.3",
@@ -9992,23 +9799,12 @@ const stars = [
         "decDeg": "34",
         "decMin": "23",
         "decSec": "33",
-        "magnitude": "3.13",
-        "constellation": "Lynx (やまねこ座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "3.13"
     },
     {
         "starName": "βPyx",
+        "starLabel": "β",
+        "constellation": "Pyxis (らしんばん座)",
         "raHour": "8",
         "raMin": "40",
         "raSec": "6.2",
@@ -10016,11 +9812,12 @@ const stars = [
         "decDeg": "35",
         "decMin": "18",
         "decSec": "30",
-        "magnitude": "3.97",
-        "constellation": "Pyxis (らしんばん座)"
+        "magnitude": "3.97"
     },
     {
         "starName": "αPyx",
+        "starLabel": "α",
+        "constellation": "Pyxis (らしんばん座)",
         "raHour": "8",
         "raMin": "43",
         "raSec": "35.5",
@@ -10028,11 +9825,12 @@ const stars = [
         "decDeg": "33",
         "decMin": "11",
         "decSec": "11",
-        "magnitude": "3.68",
-        "constellation": "Pyxis (らしんばん座)"
+        "magnitude": "3.68"
     },
     {
         "starName": "γPyx",
+        "starLabel": "γ",
+        "constellation": "Pyxis (らしんばん座)",
         "raHour": "8",
         "raMin": "50",
         "raSec": "31.9",
@@ -10040,23 +9838,12 @@ const stars = [
         "decDeg": "27",
         "decMin": "42",
         "decSec": "36",
-        "magnitude": "4.01",
-        "constellation": "Pyxis (らしんばん座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "4.01"
     },
     {
         "starName": "1λDra",
+        "starLabel": "1λ",
+        "constellation": "Draco (りゅう座)",
         "raHour": "11",
         "raMin": "31",
         "raSec": "24.2",
@@ -10064,11 +9851,12 @@ const stars = [
         "decDeg": "69",
         "decMin": "19",
         "decSec": "52",
-        "magnitude": "3.84",
-        "constellation": "Draco (りゅう座)"
+        "magnitude": "3.84"
     },
     {
         "starName": "5κDra",
+        "starLabel": "5κ",
+        "constellation": "Draco (りゅう座)",
         "raHour": "12",
         "raMin": "33",
         "raSec": "29",
@@ -10076,11 +9864,12 @@ const stars = [
         "decDeg": "69",
         "decMin": "47",
         "decSec": "18",
-        "magnitude": "3.87",
-        "constellation": "Draco (りゅう座)"
+        "magnitude": "3.87"
     },
     {
         "starName": "11αDra",
+        "starLabel": "11α",
+        "constellation": "Draco (りゅう座)",
         "raHour": "14",
         "raMin": "4",
         "raSec": "23.3",
@@ -10088,11 +9877,12 @@ const stars = [
         "decDeg": "64",
         "decMin": "22",
         "decSec": "33",
-        "magnitude": "3.65",
-        "constellation": "Draco (りゅう座)"
+        "magnitude": "3.65"
     },
     {
         "starName": "12ιDra",
+        "starLabel": "12ι",
+        "constellation": "Draco (りゅう座)",
         "raHour": "15",
         "raMin": "24",
         "raSec": "55.8",
@@ -10100,11 +9890,12 @@ const stars = [
         "decDeg": "58",
         "decMin": "57",
         "decSec": "58",
-        "magnitude": "3.29",
-        "constellation": "Draco (りゅう座)"
+        "magnitude": "3.29"
     },
     {
         "starName": "13θDra",
+        "starLabel": "13θ",
+        "constellation": "Draco (りゅう座)",
         "raHour": "16",
         "raMin": "1",
         "raSec": "53.3",
@@ -10112,11 +9903,12 @@ const stars = [
         "decDeg": "58",
         "decMin": "33",
         "decSec": "55",
-        "magnitude": "4.01",
-        "constellation": "Draco (りゅう座)"
+        "magnitude": "4.01"
     },
     {
         "starName": "14ηDra",
+        "starLabel": "14η",
+        "constellation": "Draco (りゅう座)",
         "raHour": "16",
         "raMin": "23",
         "raSec": "59.5",
@@ -10124,11 +9916,12 @@ const stars = [
         "decDeg": "61",
         "decMin": "30",
         "decSec": "51",
-        "magnitude": "2.74",
-        "constellation": "Draco (りゅう座)"
+        "magnitude": "2.74"
     },
     {
         "starName": "22ζDra",
+        "starLabel": "22ζ",
+        "constellation": "Draco (りゅう座)",
         "raHour": "17",
         "raMin": "8",
         "raSec": "47.2",
@@ -10136,11 +9929,12 @@ const stars = [
         "decDeg": "65",
         "decMin": "42",
         "decSec": "53",
-        "magnitude": "3.17",
-        "constellation": "Draco (りゅう座)"
+        "magnitude": "3.17"
     },
     {
         "starName": "23βDra",
+        "starLabel": "23β",
+        "constellation": "Draco (りゅう座)",
         "raHour": "17",
         "raMin": "30",
         "raSec": "26",
@@ -10148,11 +9942,12 @@ const stars = [
         "decDeg": "52",
         "decMin": "18",
         "decSec": "5",
-        "magnitude": "2.79",
-        "constellation": "Draco (りゅう座)"
+        "magnitude": "2.79"
     },
     {
         "starName": "24ν1Dra",
+        "starLabel": "24ν 1",
+        "constellation": "Draco (りゅう座)",
         "raHour": "17",
         "raMin": "32",
         "raSec": "10.6",
@@ -10160,11 +9955,12 @@ const stars = [
         "decDeg": "55",
         "decMin": "11",
         "decSec": "3",
-        "magnitude": "4.88",
-        "constellation": "Draco (りゅう座)"
+        "magnitude": "4.88"
     },
     {
         "starName": "28ωDra",
+        "starLabel": "28ω",
+        "constellation": "Draco (りゅう座)",
         "raHour": "17",
         "raMin": "36",
         "raSec": "57.1",
@@ -10172,11 +9968,12 @@ const stars = [
         "decDeg": "68",
         "decMin": "45",
         "decSec": "29",
-        "magnitude": "4.8",
-        "constellation": "Draco (りゅう座)"
+        "magnitude": "4.8"
     },
     {
         "starName": "32ξDra",
+        "starLabel": "32ξ",
+        "constellation": "Draco (りゅう座)",
         "raHour": "17",
         "raMin": "53",
         "raSec": "31.7",
@@ -10184,11 +9981,12 @@ const stars = [
         "decDeg": "56",
         "decMin": "52",
         "decSec": "22",
-        "magnitude": "3.75",
-        "constellation": "Draco (りゅう座)"
+        "magnitude": "3.75"
     },
     {
         "starName": "33γDra",
+        "starLabel": "33γ",
+        "constellation": "Draco (りゅう座)",
         "raHour": "17",
         "raMin": "56",
         "raSec": "36.4",
@@ -10196,11 +9994,12 @@ const stars = [
         "decDeg": "51",
         "decMin": "29",
         "decSec": "20",
-        "magnitude": "2.23",
-        "constellation": "Draco (りゅう座)"
+        "magnitude": "2.23"
     },
     {
         "starName": "43φDra",
+        "starLabel": "43φ",
+        "constellation": "Draco (りゅう座)",
         "raHour": "18",
         "raMin": "20",
         "raSec": "45.5",
@@ -10208,11 +10007,12 @@ const stars = [
         "decDeg": "71",
         "decMin": "20",
         "decSec": "16",
-        "magnitude": "4.22",
-        "constellation": "Draco (りゅう座)"
+        "magnitude": "4.22"
     },
     {
         "starName": "57δDra",
+        "starLabel": "57δ",
+        "constellation": "Draco (りゅう座)",
         "raHour": "19",
         "raMin": "12",
         "raSec": "33.3",
@@ -10220,11 +10020,12 @@ const stars = [
         "decDeg": "67",
         "decMin": "39",
         "decSec": "42",
-        "magnitude": "3.07",
-        "constellation": "Draco (りゅう座)"
+        "magnitude": "3.07"
     },
     {
         "starName": "60τDra",
+        "starLabel": "60τ",
+        "constellation": "Draco (りゅう座)",
         "raHour": "19",
         "raMin": "15",
         "raSec": "33",
@@ -10232,11 +10033,12 @@ const stars = [
         "decDeg": "73",
         "decMin": "21",
         "decSec": "20",
-        "magnitude": "4.45",
-        "constellation": "Draco (りゅう座)"
+        "magnitude": "4.45"
     },
     {
         "starName": "63εDra",
+        "starLabel": "63ε",
+        "constellation": "Draco (りゅう座)",
         "raHour": "19",
         "raMin": "48",
         "raSec": "10.4",
@@ -10244,23 +10046,12 @@ const stars = [
         "decDeg": "70",
         "decMin": "16",
         "decSec": "4",
-        "magnitude": "3.83",
-        "constellation": "Draco (りゅう座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "3.83"
     },
     {
         "starName": "αCar",
+        "starLabel": "α",
+        "constellation": "Carina (りゅうこつ座)",
         "raHour": "6",
         "raMin": "23",
         "raSec": "57.1",
@@ -10268,11 +10059,12 @@ const stars = [
         "decDeg": "52",
         "decMin": "41",
         "decSec": "45",
-        "magnitude": "-0.72",
-        "constellation": "Carina (りゅうこつ座)"
+        "magnitude": "-0.72"
     },
     {
         "starName": "χCar",
+        "starLabel": "χ",
+        "constellation": "Carina (りゅうこつ座)",
         "raHour": "7",
         "raMin": "56",
         "raSec": "46.7",
@@ -10280,11 +10072,12 @@ const stars = [
         "decDeg": "52",
         "decMin": "58",
         "decSec": "56",
-        "magnitude": "3.47",
-        "constellation": "Carina (りゅうこつ座)"
+        "magnitude": "3.47"
     },
     {
         "starName": "εCar",
+        "starLabel": "ε",
+        "constellation": "Carina (りゅうこつ座)",
         "raHour": "8",
         "raMin": "22",
         "raSec": "30.8",
@@ -10292,11 +10085,12 @@ const stars = [
         "decDeg": "59",
         "decMin": "30",
         "decSec": "35",
-        "magnitude": "1.86",
-        "constellation": "Carina (りゅうこつ座)"
+        "magnitude": "1.86"
     },
     {
         "starName": "βCar",
+        "starLabel": "β",
+        "constellation": "Carina (りゅうこつ座)",
         "raHour": "9",
         "raMin": "13",
         "raSec": "12",
@@ -10304,11 +10098,12 @@ const stars = [
         "decDeg": "69",
         "decMin": "43",
         "decSec": "2",
-        "magnitude": "1.68",
-        "constellation": "Carina (りゅうこつ座)"
+        "magnitude": "1.68"
     },
     {
         "starName": "ιCar",
+        "starLabel": "ι",
+        "constellation": "Carina (りゅうこつ座)",
         "raHour": "9",
         "raMin": "17",
         "raSec": "5.4",
@@ -10316,11 +10111,12 @@ const stars = [
         "decDeg": "59",
         "decMin": "16",
         "decSec": "31",
-        "magnitude": "2.25",
-        "constellation": "Carina (りゅうこつ座)"
+        "magnitude": "2.25"
     },
     {
         "starName": "υCar",
+        "starLabel": "υ",
+        "constellation": "Carina (りゅうこつ座)",
         "raHour": "9",
         "raMin": "47",
         "raSec": "6.1",
@@ -10328,11 +10124,12 @@ const stars = [
         "decDeg": "65",
         "decMin": "4",
         "decSec": "19",
-        "magnitude": "3.01",
-        "constellation": "Carina (りゅうこつ座)"
+        "magnitude": "3.01"
     },
     {
         "starName": "ωCar",
+        "starLabel": "ω",
+        "constellation": "Carina (りゅうこつ座)",
         "raHour": "10",
         "raMin": "13",
         "raSec": "44.2",
@@ -10340,11 +10137,12 @@ const stars = [
         "decDeg": "70",
         "decMin": "2",
         "decSec": "17",
-        "magnitude": "3.32",
-        "constellation": "Carina (りゅうこつ座)"
+        "magnitude": "3.32"
     },
     {
         "starName": "HIP50371Car",
+        "starLabel": "HIP50371",
+        "constellation": "Carina (りゅうこつ座)",
         "raHour": "10",
         "raMin": "17",
         "raSec": "5",
@@ -10352,11 +10150,12 @@ const stars = [
         "decDeg": "61",
         "decMin": "19",
         "decSec": "56",
-        "magnitude": "3.4",
-        "constellation": "Carina (りゅうこつ座)"
+        "magnitude": "3.4"
     },
     {
         "starName": "HIP51576Car",
+        "starLabel": "HIP51576",
+        "constellation": "Carina (りゅうこつ座)",
         "raHour": "10",
         "raMin": "32",
         "raSec": "1.4",
@@ -10364,11 +10163,12 @@ const stars = [
         "decDeg": "61",
         "decMin": "41",
         "decSec": "7",
-        "magnitude": "3.32",
-        "constellation": "Carina (りゅうこつ座)"
+        "magnitude": "3.32"
     },
     {
         "starName": "θCar",
+        "starLabel": "θ",
+        "constellation": "Carina (りゅうこつ座)",
         "raHour": "10",
         "raMin": "42",
         "raSec": "57.4",
@@ -10376,23 +10176,12 @@ const stars = [
         "decDeg": "64",
         "decMin": "23",
         "decSec": "40",
-        "magnitude": "2.76",
-        "constellation": "Carina (りゅうこつ座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "2.76"
     },
     {
         "starName": "8βCVn",
+        "starLabel": "8β",
+        "constellation": "Canes Venatici (猟犬座)",
         "raHour": "12",
         "raMin": "33",
         "raSec": "44.5",
@@ -10400,11 +10189,12 @@ const stars = [
         "decDeg": "41",
         "decMin": "21",
         "decSec": "27",
-        "magnitude": "4.26",
-        "constellation": "Canes Venatici (猟犬座)"
+        "magnitude": "4.26"
     },
     {
         "starName": "12α2CVn",
+        "starLabel": "12α2",
+        "constellation": "Canes Venatici (猟犬座)",
         "raHour": "12",
         "raMin": "56",
         "raSec": "1.7",
@@ -10412,23 +10202,12 @@ const stars = [
         "decDeg": "38",
         "decMin": "19",
         "decSec": "6",
-        "magnitude": "2.9",
-        "constellation": "Canes Venatici (猟犬座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "2.9"
     },
     {
         "starName": "βRet",
+        "starLabel": "β",
+        "constellation": "Reticulum (レチクル座)",
         "raHour": "3",
         "raMin": "44",
         "raSec": "12",
@@ -10436,11 +10215,12 @@ const stars = [
         "decDeg": "64",
         "decMin": "48",
         "decSec": "25",
-        "magnitude": "3.85",
-        "constellation": "Reticulum (レチクル座)"
+        "magnitude": "3.85"
     },
     {
         "starName": "δRet",
+        "starLabel": "δ",
+        "constellation": "Reticulum (レチクル座)",
         "raHour": "3",
         "raMin": "58",
         "raSec": "44.7",
@@ -10448,11 +10228,12 @@ const stars = [
         "decDeg": "61",
         "decMin": "24",
         "decSec": "1",
-        "magnitude": "4.56",
-        "constellation": "Reticulum (レチクル座)"
+        "magnitude": "4.56"
     },
     {
         "starName": "γRet",
+        "starLabel": "γ",
+        "constellation": "Reticulum (レチクル座)",
         "raHour": "4",
         "raMin": "0",
         "raSec": "53.8",
@@ -10460,11 +10241,12 @@ const stars = [
         "decDeg": "62",
         "decMin": "9",
         "decSec": "34",
-        "magnitude": "4.51",
-        "constellation": "Reticulum (レチクル座)"
+        "magnitude": "4.51"
     },
     {
         "starName": "αRet",
+        "starLabel": "α",
+        "constellation": "Reticulum (レチクル座)",
         "raHour": "4",
         "raMin": "14",
         "raSec": "25.5",
@@ -10472,11 +10254,12 @@ const stars = [
         "decDeg": "62",
         "decMin": "28",
         "decSec": "26",
-        "magnitude": "3.35",
-        "constellation": "Reticulum (レチクル座)"
+        "magnitude": "3.35"
     },
     {
         "starName": "εRet",
+        "starLabel": "ε",
+        "constellation": "Reticulum (レチクル座)",
         "raHour": "4",
         "raMin": "16",
         "raSec": "28.9",
@@ -10484,23 +10267,12 @@ const stars = [
         "decDeg": "59",
         "decMin": "18",
         "decSec": "7",
-        "magnitude": "4.44",
-        "constellation": "Reticulum (レチクル座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "4.44"
     },
     {
         "starName": "μFor",
+        "starLabel": "μ",
+        "constellation": "Fornax (ろ座)",
         "raHour": "2",
         "raMin": "12",
         "raSec": "54.5",
@@ -10508,11 +10280,12 @@ const stars = [
         "decDeg": "30",
         "decMin": "43",
         "decSec": "26",
-        "magnitude": "5.28",
-        "constellation": "Fornax (ろ座)"
+        "magnitude": "5.28"
     },
     {
         "starName": "βFor",
+        "starLabel": "β",
+        "constellation": "Fornax (ろ座)",
         "raHour": "2",
         "raMin": "49",
         "raSec": "5.4",
@@ -10520,11 +10293,12 @@ const stars = [
         "decDeg": "32",
         "decMin": "24",
         "decSec": "21",
-        "magnitude": "4.46",
-        "constellation": "Fornax (ろ座)"
+        "magnitude": "4.46"
     },
     {
         "starName": "αFor",
+        "starLabel": "α",
+        "constellation": "Fornax (ろ座)",
         "raHour": "3",
         "raMin": "12",
         "raSec": "4.3",
@@ -10532,11 +10306,12 @@ const stars = [
         "decDeg": "28",
         "decMin": "59",
         "decSec": "13",
-        "magnitude": "3.87",
-        "constellation": "Fornax (ろ座)"
+        "magnitude": "3.87"
     },
     {
         "starName": "δFor",
+        "starLabel": "δ",
+        "constellation": "Fornax (ろ座)",
         "raHour": "3",
         "raMin": "42",
         "raSec": "14.9",
@@ -10544,23 +10319,12 @@ const stars = [
         "decDeg": "31",
         "decMin": "56",
         "decSec": "18",
-        "magnitude": "5",
-        "constellation": "Fornax (ろ座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "5"
     },
     {
         "starName": "8γSex",
+        "starLabel": "8γ",
+        "constellation": "Sextans (ろくぶんぎ座)",
         "raHour": "9",
         "raMin": "52",
         "raSec": "30.4",
@@ -10568,11 +10332,12 @@ const stars = [
         "decDeg": "8",
         "decMin": "6",
         "decSec": "18",
-        "magnitude": "5.05",
-        "constellation": "Sextans (ろくぶんぎ座)"
+        "magnitude": "5.05"
     },
     {
         "starName": "15αSex",
+        "starLabel": "15α",
+        "constellation": "Sextans (ろくぶんぎ座)",
         "raHour": "10",
         "raMin": "7",
         "raSec": "56.3",
@@ -10580,11 +10345,12 @@ const stars = [
         "decDeg": "0",
         "decMin": "22",
         "decSec": "18",
-        "magnitude": "4.49",
-        "constellation": "Sextans (ろくぶんぎ座)"
+        "magnitude": "4.49"
     },
     {
         "starName": "30βSex",
+        "starLabel": "30β",
+        "constellation": "Sextans (ろくぶんぎ座)",
         "raHour": "10",
         "raMin": "30",
         "raSec": "17.5",
@@ -10592,23 +10358,12 @@ const stars = [
         "decDeg": "0",
         "decMin": "38",
         "decSec": "13",
-        "magnitude": "5.09",
-        "constellation": "Sextans (ろくぶんぎ座)"
-    },
-    {
-        "starName": "",
-        "raHour": "",
-        "raMin": "",
-        "raSec": "",
-        "decSign": "",
-        "decDeg": "",
-        "decMin": "",
-        "decSec": "",
-        "magnitude": "",
-        "constellation": ""
+        "magnitude": "5.09"
     },
     {
         "starName": "13εAql",
+        "starLabel": "13ε",
+        "constellation": "Aquila (わし座)",
         "raHour": "18",
         "raMin": "59",
         "raSec": "37.4",
@@ -10616,11 +10371,12 @@ const stars = [
         "decDeg": "15",
         "decMin": "4",
         "decSec": "6",
-        "magnitude": "4.02",
-        "constellation": "Aquila (わし座)"
+        "magnitude": "4.02"
     },
     {
         "starName": "17ζAql",
+        "starLabel": "17ζ",
+        "constellation": "Aquila (わし座)",
         "raHour": "19",
         "raMin": "5",
         "raSec": "24.6",
@@ -10628,11 +10384,12 @@ const stars = [
         "decDeg": "13",
         "decMin": "51",
         "decSec": "48",
-        "magnitude": "2.99",
-        "constellation": "Aquila (わし座)"
+        "magnitude": "2.99"
     },
     {
         "starName": "16λAql",
+        "starLabel": "16λ",
+        "constellation": "Aquila (わし座)",
         "raHour": "19",
         "raMin": "6",
         "raSec": "14.9",
@@ -10640,11 +10397,12 @@ const stars = [
         "decDeg": "4",
         "decMin": "52",
         "decSec": "57",
-        "magnitude": "3.44",
-        "constellation": "Aquila (わし座)"
+        "magnitude": "3.44"
     },
     {
         "starName": "30δAql",
+        "starLabel": "30δ",
+        "constellation": "Aquila (わし座)",
         "raHour": "19",
         "raMin": "25",
         "raSec": "29.9",
@@ -10652,11 +10410,12 @@ const stars = [
         "decDeg": "3",
         "decMin": "6",
         "decSec": "53",
-        "magnitude": "3.36",
-        "constellation": "Aquila (わし座)"
+        "magnitude": "3.36"
     },
     {
         "starName": "38μAql",
+        "starLabel": "38μ",
+        "constellation": "Aquila (わし座)",
         "raHour": "19",
         "raMin": "34",
         "raSec": "5.4",
@@ -10664,11 +10423,12 @@ const stars = [
         "decDeg": "7",
         "decMin": "22",
         "decSec": "44",
-        "magnitude": "4.45",
-        "constellation": "Aquila (わし座)"
+        "magnitude": "4.45"
     },
     {
         "starName": "50γAql",
+        "starLabel": "50γ",
+        "constellation": "Aquila (わし座)",
         "raHour": "19",
         "raMin": "46",
         "raSec": "15.6",
@@ -10676,11 +10436,12 @@ const stars = [
         "decDeg": "10",
         "decMin": "36",
         "decSec": "48",
-        "magnitude": "2.72",
-        "constellation": "Aquila (わし座)"
+        "magnitude": "2.72"
     },
     {
         "starName": "53αAql",
+        "starLabel": "53α",
+        "constellation": "Aquila (わし座)",
         "raHour": "19",
         "raMin": "50",
         "raSec": "47",
@@ -10688,11 +10449,12 @@ const stars = [
         "decDeg": "8",
         "decMin": "52",
         "decSec": "6",
-        "magnitude": "0.77",
-        "constellation": "Aquila (わし座)"
+        "magnitude": "0.77"
     },
     {
         "starName": "60βAql",
+        "starLabel": "60β",
+        "constellation": "Aquila (わし座)",
         "raHour": "19",
         "raMin": "55",
         "raSec": "18.8",
@@ -10700,11 +10462,12 @@ const stars = [
         "decDeg": "6",
         "decMin": "24",
         "decSec": "24",
-        "magnitude": "3.71",
-        "constellation": "Aquila (わし座)"
+        "magnitude": "3.71"
     },
     {
         "starName": "61φAql",
+        "starLabel": "61φ",
+        "constellation": "Aquila (わし座)",
         "raHour": "19",
         "raMin": "56",
         "raSec": "14.3",
@@ -10712,11 +10475,12 @@ const stars = [
         "decDeg": "11",
         "decMin": "25",
         "decSec": "26",
-        "magnitude": "5.28",
-        "constellation": "Aquila (わし座)"
+        "magnitude": "5.28"
     },
     {
         "starName": "65θAql",
+        "starLabel": "65θ",
+        "constellation": "Aquila (わし座)",
         "raHour": "20",
         "raMin": "11",
         "raSec": "18.3",
@@ -10724,11 +10488,12 @@ const stars = [
         "decDeg": "0",
         "decMin": "49",
         "decSec": "17",
-        "magnitude": "3.23",
-        "constellation": "Aquila (わし座)"
+        "magnitude": "3.23"
     },
     {
         "starName": "67ρAql",
+        "starLabel": "67ρ",
+        "constellation": "Aquila (わし座)",
         "raHour": "20",
         "raMin": "14",
         "raSec": "16.6",
@@ -10736,7 +10501,6 @@ const stars = [
         "decDeg": "15",
         "decMin": "11",
         "decSec": "51",
-        "magnitude": "4.95",
-        "constellation": "Aquila (わし座)"
+        "magnitude": "4.95"
     }
-]
+];

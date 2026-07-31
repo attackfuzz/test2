@@ -387,7 +387,7 @@ const starlines = [
     {
         "starName1": "23θBoo",
         "starName2": "19λBoo",
-        "constellation": "Lepus (うさぎ座)"
+        "constellation": "Bootes (うしかい座)"
     },
     {
         "starName1": "19λBoo",
@@ -2937,7 +2937,7 @@ const starlines = [
     {
         "starName1": "58ηSer",
         "starName2": "63θ1Ser",
-        "constellation": "Ophiuchus (へびつかい座)"
+        "constellation": "Serpens (へび座)"
     },
     {
         "starName1": "1δOph",
@@ -3904,4 +3904,4 @@ const starlines = [
         "starName2": "16λAql",
         "constellation": "Aquila (わし座)"
     }
-]
+];
