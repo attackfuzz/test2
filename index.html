@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>星座探索 - スマホメニュー操作対応</title>
+    <title>星座探索 - ワイヤーフレーム表示修正版</title>
     <style>
         :root {
             color-scheme: dark;
@@ -583,7 +583,7 @@
         const earthMaterial = new THREE.MeshBasicMaterial({
             color: 0x168a42,
             wireframe: true,
-            opacity: 0.22,
+            opacity: 0,
             transparent: true,
             depthWrite: false
         });
@@ -1133,7 +1133,7 @@
                 targetLookAt = northStarPosition.clone();
                 targetUp = new THREE.Vector3(0, 1, 0);
                 targetFov = 75;
-                targetEarthOpacity = 0.22;
+                targetEarthOpacity = 0;
                 targetGroundOpacity = 0.05;
                 targetGridOpacity = 0;
             }
