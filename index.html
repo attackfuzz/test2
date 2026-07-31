@@ -2,89 +2,265 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>星座探索 - JSファイル対応</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>星座探索 - 観測地点・日時・タッチ操作対応</title>
     <style>
-        body { margin: 0; overflow: hidden; }
-        canvas { display: block; touch-action: none; }
+        :root {
+            color-scheme: dark;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+        * { box-sizing: border-box; }
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            overscroll-behavior: none;
+        }
+        body {
+            position: fixed;
+            inset: 0;
+            margin: 0;
+            overflow: hidden;
+            background: #000011;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
+        }
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            touch-action: none;
+        }
         #controls {
             position: absolute;
-            top: 16px;
-            left: 16px;
+            top: max(12px, env(safe-area-inset-top));
+            left: max(12px, env(safe-area-inset-left));
             z-index: 100;
-            width: min(340px, calc(100vw - 32px));
+            width: min(380px, calc(100vw - 24px));
+            max-height: calc(100vh - 24px - env(safe-area-inset-top));
+            overflow-y: auto;
+            overscroll-behavior: contain;
+            -webkit-overflow-scrolling: touch;
+            touch-action: pan-y;
+            user-select: auto;
+            -webkit-user-select: auto;
             display: flex;
             flex-direction: column;
             gap: 9px;
             padding: 12px;
-            border-radius: 10px;
-            background: rgba(0, 0, 18, 0.78);
+            border: 1px solid rgba(150, 190, 255, 0.18);
+            border-radius: 13px;
+            background: rgba(0, 0, 18, 0.83);
             color: #ffffff;
-            font-family: sans-serif;
-            box-sizing: border-box;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.34);
         }
-        #controls select, #controls button, #controls label, #controls input[type=range] {
+        #controls select,
+        #controls button,
+        #controls label,
+        #controls input {
+            font: inherit;
+        }
+        #controls select,
+        #controls button,
+        #controls input[type="datetime-local"],
+        #controls input[type="number"] {
+            min-height: 36px;
+            padding: 7px 8px;
+            border: 1px solid rgba(160, 190, 255, 0.28);
+            border-radius: 7px;
+            color: #ffffff;
+            background: rgba(22, 29, 57, 0.92);
+        }
+        #controls button {
+            cursor: pointer;
+            touch-action: manipulation;
+        }
+        #controls select,
+        #controls input,
+        #controls label {
+            touch-action: manipulation;
+        }
+        .controls-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            min-height: 36px;
+        }
+        .controls-title {
             font-size: 14px;
+            font-weight: 750;
+            letter-spacing: 0.05em;
+            color: #cde4ff;
         }
-        #controls select, #controls button {
-            padding: 8px;
+        #controlsToggle {
+            min-width: 92px;
+            padding-inline: 9px;
+            font-size: 12px;
         }
+        #controls.collapsed {
+            width: auto;
+            max-height: none;
+            overflow: hidden;
+            padding: 8px 9px;
+        }
+        #controls.collapsed > :not(.controls-header) {
+            display: none !important;
+        }
+        #controls button:active {
+            transform: translateY(1px);
+        }
+        #constellationSelect { width: 100%; }
         .control-row {
             display: flex;
             gap: 7px;
             align-items: center;
             flex-wrap: wrap;
         }
-        .control-row > span {
-            min-width: 58px;
-            opacity: 0.8;
+        .control-row > .row-label {
+            min-width: 62px;
+            opacity: 0.78;
+            font-size: 13px;
         }
         .view-button {
             flex: 1;
-            min-width: 75px;
-            cursor: pointer;
+            min-width: 78px;
         }
         .view-button.active {
             outline: 2px solid #77bbff;
-            background: #dceeff;
+            background: #dceeff !important;
+            color: #071222 !important;
+        }
+        .section {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding: 10px;
+            border: 1px solid rgba(130, 170, 235, 0.15);
+            border-radius: 10px;
+            background: rgba(13, 20, 44, 0.62);
+        }
+        .section-title {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            color: #a8cfff;
+        }
+        .ground-only,
+        .center-only {
+            display: none;
+        }
+        .ground-only.visible,
+        .center-only.visible {
+            display: flex;
+        }
+        .stack-row {
+            display: grid;
+            grid-template-columns: 72px minmax(0, 1fr);
+            gap: 8px;
+            align-items: center;
+        }
+        .stack-row > label,
+        .stack-row > span:first-child {
+            font-size: 12px;
+            opacity: 0.78;
+        }
+        .coordinate-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 7px;
+        }
+        .coordinate-field {
+            display: grid;
+            grid-template-columns: auto minmax(0, 1fr);
+            gap: 5px;
+            align-items: center;
+        }
+        .coordinate-field span {
+            font-size: 12px;
+            opacity: 0.75;
+        }
+        .time-step-row,
+        .play-row {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 6px;
+        }
+        .play-row {
+            grid-template-columns: minmax(88px, 1fr) minmax(112px, 1fr);
+        }
+        .time-step-row button,
+        .play-row button,
+        .play-row select {
+            min-width: 0;
+            padding-left: 4px;
+            padding-right: 4px;
         }
         .check-label {
             display: inline-flex;
             align-items: center;
-            gap: 4px;
+            gap: 5px;
             padding: 2px;
         }
-        .lens-control {
-            display: grid;
-            grid-template-columns: auto minmax(150px, 1fr) auto;
-            align-items: center;
-            gap: 8px;
-        }
-        .lens-control input[type=range] {
-            width: 190px;
-            padding: 0;
-        }
-        #lensValue {
-            min-width: 92px;
-            text-align: right;
-            font-variant-numeric: tabular-nums;
-        }
+        .lens-control,
         .background-control {
             display: grid;
-            grid-template-columns: auto minmax(130px, 1fr) auto;
+            grid-template-columns: auto minmax(120px, 1fr) auto;
             align-items: center;
             gap: 8px;
         }
-        .background-control input[type=range] { width: 165px; }
+        .lens-control input[type="range"],
+        .background-control input[type="range"] {
+            width: 100%;
+            padding: 0;
+        }
+        #lensValue,
         #backgroundMagnitudeValue {
-            min-width: 42px;
+            min-width: 78px;
             text-align: right;
+            font-size: 12px;
             font-variant-numeric: tabular-nums;
         }
-        #controlHint {
+        #backgroundMagnitudeValue { min-width: 42px; }
+        #skyStatus {
+            padding: 8px;
+            border-radius: 8px;
+            background: rgba(3, 8, 24, 0.72);
             font-size: 12px;
-            opacity: 0.72;
-            line-height: 1.4;
+            line-height: 1.5;
+            font-variant-numeric: tabular-nums;
+        }
+        #touchHint {
+            position: fixed;
+            left: 50%;
+            bottom: max(14px, env(safe-area-inset-bottom));
+            z-index: 90;
+            display: none;
+            transform: translateX(-50%);
+            max-width: calc(100vw - 28px);
+            padding: 8px 12px;
+            border: 1px solid rgba(160, 195, 255, 0.22);
+            border-radius: 999px;
+            background: rgba(2, 8, 24, 0.75);
+            color: rgba(255, 255, 255, 0.86);
+            font-size: 12px;
+            line-height: 1.35;
+            text-align: center;
+            white-space: nowrap;
+            pointer-events: none;
+            backdrop-filter: blur(6px);
+            transition: opacity 220ms ease;
+        }
+        #touchHint.dismissed {
+            opacity: 0;
+        }
+        #controlHint,
+        .small-note {
+            font-size: 11px;
+            opacity: 0.66;
+            line-height: 1.45;
         }
         #constellationLabels {
             position: absolute;
@@ -111,80 +287,213 @@
             font-weight: bold;
             opacity: 1;
         }
+        @media (pointer: coarse) {
+            #controls select,
+            #controls button,
+            #controls input[type="datetime-local"],
+            #controls input[type="number"] {
+                min-height: 44px;
+            }
+            #touchHint {
+                display: block;
+            }
+        }
+        @media (max-width: 520px) {
+            #controls {
+                top: max(8px, env(safe-area-inset-top));
+                left: 8px;
+                width: calc(100vw - 16px);
+                max-height: calc(100dvh - 16px - env(safe-area-inset-top));
+                padding: 10px;
+            }
+            #controls.collapsed {
+                width: auto;
+                max-width: calc(100vw - 16px);
+            }
+            .time-step-row {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+            .play-row {
+                grid-template-columns: 1fr 1fr;
+            }
+            #controlHint {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body>
     <div id="controls">
+        <div class="controls-header">
+            <span class="controls-title">星空設定</span>
+            <button type="button" id="controlsToggle" aria-expanded="true">メニューをたたむ</button>
+        </div>
+
         <select id="constellationSelect">
             <option value="">星座を選択してください</option>
         </select>
 
         <div class="control-row">
-            <span>視点</span>
+            <span class="row-label">視点</span>
             <button class="view-button" data-view="ground">地上</button>
             <button class="view-button active" data-view="center">天球中心</button>
             <button class="view-button" data-view="overview">地球俯瞰</button>
         </div>
 
-        <div class="control-row">
-            <span>ドラッグ</span>
-            <select id="dragModeSelect">
-                <option value="look">視線を動かす</option>
-                <option value="orbit">地球を中心に周回</option>
-            </select>
+        <div class="section ground-only" id="groundSettings">
+            <div class="section-title">地上観測</div>
+
+            <div class="stack-row">
+                <label for="locationPreset">観測地点</label>
+                <select id="locationPreset">
+                    <option value="tokyo">東京</option>
+                    <option value="sapporo">札幌</option>
+                    <option value="naha">那覇</option>
+                    <option value="osaka">大阪</option>
+                    <option value="london">ロンドン</option>
+                    <option value="newyork">ニューヨーク</option>
+                    <option value="sydney">シドニー</option>
+                    <option value="equator">赤道・経度0°</option>
+                    <option value="northpole">北極</option>
+                    <option value="southpole">南極</option>
+                    <option value="custom">緯度・経度を入力</option>
+                </select>
+            </div>
+
+            <div class="coordinate-grid">
+                <label class="coordinate-field">
+                    <span>緯度</span>
+                    <input id="latitudeInput" type="number" min="-90" max="90" step="0.0001" value="35.6812">
+                </label>
+                <label class="coordinate-field">
+                    <span>経度</span>
+                    <input id="longitudeInput" type="number" min="-180" max="180" step="0.0001" value="139.7671">
+                </label>
+            </div>
+
+            <div class="stack-row">
+                <label for="timeZoneSelect">時間帯</label>
+                <select id="timeZoneSelect">
+                    <option value="Asia/Tokyo">日本標準時</option>
+                    <option value="Europe/London">ロンドン</option>
+                    <option value="America/New_York">ニューヨーク</option>
+                    <option value="Australia/Sydney">シドニー</option>
+                    <option value="Etc/UTC">UTC</option>
+                </select>
+            </div>
+
+            <div class="stack-row">
+                <label for="observationDateTime">現地日時</label>
+                <input id="observationDateTime" type="datetime-local" step="60">
+            </div>
+
+            <div class="time-step-row">
+                <button type="button" data-time-step="-86400000">−1日</button>
+                <button type="button" data-time-step="-3600000">−1時間</button>
+                <button type="button" data-time-step="3600000">＋1時間</button>
+                <button type="button" data-time-step="86400000">＋1日</button>
+            </div>
+
+            <div class="play-row">
+                <button type="button" id="nowButton">現在時刻</button>
+                <button type="button" id="playTimeButton">時間再生</button>
+            </div>
+
+            <div class="stack-row">
+                <label for="timeSpeedSelect">再生速度</label>
+                <select id="timeSpeedSelect">
+                    <option value="1">等速 ×1</option>
+                    <option value="60">×60</option>
+                    <option value="600">×600</option>
+                    <option value="3600" selected>×3600（1秒で1時間）</option>
+                    <option value="86400">×86400（1秒で1日）</option>
+                </select>
+            </div>
+
+            <div class="lens-control">
+                <span>レンズ</span>
+                <input type="range" id="groundLensSlider" min="6" max="50" step="0.5" value="50">
+                <span id="lensValue">50mm / 27°</span>
+            </div>
+
+            <div id="skyStatus"></div>
+            <div class="small-note">星の位置は地方恒星時から計算します。大気差・歳差・章動・昼光はまだ含めません。</div>
         </div>
 
-        <div class="control-row">
-            <span>方向</span>
-            <label class="check-label"><input type="checkbox" id="invertHorizontal">横反転</label>
-            <label class="check-label"><input type="checkbox" id="invertVertical">縦反転</label>
+        <div class="section center-only" id="centerSettings">
+            <label class="check-label">
+                <input type="checkbox" id="cameraFocusToggle" checked>
+                北極星固定
+            </label>
         </div>
 
-        <div class="control-row lens-control">
-            <span>地上レンズ</span>
-            <input type="range" id="groundLensSlider" min="6" max="50" step="0.5" value="50">
-            <span id="lensValue">50mm / 27°</span>
+        <div class="section">
+            <div class="section-title">星の表示</div>
+            <label class="check-label">
+                <input type="checkbox" id="backgroundStarsToggle" checked>
+                背景星を表示
+            </label>
+            <div class="background-control">
+                <span>限界等級</span>
+                <input type="range" id="backgroundMagnitudeSlider" min="3" max="6" step="0.1" value="6">
+                <span id="backgroundMagnitudeValue">6.0等</span>
+            </div>
         </div>
 
-        <div class="control-row">
-            <span>背景星</span>
-            <label class="check-label"><input type="checkbox" id="backgroundStarsToggle" checked>表示</label>
-        </div>
-
-        <div class="control-row background-control">
-            <span>限界等級</span>
-            <input type="range" id="backgroundMagnitudeSlider" min="3" max="6" step="0.1" value="6">
-            <span id="backgroundMagnitudeValue">6.0等</span>
-        </div>
-
-        <label class="check-label">
-            <input type="checkbox" id="cameraFocusToggle" checked>
-            北極星固定
-        </label>
-
-        <div id="controlHint">左ドラッグ：開始点基準で回転　／　ホイール・ピンチ：距離または視野角</div>
+        <div id="controlHint">ドラッグ：視点移動　／　ホイール：ズーム　／　スマホは1本指で視点移動・2本指でピンチズーム</div>
     </div>
+
+    <div id="touchHint">1本指：見回す　・　2本指：ピンチズーム</div>
     <div id="constellationLabels"></div>
-    <script src="stars.js"></script> <!-- stars.js を読み込み -->
-    <script src="starline.js"></script> <!-- starline.js を読み込み -->
-    <script src="background_stars.js"></script> <!-- 6等級までの背景星 -->
+
+    <script src="stars.js"></script>
+    <script src="starline.js"></script>
+    <script src="background_stars.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
     <script>
+        'use strict';
+
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(27, window.innerWidth / window.innerHeight, 0.5, 250000);
-        const renderer = new THREE.WebGLRenderer();
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
         renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setClearColor(0x000011);
         document.body.appendChild(renderer.domElement);
 
-        renderer.setClearColor(0x000011);
+        const EARTH_RADIUS = 1000;
+        const OBSERVER_HEIGHT = 1.7;
+        const SKY_RADIUS = 100000;
+        const OVERVIEW_DISTANCE = EARTH_RADIUS * 3;
+        const FULL_FRAME_SENSOR_HEIGHT = 24;
+        const GROUND_DEFAULT_FOCAL_LENGTH = 50;
+        const GROUND_MIN_FOCAL_LENGTH = 6;
+        const GROUND_MIN_ALTITUDE = THREE.MathUtils.degToRad(-5);
+        const GROUND_MAX_ALTITUDE = THREE.MathUtils.degToRad(89);
+        const ROTATION_SPEED = 0.0065;
+        const ORBIT_SPEED = 0.0065;
+        const VIEW_TRANSITION_DURATION = 900;
+        const CAMERA_FOCUS_DURATION = 700;
+
+        const LOCATION_PRESETS = {
+            tokyo:     { name: '東京', lat: 35.681236, lon: 139.767125, zone: 'Asia/Tokyo' },
+            sapporo:   { name: '札幌', lat: 43.062096, lon: 141.354376, zone: 'Asia/Tokyo' },
+            naha:      { name: '那覇', lat: 26.212401, lon: 127.680932, zone: 'Asia/Tokyo' },
+            osaka:     { name: '大阪', lat: 34.693738, lon: 135.502165, zone: 'Asia/Tokyo' },
+            london:    { name: 'ロンドン', lat: 51.5074, lon: -0.1278, zone: 'Europe/London' },
+            newyork:   { name: 'ニューヨーク', lat: 40.7128, lon: -74.0060, zone: 'America/New_York' },
+            sydney:    { name: 'シドニー', lat: -33.8688, lon: 151.2093, zone: 'Australia/Sydney' },
+            equator:   { name: '赤道・経度0°', lat: 0, lon: 0, zone: 'Etc/UTC' },
+            northpole: { name: '北極', lat: 90, lon: 0, zone: 'Etc/UTC' },
+            southpole: { name: '南極', lat: -90, lon: 0, zone: 'Etc/UTC' }
+        };
 
         const earthGroup = new THREE.Group();
-        const earthGeometry = new THREE.SphereGeometry(1000, 96, 64);
+        const earthGeometry = new THREE.SphereGeometry(EARTH_RADIUS, 96, 64);
 
-        // 地表本体。地上視点では足元から地平線までを覆う。
         const groundMaterial = new THREE.MeshBasicMaterial({
             color: 0x07180d,
-            opacity: 0.96,
+            opacity: 0.05,
             transparent: true,
             depthWrite: true,
             side: THREE.FrontSide
@@ -192,56 +501,59 @@
         const groundEarth = new THREE.Mesh(earthGeometry, groundMaterial);
         earthGroup.add(groundEarth);
 
-        // 従来の地球ワイヤーフレームは地表の上に重ねて残す。
         const earthMaterial = new THREE.MeshBasicMaterial({
             color: 0x168a42,
             wireframe: true,
-            opacity: 0.3,
+            opacity: 0.22,
             transparent: true,
             depthWrite: false
         });
-        const earth = new THREE.Mesh(earthGeometry, earthMaterial);
-        earth.scale.setScalar(1.002);
-        earthGroup.add(earth);
+        const earthWireframe = new THREE.Mesh(earthGeometry, earthMaterial);
+        earthWireframe.scale.setScalar(1.002);
+        earthGroup.add(earthWireframe);
         scene.add(earthGroup);
 
-        // 地上モード専用の接平面グリッド。外周は透明にして地平線付近へ届かせない。
-        const groundGridTexture = createGroundGridTexture();
         const groundGridMaterial = new THREE.MeshBasicMaterial({
-            map: groundGridTexture,
+            map: createGroundGridTexture(),
             transparent: true,
             opacity: 0,
             depthWrite: false,
             side: THREE.DoubleSide
         });
-        const groundGrid = new THREE.Mesh(
-            new THREE.PlaneGeometry(140, 140),
-            groundGridMaterial
-        );
-        groundGrid.rotation.x = -Math.PI / 2;
-        groundGrid.position.set(0, 1000 + 0.03, 0);
+        const groundGrid = new THREE.Mesh(new THREE.PlaneGeometry(140, 140), groundGridMaterial);
         groundGrid.renderOrder = 2;
         scene.add(groundGrid);
 
+        const celestialGroup = new THREE.Group();
         const backgroundStarGroup = new THREE.Group();
         const starGroup = new THREE.Group();
         const lineGroup = new THREE.Group();
-        scene.add(backgroundStarGroup);
-        scene.add(starGroup);
-        scene.add(lineGroup);
+        celestialGroup.add(backgroundStarGroup, starGroup, lineGroup);
+        scene.add(celestialGroup);
 
         const constellationSelect = document.getElementById('constellationSelect');
         const cameraFocusToggle = document.getElementById('cameraFocusToggle');
         const constellationLabelsLayer = document.getElementById('constellationLabels');
         const groundLensSlider = document.getElementById('groundLensSlider');
         const lensValue = document.getElementById('lensValue');
-        const dragModeSelect = document.getElementById('dragModeSelect');
-        const invertHorizontalToggle = document.getElementById('invertHorizontal');
-        const invertVerticalToggle = document.getElementById('invertVertical');
         const viewButtons = Array.from(document.querySelectorAll('.view-button'));
+        const groundOnlyElements = Array.from(document.querySelectorAll('.ground-only'));
+        const centerOnlyElements = Array.from(document.querySelectorAll('.center-only'));
         const backgroundStarsToggle = document.getElementById('backgroundStarsToggle');
         const backgroundMagnitudeSlider = document.getElementById('backgroundMagnitudeSlider');
         const backgroundMagnitudeValue = document.getElementById('backgroundMagnitudeValue');
+        const locationPreset = document.getElementById('locationPreset');
+        const latitudeInput = document.getElementById('latitudeInput');
+        const longitudeInput = document.getElementById('longitudeInput');
+        const timeZoneSelect = document.getElementById('timeZoneSelect');
+        const observationDateTime = document.getElementById('observationDateTime');
+        const nowButton = document.getElementById('nowButton');
+        const playTimeButton = document.getElementById('playTimeButton');
+        const timeSpeedSelect = document.getElementById('timeSpeedSelect');
+        const skyStatus = document.getElementById('skyStatus');
+        const controlsPanel = document.getElementById('controls');
+        const controlsToggle = document.getElementById('controlsToggle');
+        const touchHint = document.getElementById('touchHint');
 
         const starPositions = {};
         const starMeshes = {};
@@ -251,306 +563,894 @@
         const constellationLabelElements = {};
         let backgroundStarLayers = [];
 
+        const observerUp = new THREE.Vector3(0, 1, 0);
+        const observerNorth = new THREE.Vector3(0, 0, 1);
+        const observerEast = new THREE.Vector3(1, 0, 0);
+        const observerPosition = new THREE.Vector3(0, EARTH_RADIUS + OBSERVER_HEIGHT, 0);
+
+        let observerLatitudeDeg = LOCATION_PRESETS.tokyo.lat;
+        let observerLongitudeDeg = LOCATION_PRESETS.tokyo.lon;
+        let simulationUtcMs = Date.now();
+        let localSiderealDeg = 0;
+        let groundAzimuth = 0;
+        let groundAltitude = THREE.MathUtils.degToRad(12);
+        let currentViewMode = 'center';
+        let activeViewPreset = 'center';
+        let focusOnNorthStar = true;
+        let cameraAnimation = null;
         let isDragging = false;
-        let previousMousePosition = { x: 0, y: 0 };
-        let previousTouchPosition = { x: 0, y: 0 };
+        let previousPointerPosition = { x: 0, y: 0 };
         let dragStartPosition = { x: 0, y: 0 };
         let dragStartQuaternion = new THREE.Quaternion();
         let dragStartUp = new THREE.Vector3(0, 1, 0);
         let dragStartRight = new THREE.Vector3(1, 0, 0);
-
-        // 表示スケール：地表の曲率と天球の視差を抑えた地上観測向け設定
-        const EARTH_RADIUS = 1000;
-        const OBSERVER_HEIGHT = 1.7;
-        const SKY_RADIUS = 100000;
-        const OVERVIEW_DISTANCE = EARTH_RADIUS * 3;
-        const FULL_FRAME_SENSOR_HEIGHT = 24;
-        const GROUND_DEFAULT_FOCAL_LENGTH = 50;
-        const GROUND_MIN_FOCAL_LENGTH = 6;
-        const moveSpeed = 50;
-        const rotationSpeed = 0.01;
-        const orbitSpeed = 0.008;
-
-        let focusOnNorthStar = true;
-        let cameraAnimation = null;
-        let activeViewPreset = 'center';
-        let currentViewMode = 'center';
-        let groundAzimuth = 0;
-        let groundAltitude = THREE.MathUtils.degToRad(1.75);
-        const GROUND_MIN_ALTITUDE = THREE.MathUtils.degToRad(-5);
-        const GROUND_MAX_ALTITUDE = THREE.MathUtils.degToRad(89);
+        const activePointers = new Map();
+        let dragPointerId = null;
         let pinchStartDistance = null;
-        const cameraFocusDuration = 900;
-        const viewTransitionDuration = 1200;
+        let touchHintTimer = null;
+        let isTimePlaying = false;
+        let lastAnimationTime = performance.now();
+        let lastSkyUiUpdate = 0;
+        const cameraQuaternion = new THREE.Quaternion();
 
-        // クォータニオンによるカメラの回転制御
-        let cameraQuaternion = new THREE.Quaternion();
-        camera.quaternion.copy(cameraQuaternion);
+        const northStarPosition = convertToCartesian(2.530301028 * 15, 89.26413889);
 
-        cameraFocusToggle.addEventListener('change', function() {
-            cancelCameraAnimation();
-            focusOnNorthStar = cameraFocusToggle.checked;
-            syncCameraQuaternion();
+        initializeStarData();
+        initializeUi();
+        setCameraFocalLength(GROUND_DEFAULT_FOCAL_LENGTH);
+        updateObserverFromSimulation(true);
+        applyViewPreset('center', false);
+        animate(performance.now());
 
-            if (focusOnNorthStar) {
-                dragModeSelect.value = 'look';
-                lookAtNorthStar();
+        function initializeUi() {
+            locationPreset.value = 'tokyo';
+            timeZoneSelect.value = LOCATION_PRESETS.tokyo.zone;
+            setDateInputFromUtc(simulationUtcMs);
+            backgroundMagnitudeValue.textContent = `${parseFloat(backgroundMagnitudeSlider.value).toFixed(1)}等`;
+            updateModeSpecificControls();
+
+            controlsToggle.addEventListener('click', () => {
+                const collapsed = controlsPanel.classList.toggle('collapsed');
+                controlsToggle.textContent = collapsed ? 'メニューを開く' : 'メニューをたたむ';
+                controlsToggle.setAttribute('aria-expanded', String(!collapsed));
+            });
+
+            viewButtons.forEach(button => {
+                button.addEventListener('click', () => applyViewPreset(button.dataset.view, true));
+            });
+
+            cameraFocusToggle.addEventListener('change', () => {
+                cancelCameraAnimation();
+                focusOnNorthStar = cameraFocusToggle.checked;
+                if (focusOnNorthStar && currentViewMode === 'center') lookAtNorthStar();
+            });
+
+            groundLensSlider.addEventListener('input', () => {
+                cancelCameraAnimation();
+                setCameraFocalLength(parseFloat(groundLensSlider.value));
+                clearActiveViewPreset();
+            });
+
+            backgroundStarsToggle.addEventListener('change', () => {
+                backgroundStarGroup.visible = backgroundStarsToggle.checked;
+            });
+
+            backgroundMagnitudeSlider.addEventListener('input', () => {
+                const limit = parseFloat(backgroundMagnitudeSlider.value);
+                backgroundMagnitudeValue.textContent = `${limit.toFixed(1)}等`;
+                buildBackgroundStarLayers(limit);
+            });
+
+            locationPreset.addEventListener('change', () => {
+                const preset = LOCATION_PRESETS[locationPreset.value];
+                if (!preset) return;
+                observerLatitudeDeg = preset.lat;
+                observerLongitudeDeg = preset.lon;
+                latitudeInput.value = formatCoordinate(preset.lat);
+                longitudeInput.value = formatCoordinate(preset.lon);
+                timeZoneSelect.value = preset.zone;
+                setDateInputFromUtc(simulationUtcMs);
+                updateObserverFromSimulation(true);
+            });
+
+            latitudeInput.addEventListener('change', applyCustomCoordinates);
+            longitudeInput.addEventListener('change', applyCustomCoordinates);
+
+            timeZoneSelect.addEventListener('change', () => {
+                locationPreset.value = 'custom';
+                setDateInputFromUtc(simulationUtcMs);
+                updateSkyStatus();
+            });
+
+            observationDateTime.addEventListener('change', () => {
+                const utcDate = zonedLocalDateTimeToUtc(observationDateTime.value, timeZoneSelect.value);
+                if (!utcDate || Number.isNaN(utcDate.getTime())) return;
+                pauseTimePlayback();
+                simulationUtcMs = utcDate.getTime();
+                updateObserverFromSimulation(true);
+            });
+
+            document.querySelectorAll('[data-time-step]').forEach(button => {
+                button.addEventListener('click', () => {
+                    pauseTimePlayback();
+                    simulationUtcMs += Number(button.dataset.timeStep);
+                    updateObserverFromSimulation(true);
+                });
+            });
+
+            nowButton.addEventListener('click', () => {
+                pauseTimePlayback();
+                simulationUtcMs = Date.now();
+                updateObserverFromSimulation(true);
+            });
+
+            playTimeButton.addEventListener('click', () => {
+                isTimePlaying = !isTimePlaying;
+                playTimeButton.textContent = isTimePlaying ? '一時停止' : '時間再生';
+                lastAnimationTime = performance.now();
+            });
+
+            renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { passive: false });
+            renderer.domElement.addEventListener('pointermove', handleCanvasPointerMove, { passive: false });
+            renderer.domElement.addEventListener('pointerup', handleCanvasPointerEnd, { passive: false });
+            renderer.domElement.addEventListener('pointercancel', handleCanvasPointerEnd, { passive: false });
+            renderer.domElement.addEventListener('contextmenu', event => event.preventDefault());
+
+            renderer.domElement.addEventListener('wheel', event => {
+                event.preventDefault();
+                cancelCameraAnimation();
+                applyZoom(event.deltaY * 0.0025);
+            }, { passive: false });
+
+            window.addEventListener('resize', resizeRendererToViewport);
+            window.addEventListener('orientationchange', resizeRendererToViewport);
+            if (window.visualViewport) {
+                window.visualViewport.addEventListener('resize', resizeRendererToViewport);
             }
-        });
-
-        groundLensSlider.addEventListener('input', function() {
-            cancelCameraAnimation();
-            const focalLength = parseFloat(groundLensSlider.value);
-            setCameraFocalLength(focalLength);
-            clearActiveViewPreset();
-        });
-
-        backgroundStarsToggle.addEventListener('change', function() {
-            backgroundStarGroup.visible = backgroundStarsToggle.checked;
-        });
-
-        backgroundMagnitudeSlider.addEventListener('input', function() {
-            const limit = parseFloat(backgroundMagnitudeSlider.value);
-            backgroundMagnitudeValue.textContent = `${limit.toFixed(1)}等`;
-            buildBackgroundStarLayers(limit);
-        });
-
-        viewButtons.forEach(button => {
-            button.addEventListener('click', () => applyViewPreset(button.dataset.view));
-        });
-
-        dragModeSelect.addEventListener('change', () => {
-            cancelCameraAnimation();
-            if (dragModeSelect.value === 'orbit') {
-                focusOnNorthStar = false;
-                cameraFocusToggle.checked = false;
-                camera.lookAt(new THREE.Vector3(0, 0, 0));
-                syncCameraQuaternion();
-            }
-        });
-
-        const northStarPosition = convertToCartesian(2.530301028 * 15, 89.26413889); 
-
-        if (focusOnNorthStar) {
-            lookAtNorthStar(); 
         }
 
-        // マウス操作
-        document.addEventListener('mousedown', function (event) {
-            if (event.button === 0) {
-                isDragging = true;
-                previousMousePosition = { x: event.clientX, y: event.clientY };
-                beginAnchoredDrag(previousMousePosition);
+        function handleCanvasPointerDown(event) {
+            if (event.pointerType === 'mouse' && event.button !== 0) return;
+            event.preventDefault();
+            dismissTouchHint();
+
+            activePointers.set(event.pointerId, {
+                x: event.clientX,
+                y: event.clientY,
+                pointerType: event.pointerType
+            });
+
+            try {
+                renderer.domElement.setPointerCapture(event.pointerId);
+            } catch (_) {
+                // Some browsers may reject capture during a cancelled gesture.
             }
-        });
 
-        document.addEventListener('mousemove', function (event) {
-            if (isDragging) {
-                const currentMousePosition = { x: event.clientX, y: event.clientY };
-                handleDrag(currentMousePosition, previousMousePosition);
-                previousMousePosition = currentMousePosition;
-            }
-        });
-
-        document.addEventListener('mouseup', function () {
-            isDragging = false;
-        });
-
-        // タッチ操作
-        document.addEventListener('touchstart', function (event) {
-            if (event.touches.length === 1) {
-                event.preventDefault();
-                isDragging = true;
+            if (activePointers.size === 1) {
+                dragPointerId = event.pointerId;
                 pinchStartDistance = null;
-                previousTouchPosition = { x: event.touches[0].clientX, y: event.touches[0].clientY };
-                beginAnchoredDrag(previousTouchPosition);
-            } else if (event.touches.length === 2) {
-                event.preventDefault();
-                isDragging = false;
-                pinchStartDistance = getTouchDistance(event.touches);
+                beginPointerDrag(event.clientX, event.clientY);
+                return;
             }
-        }, { passive: false });
 
-        document.addEventListener('touchmove', function (event) {
-            if (event.touches.length === 1 && isDragging) {
-                event.preventDefault();
-                const currentTouchPosition = { x: event.touches[0].clientX, y: event.touches[0].clientY };
-                handleDrag(currentTouchPosition, previousTouchPosition);
-                previousTouchPosition = currentTouchPosition;
-            } else if (event.touches.length === 2) {
-                event.preventDefault();
-                const distance = getTouchDistance(event.touches);
-                if (pinchStartDistance !== null && pinchStartDistance > 0) {
-                    applyZoom((pinchStartDistance - distance) * 0.006);
+            if (activePointers.size >= 2) {
+                isDragging = false;
+                dragPointerId = null;
+                pinchStartDistance = getActivePointerDistance();
+            }
+        }
+
+        function handleCanvasPointerMove(event) {
+            if (!activePointers.has(event.pointerId)) return;
+            event.preventDefault();
+
+            const pointer = activePointers.get(event.pointerId);
+            pointer.x = event.clientX;
+            pointer.y = event.clientY;
+
+            if (activePointers.size >= 2) {
+                isDragging = false;
+                dragPointerId = null;
+                const distance = getActivePointerDistance();
+                if (distance > 0 && pinchStartDistance !== null && pinchStartDistance > 0) {
+                    const zoomAmount = Math.log(pinchStartDistance / distance) * 0.9;
+                    applyZoom(zoomAmount);
                 }
                 pinchStartDistance = distance;
+                return;
             }
-        }, { passive: false });
 
-        document.addEventListener('touchend', function (event) {
-            isDragging = false;
-            if (event.touches.length < 2) pinchStartDistance = null;
-        });
+            if (activePointers.size === 1 && event.pointerId === dragPointerId && isDragging) {
+                continuePointerDrag(event.clientX, event.clientY);
+            }
+        }
 
-        document.addEventListener('touchcancel', function () {
-            isDragging = false;
-            pinchStartDistance = null;
-        });
-
-        renderer.domElement.addEventListener('wheel', function(event) {
+        function handleCanvasPointerEnd(event) {
+            if (!activePointers.has(event.pointerId)) return;
             event.preventDefault();
-            cancelCameraAnimation();
-            applyZoom(event.deltaY * 0.0025);
-        }, { passive: false });
+            activePointers.delete(event.pointerId);
 
-        function beginAnchoredDrag(position) {
-            if (currentViewMode === 'ground') {
-                syncGroundAnglesFromCamera();
+            if (activePointers.size >= 2) {
+                isDragging = false;
+                dragPointerId = null;
+                pinchStartDistance = getActivePointerDistance();
+                return;
             }
-            dragStartPosition = { x: position.x, y: position.y };
+
+            if (activePointers.size === 1) {
+                const [remainingId, pointer] = activePointers.entries().next().value;
+                dragPointerId = remainingId;
+                pinchStartDistance = null;
+                beginPointerDrag(pointer.x, pointer.y);
+                return;
+            }
+
+            isDragging = false;
+            dragPointerId = null;
+            pinchStartDistance = null;
+        }
+
+        function getActivePointerDistance() {
+            const points = Array.from(activePointers.values());
+            if (points.length < 2) return 0;
+            return Math.hypot(points[0].x - points[1].x, points[0].y - points[1].y);
+        }
+
+        function dismissTouchHint() {
+            if (!touchHint || touchHint.classList.contains('dismissed')) return;
+            clearTimeout(touchHintTimer);
+            touchHintTimer = setTimeout(() => {
+                touchHint.classList.add('dismissed');
+            }, 900);
+        }
+
+        function resizeRendererToViewport() {
+            const width = Math.max(1, document.documentElement.clientWidth || window.innerWidth);
+            const height = Math.max(1, document.documentElement.clientHeight || window.innerHeight);
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+            renderer.setSize(width, height);
+        }
+
+        function applyCustomCoordinates() {
+            locationPreset.value = 'custom';
+            observerLatitudeDeg = THREE.MathUtils.clamp(Number(latitudeInput.value) || 0, -90, 90);
+            observerLongitudeDeg = normalizeLongitude(Number(longitudeInput.value) || 0);
+            latitudeInput.value = formatCoordinate(observerLatitudeDeg);
+            longitudeInput.value = formatCoordinate(observerLongitudeDeg);
+            updateObserverFromSimulation(true);
+        }
+
+        function beginPointerDrag(x, y) {
+            isDragging = true;
+            previousPointerPosition = { x, y };
+            dragStartPosition = { x, y };
+            if (currentViewMode === 'ground') syncGroundAnglesFromCamera();
             dragStartQuaternion.copy(camera.quaternion);
             dragStartUp.set(0, 1, 0).applyQuaternion(dragStartQuaternion).normalize();
             dragStartRight.set(1, 0, 0).applyQuaternion(dragStartQuaternion).normalize();
+        }
+
+        function continuePointerDrag(x, y) {
+            const current = { x, y };
+            handleDrag(current, previousPointerPosition);
+            previousPointerPosition = current;
         }
 
         function handleDrag(currentPosition, previousPosition) {
             cancelCameraAnimation();
             const incrementalDelta = getDragDelta(currentPosition, previousPosition);
             const totalDelta = getDragDelta(currentPosition, dragStartPosition);
-            const signX = invertHorizontalToggle.checked ? -1 : 1;
-            const signY = invertVerticalToggle.checked ? -1 : 1;
 
             if (currentViewMode === 'ground') {
-                rotateGroundCamera({
-                    x: incrementalDelta.x * signX,
-                    y: incrementalDelta.y * signY
-                });
-            } else if (dragModeSelect.value === 'orbit') {
-                orbitAroundEarth({
-                    x: incrementalDelta.x * signX,
-                    y: incrementalDelta.y * signY
-                });
+                rotateGroundCamera(incrementalDelta);
+            } else if (currentViewMode === 'overview') {
+                orbitAroundEarth(incrementalDelta);
             } else if (focusOnNorthStar) {
-                moveFocusCamera({
-                    x: incrementalDelta.x * signX,
-                    y: incrementalDelta.y * signY
-                });
+                moveFocusCamera(incrementalDelta);
             } else {
-                rotateFreeCameraAnchored({
-                    x: totalDelta.x * signX,
-                    y: totalDelta.y * signY
-                });
+                rotateFreeCameraAnchored(totalDelta);
             }
         }
 
-        function getDragDelta(currentPosition, previousPosition) {
-            return {
-                x: currentPosition.x - previousPosition.x,
-                y: currentPosition.y - previousPosition.y
-            };
-        }
-
-        function getTouchDistance(touches) {
-            const dx = touches[0].clientX - touches[1].clientX;
-            const dy = touches[0].clientY - touches[1].clientY;
-            return Math.hypot(dx, dy);
-        }
-
         function rotateGroundCamera(delta) {
-            // 地上モードは自由3D回転を使わない。
-            // 横入力は固定された鉛直軸まわりの方位角、縦入力は高度角として独立管理する。
-            groundAzimuth -= delta.x * rotationSpeed;
-            groundAltitude -= delta.y * rotationSpeed;
-            groundAltitude = THREE.MathUtils.clamp(
-                groundAltitude,
-                GROUND_MIN_ALTITUDE,
-                GROUND_MAX_ALTITUDE
-            );
-
+            groundAzimuth -= delta.x * ROTATION_SPEED;
+            groundAltitude -= delta.y * ROTATION_SPEED;
+            groundAltitude = THREE.MathUtils.clamp(groundAltitude, GROUND_MIN_ALTITUDE, GROUND_MAX_ALTITUDE);
             applyGroundCameraOrientation();
+            clearActiveViewPreset();
+            updateSkyStatus();
         }
 
         function applyGroundCameraOrientation() {
-            const localUp = camera.position.clone().normalize();
-            // 現在は北極配置なので、+Zを方位角0度の水平基準とする。
-            // 将来ほかの観測地点へ移した際は、この水平基準を現地の北方向へ置き換えられる。
-            const north = new THREE.Vector3(0, 0, 1);
-            const east = new THREE.Vector3(1, 0, 0);
+            camera.position.copy(observerPosition);
             const cosAltitude = Math.cos(groundAltitude);
-
             const direction = new THREE.Vector3()
-                .addScaledVector(north, Math.cos(groundAzimuth) * cosAltitude)
-                .addScaledVector(east, Math.sin(groundAzimuth) * cosAltitude)
-                .addScaledVector(localUp, Math.sin(groundAltitude))
+                .addScaledVector(observerNorth, Math.cos(groundAzimuth) * cosAltitude)
+                .addScaledVector(observerEast, Math.sin(groundAzimuth) * cosAltitude)
+                .addScaledVector(observerUp, Math.sin(groundAltitude))
                 .normalize();
 
-            camera.up.copy(localUp);
+            camera.up.copy(observerUp);
             camera.lookAt(camera.position.clone().add(direction));
             syncCameraQuaternion();
         }
 
         function syncGroundAnglesFromCamera() {
-            const localUp = camera.position.clone().normalize();
-            const direction = new THREE.Vector3(0, 0, -1)
-                .applyQuaternion(camera.quaternion)
-                .normalize();
+            const direction = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion).normalize();
+            groundAltitude = Math.asin(THREE.MathUtils.clamp(direction.dot(observerUp), -1, 1));
+            groundAltitude = THREE.MathUtils.clamp(groundAltitude, GROUND_MIN_ALTITUDE, GROUND_MAX_ALTITUDE);
 
-            groundAltitude = Math.asin(THREE.MathUtils.clamp(
-                direction.dot(localUp),
-                -1,
-                1
-            ));
-            groundAltitude = THREE.MathUtils.clamp(
-                groundAltitude,
-                GROUND_MIN_ALTITUDE,
-                GROUND_MAX_ALTITUDE
-            );
-
-            const horizontal = direction.clone()
-                .addScaledVector(localUp, -direction.dot(localUp));
+            const horizontal = direction.clone().addScaledVector(observerUp, -direction.dot(observerUp));
             if (horizontal.lengthSq() > 1e-10) {
                 horizontal.normalize();
-                groundAzimuth = Math.atan2(horizontal.x, horizontal.z);
+                groundAzimuth = Math.atan2(horizontal.dot(observerEast), horizontal.dot(observerNorth));
             }
         }
 
         function moveFocusCamera(delta) {
-            camera.position.x -= delta.x * moveSpeed * 0.01;
-            camera.position.y += delta.y * moveSpeed * 0.01;
+            camera.position.x -= delta.x * 0.5;
+            camera.position.y += delta.y * 0.5;
             lookAtNorthStar();
+            clearActiveViewPreset();
         }
 
         function rotateFreeCameraAnchored(totalDelta) {
-            // ドラッグ開始時の姿勢と軸を固定し、開始点からの総移動量で毎回再計算する。
-            // 増分を積み重ねないため、長く操作しても回転軸が漂いにくい。
-            const yaw = new THREE.Quaternion().setFromAxisAngle(
-                dragStartUp,
-                -totalDelta.x * rotationSpeed
-            );
-            const pitch = new THREE.Quaternion().setFromAxisAngle(
-                dragStartRight,
-                -totalDelta.y * rotationSpeed
-            );
-
-            cameraQuaternion.copy(dragStartQuaternion);
-            cameraQuaternion.premultiply(yaw);
-            cameraQuaternion.premultiply(pitch);
+            const yaw = new THREE.Quaternion().setFromAxisAngle(dragStartUp, -totalDelta.x * ROTATION_SPEED);
+            const pitch = new THREE.Quaternion().setFromAxisAngle(dragStartRight, -totalDelta.y * ROTATION_SPEED);
+            cameraQuaternion.copy(dragStartQuaternion).premultiply(yaw).premultiply(pitch);
             camera.quaternion.copy(cameraQuaternion);
             clearActiveViewPreset();
         }
 
         function orbitAroundEarth(delta) {
-            const radius = Math.max(camera.position.length(), EARTH_RADIUS + OBSERVER_HEIGHT + 5);
+            const radius = Math.max(camera.position.length(), EARTH_RADIUS + OBSERVER_HEIGHT + 10);
             const spherical = new THREE.Spherical().setFromVector3(camera.position);
-            spherical.theta -= delta.x * orbitSpeed;
-            spherical.phi += delta.y * orbitSpeed;
+            spherical.theta -= delta.x * ORBIT_SPEED;
+            spherical.phi += delta.y * ORBIT_SPEED;
             spherical.phi = THREE.MathUtils.clamp(spherical.phi, 0.05, Math.PI - 0.05);
             spherical.radius = radius;
-
             camera.position.setFromSpherical(spherical);
             camera.lookAt(0, 0, 0);
             syncCameraQuaternion();
             clearActiveViewPreset();
+        }
+
+        function applyZoom(amount) {
+            if (currentViewMode === 'overview') {
+                const direction = camera.position.clone().normalize();
+                const nextRadius = THREE.MathUtils.clamp(
+                    camera.position.length() * Math.exp(amount),
+                    EARTH_RADIUS + OBSERVER_HEIGHT + 10,
+                    12000
+                );
+                camera.position.copy(direction.multiplyScalar(nextRadius));
+                camera.lookAt(0, 0, 0);
+                syncCameraQuaternion();
+            } else if (currentViewMode === 'ground') {
+                const minFov = focalLengthToVerticalFov(GROUND_DEFAULT_FOCAL_LENGTH);
+                const maxFov = focalLengthToVerticalFov(GROUND_MIN_FOCAL_LENGTH);
+                camera.fov = THREE.MathUtils.clamp(camera.fov + amount * 12, minFov, maxFov);
+                camera.updateProjectionMatrix();
+                const focalLength = THREE.MathUtils.clamp(
+                    verticalFovToFocalLength(camera.fov),
+                    GROUND_MIN_FOCAL_LENGTH,
+                    GROUND_DEFAULT_FOCAL_LENGTH
+                );
+                groundLensSlider.value = String(focalLength);
+                updateLensDisplay(focalLength, camera.fov);
+            } else {
+                camera.fov = THREE.MathUtils.clamp(camera.fov + amount * 12, 20, 100);
+                camera.updateProjectionMatrix();
+            }
+            clearActiveViewPreset();
+        }
+
+        function applyViewPreset(name, animateTransition = true) {
+            cancelCameraAnimation();
+            currentViewMode = name;
+            focusOnNorthStar = name === 'center' ? cameraFocusToggle.checked : false;
+            updateModeSpecificControls();
+            setActiveViewPreset(name);
+
+            let targetPosition;
+            let targetLookAt;
+            let targetUp;
+            let targetFov;
+            let targetEarthOpacity;
+            let targetGroundOpacity;
+            let targetGridOpacity;
+
+            if (name === 'ground') {
+                targetPosition = observerPosition.clone();
+                const cosAltitude = Math.cos(groundAltitude);
+                const groundDirection = new THREE.Vector3()
+                    .addScaledVector(observerNorth, Math.cos(groundAzimuth) * cosAltitude)
+                    .addScaledVector(observerEast, Math.sin(groundAzimuth) * cosAltitude)
+                    .addScaledVector(observerUp, Math.sin(groundAltitude))
+                    .normalize();
+                targetLookAt = targetPosition.clone().add(groundDirection);
+                targetUp = observerUp.clone();
+                targetFov = focalLengthToVerticalFov(Number(groundLensSlider.value));
+                targetEarthOpacity = 0;
+                targetGroundOpacity = 0.98;
+                targetGridOpacity = 0.58;
+            } else if (name === 'overview') {
+                targetPosition = new THREE.Vector3(OVERVIEW_DISTANCE, OVERVIEW_DISTANCE * 0.65, OVERVIEW_DISTANCE);
+                targetLookAt = new THREE.Vector3(0, 0, 0);
+                targetUp = new THREE.Vector3(0, 1, 0);
+                targetFov = 55;
+                targetEarthOpacity = 0.5;
+                targetGroundOpacity = 0.28;
+                targetGridOpacity = 0;
+            } else {
+                targetPosition = new THREE.Vector3(0, 0, 0);
+                targetLookAt = northStarPosition.clone();
+                targetUp = new THREE.Vector3(0, 1, 0);
+                targetFov = 75;
+                targetEarthOpacity = 0.22;
+                targetGroundOpacity = 0.05;
+                targetGridOpacity = 0;
+            }
+
+            if (!animateTransition) {
+                camera.position.copy(targetPosition);
+                camera.up.copy(targetUp);
+                camera.lookAt(targetLookAt);
+                camera.fov = targetFov;
+                camera.updateProjectionMatrix();
+                earthMaterial.opacity = targetEarthOpacity;
+                groundMaterial.opacity = targetGroundOpacity;
+                groundGridMaterial.opacity = targetGridOpacity;
+                if (name === 'ground') applyGroundCameraOrientation();
+                else syncCameraQuaternion();
+                return;
+            }
+
+            startCameraTransition(
+                targetPosition,
+                targetLookAt,
+                targetUp,
+                targetFov,
+                targetEarthOpacity,
+                targetGroundOpacity,
+                targetGridOpacity,
+                VIEW_TRANSITION_DURATION
+            );
+        }
+
+        function updateModeSpecificControls() {
+            groundOnlyElements.forEach(element => element.classList.toggle('visible', currentViewMode === 'ground'));
+            centerOnlyElements.forEach(element => element.classList.toggle('visible', currentViewMode === 'center'));
+        }
+
+        function setActiveViewPreset(name) {
+            activeViewPreset = name;
+            viewButtons.forEach(button => button.classList.toggle('active', button.dataset.view === name));
+        }
+
+        function clearActiveViewPreset() {
+            activeViewPreset = '';
+            controlsToggle.addEventListener('click', () => {
+                const collapsed = controlsPanel.classList.toggle('collapsed');
+                controlsToggle.textContent = collapsed ? 'メニューを開く' : 'メニューをたたむ';
+                controlsToggle.setAttribute('aria-expanded', String(!collapsed));
+            });
+
+            viewButtons.forEach(button => {
+                button.classList.toggle('active', button.dataset.view === currentViewMode);
+            });
+        }
+
+        function startCameraTransition(targetPosition, targetLookAt, targetUp, targetFov, earthOpacity, groundOpacity, gridOpacity, duration) {
+            cameraAnimation = {
+                type: 'transition',
+                startTime: performance.now(),
+                duration,
+                startPosition: camera.position.clone(),
+                endPosition: targetPosition.clone(),
+                startQuaternion: camera.quaternion.clone(),
+                endQuaternion: getLookAtQuaternion(targetPosition, targetLookAt, targetUp),
+                startFov: camera.fov,
+                endFov: targetFov,
+                startEarthOpacity: earthMaterial.opacity,
+                endEarthOpacity: earthOpacity,
+                startGroundOpacity: groundMaterial.opacity,
+                endGroundOpacity: groundOpacity,
+                startGridOpacity: groundGridMaterial.opacity,
+                endGridOpacity: gridOpacity,
+                endUp: targetUp.clone()
+            };
+        }
+
+        function startCameraLookAtAnimation(targetPosition) {
+            cameraAnimation = {
+                type: 'look',
+                startTime: performance.now(),
+                duration: CAMERA_FOCUS_DURATION,
+                startPosition: camera.position.clone(),
+                endPosition: camera.position.clone(),
+                startQuaternion: camera.quaternion.clone(),
+                endQuaternion: getLookAtQuaternion(camera.position, targetPosition, camera.up),
+                startFov: camera.fov,
+                endFov: camera.fov,
+                startEarthOpacity: earthMaterial.opacity,
+                endEarthOpacity: earthMaterial.opacity,
+                startGroundOpacity: groundMaterial.opacity,
+                endGroundOpacity: groundMaterial.opacity,
+                startGridOpacity: groundGridMaterial.opacity,
+                endGridOpacity: groundGridMaterial.opacity,
+                endUp: camera.up.clone()
+            };
+        }
+
+        function getLookAtQuaternion(cameraPositionValue, targetPosition, upVector) {
+            const dummyCamera = new THREE.PerspectiveCamera(camera.fov, camera.aspect, camera.near, camera.far);
+            dummyCamera.position.copy(cameraPositionValue);
+            dummyCamera.up.copy(upVector);
+            dummyCamera.lookAt(targetPosition);
+            dummyCamera.updateMatrixWorld();
+            return dummyCamera.quaternion.clone();
+        }
+
+        function updateCameraAnimation(currentTime) {
+            if (!cameraAnimation) return;
+            const t = THREE.MathUtils.clamp((currentTime - cameraAnimation.startTime) / cameraAnimation.duration, 0, 1);
+            const easedT = easeInOutCubic(t);
+
+            camera.position.lerpVectors(cameraAnimation.startPosition, cameraAnimation.endPosition, easedT);
+            camera.quaternion.slerpQuaternions(cameraAnimation.startQuaternion, cameraAnimation.endQuaternion, easedT);
+            camera.fov = THREE.MathUtils.lerp(cameraAnimation.startFov, cameraAnimation.endFov, easedT);
+            camera.updateProjectionMatrix();
+            earthMaterial.opacity = THREE.MathUtils.lerp(cameraAnimation.startEarthOpacity, cameraAnimation.endEarthOpacity, easedT);
+            groundMaterial.opacity = THREE.MathUtils.lerp(cameraAnimation.startGroundOpacity, cameraAnimation.endGroundOpacity, easedT);
+            groundGridMaterial.opacity = THREE.MathUtils.lerp(cameraAnimation.startGridOpacity, cameraAnimation.endGridOpacity, easedT);
+
+            if (t >= 1) {
+                const endUp = cameraAnimation.endUp.clone();
+                cameraAnimation = null;
+                camera.up.copy(endUp);
+                if (currentViewMode === 'ground') applyGroundCameraOrientation();
+                else syncCameraQuaternion();
+            }
+        }
+
+        function cancelCameraAnimation() {
+            if (!cameraAnimation) return;
+            cameraAnimation = null;
+            syncCameraQuaternion();
+        }
+
+        function lookAtNorthStar() {
+            camera.up.set(0, 1, 0);
+            camera.lookAt(northStarPosition);
+            syncCameraQuaternion();
+        }
+
+        function syncCameraQuaternion() {
+            camera.updateMatrixWorld();
+            cameraQuaternion.copy(camera.quaternion);
+        }
+
+        function focusCameraOnConstellation(constellation) {
+            const targetPosition = getConstellationCenter(constellation);
+            if (!targetPosition) return;
+
+            if (currentViewMode === 'ground') {
+                const direction = targetPosition.clone().sub(camera.position).normalize();
+                groundAltitude = Math.asin(THREE.MathUtils.clamp(direction.dot(observerUp), -1, 1));
+                const horizontal = direction.clone().addScaledVector(observerUp, -direction.dot(observerUp));
+                if (horizontal.lengthSq() > 1e-10) {
+                    horizontal.normalize();
+                    groundAzimuth = Math.atan2(horizontal.dot(observerEast), horizontal.dot(observerNorth));
+                }
+                groundAltitude = THREE.MathUtils.clamp(groundAltitude, GROUND_MIN_ALTITUDE, GROUND_MAX_ALTITUDE);
+                applyGroundCameraOrientation();
+                updateSkyStatus();
+            } else {
+                focusOnNorthStar = false;
+                cameraFocusToggle.checked = false;
+                startCameraLookAtAnimation(targetPosition);
+            }
+            clearActiveViewPreset();
+        }
+
+        function getConstellationCenter(constellation) {
+            const positions = starPositionLists[constellation];
+            if (!positions || positions.length === 0) return null;
+            const center = new THREE.Vector3();
+            positions.forEach(position => center.add(position));
+            center.divideScalar(positions.length);
+            if (center.lengthSq() < 0.0001) center.copy(positions[0]);
+            return center.normalize().multiplyScalar(SKY_RADIUS);
+        }
+
+        function updateObserverFromSimulation(updateDateField) {
+            observerLatitudeDeg = THREE.MathUtils.clamp(Number(observerLatitudeDeg) || 0, -90, 90);
+            observerLongitudeDeg = normalizeLongitude(Number(observerLongitudeDeg) || 0);
+            localSiderealDeg = calculateLocalSiderealTimeDeg(simulationUtcMs, observerLongitudeDeg);
+
+            const latitude = THREE.MathUtils.degToRad(observerLatitudeDeg);
+            const sidereal = THREE.MathUtils.degToRad(localSiderealDeg);
+            const sinLat = Math.sin(latitude);
+            const cosLat = Math.cos(latitude);
+            const sinLst = Math.sin(sidereal);
+            const cosLst = Math.cos(sidereal);
+
+            observerUp.set(cosLat * cosLst, sinLat, cosLat * sinLst).normalize();
+            observerNorth.set(-sinLat * cosLst, cosLat, -sinLat * sinLst).normalize();
+            observerEast.set(-sinLst, 0, cosLst).normalize();
+            observerPosition.copy(observerUp).multiplyScalar(EARTH_RADIUS + OBSERVER_HEIGHT);
+
+            const basisMatrix = new THREE.Matrix4().makeBasis(observerEast, observerNorth, observerUp);
+            groundGrid.position.copy(observerUp).multiplyScalar(EARTH_RADIUS + 0.03);
+            groundGrid.quaternion.setFromRotationMatrix(basisMatrix);
+
+            if (currentViewMode === 'ground' && !cameraAnimation) applyGroundCameraOrientation();
+            if (updateDateField) setDateInputFromUtc(simulationUtcMs);
+            updateSkyStatus();
+        }
+
+        function calculateLocalSiderealTimeDeg(utcMs, longitudeDeg) {
+            const julianDate = utcMs / 86400000 + 2440587.5;
+            const centuries = (julianDate - 2451545.0) / 36525;
+            const gmst = 280.46061837
+                + 360.98564736629 * (julianDate - 2451545.0)
+                + 0.000387933 * centuries * centuries
+                - (centuries * centuries * centuries) / 38710000;
+            return normalizeDegrees(gmst + longitudeDeg);
+        }
+
+        function updateSkyStatus() {
+            const locationName = LOCATION_PRESETS[locationPreset.value]?.name || '入力地点';
+            const localText = formatDateInZone(simulationUtcMs, timeZoneSelect.value);
+            const siderealHours = localSiderealDeg / 15;
+            const azimuthDeg = normalizeDegrees(THREE.MathUtils.radToDeg(groundAzimuth));
+            const altitudeDeg = THREE.MathUtils.radToDeg(groundAltitude);
+            skyStatus.innerHTML = [
+                `<strong>${escapeHtml(locationName)}</strong>　緯度 ${observerLatitudeDeg.toFixed(4)}° / 経度 ${observerLongitudeDeg.toFixed(4)}°`,
+                `${escapeHtml(localText)}　地方恒星時 ${formatHours(siderealHours)}`,
+                `視線：方位 ${azimuthDeg.toFixed(1)}° / 高度 ${altitudeDeg.toFixed(1)}°`
+            ].join('<br>');
+        }
+
+        function pauseTimePlayback() {
+            isTimePlaying = false;
+            playTimeButton.textContent = '時間再生';
+        }
+
+        function animate(currentTime) {
+            requestAnimationFrame(animate);
+            const deltaSeconds = Math.max(0, Math.min((currentTime - lastAnimationTime) / 1000, 0.25));
+            lastAnimationTime = currentTime;
+
+            if (isTimePlaying) {
+                simulationUtcMs += deltaSeconds * 1000 * Number(timeSpeedSelect.value);
+                updateObserverFromSimulation(false);
+                if (currentTime - lastSkyUiUpdate > 200) {
+                    setDateInputFromUtc(simulationUtcMs);
+                    lastSkyUiUpdate = currentTime;
+                }
+            }
+
+            updateCameraAnimation(currentTime);
+            updateConstellationLabels();
+            renderer.render(scene, camera);
+        }
+
+        function initializeStarData() {
+            const mainStarData = typeof stars !== 'undefined' && Array.isArray(stars) ? stars : [];
+            const lineData = typeof starlines !== 'undefined' && Array.isArray(starlines) ? starlines : [];
+            const constellations = new Set();
+            const positionsByConstellation = {};
+
+            mainStarData.forEach(star => {
+                const ra = (
+                    Number(star.raHour || 0)
+                    + Number(star.raMin || 0) / 60
+                    + Number(star.raSec || 0) / 3600
+                ) * 15;
+                const sign = star.decSign === '-' ? -1 : 1;
+                const dec = sign * (
+                    Number(star.decDeg || 0)
+                    + Number(star.decMin || 0) / 60
+                    + Number(star.decSec || 0) / 3600
+                );
+                const position = convertToCartesian(ra, dec);
+                const name = String(star.starName || `star-${Object.keys(starPositions).length}`);
+                const constellation = String(star.constellation || '未分類');
+
+                starPositions[name] = position;
+                constellations.add(constellation);
+                if (!positionsByConstellation[constellation]) positionsByConstellation[constellation] = [];
+                positionsByConstellation[constellation].push(position);
+                if (!starPositionLists[constellation]) starPositionLists[constellation] = [];
+                starPositionLists[constellation].push(position);
+                if (!constellationFirstStarPositions[constellation]) constellationFirstStarPositions[constellation] = position;
+            });
+
+            Object.entries(positionsByConstellation).forEach(([constellation, positions]) => {
+                const geometry = new THREE.BufferGeometry().setFromPoints(positions);
+                const material = new THREE.PointsMaterial({
+                    color: 0xffffff,
+                    size: 2,
+                    sizeAttenuation: false,
+                    transparent: true,
+                    opacity: 0.95,
+                    depthWrite: false
+                });
+                const points = new THREE.Points(geometry, material);
+                starGroup.add(points);
+                starMeshes[constellation] = points;
+            });
+
+            const linePositionsByConstellation = {};
+            lineData.forEach(line => {
+                const start = starPositions[line.starName1];
+                const end = starPositions[line.starName2];
+                if (!start || !end) return;
+                const constellation = String(line.constellation || '未分類');
+                if (!linePositionsByConstellation[constellation]) linePositionsByConstellation[constellation] = [];
+                linePositionsByConstellation[constellation].push(start, end);
+                constellations.add(constellation);
+            });
+
+            Object.entries(linePositionsByConstellation).forEach(([constellation, positions]) => {
+                const geometry = new THREE.BufferGeometry().setFromPoints(positions);
+                const material = new THREE.LineBasicMaterial({
+                    color: 0x00ff66,
+                    transparent: true,
+                    opacity: 0.75,
+                    depthWrite: false
+                });
+                const segments = new THREE.LineSegments(geometry, material);
+                lineGroup.add(segments);
+                lineMeshes[constellation] = segments;
+            });
+
+            Array.from(constellations).sort((a, b) => a.localeCompare(b, 'ja')).forEach(constellation => {
+                const option = document.createElement('option');
+                option.value = constellation;
+                option.textContent = constellation;
+                constellationSelect.appendChild(option);
+                createConstellationLabel(constellation);
+            });
+
+            constellationSelect.addEventListener('change', () => {
+                const selected = constellationSelect.value;
+                Object.entries(constellationLabelElements).forEach(([constellation, element]) => {
+                    element.classList.toggle('selected', constellation === selected);
+                });
+                Object.entries(starMeshes).forEach(([constellation, points]) => {
+                    points.material.color.set(constellation === selected ? 0xff3344 : 0xffffff);
+                    points.material.size = constellation === selected ? 5 : 2;
+                });
+                Object.entries(lineMeshes).forEach(([constellation, lines]) => {
+                    lines.material.color.set(constellation === selected ? 0xff3344 : 0x00ff66);
+                    lines.material.opacity = constellation === selected ? 1 : 0.75;
+                });
+                if (selected) focusCameraOnConstellation(selected);
+            });
+
+            buildBackgroundStarLayers(parseFloat(backgroundMagnitudeSlider.value));
+        }
+
+        function createConstellationLabel(constellation) {
+            const element = document.createElement('div');
+            element.className = 'constellation-label';
+            element.textContent = constellation;
+            element.style.display = 'none';
+            constellationLabelsLayer.appendChild(element);
+            constellationLabelElements[constellation] = element;
+        }
+
+        function updateConstellationLabels() {
+            const cameraForward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion).normalize();
+            Object.entries(constellationLabelElements).forEach(([constellation, element]) => {
+                const worldPosition = constellationFirstStarPositions[constellation];
+                if (!worldPosition) {
+                    element.style.display = 'none';
+                    return;
+                }
+
+                const toLabel = worldPosition.clone().sub(camera.position);
+                if (currentViewMode === 'ground' && toLabel.dot(observerUp) <= 0) {
+                    element.style.display = 'none';
+                    return;
+                }
+                if (toLabel.normalize().dot(cameraForward) <= 0) {
+                    element.style.display = 'none';
+                    return;
+                }
+
+                const projected = worldPosition.clone().project(camera);
+                if (projected.z < -1 || projected.z > 1 || Math.abs(projected.x) > 1.08 || Math.abs(projected.y) > 1.08) {
+                    element.style.display = 'none';
+                    return;
+                }
+
+                element.style.display = 'block';
+                element.style.left = `${(projected.x * 0.5 + 0.5) * window.innerWidth}px`;
+                element.style.top = `${(-projected.y * 0.5 + 0.5) * window.innerHeight}px`;
+            });
+        }
+
+        function buildBackgroundStarLayers(limitMagnitude) {
+            clearBackgroundStarLayers();
+            const data = typeof backgroundStars !== 'undefined' && Array.isArray(backgroundStars) ? backgroundStars : [];
+            if (data.length === 0) return;
+
+            const bands = [
+                { min: -2, max: 3.5, size: 1.7, opacity: 0.78 },
+                { min: 3.5, max: 5.0, size: 1.25, opacity: 0.58 },
+                { min: 5.0, max: 6.01, size: 0.9, opacity: 0.38 }
+            ];
+
+            bands.forEach(band => {
+                const positions = [];
+                const colors = [];
+                data.forEach(star => {
+                    const ra = Number(star[1]);
+                    const dec = Number(star[2]);
+                    const magnitude = Number(star[3]);
+                    const colorIndex = Number(star[4]);
+                    if (!Number.isFinite(ra) || !Number.isFinite(dec) || !Number.isFinite(magnitude)) return;
+                    if (magnitude > limitMagnitude || magnitude < band.min || magnitude >= band.max) return;
+                    const position = convertToCartesian(ra, dec);
+                    positions.push(position.x, position.y, position.z);
+                    const color = colorFromBV(colorIndex);
+                    colors.push(color.r, color.g, color.b);
+                });
+
+                if (positions.length === 0) return;
+                const geometry = new THREE.BufferGeometry();
+                geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+                geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+                const material = new THREE.PointsMaterial({
+                    size: band.size,
+                    sizeAttenuation: false,
+                    vertexColors: true,
+                    transparent: true,
+                    opacity: band.opacity,
+                    depthWrite: false
+                });
+                const points = new THREE.Points(geometry, material);
+                backgroundStarGroup.add(points);
+                backgroundStarLayers.push(points);
+            });
+            backgroundStarGroup.visible = backgroundStarsToggle.checked;
+        }
+
+        function clearBackgroundStarLayers() {
+            backgroundStarLayers.forEach(points => {
+                backgroundStarGroup.remove(points);
+                points.geometry.dispose();
+                points.material.dispose();
+            });
+            backgroundStarLayers = [];
+        }
+
+        function colorFromBV(colorIndex) {
+            if (!Number.isFinite(colorIndex)) return new THREE.Color(0xdde8ff);
+            const ci = THREE.MathUtils.clamp(colorIndex, -0.4, 2.0);
+            if (ci < 0) {
+                return new THREE.Color().lerpColors(new THREE.Color(0xaecbff), new THREE.Color(0xffffff), (ci + 0.4) / 0.4);
+            }
+            if (ci < 0.8) {
+                return new THREE.Color().lerpColors(new THREE.Color(0xffffff), new THREE.Color(0xffefcf), ci / 0.8);
+            }
+            return new THREE.Color().lerpColors(new THREE.Color(0xffefcf), new THREE.Color(0xffad72), (ci - 0.8) / 1.2);
+        }
+
+        function convertToCartesian(raDeg, decDeg) {
+            const phi = THREE.MathUtils.degToRad(90 - decDeg);
+            const theta = THREE.MathUtils.degToRad(raDeg);
+            return new THREE.Vector3(
+                SKY_RADIUS * Math.sin(phi) * Math.cos(theta),
+                SKY_RADIUS * Math.cos(phi),
+                SKY_RADIUS * Math.sin(phi) * Math.sin(theta)
+            );
         }
 
         function createGroundGridTexture() {
@@ -560,30 +1460,24 @@
             canvas.height = size;
             const context = canvas.getContext('2d');
             const center = size / 2;
-
-            context.clearRect(0, 0, size, size);
-
-            // 小グリッドと大グリッドを描き分ける。
             const divisions = 28;
             const step = size / divisions;
+
+            context.clearRect(0, 0, size, size);
             for (let i = 0; i <= divisions; i++) {
                 const major = i % 5 === 0;
                 context.beginPath();
-                context.strokeStyle = major
-                    ? 'rgba(80, 220, 150, 0.52)'
-                    : 'rgba(55, 150, 105, 0.22)';
+                context.strokeStyle = major ? 'rgba(80,220,150,0.52)' : 'rgba(55,150,105,0.22)';
                 context.lineWidth = major ? 2 : 1;
                 context.moveTo(i * step, 0);
                 context.lineTo(i * step, size);
                 context.stroke();
-
                 context.beginPath();
                 context.moveTo(0, i * step);
                 context.lineTo(size, i * step);
                 context.stroke();
             }
 
-            // 外周を透明化して、地平線付近の不自然な線を消す。
             context.globalCompositeOperation = 'destination-in';
             const gradient = context.createRadialGradient(center, center, size * 0.18, center, center, size * 0.5);
             gradient.addColorStop(0, 'rgba(255,255,255,1)');
@@ -602,9 +1496,7 @@
         }
 
         function focalLengthToVerticalFov(focalLengthMm) {
-            return THREE.MathUtils.radToDeg(
-                2 * Math.atan(FULL_FRAME_SENSOR_HEIGHT / (2 * focalLengthMm))
-            );
+            return THREE.MathUtils.radToDeg(2 * Math.atan(FULL_FRAME_SENSOR_HEIGHT / (2 * focalLengthMm)));
         }
 
         function verticalFovToFocalLength(verticalFovDeg) {
@@ -612,16 +1504,8 @@
             return FULL_FRAME_SENSOR_HEIGHT / (2 * Math.tan(fovRad / 2));
         }
 
-        function updateLensDisplay(focalLengthMm, verticalFovDeg) {
-            lensValue.textContent = `${focalLengthMm.toFixed(1).replace('.0', '')}mm / ${verticalFovDeg.toFixed(1)}°`;
-        }
-
         function setCameraFocalLength(focalLengthMm) {
-            const clamped = THREE.MathUtils.clamp(
-                focalLengthMm,
-                GROUND_MIN_FOCAL_LENGTH,
-                GROUND_DEFAULT_FOCAL_LENGTH
-            );
+            const clamped = THREE.MathUtils.clamp(focalLengthMm, GROUND_MIN_FOCAL_LENGTH, GROUND_DEFAULT_FOCAL_LENGTH);
             const fov = focalLengthToVerticalFov(clamped);
             camera.fov = fov;
             camera.updateProjectionMatrix();
@@ -629,516 +1513,99 @@
             updateLensDisplay(clamped, fov);
         }
 
-        function applyZoom(amount) {
-            if (dragModeSelect.value === 'orbit' || activeViewPreset === 'overview') {
-                const direction = camera.position.clone().normalize();
-                const nextRadius = THREE.MathUtils.clamp(
-                    camera.position.length() * Math.exp(amount),
-                    EARTH_RADIUS + OBSERVER_HEIGHT + 10,
-                    1200
-                );
-                camera.position.copy(direction.multiplyScalar(nextRadius));
-                camera.lookAt(0, 0, 0);
-                syncCameraQuaternion();
-            } else {
-                const minFov = focalLengthToVerticalFov(GROUND_DEFAULT_FOCAL_LENGTH);
-                const maxFov = focalLengthToVerticalFov(GROUND_MIN_FOCAL_LENGTH);
-                camera.fov = THREE.MathUtils.clamp(camera.fov + amount * 12, minFov, maxFov);
-                camera.updateProjectionMatrix();
-                const focalLength = verticalFovToFocalLength(camera.fov);
-                groundLensSlider.value = String(THREE.MathUtils.clamp(
-                    focalLength,
-                    GROUND_MIN_FOCAL_LENGTH,
-                    GROUND_DEFAULT_FOCAL_LENGTH
-                ));
-                updateLensDisplay(focalLength, camera.fov);
+        function updateLensDisplay(focalLengthMm, verticalFovDeg) {
+            lensValue.textContent = `${focalLengthMm.toFixed(1).replace('.0', '')}mm / ${verticalFovDeg.toFixed(1)}°`;
+        }
+
+        function setDateInputFromUtc(utcMs) {
+            const parts = getZonedParts(new Date(utcMs), timeZoneSelect.value);
+            observationDateTime.value = [
+                String(parts.year).padStart(4, '0'), '-',
+                String(parts.month).padStart(2, '0'), '-',
+                String(parts.day).padStart(2, '0'), 'T',
+                String(parts.hour).padStart(2, '0'), ':',
+                String(parts.minute).padStart(2, '0')
+            ].join('');
+        }
+
+        function zonedLocalDateTimeToUtc(value, timeZone) {
+            const match = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2}))?$/.exec(value);
+            if (!match) return null;
+            const targetWallMs = Date.UTC(
+                Number(match[1]), Number(match[2]) - 1, Number(match[3]),
+                Number(match[4]), Number(match[5]), Number(match[6] || 0)
+            );
+            let guessMs = targetWallMs;
+            for (let i = 0; i < 5; i++) {
+                const parts = getZonedParts(new Date(guessMs), timeZone);
+                const actualWallMs = Date.UTC(parts.year, parts.month - 1, parts.day, parts.hour, parts.minute, parts.second);
+                const difference = targetWallMs - actualWallMs;
+                guessMs += difference;
+                if (Math.abs(difference) < 1000) break;
             }
-            clearActiveViewPreset();
+            return new Date(guessMs);
         }
 
-        function lookAtNorthStar() {
-            camera.lookAt(northStarPosition);
-            syncCameraQuaternion();
-        }
-
-        function syncCameraQuaternion() {
-            // lookAt方式と自由回転方式の切替で向きが飛ばないように、現在のカメラ姿勢を同期する
-            camera.updateMatrixWorld();
-            cameraQuaternion.copy(camera.quaternion);
-        }
-
-        function cancelCameraAnimation() {
-            if (!cameraAnimation) return;
-            cameraAnimation = null;
-            syncCameraQuaternion();
-        }
-
-        function setActiveViewPreset(name) {
-            activeViewPreset = name;
-            backgroundStarsToggle.addEventListener('change', function() {
-            backgroundStarGroup.visible = backgroundStarsToggle.checked;
-        });
-
-        backgroundMagnitudeSlider.addEventListener('input', function() {
-            const limit = parseFloat(backgroundMagnitudeSlider.value);
-            backgroundMagnitudeValue.textContent = `${limit.toFixed(1)}等`;
-            buildBackgroundStarLayers(limit);
-        });
-
-        viewButtons.forEach(button => {
-                button.classList.toggle('active', button.dataset.view === name);
+        function getZonedParts(date, timeZone) {
+            const formatter = new Intl.DateTimeFormat('en-CA', {
+                timeZone,
+                year: 'numeric', month: '2-digit', day: '2-digit',
+                hour: '2-digit', minute: '2-digit', second: '2-digit',
+                hourCycle: 'h23'
             });
+            const result = {};
+            formatter.formatToParts(date).forEach(part => {
+                if (part.type !== 'literal') result[part.type] = Number(part.value);
+            });
+            return result;
         }
 
-        function clearActiveViewPreset() {
-            setActiveViewPreset('');
+        function formatDateInZone(utcMs, timeZone) {
+            return new Intl.DateTimeFormat('ja-JP', {
+                timeZone,
+                year: 'numeric', month: '2-digit', day: '2-digit',
+                hour: '2-digit', minute: '2-digit',
+                hourCycle: 'h23'
+            }).format(new Date(utcMs));
         }
 
-        function applyViewPreset(name) {
-            cancelCameraAnimation();
-            currentViewMode = name;
-            focusOnNorthStar = false;
-            cameraFocusToggle.checked = false;
-
-            let targetPosition;
-            let targetLookAt;
-            let targetFov;
-            let targetEarthOpacity;
-            let targetGroundOpacity;
-            let targetGridOpacity;
-
-            if (name === 'ground') {
-                // 北極付近の地表から、地平線より少し上を見る。
-                // 地面が画面下部に入り、空との境界が地平線になる。
-                targetPosition = new THREE.Vector3(0, EARTH_RADIUS + OBSERVER_HEIGHT, 0);
-                groundAzimuth = 0;
-                groundAltitude = THREE.MathUtils.degToRad(1.75);
-                targetLookAt = new THREE.Vector3(0, EARTH_RADIUS + 32, 1000);
-                targetFov = focalLengthToVerticalFov(GROUND_DEFAULT_FOCAL_LENGTH);
-                groundLensSlider.value = String(GROUND_DEFAULT_FOCAL_LENGTH);
-                updateLensDisplay(GROUND_DEFAULT_FOCAL_LENGTH, targetFov);
-                targetEarthOpacity = 0;
-                targetGroundOpacity = 0.98;
-                targetGridOpacity = 0.58;
-                dragModeSelect.value = 'look';
-            } else if (name === 'overview') {
-                targetPosition = new THREE.Vector3(OVERVIEW_DISTANCE, OVERVIEW_DISTANCE * 0.65, OVERVIEW_DISTANCE);
-                targetLookAt = new THREE.Vector3(0, 0, 0);
-                targetFov = 55;
-                targetEarthOpacity = 0.5;
-                targetGroundOpacity = 0.28;
-                targetGridOpacity = 0;
-                dragModeSelect.value = 'orbit';
-            } else {
-                targetPosition = new THREE.Vector3(0, 0, 0);
-                targetLookAt = northStarPosition.clone();
-                targetFov = 75;
-                targetEarthOpacity = 0.22;
-                targetGroundOpacity = 0.05;
-                targetGridOpacity = 0;
-                dragModeSelect.value = 'look';
-            }
-
-            setActiveViewPreset(name);
-            startCameraTransition(
-                targetPosition,
-                targetLookAt,
-                targetFov,
-                targetEarthOpacity,
-                targetGroundOpacity,
-                targetGridOpacity,
-                viewTransitionDuration
-            );
+        function formatHours(hours) {
+            const normalized = ((hours % 24) + 24) % 24;
+            const totalSeconds = Math.round(normalized * 3600) % 86400;
+            const h = Math.floor(totalSeconds / 3600);
+            const m = Math.floor((totalSeconds % 3600) / 60);
+            const s = totalSeconds % 60;
+            return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
         }
 
-        function focusCameraOnConstellation(constellation) {
-            const targetPosition = getConstellationCenter(constellation);
-            if (!targetPosition) return;
-
-            focusOnNorthStar = false;
-            cameraFocusToggle.checked = false;
-            dragModeSelect.value = 'look';
-            clearActiveViewPreset();
-
-            startCameraLookAtAnimation(targetPosition);
+        function formatCoordinate(value) {
+            return Number(value).toFixed(4).replace(/\.0000$/, '');
         }
 
-        function getConstellationCenter(constellation) {
-            const positions = starPositionLists[constellation];
-            if (!positions || positions.length === 0) return null;
-
-            const center = new THREE.Vector3();
-            positions.forEach(position => center.add(position));
-            center.divideScalar(positions.length);
-
-            if (center.lengthSq() < 0.0001) center.copy(positions[0]);
-            return center.normalize().multiplyScalar(SKY_RADIUS);
+        function normalizeDegrees(value) {
+            return ((value % 360) + 360) % 360;
         }
 
-        function startCameraLookAtAnimation(targetPosition) {
-            const endQuaternion = getLookAtQuaternion(camera.position, targetPosition);
-            cameraAnimation = {
-                type: 'look',
-                startTime: performance.now(),
-                duration: cameraFocusDuration,
-                startPosition: camera.position.clone(),
-                endPosition: camera.position.clone(),
-                startQuaternion: camera.quaternion.clone(),
-                endQuaternion,
-                startFov: camera.fov,
-                endFov: camera.fov,
-                startEarthOpacity: earthMaterial.opacity,
-                endEarthOpacity: earthMaterial.opacity,
-                startGroundOpacity: groundMaterial.opacity,
-                endGroundOpacity: groundMaterial.opacity,
-                startGridOpacity: groundGridMaterial.opacity,
-                endGridOpacity: groundGridMaterial.opacity
-            };
+        function normalizeLongitude(value) {
+            return ((value + 180) % 360 + 360) % 360 - 180;
         }
 
-        function startCameraTransition(
-            targetPosition,
-            targetLookAt,
-            targetFov,
-            targetEarthOpacity,
-            targetGroundOpacity,
-            targetGridOpacity,
-            duration
-        ) {
-            cameraAnimation = {
-                type: 'transition',
-                startTime: performance.now(),
-                duration,
-                startPosition: camera.position.clone(),
-                endPosition: targetPosition.clone(),
-                startQuaternion: camera.quaternion.clone(),
-                endQuaternion: getLookAtQuaternion(targetPosition, targetLookAt),
-                startFov: camera.fov,
-                endFov: targetFov,
-                startEarthOpacity: earthMaterial.opacity,
-                endEarthOpacity: targetEarthOpacity,
-                startGroundOpacity: groundMaterial.opacity,
-                endGroundOpacity: targetGroundOpacity,
-                startGridOpacity: groundGridMaterial.opacity,
-                endGridOpacity: targetGridOpacity
-            };
-        }
-
-        function getLookAtQuaternion(cameraPosition, targetPosition) {
-            // Cameraはローカルの -Z 方向を正面として見る。
-            // 汎用Object3Dではなく、実際のCameraを使って「カメラ用のlookAt姿勢」を作る。
-            const dummyCamera = new THREE.PerspectiveCamera(
-                camera.fov,
-                camera.aspect,
-                camera.near,
-                camera.far
-            );
-            dummyCamera.position.copy(cameraPosition);
-            dummyCamera.up.copy(camera.up);
-            dummyCamera.lookAt(targetPosition);
-            dummyCamera.updateMatrixWorld();
-            return dummyCamera.quaternion.clone();
-        }
-
-        function updateCameraAnimation(currentTime) {
-            if (!cameraAnimation) return;
-
-            const rawT = (currentTime - cameraAnimation.startTime) / cameraAnimation.duration;
-            const t = Math.min(Math.max(rawT, 0), 1);
-            const easedT = easeInOutCubic(t);
-
-            camera.position.lerpVectors(
-                cameraAnimation.startPosition,
-                cameraAnimation.endPosition,
-                easedT
-            );
-            camera.quaternion.slerpQuaternions(
-                cameraAnimation.startQuaternion,
-                cameraAnimation.endQuaternion,
-                easedT
-            );
-            camera.fov = THREE.MathUtils.lerp(cameraAnimation.startFov, cameraAnimation.endFov, easedT);
-            camera.updateProjectionMatrix();
-            const animatedFocalLength = verticalFovToFocalLength(camera.fov);
-            if (animatedFocalLength >= GROUND_MIN_FOCAL_LENGTH && animatedFocalLength <= GROUND_DEFAULT_FOCAL_LENGTH) {
-                groundLensSlider.value = String(animatedFocalLength);
-                updateLensDisplay(animatedFocalLength, camera.fov);
-            }
-            earthMaterial.opacity = THREE.MathUtils.lerp(
-                cameraAnimation.startEarthOpacity,
-                cameraAnimation.endEarthOpacity,
-                easedT
-            );
-            groundMaterial.opacity = THREE.MathUtils.lerp(
-                cameraAnimation.startGroundOpacity,
-                cameraAnimation.endGroundOpacity,
-                easedT
-            );
-            groundGridMaterial.opacity = THREE.MathUtils.lerp(
-                cameraAnimation.startGridOpacity,
-                cameraAnimation.endGridOpacity,
-                easedT
-            );
-
-            if (t >= 1) {
-                cameraAnimation = null;
-                if (currentViewMode === 'ground') {
-                    applyGroundCameraOrientation();
-                } else {
-                    syncCameraQuaternion();
-                }
-            }
+        function getDragDelta(current, previous) {
+            return { x: current.x - previous.x, y: current.y - previous.y };
         }
 
         function easeInOutCubic(t) {
-            return t < 0.5
-                ? 4 * t * t * t
-                : 1 - Math.pow(-2 * t + 2, 3) / 2;
+            return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
         }
 
-        function animate(currentTime) {
-            requestAnimationFrame(animate);
-            updateCameraAnimation(currentTime);
-            updateConstellationLabels();
-            renderer.render(scene, camera);
+        function escapeHtml(value) {
+            return String(value)
+                .replaceAll('&', '&amp;')
+                .replaceAll('<', '&lt;')
+                .replaceAll('>', '&gt;')
+                .replaceAll('"', '&quot;')
+                .replaceAll("'", '&#039;');
         }
-
-        setCameraFocalLength(GROUND_DEFAULT_FOCAL_LENGTH);
-        backgroundMagnitudeValue.textContent = `${parseFloat(backgroundMagnitudeSlider.value).toFixed(1)}等`;
-        animate();
-
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-
-        function convertToCartesian(ra, dec) {
-            const radius = SKY_RADIUS;
-            const phi = (90 - dec) * (Math.PI / 180);
-            const theta = ra * (Math.PI / 180);
-            const x = radius * Math.sin(phi) * Math.cos(theta);
-            const y = radius * Math.cos(phi);
-            const z = radius * Math.sin(phi) * Math.sin(theta);
-            return new THREE.Vector3(x, y, z);
-        }
-
-        function colorFromBV(colorIndex) {
-            if (!Number.isFinite(colorIndex)) return new THREE.Color(0xdde8ff);
-            const ci = THREE.MathUtils.clamp(colorIndex, -0.4, 2.0);
-            if (ci < 0) return new THREE.Color().lerpColors(new THREE.Color(0xaecbff), new THREE.Color(0xffffff), (ci + 0.4) / 0.4);
-            if (ci < 0.8) return new THREE.Color().lerpColors(new THREE.Color(0xffffff), new THREE.Color(0xffefcf), ci / 0.8);
-            return new THREE.Color().lerpColors(new THREE.Color(0xffefcf), new THREE.Color(0xffad72), (ci - 0.8) / 1.2);
-        }
-
-        function clearBackgroundStarLayers() {
-            backgroundStarLayers.forEach(points => {
-                backgroundStarGroup.remove(points);
-                points.geometry.dispose();
-                points.material.dispose();
-            });
-            backgroundStarLayers = [];
-        }
-
-        function buildBackgroundStarLayers(limitMagnitude) {
-            clearBackgroundStarLayers();
-            const bands = [
-                { min: -2, max: 3.5, size: 1.7, opacity: 0.78 },
-                { min: 3.5, max: 5.0, size: 1.25, opacity: 0.58 },
-                { min: 5.0, max: 6.01, size: 0.9, opacity: 0.38 }
-            ];
-
-            bands.forEach(band => {
-                const positions = [];
-                const colors = [];
-                backgroundStars.forEach(star => {
-                    const ra = star[1];
-                    const dec = star[2];
-                    const magnitude = star[3];
-                    if (magnitude > limitMagnitude || magnitude < band.min || magnitude >= band.max) return;
-                    const position = convertToCartesian(ra, dec);
-                    positions.push(position.x, position.y, position.z);
-                    const color = colorFromBV(star[4]);
-                    colors.push(color.r, color.g, color.b);
-                });
-                if (positions.length === 0) return;
-
-                const geometry = new THREE.BufferGeometry();
-                geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
-                geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
-                const material = new THREE.PointsMaterial({
-                    size: band.size,
-                    sizeAttenuation: false,
-                    vertexColors: true,
-                    transparent: true,
-                    opacity: band.opacity,
-                    depthWrite: false,
-                    blending: THREE.AdditiveBlending
-                });
-                const points = new THREE.Points(geometry, material);
-                points.frustumCulled = false;
-                backgroundStarGroup.add(points);
-                backgroundStarLayers.push(points);
-            });
-            backgroundStarGroup.visible = backgroundStarsToggle.checked;
-        }
-
-        function createStar(starName, position, constellation) {
-            const starGeometry = new THREE.BufferGeometry();
-            const vertices = [position.x, position.y, position.z];
-            starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
-            const starMaterial = new THREE.PointsMaterial({
-                color: 0xffffff,
-                size: 2.5,
-                sizeAttenuation: false
-            });
-            const star = new THREE.Points(starGeometry, starMaterial);
-            starGroup.add(star);
-
-            starPositions[starName] = position;
-            if (!starMeshes[constellation]) {
-                starMeshes[constellation] = [];
-            }
-            starMeshes[constellation].push(star);
-
-            if (!starPositionLists[constellation]) {
-                starPositionLists[constellation] = [];
-            }
-            starPositionLists[constellation].push(position.clone());
-
-            // stars.jsで最初に登場する星を、その星座名ラベルのアンカーにする
-            if (!constellationFirstStarPositions[constellation]) {
-                constellationFirstStarPositions[constellation] = position.clone();
-            }
-        }
-
-        function createConstellationLabel(constellation) {
-            const label = document.createElement('div');
-            label.className = 'constellation-label';
-            label.textContent = constellation;
-            constellationLabelsLayer.appendChild(label);
-            constellationLabelElements[constellation] = label;
-        }
-
-        function updateConstellationLabels() {
-            const cameraDirection = new THREE.Vector3();
-            camera.getWorldDirection(cameraDirection);
-
-            Object.keys(constellationLabelElements).forEach(constellation => {
-                const label = constellationLabelElements[constellation];
-                const anchorPosition = constellationFirstStarPositions[constellation];
-
-                if (!anchorPosition) {
-                    label.style.display = 'none';
-                    return;
-                }
-
-                const toAnchor = anchorPosition.clone().sub(camera.position);
-                const isInFront = cameraDirection.dot(toAnchor) > 0;
-                const projected = anchorPosition.clone().project(camera);
-                const isInsideDepth = projected.z >= -1 && projected.z <= 1;
-
-                if (!isInFront || !isInsideDepth) {
-                    label.style.display = 'none';
-                    return;
-                }
-
-                const x = (projected.x * 0.5 + 0.5) * window.innerWidth;
-                const y = (-projected.y * 0.5 + 0.5) * window.innerHeight;
-
-                label.style.display = 'block';
-                label.style.left = `${x}px`;
-                label.style.top = `${y}px`;
-            });
-        }
-
-        function createStarLine(starName1, starName2, constellation) {
-            const pos1 = starPositions[starName1];
-            const pos2 = starPositions[starName2];
-
-            if (pos1 && pos2) {
-                const lineGeometry = new THREE.BufferGeometry().setFromPoints([pos1, pos2]);
-                const lineMaterial = new THREE.LineBasicMaterial({ color: 0x00ff00 });
-                const line = new THREE.Line(lineGeometry, lineMaterial);
-                lineGroup.add(line);
-
-                if (!lineMeshes[constellation]) {
-                    lineMeshes[constellation] = [];
-                }
-                lineMeshes[constellation].push(line);
-            } else {
-                console.warn(`星が見つかりません: ${starName1}, ${starName2}`);
-            }
-        }
-
-        // stars.js と starline.js からデータを使って星座と線を作成する
-        const constellations = new Set();
-
-        stars.forEach(star => {
-            const ra = (parseFloat(star.raHour) + parseFloat(star.raMin) / 60 + parseFloat(star.raSec) / 3600) * 15;
-            const dec = (star.decSign === '-' ? -1 : 1) * (parseFloat(star.decDeg) + parseFloat(star.decMin) / 60 + parseFloat(star.decSec) / 3600);
-            const position = convertToCartesian(ra, dec);
-            createStar(star.starName, position, star.constellation);
-            constellations.add(star.constellation);
-        });
-
-        buildBackgroundStarLayers(parseFloat(backgroundMagnitudeSlider.value));
-
-        starlines.forEach(line => {
-            createStarLine(line.starName1, line.starName2, line.constellation);
-        });
-
-        // 星座リストの作成
-        constellations.forEach(constellation => {
-            const option = document.createElement('option');
-            option.value = constellation;
-            option.textContent = constellation;
-            constellationSelect.appendChild(option);
-            createConstellationLabel(constellation);
-        });
-
-        constellationSelect.addEventListener('change', function() {
-            const selectedConstellation = constellationSelect.value;
-
-            Object.keys(constellationLabelElements).forEach(constellation => {
-                constellationLabelElements[constellation].classList.toggle(
-                    'selected',
-                    constellation === selectedConstellation
-                );
-            });
-
-            Object.keys(starMeshes).forEach(constellation => {
-                starMeshes[constellation].forEach(star => {
-                    star.material.color.set(0xffffff);
-                    star.material.size = 2;
-                });
-            });
-
-            Object.keys(lineMeshes).forEach(constellation => {
-                lineMeshes[constellation].forEach(line => {
-                    line.material.color.set(0x00ff00);
-                    line.material.linewidth = 1;
-                });
-            });
-
-            if (selectedConstellation) {
-                if (starMeshes[selectedConstellation]) {
-                    starMeshes[selectedConstellation].forEach(star => {
-                        star.material.color.set(0xff0000);
-                        star.material.size = 5;
-                    });
-                }
-
-                if (lineMeshes[selectedConstellation]) {
-                    lineMeshes[selectedConstellation].forEach(line => {
-                        line.material.color.set(0xff0000);
-                        line.material.linewidth = 3;
-                    });
-                }
-
-                focusCameraOnConstellation(selectedConstellation);
-            }
-        });
     </script>
 </body>
 </html>
