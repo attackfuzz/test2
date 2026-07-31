@@ -399,41 +399,6 @@
                 display: none;
             }
         }
-    
-        /* 地上描画の原因切り分け用パネル */
-        #diagnosticPanel {
-            position: fixed;
-            right: 10px;
-            bottom: 82px;
-            z-index: 30;
-            width: min(310px, calc(100vw - 20px));
-            padding: 10px;
-            border: 1px solid rgba(130, 170, 255, 0.5);
-            border-radius: 14px;
-            background: rgba(2, 6, 22, 0.92);
-            color: #eef4ff;
-            font-family: sans-serif;
-            box-shadow: 0 10px 30px rgba(0,0,0,.35);
-        }
-        #diagnosticPanel h2 { margin: 0 0 7px; font-size: 15px; }
-        #diagnosticPanel p { margin: 0 0 8px; font-size: 12px; line-height: 1.45; opacity: .82; }
-        #diagnosticButtons { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
-        #diagnosticPanel button {
-            min-height: 44px;
-            padding: 7px 8px;
-            border: 1px solid rgba(135, 165, 230, .55);
-            border-radius: 10px;
-            color: #fff;
-            background: rgba(30, 45, 86, .9);
-            font-size: 13px;
-            touch-action: manipulation;
-        }
-        #diagnosticPanel button.off { background: rgba(105, 30, 45, .92); }
-        #diagnosticResult { margin-top: 8px; font-size: 12px; line-height: 1.45; color: #bfe0ff; }
-        @media (max-width: 700px) {
-            #diagnosticPanel { bottom: 68px; right: 6px; width: min(300px, calc(100vw - 12px)); }
-        }
-
     </style>
 </head>
 <body>
@@ -644,16 +609,9 @@
         earthGroup.add(earthWireframe);
         scene.add(earthGroup);
 
-        const groundGridMaterial = new THREE.MeshBasicMaterial({
-            map: createGroundGridTexture(),
-            transparent: true,
-            opacity: 0,
-            depthWrite: false,
-            side: THREE.DoubleSide
-        });
-        const groundGrid = new THREE.Mesh(new THREE.PlaneGeometry(140, 140), groundGridMaterial);
-        groundGrid.renderOrder = 2;
-        scene.add(groundGrid);
+
+        // 地上モードでは地面グリッドを使用しない。
+
 
         const celestialGroup = new THREE.Group();
         const backgroundStarGroup = new THREE.Group();
@@ -661,71 +619,6 @@
         const lineGroup = new THREE.Group();
         celestialGroup.add(backgroundStarGroup, starGroup, lineGroup);
         scene.add(celestialGroup);
-
-        const diagnosticState = {
-            groundSurface: true,
-            depthOccluder: true,
-            groundGrid: true,
-            constellationLines: true,
-            backgroundStars: true
-        };
-
-        const diagnosticPanel = document.createElement('section');
-        diagnosticPanel.id = 'diagnosticPanel';
-        diagnosticPanel.innerHTML = `
-            <h2>地上モード描画テスト</h2>
-            <p>謎の縦線が消えるボタンを探してください。赤はOFFです。</p>
-            <div id="diagnosticButtons">
-                <button type="button" data-test="groundSurface">地球表面：ON</button>
-                <button type="button" data-test="depthOccluder">遮蔽球：ON</button>
-                <button type="button" data-test="groundGrid">地面グリッド：ON</button>
-                <button type="button" data-test="constellationLines">星座線：ON</button>
-                <button type="button" data-test="backgroundStars">背景星：ON</button>
-                <button type="button" data-test="reset">すべて戻す</button>
-            </div>
-            <div id="diagnosticResult">最初に「地球表面」をOFFにしてください。</div>
-        `;
-        document.body.appendChild(diagnosticPanel);
-        const diagnosticResult = diagnosticPanel.querySelector('#diagnosticResult');
-
-        function updateDiagnosticButtons() {
-            diagnosticPanel.querySelectorAll('button[data-test]').forEach(button => {
-                const key = button.dataset.test;
-                if (key === 'reset') return;
-                const on = diagnosticState[key];
-                const labelMap = {
-                    groundSurface: '地球表面',
-                    depthOccluder: '遮蔽球',
-                    groundGrid: '地面グリッド',
-                    constellationLines: '星座線',
-                    backgroundStars: '背景星'
-                };
-                button.textContent = `${labelMap[key]}：${on ? 'ON' : 'OFF'}`;
-                button.classList.toggle('off', !on);
-            });
-        }
-
-        diagnosticPanel.addEventListener('click', event => {
-            const button = event.target.closest('button[data-test]');
-            if (!button) return;
-            const key = button.dataset.test;
-            if (key === 'reset') {
-                Object.keys(diagnosticState).forEach(name => diagnosticState[name] = true);
-                diagnosticResult.textContent = '全要素をONへ戻しました。';
-            } else {
-                diagnosticState[key] = !diagnosticState[key];
-                const advice = {
-                    groundSurface: 'これで消えた場合：地球表面メッシュの継ぎ目・透明描画が原因です。',
-                    depthOccluder: 'これで消えた場合：不可視の遮蔽球または深度バッファが原因です。',
-                    groundGrid: 'これで消えた場合：地面グリッドのテクスチャまたは平面が原因です。',
-                    constellationLines: 'これで消えた場合：星座線の描画が原因です。',
-                    backgroundStars: 'これで消えた場合：背景星の点群描画が原因です。'
-                };
-                diagnosticResult.textContent = advice[key];
-            }
-            updateDiagnosticButtons();
-        });
-        updateDiagnosticButtons();
 
         const constellationSelect = document.getElementById('constellationSelect');
         const cameraFocusToggle = document.getElementById('cameraFocusToggle');
@@ -1244,7 +1137,7 @@
                 targetFov = focalLengthToVerticalFov(Number(groundLensSlider.value));
                 targetEarthOpacity = 0;
                 targetGroundOpacity = 0.98;
-                targetGridOpacity = 0.58;
+                targetGridOpacity = 0;
             } else if (name === 'overview') {
                 targetPosition = new THREE.Vector3(OVERVIEW_DISTANCE, OVERVIEW_DISTANCE * 0.65, OVERVIEW_DISTANCE);
                 targetLookAt = new THREE.Vector3(0, 0, 0);
@@ -1271,7 +1164,6 @@
                 camera.updateProjectionMatrix();
                 earthMaterial.opacity = targetEarthOpacity;
                 groundMaterial.opacity = targetGroundOpacity;
-                groundGridMaterial.opacity = targetGridOpacity;
                 if (name === 'ground') applyGroundCameraOrientation();
                 else syncCameraQuaternion();
                 refreshConstellationLineGeometry(true);
@@ -1329,8 +1221,8 @@
                 endEarthOpacity: earthOpacity,
                 startGroundOpacity: groundMaterial.opacity,
                 endGroundOpacity: groundOpacity,
-                startGridOpacity: groundGridMaterial.opacity,
-                endGridOpacity: gridOpacity,
+                startGridOpacity: 0,
+                endGridOpacity: 0,
                 endUp: targetUp.clone()
             };
         }
@@ -1350,8 +1242,8 @@
                 endEarthOpacity: earthMaterial.opacity,
                 startGroundOpacity: groundMaterial.opacity,
                 endGroundOpacity: groundMaterial.opacity,
-                startGridOpacity: groundGridMaterial.opacity,
-                endGridOpacity: groundGridMaterial.opacity,
+                startGridOpacity: 0,
+                endGridOpacity: 0,
                 endUp: camera.up.clone()
             };
         }
@@ -1376,7 +1268,6 @@
             camera.updateProjectionMatrix();
             earthMaterial.opacity = THREE.MathUtils.lerp(cameraAnimation.startEarthOpacity, cameraAnimation.endEarthOpacity, easedT);
             groundMaterial.opacity = THREE.MathUtils.lerp(cameraAnimation.startGroundOpacity, cameraAnimation.endGroundOpacity, easedT);
-            groundGridMaterial.opacity = THREE.MathUtils.lerp(cameraAnimation.startGridOpacity, cameraAnimation.endGridOpacity, easedT);
 
             if (t >= 1) {
                 const endUp = cameraAnimation.endUp.clone();
@@ -1455,8 +1346,6 @@
             observerPosition.copy(observerUp).multiplyScalar(EARTH_RADIUS + OBSERVER_HEIGHT);
 
             const basisMatrix = new THREE.Matrix4().makeBasis(observerEast, observerNorth, observerUp);
-            groundGrid.position.copy(observerUp).multiplyScalar(EARTH_RADIUS + 0.03);
-            groundGrid.quaternion.setFromRotationMatrix(basisMatrix);
 
             if (currentViewMode === 'ground' && !cameraAnimation) applyGroundCameraOrientation();
             refreshConstellationLineGeometry(false);
@@ -1507,18 +1396,6 @@
             }
 
             updateCameraAnimation(currentTime);
-
-            // 診断状態を毎フレーム適用。視点切替アニメーションによる再設定を上書きする。
-            if (currentViewMode === 'ground') {
-                groundMaterial.opacity = diagnosticState.groundSurface ? 0.98 : 0;
-                groundDepthOccluder.visible = diagnosticState.depthOccluder;
-                groundGridMaterial.opacity = diagnosticState.groundGrid ? 0.58 : 0;
-            } else {
-                groundDepthOccluder.visible = false;
-            }
-            lineGroup.visible = diagnosticState.constellationLines && constellationLinesToggle.checked;
-            backgroundStarGroup.visible = diagnosticState.backgroundStars && backgroundStarsToggle.checked;
-
             updateConstellationLabels();
             renderer.render(scene, camera);
         }
@@ -1778,48 +1655,6 @@
                 SKY_RADIUS * Math.cos(phi),
                 SKY_RADIUS * Math.sin(phi) * Math.sin(theta)
             );
-        }
-
-        function createGroundGridTexture() {
-            const size = 1024;
-            const canvas = document.createElement('canvas');
-            canvas.width = size;
-            canvas.height = size;
-            const context = canvas.getContext('2d');
-            const center = size / 2;
-            const divisions = 28;
-            const step = size / divisions;
-
-            context.clearRect(0, 0, size, size);
-            for (let i = 0; i <= divisions; i++) {
-                const major = i % 5 === 0;
-                context.beginPath();
-                context.strokeStyle = major ? 'rgba(80,220,150,0.52)' : 'rgba(55,150,105,0.22)';
-                context.lineWidth = major ? 2 : 1;
-                context.moveTo(i * step, 0);
-                context.lineTo(i * step, size);
-                context.stroke();
-                context.beginPath();
-                context.moveTo(0, i * step);
-                context.lineTo(size, i * step);
-                context.stroke();
-            }
-
-            context.globalCompositeOperation = 'destination-in';
-            const gradient = context.createRadialGradient(center, center, size * 0.18, center, center, size * 0.5);
-            gradient.addColorStop(0, 'rgba(255,255,255,1)');
-            gradient.addColorStop(0.68, 'rgba(255,255,255,0.95)');
-            gradient.addColorStop(0.86, 'rgba(255,255,255,0.35)');
-            gradient.addColorStop(1, 'rgba(255,255,255,0)');
-            context.fillStyle = gradient;
-            context.fillRect(0, 0, size, size);
-            context.globalCompositeOperation = 'source-over';
-
-            const texture = new THREE.CanvasTexture(canvas);
-            texture.minFilter = THREE.LinearFilter;
-            texture.magFilter = THREE.LinearFilter;
-            texture.generateMipmaps = false;
-            return texture;
         }
 
         function focalLengthToVerticalFov(focalLengthMm) {
