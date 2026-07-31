@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>星座探索 - 観測地点・日時・タッチ操作対応</title>
+    <title>星座探索 - スマホメニュー操作対応</title>
     <style>
         :root {
             color-scheme: dark;
@@ -74,13 +74,36 @@
             background: rgba(22, 29, 57, 0.92);
         }
         #controls button {
+            position: relative;
             cursor: pointer;
             touch-action: manipulation;
+            pointer-events: auto;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            transition: transform 80ms ease, background-color 100ms ease, border-color 100ms ease, filter 100ms ease;
+        }
+        #controls button:focus-visible {
+            outline: 3px solid rgba(119, 187, 255, 0.92);
+            outline-offset: 2px;
+        }
+        #controls button.is-pressed,
+        #controls button:active {
+            transform: scale(0.97);
+            filter: brightness(1.24);
+            border-color: rgba(160, 210, 255, 0.78);
+        }
+        #controls button:disabled {
+            cursor: default;
+            opacity: 0.5;
+            transform: none;
+            filter: none;
         }
         #controls select,
         #controls input,
         #controls label {
             touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
         }
         .controls-header {
             display: flex;
@@ -109,15 +132,17 @@
         #controls.collapsed > :not(.controls-header) {
             display: none !important;
         }
-        #controls button:active {
-            transform: translateY(1px);
-        }
         #constellationSelect { width: 100%; }
         .control-row {
             display: flex;
             gap: 7px;
             align-items: center;
             flex-wrap: wrap;
+        }
+        .view-mode-row {
+            display: grid;
+            grid-template-columns: 62px repeat(3, minmax(0, 1fr));
+            gap: 7px;
         }
         .control-row > .row-label {
             min-width: 62px;
@@ -201,8 +226,29 @@
         .check-label {
             display: inline-flex;
             align-items: center;
-            gap: 5px;
-            padding: 2px;
+            gap: 8px;
+            min-height: 40px;
+            padding: 6px 4px;
+            cursor: pointer;
+        }
+        .check-label input[type="checkbox"] {
+            width: 22px;
+            height: 22px;
+            margin: 0;
+            flex: 0 0 auto;
+        }
+        #controls input[type="range"] {
+            min-height: 40px;
+            margin: 0;
+            touch-action: pan-y;
+        }
+        #controls input[type="range"]::-webkit-slider-thumb {
+            width: 26px;
+            height: 26px;
+        }
+        #controls input[type="range"]::-moz-range-thumb {
+            width: 26px;
+            height: 26px;
         }
         .lens-control,
         .background-control {
@@ -287,12 +333,38 @@
             font-weight: bold;
             opacity: 1;
         }
-        @media (pointer: coarse) {
+        @media (hover: none) and (pointer: coarse) {
             #controls select,
             #controls button,
             #controls input[type="datetime-local"],
             #controls input[type="number"] {
-                min-height: 44px;
+                min-height: 48px;
+                font-size: 16px;
+            }
+            #controls button {
+                padding: 10px 12px;
+            }
+            #controlsToggle {
+                min-width: 104px;
+            }
+            .view-button,
+            .time-step-row button,
+            .play-row button {
+                font-weight: 700;
+            }
+            .check-label {
+                min-height: 48px;
+            }
+            #controls input[type="range"] {
+                min-height: 48px;
+            }
+            #controls input[type="range"]::-webkit-slider-thumb {
+                width: 30px;
+                height: 30px;
+            }
+            #controls input[type="range"]::-moz-range-thumb {
+                width: 30px;
+                height: 30px;
             }
             #touchHint {
                 display: block;
@@ -309,6 +381,13 @@
             #controls.collapsed {
                 width: auto;
                 max-width: calc(100vw - 16px);
+            }
+            .view-mode-row {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+            .view-mode-row > .row-label {
+                grid-column: 1 / -1;
+                min-width: 0;
             }
             .time-step-row {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -333,11 +412,11 @@
             <option value="">星座を選択してください</option>
         </select>
 
-        <div class="control-row">
+        <div class="control-row view-mode-row">
             <span class="row-label">視点</span>
-            <button class="view-button" data-view="ground">地上</button>
-            <button class="view-button active" data-view="center">天球中心</button>
-            <button class="view-button" data-view="overview">地球俯瞰</button>
+            <button type="button" class="view-button" data-view="ground" aria-pressed="false">地上</button>
+            <button type="button" class="view-button active" data-view="center" aria-pressed="true">天球中心</button>
+            <button type="button" class="view-button" data-view="overview" aria-pressed="false">地球俯瞰</button>
         </div>
 
         <div class="section ground-only" id="groundSettings">
@@ -396,7 +475,7 @@
 
             <div class="play-row">
                 <button type="button" id="nowButton">現在時刻</button>
-                <button type="button" id="playTimeButton">時間再生</button>
+                <button type="button" id="playTimeButton" aria-pressed="false">時間再生</button>
             </div>
 
             <div class="stack-row">
@@ -609,14 +688,14 @@
             backgroundMagnitudeValue.textContent = `${parseFloat(backgroundMagnitudeSlider.value).toFixed(1)}等`;
             updateModeSpecificControls();
 
-            controlsToggle.addEventListener('click', () => {
+            bindTapAction(controlsToggle, () => {
                 const collapsed = controlsPanel.classList.toggle('collapsed');
                 controlsToggle.textContent = collapsed ? 'メニューを開く' : 'メニューをたたむ';
                 controlsToggle.setAttribute('aria-expanded', String(!collapsed));
             });
 
             viewButtons.forEach(button => {
-                button.addEventListener('click', () => applyViewPreset(button.dataset.view, true));
+                bindTapAction(button, () => applyViewPreset(button.dataset.view, true));
             });
 
             cameraFocusToggle.addEventListener('change', () => {
@@ -671,22 +750,23 @@
             });
 
             document.querySelectorAll('[data-time-step]').forEach(button => {
-                button.addEventListener('click', () => {
+                bindTapAction(button, () => {
                     pauseTimePlayback();
                     simulationUtcMs += Number(button.dataset.timeStep);
                     updateObserverFromSimulation(true);
                 });
             });
 
-            nowButton.addEventListener('click', () => {
+            bindTapAction(nowButton, () => {
                 pauseTimePlayback();
                 simulationUtcMs = Date.now();
                 updateObserverFromSimulation(true);
             });
 
-            playTimeButton.addEventListener('click', () => {
+            bindTapAction(playTimeButton, () => {
                 isTimePlaying = !isTimePlaying;
                 playTimeButton.textContent = isTimePlaying ? '一時停止' : '時間再生';
+                playTimeButton.setAttribute('aria-pressed', String(isTimePlaying));
                 lastAnimationTime = performance.now();
             });
 
@@ -707,6 +787,70 @@
             if (window.visualViewport) {
                 window.visualViewport.addEventListener('resize', resizeRendererToViewport);
             }
+        }
+
+        function bindTapAction(button, handler) {
+            let activePointerId = null;
+            let startX = 0;
+            let startY = 0;
+            let moved = false;
+            let suppressNativeClickUntil = 0;
+            const moveTolerance = 14;
+
+            button.addEventListener('pointerdown', event => {
+                if (event.pointerType === 'mouse') return;
+                activePointerId = event.pointerId;
+                startX = event.clientX;
+                startY = event.clientY;
+                moved = false;
+                button.classList.add('is-pressed');
+                try {
+                    button.setPointerCapture(event.pointerId);
+                } catch (_) {
+                    // Pointer capture is optional on older mobile browsers.
+                }
+            }, { passive: true });
+
+            button.addEventListener('pointermove', event => {
+                if (event.pointerId !== activePointerId) return;
+                if (Math.hypot(event.clientX - startX, event.clientY - startY) > moveTolerance) {
+                    moved = true;
+                    button.classList.remove('is-pressed');
+                }
+            }, { passive: true });
+
+            button.addEventListener('pointerup', event => {
+                if (event.pointerId !== activePointerId) return;
+                const shouldActivate = !moved && !button.disabled;
+                activePointerId = null;
+                button.classList.remove('is-pressed');
+                if (!shouldActivate) return;
+                event.preventDefault();
+                suppressNativeClickUntil = performance.now() + 700;
+                handler(event);
+            }, { passive: false });
+
+            button.addEventListener('pointercancel', event => {
+                if (event.pointerId !== activePointerId) return;
+                activePointerId = null;
+                moved = false;
+                button.classList.remove('is-pressed');
+            });
+
+            button.addEventListener('lostpointercapture', () => {
+                activePointerId = null;
+                moved = false;
+                button.classList.remove('is-pressed');
+            });
+
+            button.addEventListener('click', event => {
+                if (performance.now() < suppressNativeClickUntil) {
+                    event.preventDefault();
+                    event.stopImmediatePropagation();
+                    return;
+                }
+                handler(event);
+            });
         }
 
         function handleCanvasPointerDown(event) {
@@ -1027,19 +1171,19 @@
 
         function setActiveViewPreset(name) {
             activeViewPreset = name;
-            viewButtons.forEach(button => button.classList.toggle('active', button.dataset.view === name));
+            viewButtons.forEach(button => {
+                const isActive = button.dataset.view === name;
+                button.classList.toggle('active', isActive);
+                button.setAttribute('aria-pressed', String(isActive));
+            });
         }
 
         function clearActiveViewPreset() {
             activeViewPreset = '';
-            controlsToggle.addEventListener('click', () => {
-                const collapsed = controlsPanel.classList.toggle('collapsed');
-                controlsToggle.textContent = collapsed ? 'メニューを開く' : 'メニューをたたむ';
-                controlsToggle.setAttribute('aria-expanded', String(!collapsed));
-            });
-
             viewButtons.forEach(button => {
-                button.classList.toggle('active', button.dataset.view === currentViewMode);
+                const isActive = button.dataset.view === currentViewMode;
+                button.classList.toggle('active', isActive);
+                button.setAttribute('aria-pressed', String(isActive));
             });
         }
 
