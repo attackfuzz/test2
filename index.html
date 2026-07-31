@@ -578,11 +578,24 @@
             color: 0x07180d,
             opacity: 0.05,
             transparent: true,
-            depthWrite: true,
+            depthWrite: false,
             side: THREE.FrontSide
         });
         const groundEarth = new THREE.Mesh(earthGeometry, groundMaterial);
         earthGroup.add(groundEarth);
+
+        // 地上モード専用の不可視深度マスク。
+        // 星座線を地平線位置で切断せず、地球の裏側にある線や星を深度で隠す。
+        const groundDepthMaterial = new THREE.MeshBasicMaterial({
+            colorWrite: false,
+            depthWrite: true,
+            depthTest: true,
+            side: THREE.FrontSide
+        });
+        const groundDepthOccluder = new THREE.Mesh(earthGeometry, groundDepthMaterial);
+        groundDepthOccluder.visible = false;
+        groundDepthOccluder.renderOrder = -10;
+        earthGroup.add(groundDepthOccluder);
 
         const earthMaterial = new THREE.MeshBasicMaterial({
             color: 0x168a42,
@@ -1106,6 +1119,7 @@
             cancelCameraAnimation();
             currentViewMode = name;
             focusOnNorthStar = name === 'center' ? cameraFocusToggle.checked : false;
+            groundDepthOccluder.visible = name === 'ground';
             updateModeSpecificControls();
             setActiveViewPreset(name);
 
@@ -1514,49 +1528,24 @@
         }
 
         function refreshConstellationLineGeometry(force = false) {
-            const clipKey = currentViewMode === 'ground'
-                ? `ground:${observerLatitudeDeg.toFixed(3)}:${localSiderealDeg.toFixed(2)}`
-                : currentViewMode;
-
+            const clipKey = 'full-constellation-lines';
             if (!force && clipKey === lastConstellationLineClipKey) return;
             lastConstellationLineClipKey = clipKey;
 
+            // 星座線は元の天球上の端点のまま描画する。
+            // 地上モードで見えない半球は groundDepthOccluder が深度で隠す。
             Object.entries(lineSegmentsByConstellation).forEach(([constellation, sourceSegments]) => {
                 const mesh = lineMeshes[constellation];
                 if (!mesh) return;
 
-                const visiblePositions = [];
+                const positions = [];
                 sourceSegments.forEach(segment => {
-                    const start = segment.start;
-                    const end = segment.end;
-                    if (!isFiniteVector3(start) || !isFiniteVector3(end)) return;
-
-                    if (currentViewMode !== 'ground') {
-                        visiblePositions.push(start, end);
-                        return;
-                    }
-
-                    const startHeight = start.clone().sub(observerPosition).dot(observerUp);
-                    const endHeight = end.clone().sub(observerPosition).dot(observerUp);
-                    const epsilon = 0.01;
-
-                    if (startHeight <= epsilon && endHeight <= epsilon) return;
-                    if (startHeight > epsilon && endHeight > epsilon) {
-                        visiblePositions.push(start, end);
-                        return;
-                    }
-
-                    const denominator = startHeight - endHeight;
-                    if (Math.abs(denominator) < 1e-9) return;
-                    const t = THREE.MathUtils.clamp(startHeight / denominator, 0, 1);
-                    const horizonPoint = start.clone().lerp(end, t);
-
-                    if (startHeight > epsilon) visiblePositions.push(start, horizonPoint);
-                    else visiblePositions.push(horizonPoint, end);
+                    if (!isFiniteVector3(segment.start) || !isFiniteVector3(segment.end)) return;
+                    positions.push(segment.start, segment.end);
                 });
 
-                const replacementGeometry = new THREE.BufferGeometry().setFromPoints(visiblePositions);
-                if (visiblePositions.length > 0) replacementGeometry.computeBoundingSphere();
+                const replacementGeometry = new THREE.BufferGeometry().setFromPoints(positions);
+                if (positions.length > 0) replacementGeometry.computeBoundingSphere();
                 mesh.geometry.dispose();
                 mesh.geometry = replacementGeometry;
             });
