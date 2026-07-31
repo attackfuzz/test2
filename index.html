@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>星座探索 - ワイヤーフレーム表示修正版</title>
+    <title>星座探索 - 地平線クリップ修正版</title>
     <style>
         :root {
             color-scheme: dark;
@@ -509,6 +509,10 @@
         <div class="section">
             <div class="section-title">星の表示</div>
             <label class="check-label">
+                <input type="checkbox" id="constellationLinesToggle" checked>
+                星座線を表示
+            </label>
+            <label class="check-label">
                 <input type="checkbox" id="backgroundStarsToggle" checked>
                 背景星を表示
             </label>
@@ -618,6 +622,7 @@
         const viewButtons = Array.from(document.querySelectorAll('.view-button'));
         const groundOnlyElements = Array.from(document.querySelectorAll('.ground-only'));
         const centerOnlyElements = Array.from(document.querySelectorAll('.center-only'));
+        const constellationLinesToggle = document.getElementById('constellationLinesToggle');
         const backgroundStarsToggle = document.getElementById('backgroundStarsToggle');
         const backgroundMagnitudeSlider = document.getElementById('backgroundMagnitudeSlider');
         const backgroundMagnitudeValue = document.getElementById('backgroundMagnitudeValue');
@@ -637,10 +642,12 @@
         const starPositions = {};
         const starMeshes = {};
         const lineMeshes = {};
+        const lineSegmentsByConstellation = {};
         const starPositionLists = {};
         const constellationFirstStarPositions = {};
         const constellationLabelElements = {};
         let backgroundStarLayers = [];
+        let lastConstellationLineClipKey = '';
 
         const observerUp = new THREE.Vector3(0, 1, 0);
         const observerNorth = new THREE.Vector3(0, 0, 1);
@@ -708,6 +715,10 @@
                 cancelCameraAnimation();
                 setCameraFocalLength(parseFloat(groundLensSlider.value));
                 clearActiveViewPreset();
+            });
+
+            constellationLinesToggle.addEventListener('change', () => {
+                lineGroup.visible = constellationLinesToggle.checked;
             });
 
             backgroundStarsToggle.addEventListener('change', () => {
@@ -1149,6 +1160,7 @@
                 groundGridMaterial.opacity = targetGridOpacity;
                 if (name === 'ground') applyGroundCameraOrientation();
                 else syncCameraQuaternion();
+                refreshConstellationLineGeometry(true);
                 return;
             }
 
@@ -1162,6 +1174,7 @@
                 targetGridOpacity,
                 VIEW_TRANSITION_DURATION
             );
+            refreshConstellationLineGeometry(true);
         }
 
         function updateModeSpecificControls() {
@@ -1332,6 +1345,7 @@
             groundGrid.quaternion.setFromRotationMatrix(basisMatrix);
 
             if (currentViewMode === 'ground' && !cameraAnimation) applyGroundCameraOrientation();
+            refreshConstellationLineGeometry(false);
             if (updateDateField) setDateInputFromUtc(simulationUtcMs);
             updateSkyStatus();
         }
@@ -1429,29 +1443,39 @@
                 starMeshes[constellation] = points;
             });
 
-            const linePositionsByConstellation = {};
             lineData.forEach(line => {
                 const start = starPositions[line.starName1];
                 const end = starPositions[line.starName2];
-                if (!start || !end) return;
+                if (!isFiniteVector3(start) || !isFiniteVector3(end)) return;
+
+                const angularDistanceDeg = THREE.MathUtils.radToDeg(start.angleTo(end));
+                if (!Number.isFinite(angularDistanceDeg) || angularDistanceDeg > 35) {
+                    console.warn('不正または極端に長い星座線を除外しました', line, angularDistanceDeg);
+                    return;
+                }
+
                 const constellation = String(line.constellation || '未分類');
-                if (!linePositionsByConstellation[constellation]) linePositionsByConstellation[constellation] = [];
-                linePositionsByConstellation[constellation].push(start, end);
+                if (!lineSegmentsByConstellation[constellation]) lineSegmentsByConstellation[constellation] = [];
+                lineSegmentsByConstellation[constellation].push({ start, end, source: line });
                 constellations.add(constellation);
             });
 
-            Object.entries(linePositionsByConstellation).forEach(([constellation, positions]) => {
+            Object.entries(lineSegmentsByConstellation).forEach(([constellation, sourceSegments]) => {
+                const positions = [];
+                sourceSegments.forEach(segment => positions.push(segment.start, segment.end));
                 const geometry = new THREE.BufferGeometry().setFromPoints(positions);
                 const material = new THREE.LineBasicMaterial({
                     color: 0x00ff66,
                     transparent: true,
                     opacity: 0.75,
-                    depthWrite: false
+                    depthWrite: false,
+                    depthTest: true
                 });
                 const segments = new THREE.LineSegments(geometry, material);
                 lineGroup.add(segments);
                 lineMeshes[constellation] = segments;
             });
+            lineGroup.visible = constellationLinesToggle.checked;
 
             Array.from(constellations).sort((a, b) => a.localeCompare(b, 'ja')).forEach(constellation => {
                 const option = document.createElement('option');
@@ -1478,6 +1502,64 @@
             });
 
             buildBackgroundStarLayers(parseFloat(backgroundMagnitudeSlider.value));
+        }
+
+        function isFiniteVector3(vector) {
+            return Boolean(
+                vector
+                && Number.isFinite(vector.x)
+                && Number.isFinite(vector.y)
+                && Number.isFinite(vector.z)
+            );
+        }
+
+        function refreshConstellationLineGeometry(force = false) {
+            const clipKey = currentViewMode === 'ground'
+                ? `ground:${observerLatitudeDeg.toFixed(3)}:${localSiderealDeg.toFixed(2)}`
+                : currentViewMode;
+
+            if (!force && clipKey === lastConstellationLineClipKey) return;
+            lastConstellationLineClipKey = clipKey;
+
+            Object.entries(lineSegmentsByConstellation).forEach(([constellation, sourceSegments]) => {
+                const mesh = lineMeshes[constellation];
+                if (!mesh) return;
+
+                const visiblePositions = [];
+                sourceSegments.forEach(segment => {
+                    const start = segment.start;
+                    const end = segment.end;
+                    if (!isFiniteVector3(start) || !isFiniteVector3(end)) return;
+
+                    if (currentViewMode !== 'ground') {
+                        visiblePositions.push(start, end);
+                        return;
+                    }
+
+                    const startHeight = start.clone().sub(observerPosition).dot(observerUp);
+                    const endHeight = end.clone().sub(observerPosition).dot(observerUp);
+                    const epsilon = 0.01;
+
+                    if (startHeight <= epsilon && endHeight <= epsilon) return;
+                    if (startHeight > epsilon && endHeight > epsilon) {
+                        visiblePositions.push(start, end);
+                        return;
+                    }
+
+                    const denominator = startHeight - endHeight;
+                    if (Math.abs(denominator) < 1e-9) return;
+                    const t = THREE.MathUtils.clamp(startHeight / denominator, 0, 1);
+                    const horizonPoint = start.clone().lerp(end, t);
+
+                    if (startHeight > epsilon) visiblePositions.push(start, horizonPoint);
+                    else visiblePositions.push(horizonPoint, end);
+                });
+
+                const replacementGeometry = new THREE.BufferGeometry().setFromPoints(visiblePositions);
+                if (visiblePositions.length > 0) replacementGeometry.computeBoundingSphere();
+                mesh.geometry.dispose();
+                mesh.geometry = replacementGeometry;
+            });
         }
 
         function createConstellationLabel(constellation) {
