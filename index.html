@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>星座探索 - 地平線クリップ修正版</title>
+    <title>星座探索 - 季節プリセット・解説シート試作</title>
     <style>
         :root {
             color-scheme: dark;
@@ -399,9 +399,159 @@
                 display: none;
             }
         }
+
+
+        /* --- スマホ下段UI試作：季節プリセット + 解説ボトムシート --- */
+        #bottomQuickBar {
+            position: fixed;
+            left: 50%;
+            bottom: max(10px, env(safe-area-inset-bottom));
+            z-index: 135;
+            transform: translateX(-50%);
+            display: grid;
+            grid-template-columns: 1fr 1.15fr 1fr;
+            gap: 8px;
+            width: min(430px, calc(100vw - 20px));
+            padding: 8px;
+            border: 1px solid rgba(150, 190, 255, 0.20);
+            border-radius: 16px;
+            background: rgba(2, 8, 26, 0.84);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.34);
+        }
+        #bottomQuickBar button,
+        #infoSheet button {
+            min-height: 48px;
+            border: 1px solid rgba(160, 195, 255, 0.30);
+            border-radius: 11px;
+            color: #fff;
+            background: rgba(24, 34, 68, 0.95);
+            font: inherit;
+            font-weight: 750;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+        #bottomQuickBar button:active,
+        #infoSheet button:active {
+            transform: scale(0.97);
+            filter: brightness(1.2);
+        }
+        #infoToggleButton {
+            background: rgba(50, 74, 120, 0.96) !important;
+        }
+        #infoSheet {
+            position: fixed;
+            left: 50%;
+            bottom: calc(max(10px, env(safe-area-inset-bottom)) + 72px);
+            z-index: 130;
+            width: min(520px, calc(100vw - 20px));
+            max-height: min(42dvh, 360px);
+            overflow: hidden;
+            transform: translate(-50%, calc(100% + 100px));
+            opacity: 0;
+            pointer-events: none;
+            transition: transform 320ms cubic-bezier(.2,.8,.2,1), opacity 220ms ease;
+            border: 1px solid rgba(160, 195, 255, 0.22);
+            border-radius: 18px 18px 14px 14px;
+            background: rgba(3, 9, 27, 0.94);
+            color: #fff;
+            backdrop-filter: blur(13px);
+            box-shadow: 0 -12px 36px rgba(0,0,0,0.42);
+        }
+        #infoSheet.open {
+            transform: translate(-50%, 0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .info-sheet-handle {
+            width: 46px;
+            height: 5px;
+            margin: 9px auto 2px;
+            border-radius: 999px;
+            background: rgba(190, 215, 255, 0.42);
+        }
+        .info-sheet-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 8px 14px 10px;
+            border-bottom: 1px solid rgba(150,190,255,0.13);
+        }
+        #infoSheetTitle {
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-size: 16px;
+            font-weight: 800;
+            color: #d9ebff;
+        }
+        #infoSheetClose {
+            min-width: 62px;
+            min-height: 40px !important;
+            padding: 6px 10px;
+            font-size: 13px;
+        }
+        .info-sheet-body {
+            overflow-y: auto;
+            max-height: calc(min(42dvh, 360px) - 92px);
+            padding: 14px 16px 18px;
+            touch-action: pan-y;
+            -webkit-overflow-scrolling: touch;
+        }
+        #infoSheetText {
+            margin: 0;
+            font-size: 14px;
+            line-height: 1.75;
+            color: rgba(255,255,255,0.88);
+            user-select: text;
+            -webkit-user-select: text;
+        }
+        .info-sheet-note {
+            margin-top: 12px;
+            font-size: 11px;
+            line-height: 1.5;
+            color: rgba(190,210,240,0.60);
+        }
+        @media (max-width: 520px) {
+            #bottomQuickBar {
+                width: calc(100vw - 16px);
+                bottom: max(8px, env(safe-area-inset-bottom));
+                gap: 6px;
+                padding: 7px;
+            }
+            #bottomQuickBar button { font-size: 14px; }
+            #infoSheet {
+                width: calc(100vw - 16px);
+                bottom: calc(max(8px, env(safe-area-inset-bottom)) + 70px);
+                max-height: 44dvh;
+            }
+            #touchHint { bottom: calc(max(8px, env(safe-area-inset-bottom)) + 72px); }
+        }
+
     </style>
 </head>
 <body>
+
+    <section id="infoSheet" aria-hidden="true" aria-label="星座解説">
+        <div class="info-sheet-handle" aria-hidden="true"></div>
+        <div class="info-sheet-header">
+            <div id="infoSheetTitle">夜空のガイド</div>
+            <button type="button" id="infoSheetClose">閉じる</button>
+        </div>
+        <div class="info-sheet-body">
+            <p id="infoSheetText">星座を選ぶと、ここにその星座の短い解説やウンチクを表示できます。</p>
+            <div class="info-sheet-note">今はUI試作です。今後、各星座につき2〜3本の小話を切り替えて読めるようにします。</div>
+        </div>
+    </section>
+
+    <nav id="bottomQuickBar" aria-label="季節と解説のクイック操作">
+        <button type="button" id="winterSkyButton">❄ 冬の空</button>
+        <button type="button" id="infoToggleButton" aria-expanded="false">✦ 解説</button>
+        <button type="button" id="summerSkyButton">☀ 夏の空</button>
+    </nav>
+
     <div id="controls">
         <div class="controls-header">
             <span class="controls-title">星空設定</span>
@@ -644,6 +794,13 @@
         const controlsPanel = document.getElementById('controls');
         const controlsToggle = document.getElementById('controlsToggle');
         const touchHint = document.getElementById('touchHint');
+        const winterSkyButton = document.getElementById('winterSkyButton');
+        const summerSkyButton = document.getElementById('summerSkyButton');
+        const infoToggleButton = document.getElementById('infoToggleButton');
+        const infoSheet = document.getElementById('infoSheet');
+        const infoSheetClose = document.getElementById('infoSheetClose');
+        const infoSheetTitle = document.getElementById('infoSheetTitle');
+        const infoSheetText = document.getElementById('infoSheetText');
 
         const starPositions = {};
         const starMeshes = {};
@@ -787,6 +944,11 @@
                 lastAnimationTime = performance.now();
             });
 
+            bindTapAction(winterSkyButton, () => setSeasonSkyPreset('winter'));
+            bindTapAction(summerSkyButton, () => setSeasonSkyPreset('summer'));
+            bindTapAction(infoToggleButton, () => setInfoSheetOpen(!infoSheet.classList.contains('open')));
+            bindTapAction(infoSheetClose, () => setInfoSheetOpen(false));
+
             renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { passive: false });
             renderer.domElement.addEventListener('pointermove', handleCanvasPointerMove, { passive: false });
             renderer.domElement.addEventListener('pointerup', handleCanvasPointerEnd, { passive: false });
@@ -804,6 +966,45 @@
             if (window.visualViewport) {
                 window.visualViewport.addEventListener('resize', resizeRendererToViewport);
             }
+        }
+
+        function setSeasonSkyPreset(season) {
+            pauseTimePlayback();
+            const current = getZonedParts(new Date(simulationUtcMs), timeZoneSelect.value);
+            const year = current.year;
+            // 「季節らしい夜空」を見やすくする代表日時。夏至・冬至そのものではない。
+            const preset = season === 'summer'
+                ? { month: 8, day: 1, hour: 21, minute: 0 }
+                : { month: 1, day: 15, hour: 21, minute: 0 };
+            const localValue = [
+                String(year).padStart(4, '0'), '-',
+                String(preset.month).padStart(2, '0'), '-',
+                String(preset.day).padStart(2, '0'), 'T',
+                String(preset.hour).padStart(2, '0'), ':',
+                String(preset.minute).padStart(2, '0')
+            ].join('');
+            const utcDate = zonedLocalDateTimeToUtc(localValue, timeZoneSelect.value);
+            if (!utcDate || Number.isNaN(utcDate.getTime())) return;
+            simulationUtcMs = utcDate.getTime();
+            updateObserverFromSimulation(true);
+        }
+
+        function setInfoSheetOpen(open) {
+            infoSheet.classList.toggle('open', open);
+            infoSheet.setAttribute('aria-hidden', String(!open));
+            infoToggleButton.setAttribute('aria-expanded', String(open));
+            infoToggleButton.textContent = open ? '✦ 解説を閉じる' : '✦ 解説';
+        }
+
+        function updateInfoSheetForConstellation() {
+            const selected = constellationSelect.value;
+            if (!selected) {
+                infoSheetTitle.textContent = '夜空のガイド';
+                infoSheetText.textContent = '星座を選ぶと、ここにその星座の短い解説やウンチクを表示できます。';
+                return;
+            }
+            infoSheetTitle.textContent = selected;
+            infoSheetText.textContent = `${selected}の小話をここに表示します。現在はボトムシートの操作感を確認するための試作表示です。`;
         }
 
         function bindTapAction(button, handler) {
@@ -1501,6 +1702,7 @@
                     lines.material.color.set(constellation === selected ? 0xff3344 : 0x00ff66);
                     lines.material.opacity = constellation === selected ? 1 : 0.75;
                 });
+                updateInfoSheetForConstellation();
                 if (selected) focusCameraOnConstellation(selected);
             });
 
