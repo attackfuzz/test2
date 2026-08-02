@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- 星座表示 + 現行UIデザイン統合版 -->
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
@@ -533,6 +534,16 @@
             border-radius: 50%;
             background: radial-gradient(circle, rgba(6,15,38,.32) 0%, rgba(3,10,29,.54) 55%, rgba(1,5,18,.10) 72%, transparent 73%);
             filter: drop-shadow(0 9px 22px rgba(0,0,0,.34));
+            touch-action: none;
+            user-select: none;
+            -webkit-user-select: none;
+            cursor: grab;
+        }
+        .clock-face.dragging {
+            cursor: grabbing;
+        }
+        .clock-face.dragging #clockHandWrap {
+            transition: none;
         }
         .clock-number {
             position: absolute;
@@ -639,6 +650,736 @@
             #infoSheet { bottom: calc(max(8px, env(safe-area-inset-bottom)) + 160px); }
         }
 
+    
+        /* Clock/date consolidated dock */
+        .dock-top {
+            grid-template-columns: 1fr !important;
+            justify-items: center;
+        }
+
+        #clockToggleButton.clock-summary {
+            min-width: 132px;
+            padding: 7px 14px 8px;
+            display: grid;
+            grid-template-columns: 1fr;
+            justify-items: center;
+            gap: 2px;
+            background: rgba(10,18,42,.72);
+            border: 1px solid rgba(255,255,255,.12);
+            border-radius: 14px;
+        }
+        #clockToggleButton .clock-summary-time {
+            font-size: 20px;
+            font-weight: 800;
+            line-height: 1.05;
+        }
+        #clockToggleButton .clock-summary-date {
+            font-size: 11px;
+            opacity: .72;
+            line-height: 1;
+        }
+
+        .dock-middle {
+            max-height: 0;
+            opacity: 0;
+            overflow: visible;
+            transform: translateY(8px);
+            pointer-events: none;
+            transition:
+                max-height 240ms ease,
+                opacity 180ms ease,
+                transform 240ms cubic-bezier(.2,.8,.2,1);
+        }
+        .dock-middle.clock-open {
+            max-height: 64px;
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .quick-now-wrap {
+            position: relative;
+            display: grid;
+            grid-template-columns: minmax(0,1fr) 42px;
+            gap: 4px;
+        }
+        #quickNowMenuButton {
+            min-width: 42px;
+            padding-inline: 0 !important;
+        }
+        #quickNowMenu {
+            position: absolute;
+            left: 50%;
+            bottom: calc(100% + 8px);
+            transform: translate(-50%, 8px);
+            width: min(210px, 72vw);
+            padding: 8px;
+            border-radius: 14px;
+            background: rgba(5,11,27,.97);
+            border: 1px solid rgba(255,255,255,.14);
+            box-shadow: 0 16px 36px rgba(0,0,0,.42);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 160ms ease, transform 180ms ease;
+            z-index: 90;
+        }
+        #quickNowMenu.open {
+            opacity: 1;
+            transform: translate(-50%, 0);
+            pointer-events: auto;
+        }
+        #quickNowMenu button {
+            width: 100%;
+            min-height: 42px;
+            margin: 3px 0;
+            text-align: left;
+        }
+
+        /* clock preview text is no longer needed */
+        #clockPreview { display: none !important; }
+
+    
+        .clock-ampm-label {
+            margin-left: 4px;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: .08em;
+            opacity: .82;
+            vertical-align: 2px;
+        }
+
+        #clockDayRow {
+            grid-template-columns: 1fr 1fr 1fr !important;
+        }
+
+        /* ===== Compact always-visible clock redesign ===== */
+        #bottomDock .dock-top {
+            display: flex !important;
+            justify-content: flex-end !important;
+            align-items: center;
+            padding-right: max(12px, env(safe-area-inset-right));
+        }
+
+        #clockToggleButton.clock-summary {
+            min-width: 138px;
+            width: auto;
+            justify-items: end !important;
+            text-align: right;
+            padding: 6px 10px;
+            background: rgba(5,10,26,.54);
+            border-color: rgba(255,255,255,.10);
+        }
+
+        #clockToggleButton .clock-summary-time {
+            font-size: 20px;
+            line-height: 1.05;
+        }
+
+        #clockToggleButton .clock-summary-date {
+            font-size: 11px;
+            opacity: .72;
+        }
+
+        /* clockPanel remains visible even when "closed".
+           closed = compact clock, open = full clock */
+        #clockPanel {
+            display: block !important;
+            pointer-events: auto !important;
+            opacity: 1 !important;
+
+            width: 104px !important;
+            height: 104px !important;
+            right: 18px !important;
+            left: auto !important;
+            bottom: 154px !important;
+
+            transform: translateY(0) scale(.92) !important;
+            transform-origin: 72% 100%;
+            transition:
+                width 260ms cubic-bezier(.2,.8,.2,1),
+                height 260ms cubic-bezier(.2,.8,.2,1),
+                right 260ms cubic-bezier(.2,.8,.2,1),
+                bottom 260ms cubic-bezier(.2,.8,.2,1),
+                transform 260ms cubic-bezier(.2,.8,.2,1),
+                filter 220ms ease !important;
+            z-index: 48;
+        }
+
+        #clockPanel.open {
+            width: min(260px, 72vw) !important;
+            height: min(260px, 72vw) !important;
+            right: 16px !important;
+            bottom: 185px !important;
+            transform: translateY(0) scale(1) !important;
+            z-index: 62;
+        }
+
+        #clockPanel .clock-face {
+            transition:
+                background 300ms ease,
+                border-color 300ms ease,
+                box-shadow 300ms ease;
+            border: 1px solid rgba(255,255,255,.16);
+            box-shadow:
+                inset 0 0 20px rgba(255,255,255,.025),
+                0 8px 22px rgba(0,0,0,.24);
+        }
+
+        /* 夜間: 18:00 - 04:00 */
+        #clockPanel.clock-night .clock-face {
+            background:
+                radial-gradient(circle at 50% 48%,
+                    rgba(42,61,126,.54) 0%,
+                    rgba(15,28,78,.72) 48%,
+                    rgba(5,11,38,.62) 70%,
+                    rgba(2,5,18,.12) 73%,
+                    transparent 74%);
+            border-color: rgba(128,153,255,.26);
+            box-shadow:
+                inset 0 0 24px rgba(91,111,226,.11),
+                0 10px 24px rgba(0,0,0,.28);
+        }
+
+        /* 日中: 04:00 - 18:00 */
+        #clockPanel.clock-day .clock-face {
+            background:
+                radial-gradient(circle at 50% 46%,
+                    rgba(210,115,44,.50) 0%,
+                    rgba(147,71,26,.66) 48%,
+                    rgba(73,31,12,.55) 70%,
+                    rgba(26,10,4,.10) 73%,
+                    transparent 74%);
+            border-color: rgba(255,178,93,.30);
+            box-shadow:
+                inset 0 0 24px rgba(255,149,54,.10),
+                0 10px 24px rgba(0,0,0,.28);
+        }
+
+        #clockPanel.clock-night .clock-number {
+            color: rgba(218,225,255,.95);
+            text-shadow: 0 1px 8px rgba(76,102,255,.38);
+        }
+
+        #clockPanel.clock-day .clock-number {
+            color: rgba(255,226,190,.96);
+            text-shadow: 0 1px 8px rgba(255,137,50,.32);
+        }
+
+        #clockPanel.clock-night #clockHandWrap {
+            filter: drop-shadow(0 0 5px rgba(145,163,255,.52));
+        }
+
+        #clockPanel.clock-day #clockHandWrap {
+            filter: drop-shadow(0 0 5px rgba(255,169,90,.48));
+        }
+
+        /* Compact mode: keep full face design, only scale labels/hand */
+        #clockPanel:not(.open) .clock-number {
+            font-size: 8px !important;
+            min-width: 15px !important;
+            min-height: 15px !important;
+            padding: 0 !important;
+        }
+
+        #clockPanel:not(.open) .clock-number[data-hour="12"] { top: 4px !important; }
+        #clockPanel:not(.open) .clock-number[data-hour="6"]  { bottom: 4px !important; }
+
+        #clockPanel:not(.open) #clockHandWrap {
+            transform-origin: center center;
+        }
+
+        #clockPanel:not(.open) .clock-hand,
+        #clockPanel:not(.open) #clockHand,
+        #clockPanel:not(.open) .hand {
+            transform: scale(.72);
+            transform-origin: 50% 100%;
+        }
+
+        #clockPanel:not(.open)::after {
+            content: "tap";
+            position: absolute;
+            right: -2px;
+            bottom: -14px;
+            font-size: 8px;
+            letter-spacing: .08em;
+            color: rgba(255,255,255,.34);
+            pointer-events: none;
+        }
+
+        /* Day controls are shown only when the clock is expanded. */
+        #clockDayRow {
+            transition:
+                max-height 240ms ease,
+                opacity 170ms ease,
+                transform 240ms cubic-bezier(.2,.8,.2,1);
+        }
+
+        @media (max-width: 520px) {
+            #clockPanel {
+                width: 94px !important;
+                height: 94px !important;
+                right: 14px !important;
+                bottom: 151px !important;
+            }
+
+            #clockPanel.open {
+                width: min(244px, 70vw) !important;
+                height: min(244px, 70vw) !important;
+                right: 12px !important;
+                bottom: 184px !important;
+            }
+
+            #clockToggleButton.clock-summary {
+                min-width: 126px;
+            }
+        }
+
+    
+        /* ===== Futuristic cyan UI refinement ===== */
+        :root {
+            --ui-cyan: #67f7ff;
+            --ui-cyan-strong: #19eaff;
+            --ui-cyan-soft: rgba(103,247,255,.78);
+            --ui-cyan-faint: rgba(103,247,255,.20);
+            --clock-night-a: #172a88;
+            --clock-night-b: #07195f;
+            --clock-day-a: #ff8618;
+            --clock-day-b: #c44705;
+        }
+
+        /* Time/date to the left, compact clock remains on the right */
+        #bottomDock .dock-top {
+            display: flex !important;
+            justify-content: flex-start !important;
+            align-items: center !important;
+            padding-left: max(12px, env(safe-area-inset-left)) !important;
+            padding-right: max(12px, env(safe-area-inset-right)) !important;
+        }
+
+        #clockToggleButton.clock-summary {
+            justify-items: start !important;
+            text-align: left !important;
+            margin-right: auto !important;
+            color: var(--ui-cyan) !important;
+            background: rgba(3,17,29,.62) !important;
+            border-color: rgba(103,247,255,.22) !important;
+            box-shadow:
+                inset 0 0 16px rgba(25,234,255,.035),
+                0 0 12px rgba(25,234,255,.04);
+        }
+
+        #clockToggleButton .clock-summary-time,
+        #clockToggleButton .clock-summary-date,
+        #quickAmPmDisplay {
+            color: var(--ui-cyan) !important;
+            text-shadow:
+                0 0 5px rgba(25,234,255,.34),
+                0 0 12px rgba(25,234,255,.12);
+        }
+
+        /* General dock/button typography */
+        #bottomDock button,
+        #settingsButton,
+        #infoToggleButton,
+        #quickPrevDay,
+        #quickNow,
+        #quickNextDay,
+        #quickNowMenuButton,
+        #quickNowMenu button {
+            color: var(--ui-cyan) !important;
+            border-color: rgba(103,247,255,.20) !important;
+            text-shadow: 0 0 5px rgba(25,234,255,.24);
+        }
+
+        #bottomDock button:hover,
+        #bottomDock button:active {
+            border-color: rgba(103,247,255,.42) !important;
+            box-shadow: inset 0 0 14px rgba(25,234,255,.06);
+        }
+
+        /* More saturated clock colors */
+        #clockPanel.clock-night .clock-face {
+            background:
+                radial-gradient(circle at 48% 44%,
+                    rgba(55,79,223,.82) 0%,
+                    rgba(23,42,136,.90) 40%,
+                    rgba(7,25,95,.94) 68%,
+                    rgba(2,8,35,.48) 73%,
+                    transparent 75%) !important;
+            border-color: rgba(74,225,255,.54) !important;
+            box-shadow:
+                inset 0 0 25px rgba(65,101,255,.24),
+                inset 0 0 8px rgba(103,247,255,.12),
+                0 0 18px rgba(31,70,255,.20),
+                0 10px 24px rgba(0,0,0,.28) !important;
+        }
+
+        #clockPanel.clock-day .clock-face {
+            background:
+                radial-gradient(circle at 48% 44%,
+                    rgba(255,168,56,.92) 0%,
+                    rgba(255,118,13,.92) 42%,
+                    rgba(196,71,5,.94) 68%,
+                    rgba(83,23,0,.46) 73%,
+                    transparent 75%) !important;
+            border-color: rgba(255,211,125,.56) !important;
+            box-shadow:
+                inset 0 0 25px rgba(255,143,27,.26),
+                inset 0 0 8px rgba(255,232,182,.12),
+                0 0 18px rgba(255,104,0,.16),
+                0 10px 24px rgba(0,0,0,.28) !important;
+        }
+
+        /* All clock text becomes fluorescent cyan */
+        #clockPanel .clock-number,
+        #clockPanel.clock-night .clock-number,
+        #clockPanel.clock-day .clock-number {
+            color: var(--ui-cyan) !important;
+            text-shadow:
+                0 0 5px rgba(25,234,255,.58),
+                0 0 11px rgba(25,234,255,.20) !important;
+        }
+
+        #clockPanel .clock-number.selected {
+            color: #d8fdff !important;
+            text-shadow:
+                0 0 5px rgba(255,255,255,.85),
+                0 0 12px rgba(25,234,255,.65) !important;
+        }
+
+        /* Hand: cyan regardless of day/night */
+        #clockPanel #clockHandWrap,
+        #clockPanel.clock-night #clockHandWrap,
+        #clockPanel.clock-day #clockHandWrap {
+            filter:
+                drop-shadow(0 0 4px rgba(103,247,255,.82))
+                drop-shadow(0 0 9px rgba(25,234,255,.30)) !important;
+        }
+
+        #clockPanel .clock-hand,
+        #clockPanel #clockHand,
+        #clockPanel .hand {
+            color: var(--ui-cyan) !important;
+            border-bottom-color: var(--ui-cyan) !important;
+        }
+
+        /* Side sheet and info sheet cyan typography, but retain neutral body copy readability */
+        #settingsSheet h2,
+        #settingsSheet h3,
+        #settingsSheet label,
+        #settingsSheet button,
+        #infoSheet h2,
+        #infoSheet h3,
+        #infoSheet .sheet-handle {
+            color: var(--ui-cyan) !important;
+        }
+
+        /* Compact clock should clearly look tappable */
+        #clockPanel:not(.open) {
+            cursor: pointer;
+        }
+        #clockPanel:not(.open)::after {
+            content: "EXPAND" !important;
+            color: var(--ui-cyan-soft) !important;
+            text-shadow: 0 0 5px rgba(25,234,255,.28);
+        }
+
+    
+        /* ===== Compact clock position fix ===== */
+        #clockPanel:not(.open) .clock-number[data-hour="12"] {
+            top: 2px !important;
+            left: 50% !important;
+            right: auto !important;
+            bottom: auto !important;
+            transform: translateX(-50%) !important;
+        }
+        #clockPanel:not(.open) .clock-number[data-hour="1"] {
+            top: 9px !important; right: 20px !important;
+            left: auto !important; bottom: auto !important; transform: none !important;
+        }
+        #clockPanel:not(.open) .clock-number[data-hour="2"] {
+            top: 25px !important; right: 7px !important;
+            left: auto !important; bottom: auto !important; transform: none !important;
+        }
+        #clockPanel:not(.open) .clock-number[data-hour="3"] {
+            top: 50% !important; right: 2px !important;
+            left: auto !important; bottom: auto !important; transform: translateY(-50%) !important;
+        }
+        #clockPanel:not(.open) .clock-number[data-hour="4"] {
+            bottom: 25px !important; right: 7px !important;
+            top: auto !important; left: auto !important; transform: none !important;
+        }
+        #clockPanel:not(.open) .clock-number[data-hour="5"] {
+            bottom: 9px !important; right: 20px !important;
+            top: auto !important; left: auto !important; transform: none !important;
+        }
+        #clockPanel:not(.open) .clock-number[data-hour="6"] {
+            bottom: 2px !important; left: 50% !important;
+            right: auto !important; top: auto !important; transform: translateX(-50%) !important;
+        }
+        #clockPanel:not(.open) .clock-number[data-hour="7"] {
+            bottom: 9px !important; left: 20px !important;
+            right: auto !important; top: auto !important; transform: none !important;
+        }
+        #clockPanel:not(.open) .clock-number[data-hour="8"] {
+            bottom: 25px !important; left: 7px !important;
+            right: auto !important; top: auto !important; transform: none !important;
+        }
+        #clockPanel:not(.open) .clock-number[data-hour="9"] {
+            top: 50% !important; left: 2px !important;
+            right: auto !important; bottom: auto !important; transform: translateY(-50%) !important;
+        }
+        #clockPanel:not(.open) .clock-number[data-hour="10"] {
+            top: 25px !important; left: 7px !important;
+            right: auto !important; bottom: auto !important; transform: none !important;
+        }
+        #clockPanel:not(.open) .clock-number[data-hour="11"] {
+            top: 9px !important; left: 20px !important;
+            right: auto !important; bottom: auto !important; transform: none !important;
+        }
+
+        body.info-sheet-open #clockPanel {
+            bottom: calc(154px + min(42vh, 360px)) !important;
+        }
+        body.info-sheet-open #clockPanel.open {
+            bottom: calc(185px + min(42vh, 360px)) !important;
+        }
+
+        @media (max-width: 520px) {
+            body.info-sheet-open #clockPanel {
+                bottom: calc(151px + min(38vh, 310px)) !important;
+            }
+            body.info-sheet-open #clockPanel.open {
+                bottom: calc(184px + min(38vh, 310px)) !important;
+            }
+        }
+
+    
+        /* ===== Frameless compact clock refinement ===== */
+
+        /* 縮小時は盤面フレームを消し、数字＋針だけを浮かせる */
+        #clockPanel:not(.open) {
+            width: 112px !important;
+            height: 112px !important;
+            overflow: visible !important;
+        }
+
+        #clockPanel:not(.open) .clock-face {
+            overflow: visible !important;
+            background: transparent !important;
+            border: 0 !important;
+            box-shadow: none !important;
+            filter: none !important;
+        }
+
+        /* 数字自体の丸背景も外して、見やすい蛍光数字へ */
+        #clockPanel:not(.open) .clock-number {
+            width: 24px !important;
+            height: 24px !important;
+            min-width: 24px !important;
+            min-height: 24px !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            border: 0 !important;
+            border-radius: 0 !important;
+            background: transparent !important;
+
+            font-size: 12px !important;
+            font-weight: 800 !important;
+            line-height: 24px !important;
+            text-align: center !important;
+
+            color: var(--ui-cyan) !important;
+            text-shadow:
+                0 0 4px rgba(25,234,255,.78),
+                0 0 10px rgba(25,234,255,.28) !important;
+        }
+
+        /* 上側は12と11/1が被らないよう明示配置 */
+        #clockPanel:not(.open) .clock-number[data-hour="12"] {
+            top: -7px !important;
+            left: 44px !important;
+            right: auto !important;
+            bottom: auto !important;
+            transform: none !important;
+        }
+        #clockPanel:not(.open) .clock-number[data-hour="11"] {
+            top: 0px !important;
+            left: 14px !important;
+            right: auto !important;
+            bottom: auto !important;
+            transform: none !important;
+        }
+        #clockPanel:not(.open) .clock-number[data-hour="1"] {
+            top: 0px !important;
+            right: 14px !important;
+            left: auto !important;
+            bottom: auto !important;
+            transform: none !important;
+        }
+
+        #clockPanel:not(.open) .clock-number[data-hour="10"] {
+            top: 18px !important;
+            left: -1px !important;
+            right: auto !important;
+            bottom: auto !important;
+            transform: none !important;
+        }
+        #clockPanel:not(.open) .clock-number[data-hour="2"] {
+            top: 18px !important;
+            right: -1px !important;
+            left: auto !important;
+            bottom: auto !important;
+            transform: none !important;
+        }
+
+        #clockPanel:not(.open) .clock-number[data-hour="9"] {
+            top: 44px !important;
+            left: -10px !important;
+            right: auto !important;
+            bottom: auto !important;
+            transform: none !important;
+        }
+        #clockPanel:not(.open) .clock-number[data-hour="3"] {
+            top: 44px !important;
+            right: -10px !important;
+            left: auto !important;
+            bottom: auto !important;
+            transform: none !important;
+        }
+
+        #clockPanel:not(.open) .clock-number[data-hour="8"] {
+            bottom: 18px !important;
+            left: -1px !important;
+            right: auto !important;
+            top: auto !important;
+            transform: none !important;
+        }
+        #clockPanel:not(.open) .clock-number[data-hour="4"] {
+            bottom: 18px !important;
+            right: -1px !important;
+            left: auto !important;
+            top: auto !important;
+            transform: none !important;
+        }
+
+        #clockPanel:not(.open) .clock-number[data-hour="7"] {
+            bottom: 0px !important;
+            left: 14px !important;
+            right: auto !important;
+            top: auto !important;
+            transform: none !important;
+        }
+        #clockPanel:not(.open) .clock-number[data-hour="5"] {
+            bottom: 0px !important;
+            right: 14px !important;
+            left: auto !important;
+            top: auto !important;
+            transform: none !important;
+        }
+
+        #clockPanel:not(.open) .clock-number[data-hour="6"] {
+            bottom: -7px !important;
+            left: 44px !important;
+            right: auto !important;
+            top: auto !important;
+            transform: none !important;
+        }
+
+        /* 選択中も背景を付けず、発光強度だけ変える */
+        #clockPanel:not(.open) .clock-number.selected {
+            background: transparent !important;
+            color: #e9ffff !important;
+            text-shadow:
+                0 0 5px rgba(255,255,255,.95),
+                0 0 12px rgba(25,234,255,.78) !important;
+        }
+
+        /* 縮小時計の針を少し見やすく */
+        #clockPanel:not(.open) #clockHandWrap {
+            filter:
+                drop-shadow(0 0 4px rgba(103,247,255,.95))
+                drop-shadow(0 0 9px rgba(25,234,255,.48)) !important;
+        }
+
+        /* EXPAND文字は数字と競合するので廃止 */
+        #clockPanel:not(.open)::after {
+            content: "" !important;
+            display: none !important;
+        }
+
+        @media (max-width: 520px) {
+            #clockPanel:not(.open) {
+                width: 108px !important;
+                height: 108px !important;
+            }
+
+            #clockPanel:not(.open) .clock-number {
+                font-size: 12px !important;
+            }
+
+            #clockPanel:not(.open) .clock-number[data-hour="12"],
+            #clockPanel:not(.open) .clock-number[data-hour="6"] {
+                left: 42px !important;
+            }
+        }
+
+    
+        /* ===== Explanation mode: hide clock UI ===== */
+
+        #clockToggleButton,
+        #clockPanel {
+            transition:
+                opacity 180ms ease,
+                transform 220ms cubic-bezier(.2,.8,.2,1),
+                visibility 0s linear 220ms,
+                width 260ms cubic-bezier(.2,.8,.2,1),
+                height 260ms cubic-bezier(.2,.8,.2,1),
+                right 260ms cubic-bezier(.2,.8,.2,1),
+                bottom 260ms cubic-bezier(.2,.8,.2,1) !important;
+        }
+
+        body.info-sheet-open #clockToggleButton {
+            opacity: 0 !important;
+            visibility: hidden !important;
+            pointer-events: none !important;
+            transform: translateY(8px) !important;
+        }
+
+        body.info-sheet-open #clockPanel,
+        body.info-sheet-open #clockPanel.open {
+            opacity: 0 !important;
+            visibility: hidden !important;
+            pointer-events: none !important;
+            transform: translateY(16px) scale(.88) !important;
+        }
+
+        /* 以前の「解説時に時計を上へ退避」は無効化 */
+        body.info-sheet-open #clockPanel,
+        body.info-sheet-open #clockPanel.open {
+            bottom: 151px !important;
+        }
+
+        /* 解説中は時計操作列も閉じる */
+        body.info-sheet-open #clockDayRow {
+            max-height: 0 !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+            transform: translateY(8px) !important;
+            overflow: hidden !important;
+        }
+
+        /* 時計が消える分、ボトムシートを少し広く使える */
+        body.info-sheet-open #infoSheet {
+            max-height: min(58vh, 520px);
+        }
+
+        @media (max-width: 520px) {
+            body.info-sheet-open #infoSheet {
+                max-height: min(56vh, 460px);
+            }
+        }
+
     </style>
 </head>
 <body>
@@ -661,8 +1402,7 @@
             <button class="clock-number" data-hour="11" style="--a:330deg">11</button>
             <div id="clockHandWrap"><div id="clockHand"></div></div>
             <div id="clockCenter"></div>
-            <div id="clockPreview">針のデザイン試作</div>
-        </div>
+</div>
     </section>
 
     <section id="infoSheet" aria-hidden="true" aria-label="星座解説">
@@ -679,15 +1419,30 @@
 
     <nav id="bottomDock" aria-label="星空クイック操作">
         <div class="dock-row dock-top">
-            <button type="button" id="summerSkyButton">夏の空</button>
-            <button type="button" id="clockToggleButton" aria-expanded="false"><span id="quickTimeDisplay">21:00</span></button>
-            <button type="button" id="winterSkyButton">冬の空</button>
+            <button type="button" id="clockToggleButton" class="clock-summary" aria-expanded="false">
+                <span class="clock-summary-time">
+                    <span id="quickTimeDisplay">9:00</span>
+                    <span id="quickAmPmDisplay" class="clock-ampm-label">PM</span>
+                </span>
+                <span class="clock-summary-date" id="quickDateDisplay">2026/08/01</span>
+            </button>
         </div>
-        <div class="dock-row dock-middle">
-            <button type="button" id="quickPrevDay">◀ −1日</button>
-            <button type="button" id="quickNow">現時刻</button>
-            <button type="button" id="quickNextDay">＋1日 ▶</button>
-        </div>
+        <div class="dock-row dock-middle" id="clockDayRow">
+            <button type="button" id="quickPrevDay">◀ −12時間</button>
+
+            <div class="quick-now-wrap">
+                <button type="button" id="quickNow">現時刻</button>
+                <button type="button" id="quickNowMenuButton" aria-label="季節プリセットを開く">▾</button>
+
+                <div id="quickNowMenu" aria-hidden="true">
+                    <button type="button" data-quick-preset="now">現在時刻</button>
+                    <button type="button" data-quick-preset="summer">夏の空（8/1 21:00）</button>
+                    <button type="button" data-quick-preset="winter">冬の空（1/15 21:00）</button>
+                </div>
+            </div>
+
+            <button type="button" id="quickNextDay">＋12時間 ▶</button>
+</div>
         <div class="dock-row dock-bottom">
             <button type="button" id="settingsButton" aria-expanded="false">🔧 設定</button>
             <button type="button" id="infoToggleButton" aria-expanded="false">✦ 解説を見る</button>
@@ -937,8 +1692,7 @@
         const controlsPanel = document.getElementById('controls');
         const controlsToggle = document.getElementById('controlsToggle');
         const touchHint = document.getElementById('touchHint');
-        const winterSkyButton = document.getElementById('winterSkyButton');
-        const summerSkyButton = document.getElementById('summerSkyButton');
+
         const infoToggleButton = document.getElementById('infoToggleButton');
         const infoSheet = document.getElementById('infoSheet');
         const infoSheetClose = document.getElementById('infoSheetClose');
@@ -951,11 +1705,27 @@
         const quickNow = document.getElementById('quickNow');
         const quickNextDay = document.getElementById('quickNextDay');
         const quickTimeDisplay = document.getElementById('quickTimeDisplay');
+        const quickAmPmDisplay = document.getElementById('quickAmPmDisplay');
+        const quickDateDisplay = document.getElementById('quickDateDisplay');
+
+        const clockDayRow = document.getElementById('clockDayRow');
+        const quickNowMenuButton = document.getElementById('quickNowMenuButton');
+        const quickNowMenu = document.getElementById('quickNowMenu');
+        const quickPresetButtons = Array.from(document.querySelectorAll('[data-quick-preset]'));
         const clockToggleButton = document.getElementById('clockToggleButton');
         const clockPanel = document.getElementById('clockPanel');
+        const clockFace = clockPanel.querySelector('.clock-face');
         const clockHandWrap = document.getElementById('clockHandWrap');
         const clockPreview = document.getElementById('clockPreview');
         const clockNumberButtons = Array.from(document.querySelectorAll('.clock-number'));
+        let clockDragPointerId = null;
+        let clockDragLastAngleDeg = null;
+        let clockDragAccumulatedMinutes = 0;
+        let clockDragStartSimulationUtcMs = 0;
+        let clockDragHasMoved = false;
+        let clockTapStartX = 0;
+        let clockTapStartY = 0;
+        let clockSelectedMinutes12h = 0;
 
         const starPositions = {};
         const starMeshes = {};
@@ -1099,8 +1869,6 @@
                 lastAnimationTime = performance.now();
             });
 
-            bindTapAction(winterSkyButton, () => setSeasonSkyPreset('winter'));
-            bindTapAction(summerSkyButton, () => setSeasonSkyPreset('summer'));
             bindTapAction(infoToggleButton, () => setInfoSheetOpen(!infoSheet.classList.contains('open')));
             bindTapAction(infoSheetClose, () => setInfoSheetOpen(false));
 
@@ -1110,7 +1878,7 @@
 
             bindTapAction(quickPrevDay, () => {
                 pauseTimePlayback();
-                simulationUtcMs -= 86400000;
+                simulationUtcMs -= 12 * 60 * 60 * 1000;
                 updateObserverFromSimulation(true);
             });
             bindTapAction(quickNow, () => {
@@ -1120,8 +1888,28 @@
             });
             bindTapAction(quickNextDay, () => {
                 pauseTimePlayback();
-                simulationUtcMs += 86400000;
+                simulationUtcMs += 12 * 60 * 60 * 1000;
                 updateObserverFromSimulation(true);
+            });
+bindTapAction(quickNowMenuButton, () => {
+                const open = !quickNowMenu.classList.contains('open');
+                quickNowMenu.classList.toggle('open', open);
+                quickNowMenu.setAttribute('aria-hidden', String(!open));
+            });
+
+            quickPresetButtons.forEach(button => {
+                bindTapAction(button, () => {
+                    const preset = button.dataset.quickPreset;
+                    if (preset === 'now') {
+                        pauseTimePlayback();
+                        simulationUtcMs = Date.now();
+                        updateObserverFromSimulation(true);
+                    } else {
+                        setSeasonSkyPreset(preset);
+                    }
+                    quickNowMenu.classList.remove('open');
+                    quickNowMenu.setAttribute('aria-hidden', 'true');
+                });
             });
 
             bindTapAction(clockToggleButton, () => setClockPanelOpen(!clockPanel.classList.contains('open')));
@@ -1129,7 +1917,11 @@
                 bindTapAction(button, () => selectClockHour(Number(button.dataset.hour)));
             });
 
-            renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { passive: false });
+            clockFace.addEventListener('pointerdown', handleClockPointerDown, { passive: false });
+            clockFace.addEventListener('pointermove', handleClockPointerMove, { passive: false });
+            clockFace.addEventListener('pointerup', handleClockPointerUp, { passive: false });
+            clockFace.addEventListener('pointercancel', handleClockPointerUp, { passive: false });
+renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { passive: false });
             renderer.domElement.addEventListener('pointermove', handleCanvasPointerMove, { passive: false });
             renderer.domElement.addEventListener('pointerup', handleCanvasPointerEnd, { passive: false });
             renderer.domElement.addEventListener('pointercancel', handleCanvasPointerEnd, { passive: false });
@@ -1178,25 +1970,221 @@
 
         function setClockPanelOpen(open) {
             clockPanel.classList.toggle('open', open);
-            clockPanel.setAttribute('aria-hidden', String(!open));
+            clockPanel.setAttribute('aria-hidden', 'false');
             clockToggleButton.setAttribute('aria-expanded', String(open));
+            if (clockDayRow) clockDayRow.classList.toggle('clock-open', open);
+
+            if (!open && quickNowMenu) {
+                quickNowMenu.classList.remove('open');
+                quickNowMenu.setAttribute('aria-hidden', 'true');
+            }
+
             if (open) setInfoSheetOpen(false);
         }
 
-        function selectClockHour(hour) {
-            const normalizedHour = hour === 12 ? 0 : hour;
-            const angle = normalizedHour * 30;
+        function setClockPreviewFromMinutes(totalMinutes, isDragging = false) {
+            const normalized = ((Math.round(totalMinutes / 5) * 5) % 720 + 720) % 720;
+            clockSelectedMinutes12h = normalized;
+
+            const angle = normalized * 0.5;
             clockHandWrap.style.transform = `translate(-50%,-50%) rotate(${angle}deg)`;
-            clockNumberButtons.forEach(button => button.classList.toggle('selected', Number(button.dataset.hour) === hour));
-            clockPreview.textContent = `${hour}時方向を選択`;
+
+            const hour12 = Math.floor(normalized / 60) || 12;
+            const minute = normalized % 60;
+            const exactHour = minute === 0 ? hour12 : null;
+
+            clockNumberButtons.forEach(button => {
+                button.classList.toggle(
+                    'selected',
+                    exactHour !== null && Number(button.dataset.hour) === exactHour
+                );
+            });
+
+            if (clockPreview) clockPreview.textContent =
+                `${String(hour12).padStart(2, '0')}:${String(minute).padStart(2, '0')}` +
+                (isDragging ? '　ドラッグ中' : '');
+        }
+
+        function selectClockHour(hour) {
+            pauseTimePlayback();
+
+            const parts = getZonedParts(
+                new Date(simulationUtcMs),
+                timeZoneSelect.value
+            );
+
+            // 現在がAMならAM側、PMならPM側を維持する。
+            const currentIsPm = parts.hour >= 12;
+            const selected12 = hour === 12 ? 0 : hour;
+            const selected24 = selected12 + (currentIsPm ? 12 : 0);
+
+            // 現在の観測地点ローカル日時を入力欄に反映し、
+            // 既存のローカル→UTC変換処理へ渡す。
+            if (observationDateTime) {
+                const y = String(parts.year).padStart(4, '0');
+                const m = String(parts.month).padStart(2, '0');
+                const d = String(parts.day).padStart(2, '0');
+                const hh = String(selected24).padStart(2, '0');
+
+                observationDateTime.value =
+                    `${y}-${m}-${d}T${hh}:00`;
+                observationDateTime.dispatchEvent(
+                    new Event('change', { bubbles: true })
+                );
+            }
+
+            updateClockHandFromSimulation();
+        }
+
+        function getClockAngleFromPointer(event) {
+            const rect = clockFace.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            const dx = event.clientX - centerX;
+            const dy = event.clientY - centerY;
+
+            // 12時 = 0度、時計回りが正方向
+            let angle = Math.atan2(dx, -dy) * 180 / Math.PI;
+            if (angle < 0) angle += 360;
+            return angle;
+        }
+
+        function shortestClockAngleDelta(currentDeg, previousDeg) {
+            let delta = currentDeg - previousDeg;
+            if (delta > 180) delta -= 360;
+            if (delta < -180) delta += 360;
+            return delta;
+        }
+
+        function updateClockHandFromSimulation() {
+            const parts = getZonedParts(
+                new Date(simulationUtcMs),
+                timeZoneSelect.value
+            );
+
+            const minute12h = (parts.hour % 12) * 60 + parts.minute;
+            const angle = minute12h * 0.5;
+            clockHandWrap.style.transform =
+                `translate(-50%,-50%) rotate(${angle}deg)`;
+        }
+
+        function handleClockPointerDown(event) {
+            if (!clockPanel.classList.contains('open')) return;
+            if (clockDragPointerId !== null) return;
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            clockDragPointerId = event.pointerId;
+            clockTapStartX = event.clientX;
+            clockTapStartY = event.clientY;
+            clockDragLastAngleDeg = getClockAngleFromPointer(event);
+            clockDragAccumulatedMinutes = 0;
+            clockDragStartSimulationUtcMs = simulationUtcMs;
+            clockDragHasMoved = false;
+            clockFace.classList.add('dragging');
+
+            try {
+                clockFace.setPointerCapture(event.pointerId);
+            } catch (_) {}
+        }
+
+        function handleClockPointerMove(event) {
+            if (event.pointerId !== clockDragPointerId) return;
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            const currentAngleDeg = getClockAngleFromPointer(event);
+            const deltaDeg = shortestClockAngleDelta(
+                currentAngleDeg,
+                clockDragLastAngleDeg
+            );
+
+            clockDragLastAngleDeg = currentAngleDeg;
+
+            // 30度 = 1時間、1度 = 2分。
+            clockDragAccumulatedMinutes += deltaDeg * 2;
+
+            // 5分刻みにスナップ。
+            const snappedMinutes =
+                Math.round(clockDragAccumulatedMinutes / 5) * 5;
+
+            const dragDistance = Math.hypot(
+                event.clientX - clockTapStartX,
+                event.clientY - clockTapStartY
+            );
+
+            if (dragDistance >= 7 || Math.abs(snappedMinutes) >= 5) {
+                clockDragHasMoved = true;
+            }
+
+            simulationUtcMs =
+                clockDragStartSimulationUtcMs +
+                snappedMinutes * 60 * 1000;
+
+            pauseTimePlayback();
+            updateObserverFromSimulation(true);
+            updateClockHandFromSimulation();
+        }
+
+        function handleClockPointerUp(event) {
+            if (event.pointerId !== clockDragPointerId) return;
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            clockFace.classList.remove('dragging');
+
+            try {
+                if (clockFace.hasPointerCapture(event.pointerId)) {
+                    clockFace.releasePointerCapture(event.pointerId);
+                }
+            } catch (_) {}
+
+            clockDragPointerId = null;
+            clockDragLastAngleDeg = null;
+            clockDragAccumulatedMinutes = 0;
+            clockDragStartSimulationUtcMs = simulationUtcMs;
+
+            updateClockHandFromSimulation();
+
+            if (!clockDragHasMoved) {
+                setClockPanelOpen(!clockPanel.classList.contains('open'));
+            }
+
+            clockDragHasMoved = false;
         }
 
         function updateQuickTimeDisplay() {
             const parts = getZonedParts(new Date(simulationUtcMs), timeZoneSelect.value);
-            quickTimeDisplay.textContent = `${String(parts.hour).padStart(2,'0')}:${String(parts.minute).padStart(2,'0')}`;
+
+            const ampm = parts.hour < 12 ? 'AM' : 'PM';
+            const hour12 = parts.hour % 12 || 12;
+
+            quickTimeDisplay.textContent =
+                `${hour12}:${String(parts.minute).padStart(2,'0')}`;
+
+            if (quickAmPmDisplay) {
+                quickAmPmDisplay.textContent = ampm;
+            }
+
+            if (quickDateDisplay) {
+                quickDateDisplay.textContent =
+                    `${String(parts.year).padStart(4,'0')}/${String(parts.month).padStart(2,'0')}/${String(parts.day).padStart(2,'0')}`;
+            }
+
+            if (clockPanel) {
+                const isNight = parts.hour >= 18 || parts.hour < 4;
+                clockPanel.classList.toggle('clock-night', isNight);
+                clockPanel.classList.toggle('clock-day', !isNight);
+            }
+
+            updateClockHandFromSimulation();
         }
 
         function setInfoSheetOpen(open) {
+            document.body.classList.toggle('info-sheet-open', open);
             infoSheet.classList.toggle('open', open);
             infoSheet.setAttribute('aria-hidden', String(!open));
             infoToggleButton.setAttribute('aria-expanded', String(open));
