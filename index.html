@@ -1381,241 +1381,99 @@
         }
 
     
-        /* ===== Functional settings side sheet ===== */
-        #controls .controls-header {
-            display: none !important;
+        /* ===== Stable Settings Side Sheet V2 ===== */
+        #controls { display: none !important; }
+        #settingsScrim { display: none !important; }
+
+        #settingsScrimV2 {
+            position: fixed; inset: 0; z-index: 3000;
+            background: rgba(0,0,0,.48);
+            opacity: 0; visibility: hidden; pointer-events: none;
+            transition: opacity .22s ease, visibility 0s linear .22s;
+        }
+        #settingsScrimV2.open {
+            opacity: 1; visibility: visible; pointer-events: auto;
+            transition: opacity .22s ease, visibility 0s;
         }
 
-        #controls {
-            overflow-y: auto;
-            overscroll-behavior: contain;
-            padding-bottom: calc(24px + env(safe-area-inset-bottom));
+        #settingsSheetV2 {
+            position: fixed; top: 0; right: 0; bottom: 0; z-index: 3010;
+            width: min(360px, 88vw); height: 100dvh;
+            padding: max(14px, env(safe-area-inset-top)) 16px max(18px, env(safe-area-inset-bottom));
+            overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch;
+            background: linear-gradient(180deg, rgba(4,15,32,.995), rgba(2,8,22,.985));
+            border-left: 1px solid rgba(103,247,255,.26);
+            box-shadow: -18px 0 44px rgba(0,0,0,.54);
+            transform: translate3d(105%,0,0);
+            transition: transform .28s cubic-bezier(.2,.8,.2,1);
         }
+        #settingsSheetV2.open { transform: translate3d(0,0,0); }
 
-        #controls .settings-group {
-            margin: 14px 0;
-            padding: 12px;
-            border: 1px solid rgba(103,247,255,.14);
-            border-radius: 14px;
-            background: rgba(3,15,30,.42);
-        }
-
-        #controls .settings-group-title {
-            margin-bottom: 9px;
-            color: var(--ui-cyan, #67f7ff);
-            font-size: 12px;
-            font-weight: 800;
-            letter-spacing: .08em;
-        }
-
-        #controls .settings-zoom-row {
-            display: grid;
-            grid-template-columns: 46px minmax(0,1fr) 64px;
-            align-items: center;
-            gap: 8px;
-        }
-
-        #controls .settings-zoom-row input[type="range"] {
-            width: 100%;
-        }
-
-        #viewZoomValue {
-            color: var(--ui-cyan, #67f7ff);
-            text-align: right;
-            white-space: nowrap;
-            font-size: 11px;
-        }
-
-        #controls .view-mode-row {
-            grid-template-columns: 46px repeat(3,minmax(0,1fr));
-        }
-
-        #controls .view-button {
-            min-height: 42px;
-        }
-
-        #controls .view-button.active {
-            border-color: rgba(103,247,255,.65) !important;
-            box-shadow:
-                inset 0 0 14px rgba(25,234,255,.10),
-                0 0 10px rgba(25,234,255,.08);
-        }
-
-        #controls select,
-        #controls input[type="number"],
-        #controls input[type="datetime-local"] {
-            width: 100%;
-        }
-
-        #sideSheetHeader {
-            position: sticky;
-            top: 0;
-            z-index: 4;
-            background: rgba(3,10,24,.94);
+        .settingsV2Header {
+            position: sticky; top: -14px; z-index: 2;
+            display: flex; align-items: center; justify-content: space-between; gap: 12px;
+            margin: -14px -16px 16px;
+            padding: max(14px, env(safe-area-inset-top)) 16px 12px;
+            background: rgba(3,12,28,.97);
             backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(103,247,255,.15);
+        }
+        .settingsV2Title {
+            color: #67f7ff; font-size: 18px; font-weight: 800; letter-spacing: .06em;
+            text-shadow: 0 0 6px rgba(25,234,255,.34), 0 0 14px rgba(25,234,255,.12);
+        }
+        #settingsCloseV2 {
+            width: 44px; height: 44px; flex: 0 0 44px;
+            border: 1px solid rgba(103,247,255,.30); border-radius: 50%;
+            background: rgba(8,26,44,.78); color: #67f7ff;
+            font-size: 22px; line-height: 1; touch-action: manipulation;
+        }
+        .settingsV2Section {
+            margin-bottom: 12px; padding: 14px;
+            border: 1px solid rgba(103,247,255,.14); border-radius: 14px;
+            background: rgba(7,22,40,.58);
+        }
+        .settingsV2Section h3 {
+            margin: 0 0 8px; color: #67f7ff; font-size: 13px; letter-spacing: .05em;
+        }
+        .settingsV2Section p {
+            margin: 0; color: rgba(214,252,255,.70); font-size: 13px; line-height: 1.65;
+        }
+        @media (max-width: 520px) {
+            #settingsSheetV2 { width: min(350px, 90vw); }
         }
 
     
-        /* ===== Side sheet display stability fix ===== */
-
-        /* 旧「メニュー折りたたみ」の状態をサイドシートでは完全に無効化 */
-        #controls,
-        #controls.collapsed {
-            position: fixed !important;
-            top: 0 !important;
-            right: 0 !important;
-            bottom: 0 !important;
-            left: auto !important;
-
-            width: min(390px, 92vw) !important;
-            height: 100dvh !important;
-            max-height: 100dvh !important;
-
-            display: flex !important;
-            flex-direction: column !important;
-            gap: 10px !important;
-
-            padding:
-                max(10px, env(safe-area-inset-top))
-                12px
-                max(18px, env(safe-area-inset-bottom)) !important;
-
-            overflow-x: hidden !important;
-            overflow-y: auto !important;
-            touch-action: pan-y !important;
-            overscroll-behavior: contain !important;
-
-            border: 0 !important;
-            border-left: 1px solid rgba(103,247,255,.20) !important;
-            border-radius: 0 !important;
-            background: rgba(2,10,25,.975) !important;
-            box-shadow: -16px 0 44px rgba(0,0,0,.48) !important;
-
-            transform: translate3d(104%,0,0) !important;
-            visibility: hidden;
-            pointer-events: none;
-            transition:
-                transform 300ms cubic-bezier(.2,.82,.2,1),
-                visibility 0s linear 300ms !important;
+        /* ===== Settings V2: view mode only ===== */
+        .settingsV2ModeGrid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 8px;
         }
-
-        #controls.open,
-        #controls.collapsed.open {
-            transform: translate3d(0,0,0) !important;
-            visibility: visible;
-            pointer-events: auto;
-            transition:
-                transform 300ms cubic-bezier(.2,.82,.2,1),
-                visibility 0s linear 0s !important;
+        .settingsV2ModeButton {
+            min-height: 48px;
+            min-width: 0;
+            padding: 8px 6px;
+            border: 1px solid rgba(103,247,255,.22);
+            border-radius: 12px;
+            background: rgba(5,23,42,.72);
+            color: #67f7ff;
+            font: 700 13px/1.25 system-ui, sans-serif;
+            touch-action: manipulation;
         }
-
-        /* 古いcollapsed直下ルールを打ち消す */
-        #controls.collapsed > *,
-        #controls > * {
-            flex-shrink: 0;
+        .settingsV2ModeButton.active {
+            border-color: rgba(103,247,255,.72);
+            background: rgba(14,72,92,.66);
+            color: #eaffff;
+            box-shadow:
+                inset 0 0 16px rgba(25,234,255,.10),
+                0 0 12px rgba(25,234,255,.12);
+            text-shadow: 0 0 7px rgba(25,234,255,.45);
         }
-
-        #controls.collapsed > :not(.controls-header) {
-            display: revert !important;
-        }
-
-        #controls .controls-header {
-            display: none !important;
-        }
-
-        /* サイドシート各UIの表示方式を明示 */
-        #controls #sideSheetHeader {
-            display: flex !important;
-        }
-
-        #controls .settings-group,
-        #controls .section {
-            display: flex !important;
-            flex-direction: column !important;
-            width: 100% !important;
-            min-width: 0 !important;
-        }
-
-        #controls .control-row {
-            display: flex !important;
-            width: 100% !important;
-            min-width: 0 !important;
-        }
-
-        #controls .view-mode-row {
-            display: grid !important;
-            grid-template-columns: 44px repeat(3,minmax(0,1fr)) !important;
-            width: 100% !important;
-            min-width: 0 !important;
-        }
-
-        #controls .settings-zoom-row {
-            display: grid !important;
-            grid-template-columns: 44px minmax(0,1fr) 58px !important;
-            width: 100% !important;
-            min-width: 0 !important;
-        }
-
-        #controls .stack-row,
-        #controls .play-row,
-        #controls .time-step-row,
-        #controls .coordinate-grid {
-            width: 100% !important;
-            min-width: 0 !important;
-        }
-
-        #controls select,
-        #controls input,
-        #controls button {
-            min-width: 0 !important;
-            max-width: 100% !important;
-        }
-
-        /* ground-only / center-only は従来のvisibleクラスだけに従う */
-        #controls .ground-only:not(.visible),
-        #controls .center-only:not(.visible) {
-            display: none !important;
-        }
-
-        #controls .ground-only.visible,
-        #controls .center-only.visible {
-            display: flex !important;
-        }
-
-        #sideSheetHeader {
-            position: sticky !important;
-            top: -1px !important;
-            z-index: 20 !important;
-            min-height: 52px;
-            margin: -2px -2px 4px !important;
-            padding: 8px 4px 10px !important;
-            background: rgba(2,10,25,.985) !important;
-            border-bottom: 1px solid rgba(103,247,255,.14);
-        }
-
-        #sideSheetHeader strong {
-            color: var(--ui-cyan,#67f7ff) !important;
-        }
-
-        #sideSheetClose {
-            color: var(--ui-cyan,#67f7ff) !important;
-        }
-
-        @media (max-width: 520px) {
-            #controls,
-            #controls.collapsed {
-                width: min(360px, 94vw) !important;
-                padding-left: 10px !important;
-                padding-right: 10px !important;
-            }
-
-            #controls .view-mode-row {
-                grid-template-columns: repeat(3,minmax(0,1fr)) !important;
-            }
-
-            #controls .view-mode-row > .row-label {
-                grid-column: 1 / -1 !important;
-            }
+        .settingsV2ModeHint {
+            margin-top: 9px !important;
+            font-size: 11px !important;
+            color: rgba(180,244,248,.58) !important;
         }
 
     </style>
@@ -1623,6 +1481,27 @@
 <body>
 
     <div id="settingsScrim" aria-hidden="true"></div>
+
+    <div id="settingsScrimV2" aria-hidden="true"></div>
+    <aside id="settingsSheetV2" aria-hidden="true">
+        <div class="settingsV2Header">
+            <strong class="settingsV2Title">星空設定</strong>
+            <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
+        </div>
+        <section class="settingsV2Section">
+            <h3>表示モード</h3>
+            <div class="settingsV2ModeGrid" role="group" aria-label="表示モード">
+                <button type="button" class="settingsV2ModeButton" data-view-mode="ground">地上</button>
+                <button type="button" class="settingsV2ModeButton active" data-view-mode="center">天球中心</button>
+                <button type="button" class="settingsV2ModeButton" data-view-mode="overview">地球俯瞰</button>
+            </div>
+            <p class="settingsV2ModeHint">まずはモード切替だけを接続しています。</p>
+        </section>
+        <section class="settingsV2Section">
+            <h3>次に追加</h3>
+            <p>この切替が安定したら、次にズームか星座線を追加します。</p>
+        </section>
+    </aside>
 
     <section id="clockPanel" aria-hidden="true" aria-label="時刻ダイヤル試作">
         <div class="clock-face">
@@ -1694,27 +1573,15 @@
             <button type="button" id="controlsToggle" aria-expanded="true">メニューをたたむ</button>
         </div>
 
-        <div class="settings-group">
-            <div class="settings-group-title">星座</div>
-            <select id="constellationSelect">
-                <option value="">星座を選択してください</option>
-            </select>
-        </div>
+        <select id="constellationSelect">
+            <option value="">星座を選択してください</option>
+        </select>
 
         <div class="control-row view-mode-row">
             <span class="row-label">視点</span>
             <button type="button" class="view-button" data-view="ground" aria-pressed="false">地上</button>
             <button type="button" class="view-button active" data-view="center" aria-pressed="true">天球中心</button>
             <button type="button" class="view-button" data-view="overview" aria-pressed="false">地球俯瞰</button>
-        </div>
-
-        <div class="settings-group">
-            <div class="settings-group-title">表示</div>
-            <div class="settings-zoom-row">
-                <span>ズーム</span>
-                <input type="range" id="viewZoomSlider" min="0" max="100" step="1" value="50">
-                <span id="viewZoomValue">50%</span>
-            </div>
         </div>
 
         <div class="section ground-only" id="groundSettings">
@@ -1827,6 +1694,63 @@
     <div id="touchHint">1本指：見回す　・　2本指：ピンチズーム</div>
     <div id="constellationLabels"></div>
 
+
+    <script>
+    (() => {
+        const button = document.getElementById('settingsButton');
+        const sheet = document.getElementById('settingsSheetV2');
+        const close = document.getElementById('settingsCloseV2');
+        const scrim = document.getElementById('settingsScrimV2');
+        const modeButtons = Array.from(document.querySelectorAll('.settingsV2ModeButton'));
+
+        function setModeActive(mode) {
+            modeButtons.forEach(modeButton => {
+                const active = modeButton.dataset.viewMode === mode;
+                modeButton.classList.toggle('active', active);
+                modeButton.setAttribute('aria-pressed', String(active));
+            });
+        }
+
+        function syncModeFromViewer() {
+            try {
+                if (typeof currentViewMode !== 'undefined') {
+                    setModeActive(currentViewMode);
+                }
+            } catch (_) {}
+        }
+
+        function setOpen(open) {
+            sheet.classList.toggle('open', open);
+            scrim.classList.toggle('open', open);
+            sheet.setAttribute('aria-hidden', String(!open));
+            scrim.setAttribute('aria-hidden', String(!open));
+            button.setAttribute('aria-expanded', String(open));
+
+            if (open) {
+                requestAnimationFrame(syncModeFromViewer);
+            }
+        }
+
+        button.addEventListener('click', () => setOpen(!sheet.classList.contains('open')));
+        close.addEventListener('click', () => setOpen(false));
+        scrim.addEventListener('click', () => setOpen(false));
+
+        modeButtons.forEach(modeButton => {
+            modeButton.addEventListener('click', () => {
+                const mode = modeButton.dataset.viewMode;
+                if (typeof applyViewPreset === 'function') {
+                    applyViewPreset(mode, true);
+                    setModeActive(mode);
+                }
+            });
+        });
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') setOpen(false);
+        });
+    })();
+    </script>
+
     <script src="stars.js"></script>
     <script src="starline.js"></script>
     <script src="background_stars.js"></script>
@@ -1924,8 +1848,6 @@
         const groundLensSlider = document.getElementById('groundLensSlider');
         const lensValue = document.getElementById('lensValue');
         const viewButtons = Array.from(document.querySelectorAll('.view-button'));
-        const viewZoomSlider = document.getElementById('viewZoomSlider');
-        const viewZoomValue = document.getElementById('viewZoomValue');
         const groundOnlyElements = Array.from(document.querySelectorAll('.ground-only'));
         const centerOnlyElements = Array.from(document.querySelectorAll('.center-only'));
         const constellationLinesToggle = document.getElementById('constellationLinesToggle');
@@ -2034,19 +1956,15 @@
             setDateInputFromUtc(simulationUtcMs);
             backgroundMagnitudeValue.textContent = `${parseFloat(backgroundMagnitudeSlider.value).toFixed(1)}等`;
             updateModeSpecificControls();
-            updateViewZoomControl();
 
-            // 旧上部メニューの折りたたみ機構はサイドシートでは使用しない。
-            controlsPanel.classList.remove('collapsed');
+            bindTapAction(controlsToggle, () => {
+                const collapsed = controlsPanel.classList.toggle('collapsed');
+                controlsToggle.textContent = collapsed ? 'メニューを開く' : 'メニューをたたむ';
+                controlsToggle.setAttribute('aria-expanded', String(!collapsed));
+            });
 
             viewButtons.forEach(button => {
                 bindTapAction(button, () => applyViewPreset(button.dataset.view, true));
-            });
-
-            viewZoomSlider.addEventListener('input', () => {
-                cancelCameraAnimation();
-                applyViewZoomSlider(Number(viewZoomSlider.value));
-                clearActiveViewPreset();
             });
 
             cameraFocusToggle.addEventListener('change', () => {
@@ -2058,7 +1976,6 @@
             groundLensSlider.addEventListener('input', () => {
                 cancelCameraAnimation();
                 setCameraFocalLength(parseFloat(groundLensSlider.value));
-                updateViewZoomControl();
                 clearActiveViewPreset();
             });
 
@@ -2129,9 +2046,7 @@
             bindTapAction(infoToggleButton, () => setInfoSheetOpen(!infoSheet.classList.contains('open')));
             bindTapAction(infoSheetClose, () => setInfoSheetOpen(false));
 
-            bindTapAction(settingsButton, () => setSettingsSheetOpen(!controlsPanel.classList.contains('open')));
-            bindTapAction(sideSheetClose, () => setSettingsSheetOpen(false));
-            settingsScrim.addEventListener('click', () => setSettingsSheetOpen(false));
+            // Settings V2 handles the settings button independently.
 
             bindTapAction(quickPrevDay, () => {
                 pauseTimePlayback();
@@ -2219,22 +2134,10 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         }
 
         function setSettingsSheetOpen(open) {
-            controlsPanel.classList.remove('collapsed');
             controlsPanel.classList.toggle('open', open);
             settingsScrim.classList.toggle('open', open);
             settingsScrim.setAttribute('aria-hidden', String(!open));
             settingsButton.setAttribute('aria-expanded', String(open));
-
-            if (open) {
-                updateModeSpecificControls();
-                setActiveViewPreset(currentViewMode);
-                updateViewZoomControl();
-                constellationLinesToggle.checked = lineGroup.visible;
-                backgroundStarsToggle.checked = backgroundStarGroup.visible;
-
-                // 開くたびに先頭から表示。スマホで中途半端な位置に開かないようにする。
-                controlsPanel.scrollTop = 0;
-            }
         }
 
         function setClockPanelOpen(open) {
@@ -2744,94 +2647,6 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             clearActiveViewPreset();
         }
 
-
-        function applyViewZoomSlider(value) {
-            const normalized = THREE.MathUtils.clamp(value / 100, 0, 1);
-
-            if (currentViewMode === 'ground') {
-                // 0 = 6mm 超広角 / 100 = 50mm
-                const focal = THREE.MathUtils.lerp(
-                    GROUND_MIN_FOCAL_LENGTH,
-                    GROUND_DEFAULT_FOCAL_LENGTH,
-                    normalized
-                );
-                setCameraFocalLength(focal);
-            } else if (currentViewMode === 'center') {
-                // 0 = 広角100° / 100 = 望遠20°
-                camera.fov = THREE.MathUtils.lerp(100, 20, normalized);
-                camera.updateProjectionMatrix();
-            } else {
-                // 0 = 遠い / 100 = 地球近傍
-                const minRadius = EARTH_RADIUS + OBSERVER_HEIGHT + 10;
-                const maxRadius = 12000;
-                const radius = THREE.MathUtils.lerp(maxRadius, minRadius, normalized);
-
-                const direction = camera.position.clone();
-                if (direction.lengthSq() < 1e-8) {
-                    direction.set(1, .65, 1);
-                }
-                direction.normalize();
-
-                camera.position.copy(direction.multiplyScalar(radius));
-                camera.lookAt(0, 0, 0);
-                syncCameraQuaternion();
-            }
-
-            updateViewZoomControl();
-        }
-
-        function updateViewZoomControl() {
-            if (!viewZoomSlider || !viewZoomValue) return;
-
-            let value = 50;
-            let label = '';
-
-            if (currentViewMode === 'ground') {
-                const focal = THREE.MathUtils.clamp(
-                    verticalFovToFocalLength(camera.fov),
-                    GROUND_MIN_FOCAL_LENGTH,
-                    GROUND_DEFAULT_FOCAL_LENGTH
-                );
-                value = THREE.MathUtils.mapLinear(
-                    focal,
-                    GROUND_MIN_FOCAL_LENGTH,
-                    GROUND_DEFAULT_FOCAL_LENGTH,
-                    0,
-                    100
-                );
-                label = `${focal.toFixed(1).replace('.0','')}mm`;
-            } else if (currentViewMode === 'center') {
-                value = THREE.MathUtils.mapLinear(
-                    camera.fov,
-                    100,
-                    20,
-                    0,
-                    100
-                );
-                label = `${camera.fov.toFixed(0)}°`;
-            } else {
-                const minRadius = EARTH_RADIUS + OBSERVER_HEIGHT + 10;
-                const maxRadius = 12000;
-                const radius = THREE.MathUtils.clamp(
-                    camera.position.length(),
-                    minRadius,
-                    maxRadius
-                );
-                value = THREE.MathUtils.mapLinear(
-                    radius,
-                    maxRadius,
-                    minRadius,
-                    0,
-                    100
-                );
-                label = `×${(radius / EARTH_RADIUS).toFixed(1)}`;
-            }
-
-            value = THREE.MathUtils.clamp(value, 0, 100);
-            viewZoomSlider.value = String(value);
-            viewZoomValue.textContent = label;
-        }
-
         function applyZoom(amount) {
             if (currentViewMode === 'overview') {
                 const direction = camera.position.clone().normalize();
@@ -2859,7 +2674,6 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 camera.fov = THREE.MathUtils.clamp(camera.fov + amount * 12, 20, 100);
                 camera.updateProjectionMatrix();
             }
-            updateViewZoomControl();
             clearActiveViewPreset();
         }
 
@@ -2922,7 +2736,6 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 if (name === 'ground') applyGroundCameraOrientation();
                 else syncCameraQuaternion();
                 refreshConstellationLineGeometry(true);
-                updateViewZoomControl();
                 return;
             }
 
@@ -3031,7 +2844,6 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 camera.up.copy(endUp);
                 if (currentViewMode === 'ground') applyGroundCameraOrientation();
                 else syncCameraQuaternion();
-                updateViewZoomControl();
             }
         }
 
