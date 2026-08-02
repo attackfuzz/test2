@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>星座探索 - 季節プリセット・解説シート試作</title>
+    <title>星座探索 - 下段UI・時計・サイドシート試作</title>
     <style>
         :root {
             color-scheme: dark;
@@ -401,138 +401,269 @@
         }
 
 
-        /* --- スマホ下段UI試作：季節プリセット + 解説ボトムシート --- */
-        #bottomQuickBar {
+        /* --- 下段UI + 時計展開 + 設定サイドシート試作 --- */
+        #controls {
+            position: fixed !important;
+            top: 0 !important;
+            right: 0 !important;
+            left: auto !important;
+            bottom: 0;
+            z-index: 220;
+            width: min(390px, 88vw) !important;
+            max-height: 100dvh !important;
+            height: 100dvh;
+            padding: max(16px, env(safe-area-inset-top)) 14px max(18px, env(safe-area-inset-bottom));
+            border: 0;
+            border-left: 1px solid rgba(160, 195, 255, 0.20);
+            border-radius: 0;
+            background: rgba(3, 9, 27, 0.96);
+            transform: translateX(104%);
+            transition: transform 340ms cubic-bezier(.2,.82,.2,1);
+            box-shadow: -16px 0 44px rgba(0,0,0,0.45);
+        }
+        #controls.open { transform: translateX(0); }
+        #controls .controls-header { display: none !important; }
+        #controls.collapsed { width: min(390px, 88vw) !important; max-height: 100dvh !important; padding: max(16px, env(safe-area-inset-top)) 14px max(18px, env(safe-area-inset-bottom)); }
+        #controls.collapsed > :not(.controls-header) { display: flex !important; }
+        #controls.collapsed > select { display: block !important; }
+        #controls.collapsed > .view-mode-row { display: grid !important; }
+        #settingsScrim {
             position: fixed;
-            left: 50%;
-            bottom: max(10px, env(safe-area-inset-bottom));
-            z-index: 135;
-            transform: translateX(-50%);
-            display: grid;
-            grid-template-columns: 1fr 1.15fr 1fr;
-            gap: 8px;
-            width: min(430px, calc(100vw - 20px));
-            padding: 8px;
-            border: 1px solid rgba(150, 190, 255, 0.20);
-            border-radius: 16px;
-            background: rgba(2, 8, 26, 0.84);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.34);
-        }
-        #bottomQuickBar button,
-        #infoSheet button {
-            min-height: 48px;
-            border: 1px solid rgba(160, 195, 255, 0.30);
-            border-radius: 11px;
-            color: #fff;
-            background: rgba(24, 34, 68, 0.95);
-            font: inherit;
-            font-weight: 750;
-            touch-action: manipulation;
-            -webkit-tap-highlight-color: transparent;
-        }
-        #bottomQuickBar button:active,
-        #infoSheet button:active {
-            transform: scale(0.97);
-            filter: brightness(1.2);
-        }
-        #infoToggleButton {
-            background: rgba(50, 74, 120, 0.96) !important;
-        }
-        #infoSheet {
-            position: fixed;
-            left: 50%;
-            bottom: calc(max(10px, env(safe-area-inset-bottom)) + 72px);
-            z-index: 130;
-            width: min(520px, calc(100vw - 20px));
-            max-height: min(42dvh, 360px);
-            overflow: hidden;
-            transform: translate(-50%, calc(100% + 100px));
+            inset: 0;
+            z-index: 210;
+            background: rgba(0,0,0,0.38);
             opacity: 0;
             pointer-events: none;
-            transition: transform 320ms cubic-bezier(.2,.8,.2,1), opacity 220ms ease;
-            border: 1px solid rgba(160, 195, 255, 0.22);
-            border-radius: 18px 18px 14px 14px;
-            background: rgba(3, 9, 27, 0.94);
-            color: #fff;
-            backdrop-filter: blur(13px);
-            box-shadow: 0 -12px 36px rgba(0,0,0,0.42);
+            transition: opacity 240ms ease;
         }
-        #infoSheet.open {
-            transform: translate(-50%, 0);
-            opacity: 1;
-            pointer-events: auto;
-        }
-        .info-sheet-handle {
-            width: 46px;
-            height: 5px;
-            margin: 9px auto 2px;
-            border-radius: 999px;
-            background: rgba(190, 215, 255, 0.42);
-        }
-        .info-sheet-header {
+        #settingsScrim.open { opacity: 1; pointer-events: auto; }
+        #sideSheetHeader {
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 12px;
-            padding: 8px 14px 10px;
-            border-bottom: 1px solid rgba(150,190,255,0.13);
+            margin-bottom: 2px;
+            padding: 4px 2px 8px;
         }
-        #infoSheetTitle {
-            min-width: 0;
+        #sideSheetHeader strong { color: #d9ebff; letter-spacing: .05em; }
+        #sideSheetClose {
+            min-height: 42px;
+            min-width: 64px;
+            border: 1px solid rgba(160,195,255,.28);
+            border-radius: 10px;
+            background: rgba(24,34,68,.95);
+            color: #fff;
+            font: inherit;
+        }
+
+        #bottomDock {
+            position: fixed;
+            left: 50%;
+            bottom: max(8px, env(safe-area-inset-bottom));
+            z-index: 155;
+            transform: translateX(-50%);
+            width: min(470px, calc(100vw - 16px));
+            padding: 8px;
+            border: 1px solid rgba(150,190,255,.20);
+            border-radius: 18px;
+            background: linear-gradient(180deg, rgba(7,15,38,.79), rgba(2,7,22,.91));
+            backdrop-filter: blur(12px);
+            box-shadow: 0 12px 34px rgba(0,0,0,.38);
+        }
+        .dock-row { display: grid; gap: 7px; }
+        .dock-row + .dock-row { margin-top: 7px; }
+        .dock-top { grid-template-columns: 1fr 1.18fr 1fr; }
+        .dock-middle { grid-template-columns: 1fr 1.08fr 1fr; }
+        .dock-bottom { grid-template-columns: .82fr 1.45fr; }
+        #bottomDock button {
+            min-height: 46px;
+            padding: 7px 8px;
+            border: 1px solid rgba(160,195,255,.25);
+            border-radius: 12px;
+            color: #fff;
+            background: rgba(23,34,67,.86);
+            font: inherit;
+            font-weight: 720;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+        #bottomDock button:active { transform: scale(.97); filter: brightness(1.18); }
+        #clockToggleButton {
+            position: relative;
+            background: rgba(7,17,42,.92) !important;
+            font-variant-numeric: tabular-nums;
+            font-size: 18px !important;
+            letter-spacing: .04em;
+        }
+        #clockToggleButton::after {
+            content: '⌃';
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-52%);
+            font-size: 12px;
+            opacity: .62;
+            transition: transform 260ms ease;
+        }
+        #clockToggleButton[aria-expanded="true"]::after { transform: translateY(-40%) rotate(180deg); }
+        #settingsButton { font-size: 19px !important; }
+        #infoToggleButton { background: rgba(50,74,120,.93) !important; }
+
+        #clockPanel {
+            position: fixed;
+            left: 50%;
+            bottom: calc(max(8px, env(safe-area-inset-bottom)) + 166px);
+            z-index: 150;
+            width: min(300px, 72vw);
+            aspect-ratio: 1 / 1;
+            transform: translate(-50%, 24px) scale(.78);
+            transform-origin: 50% 100%;
+            opacity: 0;
+            pointer-events: none;
+            transition: transform 330ms cubic-bezier(.18,.86,.24,1), opacity 220ms ease;
+        }
+        #clockPanel.open {
+            transform: translate(-50%, 0) scale(1);
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .clock-face {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(6,15,38,.32) 0%, rgba(3,10,29,.54) 55%, rgba(1,5,18,.10) 72%, transparent 73%);
+            filter: drop-shadow(0 9px 22px rgba(0,0,0,.34));
+        }
+        .clock-number {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 48px;
+            height: 48px;
+            margin: -24px;
+            border: 0;
+            border-radius: 50%;
+            background: rgba(4,10,28,.55);
+            color: rgba(239,247,255,.95);
+            font: 750 19px/1 system-ui, sans-serif;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            transform: rotate(var(--a)) translateY(-122px) rotate(calc(-1 * var(--a)));
+            text-shadow: 0 1px 6px #000;
+            transition: background 120ms ease, color 120ms ease, scale 120ms ease;
+        }
+        .clock-number:active { scale: .92; background: rgba(81,122,189,.72); }
+        .clock-number.selected { background: rgba(94,145,220,.72); color: #fff; }
+        #clockHandWrap {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 4px;
+            height: 4px;
+            transform: translate(-50%,-50%) rotate(0deg);
+            transition: transform 300ms cubic-bezier(.18,.9,.23,1.15);
+            pointer-events: none;
+        }
+        #clockHand {
+            position: absolute;
+            left: -16px;
+            bottom: 2px;
+            width: 32px;
+            height: 84px;
+            clip-path: polygon(50% 0, 94% 92%, 50% 74%, 6% 92%);
+            background: linear-gradient(180deg, rgba(225,242,255,.98), rgba(91,157,229,.82));
+            filter: drop-shadow(0 2px 7px rgba(50,130,230,.55));
+            transform-origin: 50% 100%;
+        }
+        #clockCenter {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 9px;
+            height: 9px;
+            transform: translate(-50%,-50%);
+            border-radius: 50%;
+            background: #d8edff;
+            box-shadow: 0 0 12px rgba(105,177,255,.75);
+            pointer-events: none;
+        }
+        #clockPreview {
+            position: absolute;
+            left: 50%;
+            bottom: 13%;
+            transform: translateX(-50%);
+            min-width: 88px;
+            text-align: center;
+            color: rgba(205,229,255,.82);
+            font-size: 12px;
+            font-variant-numeric: tabular-nums;
+            pointer-events: none;
+        }
+
+        #infoSheet {
+            position: fixed;
+            left: 50%;
+            bottom: calc(max(8px, env(safe-area-inset-bottom)) + 166px);
+            z-index: 180;
+            width: min(520px, calc(100vw - 16px));
+            max-height: min(44dvh, 380px);
             overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            font-size: 16px;
-            font-weight: 800;
-            color: #d9ebff;
+            transform: translate(-50%, calc(100% + 180px));
+            opacity: 0;
+            pointer-events: none;
+            transition: transform 330ms cubic-bezier(.2,.82,.2,1), opacity 220ms ease;
+            border: 1px solid rgba(160,195,255,.22);
+            border-radius: 18px 18px 14px 14px;
+            background: rgba(3,9,27,.95);
+            color: #fff;
+            backdrop-filter: blur(13px);
+            box-shadow: 0 -12px 36px rgba(0,0,0,.42);
         }
-        #infoSheetClose {
-            min-width: 62px;
-            min-height: 40px !important;
-            padding: 6px 10px;
-            font-size: 13px;
-        }
-        .info-sheet-body {
-            overflow-y: auto;
-            max-height: calc(min(42dvh, 360px) - 92px);
-            padding: 14px 16px 18px;
-            touch-action: pan-y;
-            -webkit-overflow-scrolling: touch;
-        }
-        #infoSheetText {
-            margin: 0;
-            font-size: 14px;
-            line-height: 1.75;
-            color: rgba(255,255,255,0.88);
-            user-select: text;
-            -webkit-user-select: text;
-        }
-        .info-sheet-note {
-            margin-top: 12px;
-            font-size: 11px;
-            line-height: 1.5;
-            color: rgba(190,210,240,0.60);
-        }
+        #infoSheet.open { transform: translate(-50%,0); opacity: 1; pointer-events: auto; }
+        .info-sheet-handle { width:46px; height:5px; margin:9px auto 2px; border-radius:999px; background:rgba(190,215,255,.42); }
+        .info-sheet-header { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:8px 14px 10px; border-bottom:1px solid rgba(150,190,255,.13); }
+        #infoSheetTitle { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:16px; font-weight:800; color:#d9ebff; }
+        #infoSheetClose { min-width:62px; min-height:40px; padding:6px 10px; border:1px solid rgba(160,195,255,.3); border-radius:10px; color:#fff; background:rgba(24,34,68,.95); font:inherit; }
+        .info-sheet-body { overflow-y:auto; max-height:calc(min(44dvh,380px) - 92px); padding:14px 16px 18px; touch-action:pan-y; -webkit-overflow-scrolling:touch; }
+        #infoSheetText { margin:0; font-size:14px; line-height:1.75; color:rgba(255,255,255,.88); user-select:text; -webkit-user-select:text; }
+        .info-sheet-note { margin-top:12px; font-size:11px; line-height:1.5; color:rgba(190,210,240,.60); }
+
+        #touchHint { bottom: calc(max(8px, env(safe-area-inset-bottom)) + 170px); }
         @media (max-width: 520px) {
-            #bottomQuickBar {
-                width: calc(100vw - 16px);
-                bottom: max(8px, env(safe-area-inset-bottom));
-                gap: 6px;
-                padding: 7px;
-            }
-            #bottomQuickBar button { font-size: 14px; }
-            #infoSheet {
-                width: calc(100vw - 16px);
-                bottom: calc(max(8px, env(safe-area-inset-bottom)) + 70px);
-                max-height: 44dvh;
-            }
-            #touchHint { bottom: calc(max(8px, env(safe-area-inset-bottom)) + 72px); }
+            #controls { width: 90vw !important; }
+            #bottomDock { width: calc(100vw - 14px); padding: 7px; }
+            #bottomDock button { min-height: 44px; font-size: 13px; }
+            #clockToggleButton { font-size: 17px !important; }
+            #clockPanel { width: min(284px, 76vw); bottom: calc(max(8px, env(safe-area-inset-bottom)) + 160px); }
+            .clock-number { transform: rotate(var(--a)) translateY(-112px) rotate(calc(-1 * var(--a))); }
+            #infoSheet { bottom: calc(max(8px, env(safe-area-inset-bottom)) + 160px); }
         }
 
     </style>
 </head>
 <body>
+
+    <div id="settingsScrim" aria-hidden="true"></div>
+
+    <section id="clockPanel" aria-hidden="true" aria-label="時刻ダイヤル試作">
+        <div class="clock-face">
+            <button class="clock-number" data-hour="12" style="--a:0deg">12</button>
+            <button class="clock-number" data-hour="1" style="--a:30deg">1</button>
+            <button class="clock-number" data-hour="2" style="--a:60deg">2</button>
+            <button class="clock-number" data-hour="3" style="--a:90deg">3</button>
+            <button class="clock-number" data-hour="4" style="--a:120deg">4</button>
+            <button class="clock-number" data-hour="5" style="--a:150deg">5</button>
+            <button class="clock-number" data-hour="6" style="--a:180deg">6</button>
+            <button class="clock-number" data-hour="7" style="--a:210deg">7</button>
+            <button class="clock-number" data-hour="8" style="--a:240deg">8</button>
+            <button class="clock-number" data-hour="9" style="--a:270deg">9</button>
+            <button class="clock-number" data-hour="10" style="--a:300deg">10</button>
+            <button class="clock-number" data-hour="11" style="--a:330deg">11</button>
+            <div id="clockHandWrap"><div id="clockHand"></div></div>
+            <div id="clockCenter"></div>
+            <div id="clockPreview">針のデザイン試作</div>
+        </div>
+    </section>
 
     <section id="infoSheet" aria-hidden="true" aria-label="星座解説">
         <div class="info-sheet-handle" aria-hidden="true"></div>
@@ -546,13 +677,25 @@
         </div>
     </section>
 
-    <nav id="bottomQuickBar" aria-label="季節と解説のクイック操作">
-        <button type="button" id="winterSkyButton">❄ 冬の空</button>
-        <button type="button" id="infoToggleButton" aria-expanded="false">✦ 解説</button>
-        <button type="button" id="summerSkyButton">☀ 夏の空</button>
+    <nav id="bottomDock" aria-label="星空クイック操作">
+        <div class="dock-row dock-top">
+            <button type="button" id="summerSkyButton">夏の空</button>
+            <button type="button" id="clockToggleButton" aria-expanded="false"><span id="quickTimeDisplay">21:00</span></button>
+            <button type="button" id="winterSkyButton">冬の空</button>
+        </div>
+        <div class="dock-row dock-middle">
+            <button type="button" id="quickPrevDay">◀ −1日</button>
+            <button type="button" id="quickNow">現時刻</button>
+            <button type="button" id="quickNextDay">＋1日 ▶</button>
+        </div>
+        <div class="dock-row dock-bottom">
+            <button type="button" id="settingsButton" aria-expanded="false">🔧 設定</button>
+            <button type="button" id="infoToggleButton" aria-expanded="false">✦ 解説を見る</button>
+        </div>
     </nav>
 
     <div id="controls">
+        <div id="sideSheetHeader"><strong>星空設定</strong><button type="button" id="sideSheetClose">閉じる</button></div>
         <div class="controls-header">
             <span class="controls-title">星空設定</span>
             <button type="button" id="controlsToggle" aria-expanded="true">メニューをたたむ</button>
@@ -801,6 +944,18 @@
         const infoSheetClose = document.getElementById('infoSheetClose');
         const infoSheetTitle = document.getElementById('infoSheetTitle');
         const infoSheetText = document.getElementById('infoSheetText');
+        const settingsButton = document.getElementById('settingsButton');
+        const settingsScrim = document.getElementById('settingsScrim');
+        const sideSheetClose = document.getElementById('sideSheetClose');
+        const quickPrevDay = document.getElementById('quickPrevDay');
+        const quickNow = document.getElementById('quickNow');
+        const quickNextDay = document.getElementById('quickNextDay');
+        const quickTimeDisplay = document.getElementById('quickTimeDisplay');
+        const clockToggleButton = document.getElementById('clockToggleButton');
+        const clockPanel = document.getElementById('clockPanel');
+        const clockHandWrap = document.getElementById('clockHandWrap');
+        const clockPreview = document.getElementById('clockPreview');
+        const clockNumberButtons = Array.from(document.querySelectorAll('.clock-number'));
 
         const starPositions = {};
         const starMeshes = {};
@@ -949,6 +1104,31 @@
             bindTapAction(infoToggleButton, () => setInfoSheetOpen(!infoSheet.classList.contains('open')));
             bindTapAction(infoSheetClose, () => setInfoSheetOpen(false));
 
+            bindTapAction(settingsButton, () => setSettingsSheetOpen(!controlsPanel.classList.contains('open')));
+            bindTapAction(sideSheetClose, () => setSettingsSheetOpen(false));
+            settingsScrim.addEventListener('click', () => setSettingsSheetOpen(false));
+
+            bindTapAction(quickPrevDay, () => {
+                pauseTimePlayback();
+                simulationUtcMs -= 86400000;
+                updateObserverFromSimulation(true);
+            });
+            bindTapAction(quickNow, () => {
+                pauseTimePlayback();
+                simulationUtcMs = Date.now();
+                updateObserverFromSimulation(true);
+            });
+            bindTapAction(quickNextDay, () => {
+                pauseTimePlayback();
+                simulationUtcMs += 86400000;
+                updateObserverFromSimulation(true);
+            });
+
+            bindTapAction(clockToggleButton, () => setClockPanelOpen(!clockPanel.classList.contains('open')));
+            clockNumberButtons.forEach(button => {
+                bindTapAction(button, () => selectClockHour(Number(button.dataset.hour)));
+            });
+
             renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { passive: false });
             renderer.domElement.addEventListener('pointermove', handleCanvasPointerMove, { passive: false });
             renderer.domElement.addEventListener('pointerup', handleCanvasPointerEnd, { passive: false });
@@ -989,11 +1169,39 @@
             updateObserverFromSimulation(true);
         }
 
+        function setSettingsSheetOpen(open) {
+            controlsPanel.classList.toggle('open', open);
+            settingsScrim.classList.toggle('open', open);
+            settingsScrim.setAttribute('aria-hidden', String(!open));
+            settingsButton.setAttribute('aria-expanded', String(open));
+        }
+
+        function setClockPanelOpen(open) {
+            clockPanel.classList.toggle('open', open);
+            clockPanel.setAttribute('aria-hidden', String(!open));
+            clockToggleButton.setAttribute('aria-expanded', String(open));
+            if (open) setInfoSheetOpen(false);
+        }
+
+        function selectClockHour(hour) {
+            const normalizedHour = hour === 12 ? 0 : hour;
+            const angle = normalizedHour * 30;
+            clockHandWrap.style.transform = `translate(-50%,-50%) rotate(${angle}deg)`;
+            clockNumberButtons.forEach(button => button.classList.toggle('selected', Number(button.dataset.hour) === hour));
+            clockPreview.textContent = `${hour}時方向を選択`;
+        }
+
+        function updateQuickTimeDisplay() {
+            const parts = getZonedParts(new Date(simulationUtcMs), timeZoneSelect.value);
+            quickTimeDisplay.textContent = `${String(parts.hour).padStart(2,'0')}:${String(parts.minute).padStart(2,'0')}`;
+        }
+
         function setInfoSheetOpen(open) {
             infoSheet.classList.toggle('open', open);
             infoSheet.setAttribute('aria-hidden', String(!open));
             infoToggleButton.setAttribute('aria-expanded', String(open));
-            infoToggleButton.textContent = open ? '✦ 解説を閉じる' : '✦ 解説';
+            infoToggleButton.textContent = open ? '✦ 解説を閉じる' : '✦ 解説を見る';
+            if (open) setClockPanelOpen(false);
         }
 
         function updateInfoSheetForConstellation() {
@@ -1575,6 +1783,7 @@
                 `${escapeHtml(localText)}　地方恒星時 ${formatHours(siderealHours)}`,
                 `視線：方位 ${azimuthDeg.toFixed(1)}° / 高度 ${altitudeDeg.toFixed(1)}°`
             ].join('<br>');
+            updateQuickTimeDisplay();
         }
 
         function pauseTimePlayback() {
