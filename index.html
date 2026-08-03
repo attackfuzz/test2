@@ -1630,6 +1630,77 @@
             font-size: 12px;
         }
 
+    
+        /* ===== Settings V2: star display ===== */
+        .settingsV2ToggleButton {
+            width: 100%;
+            min-height: 44px;
+            margin-top: 10px;
+            padding: 8px 12px;
+            border: 1px solid rgba(103,247,255,.22);
+            border-radius: 10px;
+            background: rgba(5,23,42,.72);
+            color: #67f7ff;
+            font-size: 13px;
+            font-weight: 700;
+            text-align: center;
+            touch-action: manipulation;
+        }
+
+        .settingsV2ToggleButton.active {
+            border-color: rgba(103,247,255,.72);
+            background: rgba(14,72,92,.66);
+            color: #eaffff;
+            box-shadow:
+                inset 0 0 16px rgba(25,234,255,.10),
+                0 0 12px rgba(25,234,255,.10);
+        }
+
+        .settingsV2LabelGrid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .settingsV2LabelButton {
+            width: 100%;
+            min-height: 44px;
+            padding: 8px 12px;
+            border: 1px solid rgba(103,247,255,.22);
+            border-radius: 10px;
+            background: rgba(5,23,42,.72);
+            color: #67f7ff;
+            font-size: 13px;
+            font-weight: 700;
+            text-align: left;
+            touch-action: manipulation;
+        }
+
+        .settingsV2LabelButton.active {
+            border-color: rgba(103,247,255,.72);
+            background: rgba(14,72,92,.66);
+            color: #eaffff;
+            box-shadow:
+                inset 0 0 16px rgba(25,234,255,.10),
+                0 0 12px rgba(25,234,255,.10);
+        }
+
+        .star-label {
+            position: absolute;
+            transform: translate(-50%, calc(-100% - 8px));
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: rgba(0, 10, 24, 0.58);
+            color: #d8feff;
+            font-size: 11px;
+            line-height: 1.25;
+            white-space: pre-line;
+            text-align: center;
+            text-shadow: 0 1px 2px #000000;
+            opacity: 0.88;
+        }
+
     </style>
 </head>
 <body>
@@ -1661,6 +1732,20 @@
             </div>
             <p class="settingsV2ModeHint">地上ではレンズ、天球中心では画角、俯瞰では距離を調整します。</p>
         </section>
+        <section class="settingsV2Section">
+            <h3>星の表示</h3>
+
+            <button type="button" class="settingsV2ToggleButton active" id="v2ConstellationLinesButton">星座線：表示</button>
+
+            <div class="settingsV2LabelGrid" role="group" aria-label="ラベル表示">
+                <button type="button" class="settingsV2LabelButton" data-v2-label-mode="none">ラベルなし</button>
+                <button type="button" class="settingsV2LabelButton" data-v2-label-mode="all">星名 + 星座名</button>
+                <button type="button" class="settingsV2LabelButton active" data-v2-label-mode="constellation">星座名のみ</button>
+            </div>
+
+            <div class="settingsV2Status" id="v2StarDisplayStatus">デフォルト: 星座線表示 / 星座名のみ表示</div>
+        </section>
+
         <section class="settingsV2Section">
             <h3>観測地点</h3>
 
@@ -1922,6 +2007,9 @@
         const v2ZoomValue = document.getElementById('v2ZoomValue');
         const v2ZoomOutButton = document.getElementById('v2ZoomOutButton');
         const v2ZoomInButton = document.getElementById('v2ZoomInButton');
+        const v2ConstellationLinesButton = document.getElementById('v2ConstellationLinesButton');
+        const v2LabelButtons = Array.from(document.querySelectorAll('.settingsV2LabelButton'));
+        const v2StarDisplayStatus = document.getElementById('v2StarDisplayStatus');
 
         function oldControl(id) {
             return document.getElementById(id);
@@ -1954,6 +2042,33 @@
             try {
                 if (typeof currentViewMode !== 'undefined') {
                     setModeActive(currentViewMode);
+                }
+            } catch (_) {}
+        }
+
+        function setV2LabelModeActive(mode) {
+            v2LabelButtons.forEach(button => {
+                const active = button.dataset.v2LabelMode === mode;
+                button.classList.toggle('active', active);
+                button.setAttribute('aria-pressed', String(active));
+            });
+        }
+
+        function syncV2StarDisplayFromViewer() {
+            const oldLinesToggle = oldControl('constellationLinesToggle');
+            const linesVisible = oldLinesToggle ? !!oldLinesToggle.checked : true;
+
+            v2ConstellationLinesButton.classList.toggle('active', linesVisible);
+            v2ConstellationLinesButton.textContent = `星座線：${linesVisible ? '表示' : '非表示'}`;
+
+            try {
+                if (typeof labelDisplayMode !== 'undefined') {
+                    setV2LabelModeActive(labelDisplayMode);
+                    const labelText =
+                        labelDisplayMode === 'none' ? 'ラベルなし' :
+                        labelDisplayMode === 'all' ? '星名 + 星座名' :
+                        '星座名のみ';
+                    v2StarDisplayStatus.textContent = `星座線: ${linesVisible ? '表示' : '非表示'} / ラベル: ${labelText}`;
                 }
             } catch (_) {}
         }
@@ -2079,6 +2194,7 @@
                     syncModeFromViewer();
                     syncLocationTimeFromViewer();
                     syncV2ZoomFromViewer();
+                    syncV2StarDisplayFromViewer();
                 });
             }
         }
@@ -2174,6 +2290,25 @@
 
         v2ZoomInButton.addEventListener('click', () => {
             stepV2Zoom(8);
+        });
+
+        v2ConstellationLinesButton.addEventListener('click', () => {
+            const oldToggle = oldControl('constellationLinesToggle');
+            if (!oldToggle) return;
+            oldToggle.checked = !oldToggle.checked;
+            dispatchChange(oldToggle);
+            syncV2StarDisplayFromViewer();
+        });
+
+        v2LabelButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const mode = button.dataset.v2LabelMode;
+                try {
+                    labelDisplayMode = mode;
+                } catch (_) {}
+                setV2LabelModeActive(mode);
+                syncV2StarDisplayFromViewer();
+            });
         });
 
         document.addEventListener('keydown', e => {
@@ -2339,6 +2474,9 @@
         const starPositionLists = {};
         const constellationFirstStarPositions = {};
         const constellationLabelElements = {};
+        const starLabelElements = {};
+        const starLabelMeta = {};
+        let labelDisplayMode = 'constellation';
         let backgroundStarLayers = [];
         let lastConstellationLineClipKey = '';
 
@@ -3398,6 +3536,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
             updateCameraAnimation(currentTime);
             updateConstellationLabels();
+            updateStarLabels();
             renderer.render(scene, camera);
         }
 
@@ -3420,10 +3559,33 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                     + Number(star.decSec || 0) / 3600
                 );
                 const position = convertToCartesian(ra, dec);
-                const name = String(star.starName || `star-${Object.keys(starPositions).length}`);
+                const rawStarName = String(star.starName || '').trim();
+                const name = String(rawStarName || `star-${Object.keys(starPositions).length}`);
                 const constellation = String(star.constellation || '未分類');
+                const magnitude = Number(
+                    star.magnitude ?? star.mag ?? star.vmag ?? star.visualMag ?? 99
+                );
 
                 starPositions[name] = position;
+
+                if (rawStarName) {
+                    const starLabelKey = `${rawStarName}@@${constellation}`;
+                    const shouldCreateStarLabel = (
+                        !starLabelElements[starLabelKey]
+                        && Number.isFinite(magnitude)
+                        && magnitude <= 2.5
+                    );
+
+                    if (shouldCreateStarLabel) {
+                        createStarLabel(starLabelKey, rawStarName, constellation);
+                        starLabelMeta[starLabelKey] = {
+                            position,
+                            starName: rawStarName,
+                            constellation,
+                            magnitude
+                        };
+                    }
+                }
                 constellations.add(constellation);
                 if (!positionsByConstellation[constellation]) positionsByConstellation[constellation] = [];
                 positionsByConstellation[constellation].push(position);
@@ -3551,10 +3713,63 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             constellationLabelElements[constellation] = element;
         }
 
+        function createStarLabel(key, starName, constellation) {
+            const element = document.createElement('div');
+            element.className = 'star-label';
+            element.textContent = `${starName}\n${constellation}`;
+            element.style.display = 'none';
+            constellationLabelsLayer.appendChild(element);
+            starLabelElements[key] = element;
+        }
+
         function updateConstellationLabels() {
             const cameraForward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion).normalize();
+
             Object.entries(constellationLabelElements).forEach(([constellation, element]) => {
+                if (labelDisplayMode === 'none') {
+                    element.style.display = 'none';
+                    return;
+                }
+
                 const worldPosition = constellationFirstStarPositions[constellation];
+                if (!worldPosition) {
+                    element.style.display = 'none';
+                    return;
+                }
+
+                const toLabel = worldPosition.clone().sub(camera.position);
+                if (currentViewMode === 'ground' && toLabel.dot(observerUp) <= 0) {
+                    element.style.display = 'none';
+                    return;
+                }
+                if (toLabel.normalize().dot(cameraForward) <= 0) {
+                    element.style.display = 'none';
+                    return;
+                }
+
+                const projected = worldPosition.clone().project(camera);
+                if (projected.z < -1 || projected.z > 1 || Math.abs(projected.x) > 1.08 || Math.abs(projected.y) > 1.08) {
+                    element.style.display = 'none';
+                    return;
+                }
+
+                element.style.display = 'block';
+                element.style.left = `${(projected.x * 0.5 + 0.5) * window.innerWidth}px`;
+                element.style.top = `${(-projected.y * 0.5 + 0.5) * window.innerHeight}px`;
+            });
+        }
+
+        function updateStarLabels() {
+            const cameraForward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion).normalize();
+
+            Object.entries(starLabelElements).forEach(([key, element]) => {
+                if (labelDisplayMode !== 'all') {
+                    element.style.display = 'none';
+                    return;
+                }
+
+                const meta = starLabelMeta[key];
+                const worldPosition = meta?.position;
                 if (!worldPosition) {
                     element.style.display = 'none';
                     return;
