@@ -1746,6 +1746,48 @@
             line-height: 1.5;
         }
 
+    
+        /* ===== Settings V2: constellation sort/filter ===== */
+        .settingsV2PickerToolbar { display:grid; gap:10px; margin-top:10px; }
+        .settingsV2PickerGroup { display:grid; gap:6px; }
+        .settingsV2PickerLabel {
+            color: rgba(194,249,252,.68);
+            font-size: 10px;
+            letter-spacing: .05em;
+        }
+        .settingsV2SortGrid {
+            display:grid;
+            grid-template-columns: repeat(2,minmax(0,1fr));
+            gap:7px;
+        }
+        .settingsV2FilterGrid {
+            display:grid;
+            grid-template-columns: repeat(4,minmax(0,1fr));
+            gap:7px;
+        }
+        .settingsV2PickerButton {
+            min-width:0;
+            min-height:40px;
+            padding:7px 5px;
+            border:1px solid rgba(103,247,255,.20);
+            border-radius:9px;
+            background:rgba(5,23,42,.68);
+            color:#67f7ff;
+            font-size:11px;
+            font-weight:700;
+            line-height:1.2;
+            touch-action:manipulation;
+        }
+        .settingsV2PickerButton.active {
+            border-color:rgba(103,247,255,.72);
+            background:rgba(14,72,92,.66);
+            color:#eaffff;
+            box-shadow: inset 0 0 14px rgba(25,234,255,.09), 0 0 10px rgba(25,234,255,.09);
+        }
+        @media (max-width:380px) {
+            .settingsV2FilterGrid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+        }
+
     </style>
 </head>
 <body>
@@ -1779,6 +1821,25 @@
         </section>
         <section class="settingsV2Section">
             <h3>星座を選ぶ</h3>
+
+            <div class="settingsV2PickerToolbar">
+                <div class="settingsV2PickerGroup">
+                    <div class="settingsV2PickerLabel">並び順</div>
+                    <div class="settingsV2SortGrid">
+                        <button type="button" class="settingsV2PickerButton active" data-v2-sort="ja">50音</button>
+                        <button type="button" class="settingsV2PickerButton" data-v2-sort="abc">ABC</button>
+                    </div>
+                </div>
+                <div class="settingsV2PickerGroup">
+                    <div class="settingsV2PickerLabel">絞り込み</div>
+                    <div class="settingsV2FilterGrid">
+                        <button type="button" class="settingsV2PickerButton" data-v2-filter="summer">夏星座</button>
+                        <button type="button" class="settingsV2PickerButton" data-v2-filter="winter">冬星座</button>
+                        <button type="button" class="settingsV2PickerButton" data-v2-filter="recommended">おすすめ</button>
+                        <button type="button" class="settingsV2PickerButton active" data-v2-filter="all">88星座</button>
+                    </div>
+                </div>
+            </div>
 
             <div class="settingsV2ConstellationRow">
                 <select id="v2ConstellationSelect" aria-label="星座を選択">
@@ -2072,6 +2133,11 @@
         const v2ConstellationSelect = document.getElementById('v2ConstellationSelect');
         const v2ConstellationClear = document.getElementById('v2ConstellationClear');
         const v2ConstellationStatus = document.getElementById('v2ConstellationStatus');
+        const v2SortButtons = Array.from(document.querySelectorAll('[data-v2-sort]'));
+        const v2FilterButtons = Array.from(document.querySelectorAll('[data-v2-filter]'));
+        let v2ConstellationSort = 'ja';
+        let v2ConstellationFilter = 'all';
+        let v2ConstellationOptions = [];
 
         function oldControl(id) {
             return document.getElementById(id);
@@ -2116,22 +2182,112 @@
             });
         }
 
-        function syncV2ConstellationPicker() {
+        function normalizeConstellationName(name) {
+            return String(name || '')
+                .trim()
+                .replace(/\s+/g, '')
+                .replace(/座$/u, '');
+        }
+
+        const V2_SUMMER_CONSTELLATIONS = new Set([
+            'こと','わし','はくちょう','りゅう','ヘルクレス','へびつかい','へび',
+            'いて','さそり','てんびん','みなみのかんむり','たて','こぎつね','や','いるか'
+        ]);
+
+        const V2_WINTER_CONSTELLATIONS = new Set([
+            'オリオン','おうし','ふたご','ぎょしゃ','おおいぬ','こいぬ','うさぎ',
+            'いっかくじゅう','エリダヌス','ろ','ちょうこくぐ','はと'
+        ]);
+
+        const V2_RECOMMENDED_CONSTELLATIONS = new Set([
+            'オリオン','おおぐま','こぐま','カシオペヤ','はくちょう','こと','わし',
+            'さそり','いて','おうし','ふたご','ぎょしゃ','おおいぬ','こいぬ',
+            'ペガスス','アンドロメダ'
+        ]);
+
+        function matchesV2ConstellationFilter(option) {
+            if (v2ConstellationFilter === 'all') return true;
+
+            const normalized = normalizeConstellationName(option.text);
+            if (v2ConstellationFilter === 'summer') return V2_SUMMER_CONSTELLATIONS.has(normalized);
+            if (v2ConstellationFilter === 'winter') return V2_WINTER_CONSTELLATIONS.has(normalized);
+            if (v2ConstellationFilter === 'recommended') return V2_RECOMMENDED_CONSTELLATIONS.has(normalized);
+            return true;
+        }
+
+        function compareV2Constellations(a, b) {
+            if (v2ConstellationSort === 'abc') {
+                return String(a.value || a.text).localeCompare(
+                    String(b.value || b.text),
+                    'en',
+                    { sensitivity: 'base', numeric: true }
+                );
+            }
+            return String(a.text).localeCompare(
+                String(b.text),
+                'ja',
+                { sensitivity: 'base', numeric: true }
+            );
+        }
+
+        function renderV2ConstellationOptions() {
             const oldSelect = oldControl('constellationSelect');
             if (!oldSelect) return;
 
-            if (v2ConstellationSelect.options.length <= 1) {
-                v2ConstellationSelect.innerHTML = oldSelect.innerHTML;
+            if (!v2ConstellationOptions.length) {
+                v2ConstellationOptions = Array.from(oldSelect.options)
+                    .filter(option => option.value)
+                    .map(option => ({
+                        value: option.value,
+                        text: option.textContent || option.value
+                    }));
             }
 
-            v2ConstellationSelect.value = oldSelect.value;
+            const selectedValue = oldSelect.value;
+            const visibleOptions = v2ConstellationOptions
+                .filter(matchesV2ConstellationFilter)
+                .sort(compareV2Constellations);
 
-            const selectedText =
-                oldSelect.value
-                    ? (oldSelect.options[oldSelect.selectedIndex]?.textContent || oldSelect.value)
-                    : '未選択';
+            v2ConstellationSelect.innerHTML = '';
+            const first = document.createElement('option');
+            first.value = '';
+            first.textContent = visibleOptions.length
+                ? `星座を選択してください（${visibleOptions.length}）`
+                : '該当する星座がありません';
+            v2ConstellationSelect.appendChild(first);
 
-            v2ConstellationStatus.textContent = `選択中: ${selectedText}`;
+            visibleOptions.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.value;
+                option.textContent = item.text;
+                v2ConstellationSelect.appendChild(option);
+            });
+
+            const selectedStillVisible = visibleOptions.some(item => item.value === selectedValue);
+            v2ConstellationSelect.value = selectedStillVisible ? selectedValue : '';
+
+            v2SortButtons.forEach(button => {
+                button.classList.toggle('active', button.dataset.v2Sort === v2ConstellationSort);
+            });
+            v2FilterButtons.forEach(button => {
+                button.classList.toggle('active', button.dataset.v2Filter === v2ConstellationFilter);
+            });
+
+            const selectedText = oldSelect.value
+                ? (oldSelect.options[oldSelect.selectedIndex]?.textContent || oldSelect.value)
+                : '未選択';
+
+            const filterLabel =
+                v2ConstellationFilter === 'summer' ? '夏星座' :
+                v2ConstellationFilter === 'winter' ? '冬星座' :
+                v2ConstellationFilter === 'recommended' ? 'おすすめ' : '88星座';
+
+            v2ConstellationStatus.textContent =
+                `${filterLabel}: ${visibleOptions.length}件 / 選択中: ${selectedText}`;
+        }
+
+        function syncV2ConstellationPicker() {
+            renderV2ConstellationOptions();
         }
 
         function syncV2StarDisplayFromViewer() {
@@ -2371,6 +2527,20 @@
 
         v2ZoomInButton.addEventListener('click', () => {
             stepV2Zoom(8);
+        });
+
+        v2SortButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                v2ConstellationSort = button.dataset.v2Sort || 'ja';
+                renderV2ConstellationOptions();
+            });
+        });
+
+        v2FilterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                v2ConstellationFilter = button.dataset.v2Filter || 'all';
+                renderV2ConstellationOptions();
+            });
         });
 
         v2ConstellationSelect.addEventListener('change', () => {
