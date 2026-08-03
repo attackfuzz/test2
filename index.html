@@ -1590,6 +1590,46 @@
             text-shadow: 0 0 6px rgba(25,234,255,.30);
         }
 
+    
+        /* ===== Settings V2: zoom buttons ===== */
+        .settingsV2ZoomButtons {
+            display: grid;
+            grid-template-columns: 54px minmax(0,1fr) 54px;
+            gap: 8px;
+            align-items: center;
+            margin-top: 8px;
+        }
+
+        .settingsV2ZoomButton {
+            min-height: 44px;
+            border: 1px solid rgba(103,247,255,.24);
+            border-radius: 10px;
+            background: rgba(5,23,42,.78);
+            color: #67f7ff;
+            font-size: 22px;
+            font-weight: 800;
+            line-height: 1;
+            touch-action: manipulation;
+            text-shadow: 0 0 6px rgba(25,234,255,.35);
+        }
+
+        .settingsV2ZoomButton:active {
+            transform: scale(.96);
+            background: rgba(11,55,72,.84);
+        }
+
+        .settingsV2ZoomCenter {
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(103,247,255,.12);
+            border-radius: 10px;
+            background: rgba(3,16,30,.48);
+            color: rgba(214,252,255,.82);
+            font-size: 12px;
+        }
+
     </style>
 </head>
 <body>
@@ -1613,6 +1653,11 @@
                 <span>ズーム</span>
                 <input id="v2ZoomSlider" type="range" min="0" max="100" step="1" value="100">
                 <span id="v2ZoomValue">50mm</span>
+            </div>
+            <div class="settingsV2ZoomButtons">
+                <button type="button" class="settingsV2ZoomButton" id="v2ZoomOutButton" aria-label="ズームアウト">−</button>
+                <div class="settingsV2ZoomCenter">ボタンでも調整</div>
+                <button type="button" class="settingsV2ZoomButton" id="v2ZoomInButton" aria-label="ズームイン">＋</button>
             </div>
             <p class="settingsV2ModeHint">地上ではレンズ、天球中心では画角、俯瞰では距離を調整します。</p>
         </section>
@@ -1875,6 +1920,8 @@
         const v2TimeStatus = document.getElementById('v2TimeStatus');
         const v2ZoomSlider = document.getElementById('v2ZoomSlider');
         const v2ZoomValue = document.getElementById('v2ZoomValue');
+        const v2ZoomOutButton = document.getElementById('v2ZoomOutButton');
+        const v2ZoomInButton = document.getElementById('v2ZoomInButton');
 
         function oldControl(id) {
             return document.getElementById(id);
@@ -2113,6 +2160,20 @@
         // 旧UI側が時計やプリセットから更新された場合も、次回サイドシート表示時に同期。
         v2ZoomSlider.addEventListener('input', () => {
             applyV2Zoom(v2ZoomSlider.value);
+        });
+
+        function stepV2Zoom(delta) {
+            const next = v2Clamp(Number(v2ZoomSlider.value) + delta, 0, 100);
+            v2ZoomSlider.value = String(next);
+            applyV2Zoom(next);
+        }
+
+        v2ZoomOutButton.addEventListener('click', () => {
+            stepV2Zoom(-8);
+        });
+
+        v2ZoomInButton.addEventListener('click', () => {
+            stepV2Zoom(8);
         });
 
         document.addEventListener('keydown', e => {
