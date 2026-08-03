@@ -1476,6 +1476,92 @@
             color: rgba(180,244,248,.58) !important;
         }
 
+    
+        /* ===== Settings V2: location + time ===== */
+        .settingsV2Field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 10px;
+        }
+
+        .settingsV2Field:first-of-type {
+            margin-top: 0;
+        }
+
+        .settingsV2Field > span,
+        .settingsV2Field > label {
+            color: rgba(194,249,252,.72);
+            font-size: 11px;
+            letter-spacing: .04em;
+        }
+
+        .settingsV2Field select,
+        .settingsV2Field input {
+            width: 100%;
+            min-height: 44px;
+            padding: 8px 10px;
+            border: 1px solid rgba(103,247,255,.20);
+            border-radius: 10px;
+            outline: none;
+            background: rgba(3,18,34,.84);
+            color: #d9feff;
+            font-size: 14px;
+        }
+
+        .settingsV2Field select:focus,
+        .settingsV2Field input:focus {
+            border-color: rgba(103,247,255,.62);
+            box-shadow: 0 0 0 2px rgba(25,234,255,.08);
+        }
+
+        .settingsV2CoordinateGrid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .settingsV2TimeSteps {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0,1fr));
+            gap: 6px;
+            margin-top: 10px;
+        }
+
+        .settingsV2ActionButton,
+        .settingsV2TimeSteps button {
+            min-height: 42px;
+            min-width: 0;
+            padding: 7px 6px;
+            border: 1px solid rgba(103,247,255,.22);
+            border-radius: 10px;
+            background: rgba(5,23,42,.72);
+            color: #67f7ff;
+            font-size: 12px;
+            font-weight: 700;
+            touch-action: manipulation;
+        }
+
+        .settingsV2ActionButton {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .settingsV2Status {
+            min-height: 18px;
+            margin-top: 8px;
+            color: rgba(103,247,255,.58);
+            font-size: 10px;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 380px) {
+            .settingsV2TimeSteps {
+                grid-template-columns: repeat(2, minmax(0,1fr));
+            }
+        }
+
     </style>
 </head>
 <body>
@@ -1498,8 +1584,50 @@
             <p class="settingsV2ModeHint">まずはモード切替だけを接続しています。</p>
         </section>
         <section class="settingsV2Section">
-            <h3>次に追加</h3>
-            <p>この切替が安定したら、次にズームか星座線を追加します。</p>
+            <h3>観測地点</h3>
+
+            <label class="settingsV2Field">
+                <span>地点プリセット</span>
+                <select id="v2LocationPreset"></select>
+            </label>
+
+            <div class="settingsV2CoordinateGrid">
+                <label class="settingsV2Field">
+                    <span>緯度</span>
+                    <input id="v2LatitudeInput" type="number" min="-90" max="90" step="0.0001">
+                </label>
+                <label class="settingsV2Field">
+                    <span>経度</span>
+                    <input id="v2LongitudeInput" type="number" min="-180" max="180" step="0.0001">
+                </label>
+            </div>
+
+            <label class="settingsV2Field">
+                <span>時間帯</span>
+                <select id="v2TimeZoneSelect"></select>
+            </label>
+
+            <div class="settingsV2Status" id="v2LocationStatus"></div>
+        </section>
+
+        <section class="settingsV2Section">
+            <h3>観測日時</h3>
+
+            <label class="settingsV2Field">
+                <span>現地日時</span>
+                <input id="v2ObservationDateTime" type="datetime-local" step="60">
+            </label>
+
+            <div class="settingsV2TimeSteps">
+                <button type="button" data-v2-time-step="-86400000">−1日</button>
+                <button type="button" data-v2-time-step="-3600000">−1時間</button>
+                <button type="button" data-v2-time-step="3600000">＋1時間</button>
+                <button type="button" data-v2-time-step="86400000">＋1日</button>
+            </div>
+
+            <button type="button" class="settingsV2ActionButton" id="v2NowButton">現在時刻に戻す</button>
+
+            <div class="settingsV2Status" id="v2TimeStatus"></div>
         </section>
     </aside>
 
@@ -1703,6 +1831,35 @@
         const scrim = document.getElementById('settingsScrimV2');
         const modeButtons = Array.from(document.querySelectorAll('.settingsV2ModeButton'));
 
+        const v2LocationPreset = document.getElementById('v2LocationPreset');
+        const v2LatitudeInput = document.getElementById('v2LatitudeInput');
+        const v2LongitudeInput = document.getElementById('v2LongitudeInput');
+        const v2TimeZoneSelect = document.getElementById('v2TimeZoneSelect');
+        const v2ObservationDateTime = document.getElementById('v2ObservationDateTime');
+        const v2NowButton = document.getElementById('v2NowButton');
+        const v2TimeStepButtons = Array.from(document.querySelectorAll('[data-v2-time-step]'));
+        const v2LocationStatus = document.getElementById('v2LocationStatus');
+        const v2TimeStatus = document.getElementById('v2TimeStatus');
+
+        function oldControl(id) {
+            return document.getElementById(id);
+        }
+
+        function cloneOptions(source, target) {
+            if (!source || !target || target.options.length) return;
+            target.innerHTML = source.innerHTML;
+        }
+
+        function dispatchChange(element) {
+            if (!element) return;
+            element.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+
+        function clickOld(element) {
+            if (!element) return;
+            element.click();
+        }
+
         function setModeActive(mode) {
             modeButtons.forEach(modeButton => {
                 const active = modeButton.dataset.viewMode === mode;
@@ -1719,6 +1876,32 @@
             } catch (_) {}
         }
 
+        function syncLocationTimeFromViewer() {
+            const locationPreset = oldControl('locationPreset');
+            const latitudeInput = oldControl('latitudeInput');
+            const longitudeInput = oldControl('longitudeInput');
+            const timeZoneSelect = oldControl('timeZoneSelect');
+            const observationDateTime = oldControl('observationDateTime');
+
+            cloneOptions(locationPreset, v2LocationPreset);
+            cloneOptions(timeZoneSelect, v2TimeZoneSelect);
+
+            if (locationPreset) v2LocationPreset.value = locationPreset.value;
+            if (latitudeInput) v2LatitudeInput.value = latitudeInput.value;
+            if (longitudeInput) v2LongitudeInput.value = longitudeInput.value;
+            if (timeZoneSelect) v2TimeZoneSelect.value = timeZoneSelect.value;
+            if (observationDateTime) v2ObservationDateTime.value = observationDateTime.value;
+
+            if (v2LocationStatus && v2LatitudeInput.value && v2LongitudeInput.value) {
+                v2LocationStatus.textContent =
+                    `緯度 ${v2LatitudeInput.value}° / 経度 ${v2LongitudeInput.value}°`;
+            }
+
+            if (v2TimeStatus && v2ObservationDateTime.value) {
+                v2TimeStatus.textContent = `観測日時: ${v2ObservationDateTime.value.replace('T', ' ')}`;
+            }
+        }
+
         function setOpen(open) {
             sheet.classList.toggle('open', open);
             scrim.classList.toggle('open', open);
@@ -1727,7 +1910,10 @@
             button.setAttribute('aria-expanded', String(open));
 
             if (open) {
-                requestAnimationFrame(syncModeFromViewer);
+                requestAnimationFrame(() => {
+                    syncModeFromViewer();
+                    syncLocationTimeFromViewer();
+                });
             }
         }
 
@@ -1745,6 +1931,66 @@
             });
         });
 
+        v2LocationPreset.addEventListener('change', () => {
+            const old = oldControl('locationPreset');
+            if (!old) return;
+            old.value = v2LocationPreset.value;
+            dispatchChange(old);
+            requestAnimationFrame(syncLocationTimeFromViewer);
+        });
+
+        function applyV2Coordinates() {
+            const oldLat = oldControl('latitudeInput');
+            const oldLon = oldControl('longitudeInput');
+            if (!oldLat || !oldLon) return;
+
+            oldLat.value = v2LatitudeInput.value;
+            oldLon.value = v2LongitudeInput.value;
+
+            // 既存ビューアでは各changeで同じ custom 座標適用関数が呼ばれる。
+            dispatchChange(oldLat);
+            dispatchChange(oldLon);
+            requestAnimationFrame(syncLocationTimeFromViewer);
+        }
+
+        v2LatitudeInput.addEventListener('change', applyV2Coordinates);
+        v2LongitudeInput.addEventListener('change', applyV2Coordinates);
+
+        v2TimeZoneSelect.addEventListener('change', () => {
+            const old = oldControl('timeZoneSelect');
+            if (!old) return;
+            old.value = v2TimeZoneSelect.value;
+            dispatchChange(old);
+            requestAnimationFrame(syncLocationTimeFromViewer);
+        });
+
+        v2ObservationDateTime.addEventListener('change', () => {
+            const old = oldControl('observationDateTime');
+            if (!old) return;
+            old.value = v2ObservationDateTime.value;
+            dispatchChange(old);
+            requestAnimationFrame(syncLocationTimeFromViewer);
+        });
+
+        v2NowButton.addEventListener('click', () => {
+            clickOld(oldControl('nowButton'));
+            requestAnimationFrame(() => {
+                requestAnimationFrame(syncLocationTimeFromViewer);
+            });
+        });
+
+        v2TimeStepButtons.forEach(stepButton => {
+            stepButton.addEventListener('click', () => {
+                const value = stepButton.dataset.v2TimeStep;
+                const oldButton = document.querySelector(`[data-time-step="${value}"]`);
+                clickOld(oldButton);
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(syncLocationTimeFromViewer);
+                });
+            });
+        });
+
+        // 旧UI側が時計やプリセットから更新された場合も、次回サイドシート表示時に同期。
         document.addEventListener('keydown', e => {
             if (e.key === 'Escape') setOpen(false);
         });
