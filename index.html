@@ -1701,6 +1701,51 @@
             opacity: 0.88;
         }
 
+    
+        /* ===== Settings V2: constellation picker ===== */
+        .settingsV2ConstellationRow {
+            display: grid;
+            grid-template-columns: minmax(0,1fr);
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        #v2ConstellationSelect {
+            width: 100%;
+            min-height: 46px;
+            padding: 8px 10px;
+            border: 1px solid rgba(103,247,255,.22);
+            border-radius: 10px;
+            background: rgba(3,18,34,.84);
+            color: #d9feff;
+            font-size: 14px;
+            outline: none;
+        }
+
+        #v2ConstellationSelect:focus {
+            border-color: rgba(103,247,255,.62);
+            box-shadow: 0 0 0 2px rgba(25,234,255,.08);
+        }
+
+        #v2ConstellationClear {
+            width: 100%;
+            min-height: 42px;
+            border: 1px solid rgba(103,247,255,.18);
+            border-radius: 10px;
+            background: rgba(5,23,42,.62);
+            color: rgba(103,247,255,.80);
+            font-size: 12px;
+            font-weight: 700;
+            touch-action: manipulation;
+        }
+
+        #v2ConstellationStatus {
+            margin-top: 8px;
+            color: rgba(103,247,255,.58);
+            font-size: 10px;
+            line-height: 1.5;
+        }
+
     </style>
 </head>
 <body>
@@ -1732,6 +1777,20 @@
             </div>
             <p class="settingsV2ModeHint">地上ではレンズ、天球中心では画角、俯瞰では距離を調整します。</p>
         </section>
+        <section class="settingsV2Section">
+            <h3>星座を選ぶ</h3>
+
+            <div class="settingsV2ConstellationRow">
+                <select id="v2ConstellationSelect" aria-label="星座を選択">
+                    <option value="">星座を選択してください</option>
+                </select>
+
+                <button type="button" id="v2ConstellationClear">選択を解除</button>
+            </div>
+
+            <div id="v2ConstellationStatus">88星座リストから選択できます。</div>
+        </section>
+
         <section class="settingsV2Section">
             <h3>星の表示</h3>
 
@@ -2010,6 +2069,9 @@
         const v2ConstellationLinesButton = document.getElementById('v2ConstellationLinesButton');
         const v2LabelButtons = Array.from(document.querySelectorAll('.settingsV2LabelButton'));
         const v2StarDisplayStatus = document.getElementById('v2StarDisplayStatus');
+        const v2ConstellationSelect = document.getElementById('v2ConstellationSelect');
+        const v2ConstellationClear = document.getElementById('v2ConstellationClear');
+        const v2ConstellationStatus = document.getElementById('v2ConstellationStatus');
 
         function oldControl(id) {
             return document.getElementById(id);
@@ -2052,6 +2114,24 @@
                 button.classList.toggle('active', active);
                 button.setAttribute('aria-pressed', String(active));
             });
+        }
+
+        function syncV2ConstellationPicker() {
+            const oldSelect = oldControl('constellationSelect');
+            if (!oldSelect) return;
+
+            if (v2ConstellationSelect.options.length <= 1) {
+                v2ConstellationSelect.innerHTML = oldSelect.innerHTML;
+            }
+
+            v2ConstellationSelect.value = oldSelect.value;
+
+            const selectedText =
+                oldSelect.value
+                    ? (oldSelect.options[oldSelect.selectedIndex]?.textContent || oldSelect.value)
+                    : '未選択';
+
+            v2ConstellationStatus.textContent = `選択中: ${selectedText}`;
         }
 
         function syncV2StarDisplayFromViewer() {
@@ -2195,6 +2275,7 @@
                     syncLocationTimeFromViewer();
                     syncV2ZoomFromViewer();
                     syncV2StarDisplayFromViewer();
+                    syncV2ConstellationPicker();
                 });
             }
         }
@@ -2290,6 +2371,26 @@
 
         v2ZoomInButton.addEventListener('click', () => {
             stepV2Zoom(8);
+        });
+
+        v2ConstellationSelect.addEventListener('change', () => {
+            const oldSelect = oldControl('constellationSelect');
+            if (!oldSelect) return;
+
+            oldSelect.value = v2ConstellationSelect.value;
+            dispatchChange(oldSelect);
+
+            requestAnimationFrame(syncV2ConstellationPicker);
+        });
+
+        v2ConstellationClear.addEventListener('click', () => {
+            const oldSelect = oldControl('constellationSelect');
+            if (!oldSelect) return;
+
+            oldSelect.value = '';
+            dispatchChange(oldSelect);
+
+            requestAnimationFrame(syncV2ConstellationPicker);
         });
 
         v2ConstellationLinesButton.addEventListener('click', () => {
