@@ -1562,6 +1562,34 @@
             }
         }
 
+    
+        /* ===== Settings V2: zoom ===== */
+        .settingsV2ZoomRow {
+            display: grid;
+            grid-template-columns: 42px minmax(0,1fr) 62px;
+            gap: 8px;
+            align-items: center;
+            margin-top: 12px;
+        }
+
+        .settingsV2ZoomRow > span:first-child {
+            color: rgba(194,249,252,.72);
+            font-size: 11px;
+        }
+
+        #v2ZoomSlider {
+            width: 100%;
+            accent-color: #67f7ff;
+        }
+
+        #v2ZoomValue {
+            color: #67f7ff;
+            font-size: 11px;
+            text-align: right;
+            white-space: nowrap;
+            text-shadow: 0 0 6px rgba(25,234,255,.30);
+        }
+
     </style>
 </head>
 <body>
@@ -1577,11 +1605,16 @@
         <section class="settingsV2Section">
             <h3>表示モード</h3>
             <div class="settingsV2ModeGrid" role="group" aria-label="表示モード">
-                <button type="button" class="settingsV2ModeButton" data-view-mode="ground">地上</button>
-                <button type="button" class="settingsV2ModeButton active" data-view-mode="center">天球中心</button>
+                <button type="button" class="settingsV2ModeButton active" data-view-mode="ground">地上</button>
+                <button type="button" class="settingsV2ModeButton" data-view-mode="center">天球中心</button>
                 <button type="button" class="settingsV2ModeButton" data-view-mode="overview">地球俯瞰</button>
             </div>
-            <p class="settingsV2ModeHint">まずはモード切替だけを接続しています。</p>
+            <div class="settingsV2ZoomRow">
+                <span>ズーム</span>
+                <input id="v2ZoomSlider" type="range" min="0" max="100" step="1" value="100">
+                <span id="v2ZoomValue">50mm</span>
+            </div>
+            <p class="settingsV2ModeHint">地上ではレンズ、天球中心では画角、俯瞰では距離を調整します。</p>
         </section>
         <section class="settingsV2Section">
             <h3>観測地点</h3>
@@ -1707,8 +1740,8 @@
 
         <div class="control-row view-mode-row">
             <span class="row-label">視点</span>
-            <button type="button" class="view-button" data-view="ground" aria-pressed="false">地上</button>
-            <button type="button" class="view-button active" data-view="center" aria-pressed="true">天球中心</button>
+            <button type="button" class="view-button active" data-view="ground" aria-pressed="true">地上</button>
+            <button type="button" class="view-button" data-view="center" aria-pressed="false">天球中心</button>
             <button type="button" class="view-button" data-view="overview" aria-pressed="false">地球俯瞰</button>
         </div>
 
@@ -1840,6 +1873,8 @@
         const v2TimeStepButtons = Array.from(document.querySelectorAll('[data-v2-time-step]'));
         const v2LocationStatus = document.getElementById('v2LocationStatus');
         const v2TimeStatus = document.getElementById('v2TimeStatus');
+        const v2ZoomSlider = document.getElementById('v2ZoomSlider');
+        const v2ZoomValue = document.getElementById('v2ZoomValue');
 
         function oldControl(id) {
             return document.getElementById(id);
@@ -1902,6 +1937,89 @@
             }
         }
 
+
+        function v2Clamp(value, min, max) {
+            return Math.min(max, Math.max(min, value));
+        }
+
+        function applyV2Zoom(value) {
+            const normalized = v2Clamp(Number(value) / 100, 0, 1);
+
+            try {
+                if (typeof currentViewMode === 'undefined' || typeof camera === 'undefined') return;
+
+                if (currentViewMode === 'ground') {
+                    const minFocal = (typeof GROUND_MIN_FOCAL_LENGTH !== 'undefined') ? GROUND_MIN_FOCAL_LENGTH : 6;
+                    const maxFocal = (typeof GROUND_DEFAULT_FOCAL_LENGTH !== 'undefined') ? GROUND_DEFAULT_FOCAL_LENGTH : 50;
+                    const focal = minFocal + (maxFocal - minFocal) * normalized;
+
+                    if (typeof setCameraFocalLength === 'function') {
+                        setCameraFocalLength(focal);
+                    }
+                    v2ZoomValue.textContent = `${focal.toFixed(1).replace('.0','')}mm`;
+                } else if (currentViewMode === 'center') {
+                    const fov = 100 + (20 - 100) * normalized;
+                    camera.fov = fov;
+                    camera.updateProjectionMatrix();
+                    v2ZoomValue.textContent = `${fov.toFixed(0)}°`;
+                } else {
+                    const minRadius = (typeof EARTH_RADIUS !== 'undefined' ? EARTH_RADIUS : 1000) +
+                        (typeof OBSERVER_HEIGHT !== 'undefined' ? OBSERVER_HEIGHT : 1.7) + 10;
+                    const maxRadius = 12000;
+                    const radius = maxRadius + (minRadius - maxRadius) * normalized;
+
+                    const direction = camera.position.clone();
+                    if (direction.lengthSq() < 1e-8) direction.set(1, .65, 1);
+                    direction.normalize();
+
+                    camera.position.copy(direction.multiplyScalar(radius));
+                    camera.lookAt(0, 0, 0);
+                    if (typeof syncCameraQuaternion === 'function') syncCameraQuaternion();
+
+                    const earthRadius = (typeof EARTH_RADIUS !== 'undefined') ? EARTH_RADIUS : 1000;
+                    v2ZoomValue.textContent = `×${(radius / earthRadius).toFixed(1)}`;
+                }
+
+                if (typeof clearActiveViewPreset === 'function') clearActiveViewPreset();
+            } catch (error) {
+                console.warn('V2 zoom error', error);
+            }
+        }
+
+        function syncV2ZoomFromViewer() {
+            try {
+                if (typeof currentViewMode === 'undefined' || typeof camera === 'undefined') return;
+
+                let value = 50;
+
+                if (currentViewMode === 'ground') {
+                    const minFocal = (typeof GROUND_MIN_FOCAL_LENGTH !== 'undefined') ? GROUND_MIN_FOCAL_LENGTH : 6;
+                    const maxFocal = (typeof GROUND_DEFAULT_FOCAL_LENGTH !== 'undefined') ? GROUND_DEFAULT_FOCAL_LENGTH : 50;
+                    let focal = maxFocal;
+
+                    if (typeof verticalFovToFocalLength === 'function') {
+                        focal = v2Clamp(verticalFovToFocalLength(camera.fov), minFocal, maxFocal);
+                    }
+
+                    value = ((focal - minFocal) / (maxFocal - minFocal)) * 100;
+                    v2ZoomValue.textContent = `${focal.toFixed(1).replace('.0','')}mm`;
+                } else if (currentViewMode === 'center') {
+                    value = ((100 - camera.fov) / 80) * 100;
+                    v2ZoomValue.textContent = `${camera.fov.toFixed(0)}°`;
+                } else {
+                    const earthRadius = (typeof EARTH_RADIUS !== 'undefined') ? EARTH_RADIUS : 1000;
+                    const observerHeight = (typeof OBSERVER_HEIGHT !== 'undefined') ? OBSERVER_HEIGHT : 1.7;
+                    const minRadius = earthRadius + observerHeight + 10;
+                    const maxRadius = 12000;
+                    const radius = v2Clamp(camera.position.length(), minRadius, maxRadius);
+                    value = ((maxRadius - radius) / (maxRadius - minRadius)) * 100;
+                    v2ZoomValue.textContent = `×${(radius / earthRadius).toFixed(1)}`;
+                }
+
+                v2ZoomSlider.value = String(v2Clamp(value, 0, 100));
+            } catch (_) {}
+        }
+
         function setOpen(open) {
             sheet.classList.toggle('open', open);
             scrim.classList.toggle('open', open);
@@ -1913,6 +2031,7 @@
                 requestAnimationFrame(() => {
                     syncModeFromViewer();
                     syncLocationTimeFromViewer();
+                    syncV2ZoomFromViewer();
                 });
             }
         }
@@ -1927,6 +2046,7 @@
                 if (typeof applyViewPreset === 'function') {
                     applyViewPreset(mode, true);
                     setModeActive(mode);
+                    setTimeout(syncV2ZoomFromViewer, 320);
                 }
             });
         });
@@ -1991,6 +2111,10 @@
         });
 
         // 旧UI側が時計やプリセットから更新された場合も、次回サイドシート表示時に同期。
+        v2ZoomSlider.addEventListener('input', () => {
+            applyV2Zoom(v2ZoomSlider.value);
+        });
+
         document.addEventListener('keydown', e => {
             if (e.key === 'Escape') setOpen(false);
         });
@@ -2167,8 +2291,8 @@
         let simulationUtcMs = Date.now();
         let localSiderealDeg = 0;
         let groundAzimuth = 0;
-        let groundAltitude = THREE.MathUtils.degToRad(12);
-        let currentViewMode = 'center';
+        let groundAltitude = THREE.MathUtils.degToRad(30);
+        let currentViewMode = 'ground';
         let activeViewPreset = 'center';
         let focusOnNorthStar = true;
         let cameraAnimation = null;
@@ -2193,7 +2317,7 @@
         initializeUi();
         setCameraFocalLength(GROUND_DEFAULT_FOCAL_LENGTH);
         updateObserverFromSimulation(true);
-        applyViewPreset('center', false);
+        applyViewPreset('ground', false);
         animate(performance.now());
 
         function initializeUi() {
