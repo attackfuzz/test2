@@ -1926,6 +1926,25 @@
             }
         }
 
+    
+        /* ===== Search V4 ===== */
+        #searchContentV3 { display:grid; gap:14px; }
+        .searchV4SearchBox { width:100%; min-height:44px; box-sizing:border-box; padding:10px 12px; border:1px solid rgba(103,247,255,.28); border-radius:12px; outline:none; background:rgba(4,20,38,.78); color:#eaffff; font-size:14px; }
+        .searchV4SearchBox:focus { border-color:rgba(103,247,255,.75); box-shadow:0 0 0 2px rgba(103,247,255,.08); }
+        .searchV4SectionLabel { margin:2px 0 7px; color:rgba(194,249,252,.68); font-size:10px; letter-spacing:.08em; }
+        .searchV4CategoryGrid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+        .searchV4CategoryButton,.searchV4SortButton { min-height:42px; padding:8px 9px; border:1px solid rgba(103,247,255,.22); border-radius:10px; background:rgba(5,23,42,.68); color:#67f7ff; font-size:12px; font-weight:700; line-height:1.25; touch-action:manipulation; }
+        .searchV4CategoryButton.active,.searchV4SortButton.active { border-color:rgba(103,247,255,.75); background:rgba(14,72,92,.66); color:#eaffff; box-shadow:inset 0 0 14px rgba(25,234,255,.08); }
+        .searchV4CategoryButton.wide { grid-column:1/-1; }
+        .searchV4SortRow { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+        .searchV4Status { min-height:18px; color:rgba(194,249,252,.72); font-size:11px; }
+        .searchV4List { display:grid; gap:7px; }
+        .searchV4Item { width:100%; display:grid; grid-template-columns:1fr auto; align-items:center; gap:10px; min-height:46px; padding:9px 11px; border:1px solid rgba(103,247,255,.14); border-radius:10px; background:rgba(3,15,31,.72); color:#eaffff; text-align:left; touch-action:manipulation; }
+        .searchV4ItemJa { display:block; color:#eaffff; font-size:13px; font-weight:700; }
+        .searchV4ItemSub { display:block; margin-top:2px; color:rgba(194,249,252,.58); font-size:10px; }
+        .searchV4ItemId { color:#67f7ff; font-size:10px; font-weight:700; }
+        .searchV4Empty { padding:18px 10px; color:rgba(194,249,252,.58); font-size:12px; text-align:center; }
+
     </style>
 </head>
 <body>
@@ -2059,7 +2078,33 @@
             <strong class="searchV3Title">探す</strong>
             <button id="searchCloseV3" type="button" aria-label="閉じる">×</button>
         </div>
-        <div id="searchContentV3"></div>
+        <div id="searchContentV3">
+            <input id="searchV4Query" class="searchV4SearchBox" type="search" placeholder="星座名・英名・3文字IDで検索" autocomplete="off" spellcheck="false">
+            <div>
+                <div class="searchV4SectionLabel">カテゴリ</div>
+                <div class="searchV4CategoryGrid" id="searchV4Categories">
+                    <button class="searchV4CategoryButton active" type="button" data-search-category="all">88星座</button>
+                    <button class="searchV4CategoryButton" type="button" data-search-category="recommended">おすすめ星座</button>
+                    <button class="searchV4CategoryButton" type="button" data-search-category="summer">日本の夏</button>
+                    <button class="searchV4CategoryButton" type="button" data-search-category="winter">日本の冬</button>
+                    <button class="searchV4CategoryButton" type="button" data-search-category="stars">星名</button>
+                    <button class="searchV4CategoryButton" type="button" data-search-category="asterisms">アステリズム</button>
+                    <button class="searchV4CategoryButton" type="button" data-search-category="clusters">星団</button>
+                    <button class="searchV4CategoryButton" type="button" data-search-category="galaxies">銀河</button>
+                    <button class="searchV4CategoryButton wide" type="button" data-search-category="milkyway">天の川</button>
+                    <button class="searchV4CategoryButton wide" type="button" data-search-category="trivia">おすすめ天文雑学</button>
+                </div>
+            </div>
+            <div id="searchV4SortBlock">
+                <div class="searchV4SectionLabel">並び順</div>
+                <div class="searchV4SortRow">
+                    <button class="searchV4SortButton active" type="button" data-search-sort="ja">50音</button>
+                    <button class="searchV4SortButton" type="button" data-search-sort="en">ABC</button>
+                </div>
+            </div>
+            <div id="searchV4Status" class="searchV4Status"></div>
+            <div id="searchV4List" class="searchV4List"></div>
+        </div>
     </aside>
 
     <section id="clockPanel" aria-hidden="true" aria-label="時刻ダイヤル試作">
@@ -2804,13 +2849,6 @@
             const searchClose = document.getElementById('searchCloseV3');
             const searchContent = document.getElementById('searchContentV3');
 
-            const sections = Array.from(settingsSheet?.querySelectorAll('.settingsV2Section') || []);
-            sections.forEach(section => {
-                const title = section.querySelector('h3')?.textContent?.trim() || '';
-                if (title === '星座を選ぶ') {
-                    searchContent.appendChild(section);
-                }
-            });
 
             searchButton?.addEventListener('click', () => {
                 const open = !searchSheet.classList.contains('open');
@@ -2834,6 +2872,99 @@
     })();
     </script>
 
+
+
+    <script>
+    (() => {
+        const RECOMMENDED = new Set(['Ori','UMa','UMi','Cas','Cyg','Lyr','Aql','Sco','Sgr','Tau','Gem','Aur','CMa','CMi','Peg','And']);
+        const SUMMER = new Set(['Lyr','Aql','Cyg','Sco','Sgr','Oph','Her','Lib','CrB','Sct','Vul','Sge','Del']);
+        const WINTER = new Set(['Ori','Tau','Gem','Aur','CMa','CMi','Lep','Mon','Eri']);
+        const TOPICS = {
+            stars:[
+                {id:'Vega',ja:'ベガ',en:'Vega',note:'こと座 α星・織姫星',constellationId:'Lyr'},
+                {id:'Altair',ja:'アルタイル',en:'Altair',note:'わし座 α星・彦星',constellationId:'Aql'},
+                {id:'Deneb',ja:'デネブ',en:'Deneb',note:'はくちょう座 α星',constellationId:'Cyg'},
+                {id:'Sirius',ja:'シリウス',en:'Sirius',note:'おおいぬ座 α星',constellationId:'CMa'},
+                {id:'Polaris',ja:'北極星',en:'Polaris',note:'こぐま座 α星',constellationId:'UMi'},
+                {id:'Betelgeuse',ja:'ベテルギウス',en:'Betelgeuse',note:'オリオン座 α星',constellationId:'Ori'},
+                {id:'Rigel',ja:'リゲル',en:'Rigel',note:'オリオン座 β星',constellationId:'Ori'},
+                {id:'Antares',ja:'アンタレス',en:'Antares',note:'さそり座 α星',constellationId:'Sco'}
+            ],
+            asterisms:[
+                {id:'SummerTriangle',ja:'夏の大三角',en:'Summer Triangle',note:'ベガ・アルタイル・デネブ'},
+                {id:'WinterTriangle',ja:'冬の大三角',en:'Winter Triangle',note:'ベテルギウス・シリウス・プロキオン'},
+                {id:'BigDipper',ja:'北斗七星',en:'Big Dipper',note:'おおぐま座の7つの明るい星',constellationId:'UMa'},
+                {id:'OrionBelt',ja:'オリオンの三つ星',en:"Orion's Belt",note:'オリオン座中央の三つ並び',constellationId:'Ori'}
+            ],
+            clusters:[
+                {id:'M45',ja:'すばる（プレアデス星団）',en:'Pleiades',note:'M45・おうし座',constellationId:'Tau'},
+                {id:'M44',ja:'プレセペ星団',en:'Beehive Cluster',note:'M44・かに座',constellationId:'Cnc'}
+            ],
+            galaxies:[{id:'M31',ja:'アンドロメダ銀河',en:'Andromeda Galaxy',note:'M31',constellationId:'And'}],
+            milkyway:[{id:'MilkyWay',ja:'天の川',en:'Milky Way',note:'私たちがいる銀河を地球から帯状に見た姿'}],
+            trivia:[
+                {id:'Tanabata',ja:'七夕と織姫・彦星',en:'Tanabata',note:'ベガとアルタイルを結ぶ日本の有名な伝承'},
+                {id:'Constellation88',ja:'なぜ星座は88個？',en:'Why 88 constellations?',note:'現在の全天は88星座に区分されている'},
+                {id:'PolarisChange',ja:'北極星はずっと同じ？',en:'Does Polaris stay forever?',note:'歳差運動で北天の目印は長い時間で変わる'},
+                {id:'M78Trivia',ja:'M78は実在する？',en:'M78',note:'オリオン座に実在する反射星雲。作品名でも有名',constellationId:'Ori'}
+            ]
+        };
+        const norm=v=>String(v||'').trim().toLowerCase();
+        function pickConstellation(id){
+            const sel=document.getElementById('constellationSelect');
+            const info=typeof constellationCatalog!=='undefined'?constellationCatalog[id]:null;
+            if(!sel||!info)return false;
+            const legacy=`${info.en} (${info.ja})`;
+            let hit=false;
+            for(const o of Array.from(sel.options)){
+                const t=String(o.textContent||'').trim(),v=String(o.value||'').trim();
+                if([id,info.en,info.ja,legacy].includes(v)||[id,info.en,info.ja,legacy].includes(t)){sel.value=o.value;hit=true;break;}
+            }
+            if(hit)sel.dispatchEvent(new Event('change',{bubbles:true}));
+            return hit;
+        }
+        document.addEventListener('DOMContentLoaded',()=>{
+            // old constellation picker is superseded by Search V4
+            for(const sec of Array.from(document.querySelectorAll('#settingsSheetV2 .settingsV2Section'))){
+                if((sec.querySelector('h3')?.textContent||'').trim()==='星座を選ぶ')sec.remove();
+            }
+            const q=document.getElementById('searchV4Query'), list=document.getElementById('searchV4List'), status=document.getElementById('searchV4Status'), sortBlock=document.getElementById('searchV4SortBlock');
+            const cats=Array.from(document.querySelectorAll('[data-search-category]')), sorts=Array.from(document.querySelectorAll('[data-search-sort]'));
+            let category='all', sort='ja';
+            function render(){
+                cats.forEach(b=>b.classList.toggle('active',b.dataset.searchCategory===category));
+                sorts.forEach(b=>b.classList.toggle('active',b.dataset.searchSort===sort));
+                const constellationMode=['all','recommended','summer','winter'].includes(category);
+                sortBlock.style.display=constellationMode?'':'none';
+                let items=[];
+                if(constellationMode){
+                    items=Object.values(constellationCatalog).map(x=>({id:x.id,ja:x.ja,en:x.en,tags:x.searchTags||[]}));
+                    if(category==='recommended')items=items.filter(x=>RECOMMENDED.has(x.id));
+                    if(category==='summer')items=items.filter(x=>SUMMER.has(x.id));
+                    if(category==='winter')items=items.filter(x=>WINTER.has(x.id));
+                }else items=[...(TOPICS[category]||[])];
+                const needle=norm(q.value);
+                if(needle)items=items.filter(x=>[x.id,x.ja,x.en,x.note,...(x.tags||[])].some(v=>norm(v).includes(needle)));
+                if(constellationMode)items.sort((a,b)=>sort==='en'?a.en.localeCompare(b.en,'en',{sensitivity:'base'}):a.ja.localeCompare(b.ja,'ja',{sensitivity:'base'}));
+                status.textContent=`${items.length}件`;
+                list.innerHTML='';
+                if(!items.length){const e=document.createElement('div');e.className='searchV4Empty';e.textContent='該当する項目がありません';list.appendChild(e);return;}
+                for(const item of items){
+                    const b=document.createElement('button');b.type='button';b.className='searchV4Item';
+                    b.innerHTML=`<span><span class="searchV4ItemJa"></span><span class="searchV4ItemSub"></span></span><span class="searchV4ItemId"></span>`;
+                    b.querySelector('.searchV4ItemJa').textContent=item.ja;
+                    b.querySelector('.searchV4ItemSub').textContent=constellationMode?item.en:`${item.en||''}${item.note?' / '+item.note:''}`;
+                    b.querySelector('.searchV4ItemId').textContent=item.id;
+                    b.addEventListener('click',()=>{ if(constellationMode)pickConstellation(item.id); else if(item.constellationId)pickConstellation(item.constellationId); });
+                    list.appendChild(b);
+                }
+            }
+            cats.forEach(b=>b.addEventListener('click',()=>{category=b.dataset.searchCategory||'all';q.value='';render();}));
+            sorts.forEach(b=>b.addEventListener('click',()=>{sort=b.dataset.searchSort||'ja';render();}));
+            q.addEventListener('input',render); render();
+        });
+    })();
+    </script>
 
     <script src="stars.js"></script>
     <script src="starline.js"></script>
@@ -4079,7 +4210,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 const position = convertToCartesian(ra, dec);
                 const rawStarName = String(star.starName || '').trim();
                 const name = String(rawStarName || `star-${Object.keys(starPositions).length}`);
-                const constellation = String(star.constellation || '未分類');
+                const constellation = String((constellationCatalog[star.constellationId]?.en || star.constellationId || '未分類') + ' (' + (constellationCatalog[star.constellationId]?.ja || '') + ')');
                 const magnitude = Number(
                     star.magnitude ?? star.mag ?? star.vmag ?? star.visualMag ?? 99
                 );
