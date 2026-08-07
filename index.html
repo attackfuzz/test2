@@ -2880,41 +2880,15 @@
         const SUMMER = new Set(['Lyr','Aql','Cyg','Sco','Sgr','Oph','Her','Lib','CrB','Sct','Vul','Sge','Del']);
         const WINTER = new Set(['Ori','Tau','Gem','Aur','CMa','CMi','Lep','Mon','Eri']);
         const TOPICS = {
-            stars: [
-                { id:'Arcturus', ja:'アークトゥルス', en:'Arcturus', season:'春', note:'うしかい座。オレンジ色に輝く春で最も明るい星。', constellationId:'Boo', targetStar:'16αBoo' },
-                { id:'Spica', ja:'スピカ', en:'Spica', season:'春', note:'おとめ座。青白く気品のある輝きから「真珠星」と呼ばれる星。', constellationId:'Vir', targetStar:'67αVir' },
-                { id:'Regulus', ja:'レグルス', en:'Regulus', season:'春', note:'しし座。ライオンの胸元に位置する「しし座の心臓」と呼ばれる星。', constellationId:'Leo', targetStar:'32αLeo' },
-                { id:'Denebola', ja:'デネボラ', en:'Denebola', season:'春', note:'しし座。しし座の尻尾に位置し、春の大三角を構成する星。', constellationId:'Leo', targetStar:'94βLeo' },
-                { id:'CorCaroli', ja:'コル・カロリ', en:'Cor Caroli', season:'春', note:'りょうけん座。「チャールズの心臓」という意味を持つ、春のダイヤモンドを構成する星。', constellationId:'CVn', targetStar:'12α2CVn' },
-
-                { id:'Vega', ja:'ベガ', en:'Vega', season:'夏', note:'こと座。七夕の「織姫星」。夏の大三角で最も明るい星。', constellationId:'Lyr', targetStar:'3αLyr' },
-                { id:'Altair', ja:'アルタイル', en:'Altair', season:'夏', note:'わし座。七夕の「彦星」。ベガの向かい側で輝く星。', constellationId:'Aql', targetStar:'53αAql' },
-                { id:'Deneb', ja:'デネブ', en:'Deneb', season:'夏', note:'はくちょう座。白鳥の尻尾に位置する、夏の大三角を構成する星。', constellationId:'Cyg', targetStar:'50αCyg' },
-                { id:'Antares', ja:'アンタレス', en:'Antares', season:'夏', note:'さそり座。「火星に対抗するもの」という意味を持つ、赤く妖しく輝く巨大な星。', constellationId:'Sco', targetStar:'21αSco' },
-                { id:'Shaula', ja:'シャウラ', en:'Shaula', season:'夏', note:'さそり座。さそりの猛毒の針の先端に位置する明るい2等星。', constellationId:'Sco', targetStar:'35λSco' },
-                { id:'Nunki', ja:'ヌキ', en:'Nunki', season:'夏', note:'いて座。南斗六星の一部を構成する、日本でなじみのある呼び名の星。', constellationId:'Sgr', targetStar:'34σSgr' },
-
-                { id:'Fomalhaut', ja:'フォーマルハウト', en:'Fomalhaut', season:'秋', note:'みなみのうお座。秋の夜空でぽつんと一つだけ輝くため「秋の一つ星」と呼ばれる星。', constellationId:'PsA', targetStar:'24αPsA' },
-                { id:'Alpheratz', ja:'アルフェラッツ', en:'Alpheratz', season:'秋', note:'アンドロメダ座。ペガススの大四辺形を構成する、アンドロメダの頭にあたる星。', constellationId:'And', targetStar:'21αAnd' },
-                { id:'Markab', ja:'マルカブ', en:'Markab', season:'秋', note:'ペガスス座。ペガススの肩に位置する、秋の大四辺形を構成する星。', constellationId:'Peg', targetStar:'54αPeg' },
-                { id:'Alderamin', ja:'アルデラミン', en:'Alderamin', season:'秋', note:'ケフェウス座。北天の王ケフェウス座の右肩で輝く星。', constellationId:'Cep', targetStar:'5αCep' },
-
-                { id:'Sirius', ja:'シリウス', en:'Sirius', season:'冬', note:'おおいぬ座。太陽を除いて、地球から見える全天で最も明るい恒星。', constellationId:'CMa', targetStar:'9αCMa' },
-                { id:'Betelgeuse', ja:'ベテルギウス', en:'Betelgeuse', season:'冬', note:'オリオン座。オリオン座の肩にある赤色超巨星。冬の大三角の一つ。', constellationId:'Ori', targetStar:'58αOri' },
-                { id:'Rigel', ja:'リゲル', en:'Rigel', season:'冬', note:'オリオン座。オリオン座の足元で青白く輝く、非常にエネルギーの強い星。', constellationId:'Ori', targetStar:'19βOri' },
-                { id:'Procyon', ja:'プロキオン', en:'Procyon', season:'冬', note:'こいぬ座。冬の大三角を構成する、シリウスに次いで早く昇る明るい星。', constellationId:'CMi', targetStar:'10αCMi' },
-                { id:'Aldebaran', ja:'アルデバラン', en:'Aldebaran', season:'冬', note:'おうし座。プレアデス星団（すばる）の近くで赤く輝く、牡牛の目にあたる星。', constellationId:'Tau', targetStar:'87αTau' },
-                { id:'Capella', ja:'カペラ', en:'Capella', season:'冬', note:'ぎょしゃ座。冬の夜空のかなり高い位置で黄色く輝く1等星。', constellationId:'Aur', targetStar:'13αAur' },
-                { id:'Pollux', ja:'ポルックス', en:'Pollux', season:'冬', note:'ふたご座。ふたご座の弟の頭にあたる、オレンジ色の1等星。', constellationId:'Gem', targetStar:'78βGem' },
-                { id:'Castor', ja:'カストル', en:'Castor', season:'冬', note:'ふたご座。ふたご座の兄の頭にあたる、少し控えめに輝く2等星。', constellationId:'Gem', targetStar:'66αGem' },
-                { id:'Alnitak', ja:'アルニタク', en:'Alnitak', season:'冬', note:'オリオン座。オリオン座の有名な「三つ星」の左側に位置する星。', constellationId:'Ori', targetStar:'50ζOri' },
-
-                { id:'Polaris', ja:'ポラリス', en:'Polaris', season:'南天・北天・その他', note:'こぐま座。常に真北の方角を示す、現在の「北極星」。', constellationId:'UMi', targetStar:'1αUMi' },
-                { id:'Canopus', ja:'カノープス', en:'Canopus', season:'南天・北天・その他', note:'りゅうこつ座。全天で2番目に明るい星。日本では南の地平線すれすれに見え、「寿星」とも呼ばれる。', constellationId:'Car', targetStar:'αCar' },
-                { id:'RigilKentaurus', ja:'リギル・ケンタウルス', en:'Rigil Kentaurus', season:'南天・北天・その他', note:'ケンタウルス座。太陽系に最も近い恒星系の一つで、全天でも非常に明るい星。', constellationId:'Cen', targetStar:'α1Cen' },
-                { id:'Hadar', ja:'ハダル', en:'Hadar', season:'南天・北天・その他', note:'ケンタウルス座。南十字星を探す目印となる、ケンタウルス座のもう一つの1等星。', constellationId:'Cen', targetStar:'βCen' },
-                { id:'Acrux', ja:'アクルックス', en:'Acrux', season:'南天・北天・その他', note:'みなみじゅうじ座。南十字星（サザンクロス）の中で最も明るく輝く星。', constellationId:'Cru', targetStar:'α1Cru' },
-                { id:'Mimosa', ja:'ミモザ', en:'Mimosa', season:'南天・北天・その他', note:'みなみじゅうじ座。南十字星を構成する、青白く美しい1等星。', constellationId:'Cru', targetStar:'βCru' }
+            stars:[
+                {id:'Vega',ja:'ベガ',en:'Vega',note:'こと座 α星・織姫星',constellationId:'Lyr',targetStar:'3αLyr'},
+                {id:'Altair',ja:'アルタイル',en:'Altair',note:'わし座 α星・彦星',constellationId:'Aql',targetStar:'53αAql'},
+                {id:'Deneb',ja:'デネブ',en:'Deneb',note:'はくちょう座 α星',constellationId:'Cyg',targetStar:'50αCyg'},
+                {id:'Sirius',ja:'シリウス',en:'Sirius',note:'おおいぬ座 α星',constellationId:'CMa',targetStar:'9αCMa'},
+                {id:'Polaris',ja:'北極星',en:'Polaris',note:'こぐま座 α星',constellationId:'UMi',targetStar:'1αUMi'},
+                {id:'Betelgeuse',ja:'ベテルギウス',en:'Betelgeuse',note:'オリオン座 α星',constellationId:'Ori',targetStar:'58αOri'},
+                {id:'Rigel',ja:'リゲル',en:'Rigel',note:'オリオン座 β星',constellationId:'Ori',targetStar:'19βOri'},
+                {id:'Antares',ja:'アンタレス',en:'Antares',note:'さそり座 α星',constellationId:'Sco',targetStar:'21αSco'}
             ],
             asterisms:[
                 {id:'SummerTriangle',ja:'夏の大三角',en:'Summer Triangle',note:'ベガ・アルタイル・デネブ',targetStars:['3αLyr','53αAql','50αCyg'],closed:true},
