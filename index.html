@@ -1945,6 +1945,35 @@
         .searchV4ItemId { color:#67f7ff; font-size:10px; font-weight:700; }
         .searchV4Empty { padding:18px 10px; color:rgba(194,249,252,.58); font-size:12px; text-align:center; }
 
+    
+        /* ===== 88星座 基本コメント試作 ===== */
+        #infoSheetTitle .info-title-ja {
+            display: block;
+            color: #eaffff;
+            font-size: 19px;
+            font-weight: 800;
+            line-height: 1.25;
+        }
+        #infoSheetTitle .info-title-en {
+            display: block;
+            margin-top: 3px;
+            color: rgba(103,247,255,.72);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .05em;
+        }
+        #infoSheetText {
+            line-height: 1.75;
+            font-size: 14px;
+        }
+        .info-basic-label {
+            margin: 0 0 7px;
+            color: #67f7ff;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: .08em;
+        }
+
     </style>
 </head>
 <body>
@@ -2133,8 +2162,9 @@
             <button type="button" id="infoSheetClose">閉じる</button>
         </div>
         <div class="info-sheet-body">
-            <p id="infoSheetText">星座を選ぶと、ここにその星座の短い解説やウンチクを表示できます。</p>
-            <div class="info-sheet-note">今はUI試作です。今後、各星座につき2〜3本の小話を切り替えて読めるようにします。</div>
+            <div class="info-basic-label">基本コメント</div>
+            <p id="infoSheetText">星座を選ぶと、ここにその星座の基本コメントを表示します。</p>
+            <div class="info-sheet-note">基本コメント試作版。追加解説や一行小ネタは今後ここから分けて追加します。</div>
         </div>
     </section>
 
@@ -2880,15 +2910,41 @@
         const SUMMER = new Set(['Lyr','Aql','Cyg','Sco','Sgr','Oph','Her','Lib','CrB','Sct','Vul','Sge','Del']);
         const WINTER = new Set(['Ori','Tau','Gem','Aur','CMa','CMi','Lep','Mon','Eri']);
         const TOPICS = {
-            stars:[
-                {id:'Vega',ja:'ベガ',en:'Vega',note:'こと座 α星・織姫星',constellationId:'Lyr',targetStar:'3αLyr'},
-                {id:'Altair',ja:'アルタイル',en:'Altair',note:'わし座 α星・彦星',constellationId:'Aql',targetStar:'53αAql'},
-                {id:'Deneb',ja:'デネブ',en:'Deneb',note:'はくちょう座 α星',constellationId:'Cyg',targetStar:'50αCyg'},
-                {id:'Sirius',ja:'シリウス',en:'Sirius',note:'おおいぬ座 α星',constellationId:'CMa',targetStar:'9αCMa'},
-                {id:'Polaris',ja:'北極星',en:'Polaris',note:'こぐま座 α星',constellationId:'UMi',targetStar:'1αUMi'},
-                {id:'Betelgeuse',ja:'ベテルギウス',en:'Betelgeuse',note:'オリオン座 α星',constellationId:'Ori',targetStar:'58αOri'},
-                {id:'Rigel',ja:'リゲル',en:'Rigel',note:'オリオン座 β星',constellationId:'Ori',targetStar:'19βOri'},
-                {id:'Antares',ja:'アンタレス',en:'Antares',note:'さそり座 α星',constellationId:'Sco',targetStar:'21αSco'}
+            stars: [
+                { id:'Arcturus', ja:'アークトゥルス', en:'Arcturus', season:'春', note:'うしかい座。オレンジ色に輝く春で最も明るい星。', constellationId:'Boo', targetStar:'16αBoo' },
+                { id:'Spica', ja:'スピカ', en:'Spica', season:'春', note:'おとめ座。青白く気品のある輝きから「真珠星」と呼ばれる星。', constellationId:'Vir', targetStar:'67αVir' },
+                { id:'Regulus', ja:'レグルス', en:'Regulus', season:'春', note:'しし座。ライオンの胸元に位置する「しし座の心臓」と呼ばれる星。', constellationId:'Leo', targetStar:'32αLeo' },
+                { id:'Denebola', ja:'デネボラ', en:'Denebola', season:'春', note:'しし座。しし座の尻尾に位置し、春の大三角を構成する星。', constellationId:'Leo', targetStar:'94βLeo' },
+                { id:'CorCaroli', ja:'コル・カロリ', en:'Cor Caroli', season:'春', note:'りょうけん座。「チャールズの心臓」という意味を持つ、春のダイヤモンドを構成する星。', constellationId:'CVn', targetStar:'12α2CVn' },
+
+                { id:'Vega', ja:'ベガ', en:'Vega', season:'夏', note:'こと座。七夕の「織姫星」。夏の大三角で最も明るい星。', constellationId:'Lyr', targetStar:'3αLyr' },
+                { id:'Altair', ja:'アルタイル', en:'Altair', season:'夏', note:'わし座。七夕の「彦星」。ベガの向かい側で輝く星。', constellationId:'Aql', targetStar:'53αAql' },
+                { id:'Deneb', ja:'デネブ', en:'Deneb', season:'夏', note:'はくちょう座。白鳥の尻尾に位置する、夏の大三角を構成する星。', constellationId:'Cyg', targetStar:'50αCyg' },
+                { id:'Antares', ja:'アンタレス', en:'Antares', season:'夏', note:'さそり座。「火星に対抗するもの」という意味を持つ、赤く妖しく輝く巨大な星。', constellationId:'Sco', targetStar:'21αSco' },
+                { id:'Shaula', ja:'シャウラ', en:'Shaula', season:'夏', note:'さそり座。さそりの猛毒の針の先端に位置する明るい2等星。', constellationId:'Sco', targetStar:'35λSco' },
+                { id:'Nunki', ja:'ヌキ', en:'Nunki', season:'夏', note:'いて座。南斗六星の一部を構成する、日本でなじみのある呼び名の星。', constellationId:'Sgr', targetStar:'34σSgr' },
+
+                { id:'Fomalhaut', ja:'フォーマルハウト', en:'Fomalhaut', season:'秋', note:'みなみのうお座。秋の夜空でぽつんと一つだけ輝くため「秋の一つ星」と呼ばれる星。', constellationId:'PsA', targetStar:'24αPsA' },
+                { id:'Alpheratz', ja:'アルフェラッツ', en:'Alpheratz', season:'秋', note:'アンドロメダ座。ペガススの大四辺形を構成する、アンドロメダの頭にあたる星。', constellationId:'And', targetStar:'21αAnd' },
+                { id:'Markab', ja:'マルカブ', en:'Markab', season:'秋', note:'ペガスス座。ペガススの肩に位置する、秋の大四辺形を構成する星。', constellationId:'Peg', targetStar:'54αPeg' },
+                { id:'Alderamin', ja:'アルデラミン', en:'Alderamin', season:'秋', note:'ケフェウス座。北天の王ケフェウス座の右肩で輝く星。', constellationId:'Cep', targetStar:'5αCep' },
+
+                { id:'Sirius', ja:'シリウス', en:'Sirius', season:'冬', note:'おおいぬ座。太陽を除いて、地球から見える全天で最も明るい恒星。', constellationId:'CMa', targetStar:'9αCMa' },
+                { id:'Betelgeuse', ja:'ベテルギウス', en:'Betelgeuse', season:'冬', note:'オリオン座。オリオン座の肩にある赤色超巨星。冬の大三角の一つ。', constellationId:'Ori', targetStar:'58αOri' },
+                { id:'Rigel', ja:'リゲル', en:'Rigel', season:'冬', note:'オリオン座。オリオン座の足元で青白く輝く、非常にエネルギーの強い星。', constellationId:'Ori', targetStar:'19βOri' },
+                { id:'Procyon', ja:'プロキオン', en:'Procyon', season:'冬', note:'こいぬ座。冬の大三角を構成する、シリウスに次いで早く昇る明るい星。', constellationId:'CMi', targetStar:'10αCMi' },
+                { id:'Aldebaran', ja:'アルデバラン', en:'Aldebaran', season:'冬', note:'おうし座。プレアデス星団（すばる）の近くで赤く輝く、牡牛の目にあたる星。', constellationId:'Tau', targetStar:'87αTau' },
+                { id:'Capella', ja:'カペラ', en:'Capella', season:'冬', note:'ぎょしゃ座。冬の夜空のかなり高い位置で黄色く輝く1等星。', constellationId:'Aur', targetStar:'13αAur' },
+                { id:'Pollux', ja:'ポルックス', en:'Pollux', season:'冬', note:'ふたご座。ふたご座の弟の頭にあたる、オレンジ色の1等星。', constellationId:'Gem', targetStar:'78βGem' },
+                { id:'Castor', ja:'カストル', en:'Castor', season:'冬', note:'ふたご座。ふたご座の兄の頭にあたる、少し控えめに輝く2等星。', constellationId:'Gem', targetStar:'66αGem' },
+                { id:'Alnitak', ja:'アルニタク', en:'Alnitak', season:'冬', note:'オリオン座。オリオン座の有名な「三つ星」の左側に位置する星。', constellationId:'Ori', targetStar:'50ζOri' },
+
+                { id:'Polaris', ja:'ポラリス', en:'Polaris', season:'南天・北天・その他', note:'こぐま座。常に真北の方角を示す、現在の「北極星」。', constellationId:'UMi', targetStar:'1αUMi' },
+                { id:'Canopus', ja:'カノープス', en:'Canopus', season:'南天・北天・その他', note:'りゅうこつ座。全天で2番目に明るい星。日本では南の地平線すれすれに見え、「寿星」とも呼ばれる。', constellationId:'Car', targetStar:'αCar' },
+                { id:'RigilKentaurus', ja:'リギル・ケンタウルス', en:'Rigil Kentaurus', season:'南天・北天・その他', note:'ケンタウルス座。太陽系に最も近い恒星系の一つで、全天でも非常に明るい星。', constellationId:'Cen', targetStar:'α1Cen' },
+                { id:'Hadar', ja:'ハダル', en:'Hadar', season:'南天・北天・その他', note:'ケンタウルス座。南十字星を探す目印となる、ケンタウルス座のもう一つの1等星。', constellationId:'Cen', targetStar:'βCen' },
+                { id:'Acrux', ja:'アクルックス', en:'Acrux', season:'南天・北天・その他', note:'みなみじゅうじ座。南十字星（サザンクロス）の中で最も明るく輝く星。', constellationId:'Cru', targetStar:'α1Cru' },
+                { id:'Mimosa', ja:'ミモザ', en:'Mimosa', season:'南天・北天・その他', note:'みなみじゅうじ座。南十字星を構成する、青白く美しい1等星。', constellationId:'Cru', targetStar:'βCru' }
             ],
             asterisms:[
                 {id:'SummerTriangle',ja:'夏の大三角',en:'Summer Triangle',note:'ベガ・アルタイル・デネブ',targetStars:['3αLyr','53αAql','50αCyg'],closed:true},
@@ -2980,6 +3036,101 @@
     </script>
 
     <script src="stars.js"></script>
+
+    <script>
+    // ===== 88星座 基本コメント（試作） =====
+    const constellationBasicComments = {
+        "And": "この星座は、ギリシャ神話の王女アンドロメダの姿を表しています。母カシオペヤの言動が神々の怒りを買い、海の怪物への生贄にされる物語で知られています。",
+        "Ant": "この星座が表しているのは、18世紀に使われた空気ポンプです。神話ではなく、当時の科学機器を星座にした近世の星座です。",
+        "Aps": "この星座は、南国に生息する極楽鳥を表しています。大航海時代に南半球の空が詳しく知られるようになったころ作られた星座です。",
+        "Aql": "この星座は、大きな鷲の姿を表しています。ギリシャ神話ではゼウスに仕える鷲や、美少年ガニュメデスを天へ連れていった鷲と結びつけられます。",
+        "Aqr": "この星座は、水を注ぐ人物の姿を表しています。ギリシャ神話では、ゼウスに天上へ連れていかれ、神々の給仕となった美少年ガニュメデスと結びつけられます。",
+        "Ara": "この星座は、神々へ捧げ物をする祭壇を表しています。ギリシャ神話では、ゼウスたち神々が戦いを前に誓いを立てた祭壇などと結びつけられています。",
+        "Ari": "この星座は、一頭の黄金の羊を表しています。ギリシャ神話では、生贄にされそうになったプリクソスとヘレの兄妹を救った羊で、その金羊毛は後に英雄イアソンの冒険へつながります。",
+        "Aur": "この星座は、馬車を操る御者の姿を表しています。ギリシャ神話では、戦車を発明したとされるエリクトニオスなど、いくつかの人物と結びつけられています。",
+        "Boo": "この星座は、牛を追う人物の姿を表しています。古代から知られる星座ですが、おおぐま座のカリストの息子アルカスなど、誰を表すかには複数の説があります。",
+        "CMa": "この星座は、大きな犬の姿を表しています。ギリシャ神話では、狩人オリオンに従う猟犬などと結びつけられています。",
+        "CMi": "この星座は、小さな犬の姿を表しています。おおいぬ座とともに、狩人オリオンに従う犬として描かれることがあります。",
+        "CVn": "この星座は、二匹の猟犬を表しています。古代神話の星座ではなく、うしかい座の人物が連れている猟犬として近世に作られました。",
+        "Cae": "この星座は、彫刻に使う工具を表しています。18世紀に作られた、科学や技術の道具を図柄にした星座です。",
+        "Cam": "この星座は、首の長いキリンを表しています。古代の星座ではなく、近世ヨーロッパで作られた比較的新しい星座です。",
+        "Cap": "この星座は、上半身が山羊、下半身が魚のような姿で描かれます。ギリシャ神話では、牧神パーンなどと結びつけられてきました。",
+        "Car": "この星座は、船の骨組みとなる竜骨の部分を表しています。もとはギリシャ神話で、英雄イアソンたちが金羊毛を求めて航海した「アルゴー船」の星座の一部でした。",
+        "Cas": "この星座は、ギリシャ神話の王妃カシオペヤの姿を表しています。娘アンドロメダの美しさを自慢したことから、娘が生贄にされる大事件を引き起こします。",
+        "Cen": "この星座は、人の上半身と馬の下半身を持つケンタウロスの姿を表しています。ギリシャ神話の賢者ケイローンと結びつけられることもあります。",
+        "Cep": "この星座は、ギリシャ神話の王ケフェウスの姿を表しています。王妃カシオペヤの夫であり、生贄にされた王女アンドロメダの父です。",
+        "Cet": "この星座は、巨大な海の怪物を表しています。ギリシャ神話では、生贄にされた王女アンドロメダを襲い、英雄ペルセウスと戦う怪物として登場します。",
+        "Cha": "この星座は、爬虫類のカメレオンを表しています。大航海時代に南の空へ追加された動物星座のひとつです。",
+        "Cir": "この星座は、円を描くためのコンパスを表しています。方角を示す磁石ではなく、製図や測量に使う道具です。",
+        "Col": "この星座は、一羽のハトを表しています。近世に作られた星座で、ノアの箱舟から放たれたハトと結びつけられることがあります。",
+        "Com": "この星座は、女性の髪の毛を表しています。古代エジプトの王妃ベレニケ2世が、夫の無事を願って自分の髪を捧げたという伝承に由来します。",
+        "CrA": "この星座は、南の空にある冠や花輪を表しています。古代から知られる星座で、ギリシャ神話の神々にまつわるいくつかの説があります。",
+        "CrB": "この星座は、美しい冠を表しています。ギリシャ神話では、ディオニュソスが王女アリアドネへ贈った冠と結びつけられます。",
+        "Crv": "この星座は、一羽のカラスを表しています。ギリシャ神話では、太陽神アポロンに仕えたカラスの物語と結びつけられています。",
+        "Crt": "この星座は、杯や器を表しています。からす座とともに、太陽神アポロンとその使いのカラスにまつわる物語に登場します。",
+        "Cru": "この星座は、南の空に見える十字形の星並びを表しています。神話の人物ではなく、南の方角を知る目印として特に有名な星座です。",
+        "Cyg": "この星座は、大きく翼を広げた白鳥を表しています。ギリシャ神話では、ゼウスが王妃レダへ近づくため白鳥になった物語などと結びつけられています。",
+        "Del": "この星座は、海を泳ぐイルカを表しています。ギリシャ神話では、海へ身を投げた音楽家アリオンを救ったイルカなどの物語があります。",
+        "Dor": "この星座は、南の海にすむ大型の魚を表しています。大航海時代、ヨーロッパ人が南方で見た生物をもとに作られた星座です。",
+        "Dra": "この星座は、長い体を持つ竜を表しています。ギリシャ神話では、黄金のリンゴを守り、英雄ヘラクレスと関わる竜の物語などがあります。",
+        "Equ": "この星座は、小さな馬の姿を表しています。古代から知られる星座で、ペガサスなど神話上の馬に関係する複数の説があります。",
+        "Eri": "この星座は、長く流れる一本の川を表しています。ギリシャ神話では、太陽神ヘリオスの息子パエトンが太陽の戦車を暴走させ、落ちた川と結びつけられます。",
+        "For": "この星座は、化学実験などに使う炉を表しています。神話ではなく、18世紀に作られた科学機器系の星座です。",
+        "Gem": "この星座は、並んだ双子の兄弟を表しています。ギリシャ神話のカストルとポルックスの強い絆の物語で知られています。",
+        "Gru": "この星座は、長い脚と首を持つ鶴を表しています。大航海時代に南の空へ追加された動物星座のひとつです。",
+        "Her": "この星座は、ギリシャ神話の英雄ヘラクレスの姿を表しています。ゼウスの息子で、ネメアの獅子やヒドラ退治など「十二の難業」で知られています。",
+        "Hor": "この星座は、振り子時計を表しています。18世紀に作られた、当時の科学機器を図柄にした星座です。",
+        "Hya": "この星座は、非常に長い大蛇や水蛇を表しています。ギリシャ神話では、英雄ヘラクレスが戦った多頭の怪物ヒドラと結びつけられます。",
+        "Hyi": "この星座は、南の空にある小さな水蛇を表しています。古代神話ではなく、大航海時代に追加された南天の星座です。",
+        "Ind": "この星座は、大航海時代のヨーロッパ人が出会った異国の人々を表したものです。当時の世界観がそのまま名前に残った近世の星座です。",
+        "Lac": "この星座は、小さなトカゲを表しています。古代神話由来ではなく、17世紀に作られた比較的新しい星座です。",
+        "Leo": "この星座は、大きな獅子を表しています。ギリシャ神話では、英雄ヘラクレスが最初の難業で倒したネメアの獅子です。",
+        "LMi": "この星座は、小さな獅子を表しています。しし座の近くに、17世紀になって追加された比較的新しい星座です。",
+        "Lep": "この星座は、一羽の野ウサギを表しています。狩人オリオンと、その猟犬であるおおいぬ座・こいぬ座の近くに置かれた獲物とも考えられています。",
+        "Lib": "この星座は、物の重さを量る天秤を表しています。古代には、さそり座の爪の一部として考えられていた時代もありました。",
+        "Lup": "この星座は、一頭の獣や狼を表しています。古代の星図では、ケンタウルスが祭壇へ捧げようとしている獣として描かれていました。",
+        "Lyn": "この星座は、山猫を表しています。星が暗く見つけにくいため、鋭い目を持つ山猫の名が付けられたといわれています。",
+        "Lyr": "この星座は、ギリシャ神話の琴の名手オルフェウスが奏でた竪琴です。亡くなった妻エウリュディケを取り戻すため、彼はこの琴を手に冥界へ向かったと伝えられています。",
+        "Men": "この星座は、南アフリカにあるテーブルマウンテンを表しています。実在する地形を名前にした珍しい星座です。",
+        "Mic": "この星座は、顕微鏡を表しています。18世紀の科学への関心から作られた、科学機器を図柄にした星座です。",
+        "Mon": "この星座は、一本の角を持つ伝説上の動物ユニコーンを表しています。古代神話ではなく、近世に作られた星座です。",
+        "Mus": "この星座は、一匹のハエを表しています。大航海時代に南の空へ追加された、小さな動物星座のひとつです。",
+        "Nor": "この星座は、直角定規などの測定道具を表しています。18世紀の科学や測量器具を星座にしたものです。",
+        "Oct": "この星座は、天体の高さを測る八分儀という観測器具を表しています。18世紀に作られた科学機器系の星座です。",
+        "Oph": "この星座は、大きな蛇を手にした人物を表しています。ギリシャ神話では、アポロンの息子で、死者さえ蘇らせる術を身につけた医神アスクレピオスと結びつけられます。",
+        "Ori": "この星座は、ギリシャ神話の巨人の狩人オリオンの姿を表しています。女神アルテミスや、彼を死に至らせたサソリなど、多くの物語とつながる人物です。",
+        "Pav": "この星座は、大きく羽を広げたクジャクを表しています。大航海時代に南の空へ追加された動物星座のひとつです。",
+        "Peg": "この星座は、翼を持つ天馬ペガサスを表しています。怪物メドゥーサから生まれ、英雄ベレロポンとともに怪物と戦った物語で知られています。",
+        "Per": "この星座は、ギリシャ神話の英雄ペルセウスの姿を表しています。女神アテナらの助けを受けて怪物メドゥーサを倒し、帰路では生贄にされていたアンドロメダを救います。",
+        "Phe": "この星座は、死と再生の伝説で知られる不死鳥フェニックスを表しています。大航海時代に南の空へ追加された星座です。",
+        "Pic": "この星座は、絵を描くときに画布を立てる画架を表しています。18世紀に作られた、芸術の道具を図柄にした星座です。",
+        "Psc": "この星座は、ひもで結ばれた二匹の魚を表しています。ギリシャ神話では、怪物から逃れるため魚になった女神アフロディテと息子エロスの物語と結びつけられます。",
+        "PsA": "この星座は、南の空を泳ぐ一匹の魚を表しています。古代から知られ、みずがめ座が注ぐ水を受ける魚として描かれています。",
+        "Pup": "この星座は、船の後部にあたる船尾を表しています。もとは英雄イアソンたちが金羊毛を求めて航海した「アルゴー船」の星座の一部でした。",
+        "Pyx": "この星座は、航海で方角を知るための羅針盤を表しています。船に関係する星座ですが、アルゴー船とは別に近世に作られました。",
+        "Ret": "この星座は、望遠鏡の視野に使う細かな目盛りや照準線を表しています。天体観測そのものに使う道具が星座になったものです。",
+        "Sge": "この星座は、一本の矢を表しています。古代から知られる星座で、英雄ヘラクレスや神アポロンの矢など、複数の神話と結びつけられています。",
+        "Sgr": "この星座は、弓を引く半人半馬の射手を表しています。ギリシャ神話では、弓の名手クロトスなどと結びつける説があります。",
+        "Sco": "この星座は、大きなサソリを表しています。ギリシャ神話では、巨人の狩人オリオンを死に至らせたサソリとして知られています。",
+        "Scl": "この星座は、彫刻家の仕事場や制作道具を表しています。18世紀に作られた、芸術や技術を図柄にした星座です。",
+        "Sct": "この星座は、一枚の盾を表しています。古代神話の盾ではなく、17世紀のポーランド王ヤン3世ソビェスキをたたえて作られた星座です。",
+        "Ser": "この星座は、大きな蛇そのものを表しています。へびつかい座の医神アスクレピオスが手にしている蛇として描かれています。",
+        "Sex": "この星座は、天体の角度を測る六分儀を表しています。天文学者ヘヴェリウスが、自ら使った観測器具を記念して作った星座です。",
+        "Tau": "この星座は、大きな牡牛を表しています。ギリシャ神話では、ゼウスが王女エウロペへ近づくために姿を変えた白い牡牛と結びつけられます。",
+        "Tel": "この星座は、天体望遠鏡を表しています。18世紀に作られた、科学機器をそのまま夜空に置いた星座です。",
+        "Tri": "この星座は、その名の通り三角形を表しています。古代から知られるシンプルな形の星座で、土地や島の形などに見立てられてきました。",
+        "TrA": "この星座は、南の空にある三角形を表しています。大航海時代に南天へ追加された、星の並びの形をそのまま名前にした星座です。",
+        "Tuc": "この星座は、大きなくちばしを持つ南国の鳥オオハシを表しています。大航海時代に知られた珍しい動物をもとに作られました。",
+        "UMa": "この星座は、大きな熊の姿を表しています。ギリシャ神話では、ゼウスに愛された女性カリストが熊へ変えられた物語と結びつけられます。",
+        "UMi": "この星座は、小さな熊を表しています。ギリシャ神話では、おおぐま座のカリストと、その息子アルカスの物語と結びつけられます。",
+        "Vel": "この星座は、船に張られた帆を表しています。りゅうこつ座・とも座と同じく、英雄イアソンたちが金羊毛を求めて航海した「アルゴー船」の一部でした。",
+        "Vir": "この星座は、一人の女性の姿を表しています。ギリシャ神話では、正義の女神アストライアや、豊穣の女神デメテルと娘ペルセポネなど、複数の人物と結びつけられています。",
+        "Vol": "この星座は、海面から飛び出すトビウオを表しています。大航海時代の船乗りたちが南の海で目にした生物をもとに作られました。",
+        "Vul": "この星座は、小さなキツネを表しています。古代神話由来ではなく、17世紀に作られた比較的新しい星座です。",
+        "Cnc": "この星座は、一匹のカニを表しています。ギリシャ神話では、英雄ヘラクレスが怪物ヒドラと戦った際、女神ヘラが送り込んだ大ガニと結びつけられています。"
+};
+    </script>
+
     <script src="starline.js"></script>
     <script src="background_stars.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
@@ -3598,13 +3749,40 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
         function updateInfoSheetForConstellation() {
             const selected = constellationSelect.value;
+
             if (!selected) {
                 infoSheetTitle.textContent = '夜空のガイド';
-                infoSheetText.textContent = '星座を選ぶと、ここにその星座の短い解説やウンチクを表示できます。';
+                infoSheetText.textContent = '星座を選ぶと、ここにその星座の基本コメントを表示します。';
                 return;
             }
-            infoSheetTitle.textContent = selected;
-            infoSheetText.textContent = `${selected}の小話をここに表示します。現在はボトムシートの操作感を確認するための試作表示です。`;
+
+            let info = null;
+            for (const item of Object.values(constellationCatalog)) {
+                const legacy = `${item.en} (${item.ja})`;
+                if (
+                    selected === legacy ||
+                    selected === item.id ||
+                    selected === item.en ||
+                    selected === item.ja
+                ) {
+                    info = item;
+                    break;
+                }
+            }
+
+            if (!info) {
+                infoSheetTitle.textContent = selected;
+                infoSheetText.textContent = 'この星座の基本コメントはまだ登録されていません。';
+                return;
+            }
+
+            infoSheetTitle.innerHTML =
+                `<span class="info-title-ja">${info.ja}</span>` +
+                `<span class="info-title-en">${info.en} / ${info.id}</span>`;
+
+            infoSheetText.textContent =
+                constellationBasicComments[info.id] ||
+                'この星座の基本コメントはまだ登録されていません。';
         }
 
         function bindTapAction(button, handler) {
