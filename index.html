@@ -1974,6 +1974,34 @@
             letter-spacing: .08em;
         }
 
+    
+        /* ===== Mobile-friendly sky label modes ===== */
+        .constellation-label {
+            white-space: nowrap !important;
+            line-height: 1 !important;
+            transform-origin: center center;
+        }
+        .constellation-label-medium { font-size: 0.90em !important; }
+        .constellation-label-long {
+            font-size: 0.78em !important;
+            letter-spacing: -0.03em;
+        }
+        .constellation-label-very-long {
+            font-size: 0.68em !important;
+            letter-spacing: -0.05em;
+        }
+        .star-label {
+            white-space: nowrap !important;
+            line-height: 1 !important;
+        }
+        [data-label-mode] {
+            min-height: 38px;
+            font-size: 11px !important;
+            line-height: 1.2;
+            padding-left: 6px !important;
+            padding-right: 6px !important;
+        }
+
     </style>
 </head>
 <body>
@@ -2525,7 +2553,7 @@
                     setV2LabelModeActive(labelDisplayMode);
                     const labelText =
                         labelDisplayMode === 'none' ? 'ラベルなし' :
-                        labelDisplayMode === 'all' ? '星名 + 星座名' :
+                        labelDisplayMode === 'star' ? '星名 + 星座名' :
                         '星座名のみ';
                     v2StarDisplayStatus.textContent = `星座線: ${linesVisible ? '表示' : '非表示'} / ラベル: ${labelText}`;
                 }
@@ -3290,7 +3318,7 @@
         const constellationLabelElements = {};
         const starLabelElements = {};
         const starLabelMeta = {};
-        let labelDisplayMode = 'constellation';
+        let labelDisplayMode = 'constellation-ja';
         let backgroundStarLayers = [];
         let lastConstellationLineClipKey = '';
 
@@ -4709,6 +4737,32 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 mesh.geometry.dispose();
                 mesh.geometry = replacementGeometry;
             });
+        }
+
+
+        function resolveConstellationLabelInfo(value) {
+            if (!value || typeof constellationCatalog === 'undefined') return null;
+            if (constellationCatalog[value]) return constellationCatalog[value];
+            for (const info of Object.values(constellationCatalog)) {
+                const legacy = `${info.en} (${info.ja})`;
+                if (value === legacy || value === info.en || value === info.ja) return info;
+            }
+            return null;
+        }
+
+        function getConstellationLabelText(value) {
+            const info = resolveConstellationLabelInfo(value);
+            if (!info) return String(value || '');
+            return labelDisplayMode === 'constellation-en' ? info.en : info.ja;
+        }
+
+        function applySmartConstellationLabelSize(element, text) {
+            if (!element) return;
+            const length = [...String(text || '')].length;
+            element.classList.remove('constellation-label-medium','constellation-label-long','constellation-label-very-long');
+            if (length >= 18) element.classList.add('constellation-label-very-long');
+            else if (length >= 13) element.classList.add('constellation-label-long');
+            else if (length >= 9) element.classList.add('constellation-label-medium');
         }
 
         function createConstellationLabel(constellation) {
