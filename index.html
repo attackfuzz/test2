@@ -1937,6 +1937,7 @@
         .searchV4CategoryButton.active,.searchV4SortButton.active { border-color:rgba(103,247,255,.75); background:rgba(14,72,92,.66); color:#eaffff; box-shadow:inset 0 0 14px rgba(25,234,255,.08); }
         .searchV4CategoryButton.wide { grid-column:1/-1; }
         .searchV4SortRow { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+        .searchV4Status { min-height:18px; color:rgba(194,249,252,.72); font-size:11px; }
         .searchV4List { display:grid; gap:7px; }
         .searchV4Item { width:100%; display:grid; grid-template-columns:1fr auto; align-items:center; gap:10px; min-height:46px; padding:9px 11px; border:1px solid rgba(103,247,255,.14); border-radius:10px; background:rgba(3,15,31,.72); color:#eaffff; text-align:left; touch-action:manipulation; }
         .searchV4ItemJa { display:block; color:#eaffff; font-size:13px; font-weight:700; }
@@ -2000,61 +2001,6 @@
             padding-left: 6px !important;
             padding-right: 6px !important;
         }
-
-    
-        /* ===== Search compact mobile V9 ===== */
-        .searchV3Header {
-            display: grid !important;
-            grid-template-columns: auto minmax(90px, 1fr) auto;
-            align-items: center;
-            gap: 7px !important;
-            margin-bottom: 10px !important;
-        }
-        .searchV4SearchBoxHeader {
-            width: 100%;
-            min-width: 0;
-            height: 32px !important;
-            min-height: 32px !important;
-            padding: 4px 8px !important;
-            border-radius: 8px !important;
-            font-size: 11px !important;
-        }
-        #searchContentV3 { gap: 8px !important; }
-        .searchV4CategoryGrid {
-            grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-            gap: 4px !important;
-        }
-        .searchV4CategoryButton {
-            min-height: 32px !important;
-            height: 32px !important;
-            padding: 3px 3px !important;
-            border-radius: 7px !important;
-            font-size: 10px !important;
-            line-height: 1.05 !important;
-        }
-        .searchV4CategoryButton.wide { grid-column: auto !important; }
-        .searchV4CategoryButtonTrivia { grid-column: 1 / -1 !important; }
-        #searchV4SortBlock { margin-top: 0 !important; }
-        #searchV4SortBlock .searchV4SectionLabel {
-            margin: 0 0 4px !important;
-            font-size: 10px !important;
-        }
-        .searchV4SortRow { gap: 4px !important; }
-        .searchV4SortButton {
-            min-height: 30px !important;
-            height: 30px !important;
-            padding: 3px 6px !important;
-            border-radius: 7px !important;
-            font-size: 10px !important;
-        }
-        .searchV4List { gap: 4px !important; }
-        .searchV4Item {
-            min-height: 38px !important;
-            padding: 6px 8px !important;
-            border-radius: 7px !important;
-        }
-        .searchV4ItemJa { font-size: 11.5px !important; }
-        .searchV4ItemSub, .searchV4ItemId { font-size: 9px !important; }
 
     </style>
 </head>
@@ -2187,33 +2133,34 @@
     <aside id="searchSheetV3" aria-hidden="true">
         <div class="searchV3Header">
             <strong class="searchV3Title">探す</strong>
-            <input id="searchV4QueryHeader" class="searchV4SearchBox searchV4SearchBoxHeader"
-                   type="search" placeholder="検索" autocomplete="off" spellcheck="false" aria-label="探す">
             <button id="searchCloseV3" type="button" aria-label="閉じる">×</button>
         </div>
         <div id="searchContentV3">
-<div>
+            <input id="searchV4Query" class="searchV4SearchBox" type="search" placeholder="星座名・英名・3文字IDで検索" autocomplete="off" spellcheck="false">
+            <div>
+                <div class="searchV4SectionLabel">カテゴリ</div>
                 <div class="searchV4CategoryGrid" id="searchV4Categories">
                     <button class="searchV4CategoryButton active" type="button" data-search-category="all">88星座</button>
-                    <button class="searchV4CategoryButton" type="button" data-search-category="summer">夏星座</button>
-                    <button class="searchV4CategoryButton" type="button" data-search-category="winter">冬星座</button>
-                    <button class="searchV4CategoryButton" type="button" data-search-category="recommended">おすすめ</button>
-                    <button class="searchV4CategoryButton" type="button" data-search-category="asterisms">アステリズム</button>
+                    <button class="searchV4CategoryButton" type="button" data-search-category="recommended">おすすめ星座</button>
+                    <button class="searchV4CategoryButton" type="button" data-search-category="summer">日本の夏</button>
+                    <button class="searchV4CategoryButton" type="button" data-search-category="winter">日本の冬</button>
                     <button class="searchV4CategoryButton" type="button" data-search-category="stars">星名</button>
-                    <button class="searchV4CategoryButton" type="button" data-search-category="galaxies">銀河</button>
+                    <button class="searchV4CategoryButton" type="button" data-search-category="asterisms">アステリズム</button>
                     <button class="searchV4CategoryButton" type="button" data-search-category="clusters">星団</button>
-                    <button class="searchV4CategoryButton" type="button" data-search-category="milkyway">天の川</button>
-                    <button class="searchV4CategoryButton searchV4CategoryButtonTrivia" type="button" data-search-category="trivia">おすすめ天文雑学</button>
+                    <button class="searchV4CategoryButton" type="button" data-search-category="galaxies">銀河</button>
+                    <button class="searchV4CategoryButton wide" type="button" data-search-category="milkyway">天の川</button>
+                    <button class="searchV4CategoryButton wide" type="button" data-search-category="trivia">おすすめ天文雑学</button>
                 </div>
             </div>
             <div id="searchV4SortBlock">
-                <div class="searchV4SectionLabel">並び順変更</div>
+                <div class="searchV4SectionLabel">並び順</div>
                 <div class="searchV4SortRow">
                     <button class="searchV4SortButton active" type="button" data-search-sort="ja">50音</button>
                     <button class="searchV4SortButton" type="button" data-search-sort="en">ABC</button>
                 </div>
             </div>
-<div id="searchV4List" class="searchV4List"></div>
+            <div id="searchV4Status" class="searchV4Status"></div>
+            <div id="searchV4List" class="searchV4List"></div>
         </div>
     </aside>
 
@@ -3064,7 +3011,7 @@
             for(const sec of Array.from(document.querySelectorAll('#settingsSheetV2 .settingsV2Section'))){
                 if((sec.querySelector('h3')?.textContent||'').trim()==='星座を選ぶ')sec.remove();
             }
-            const q=document.getElementById('searchV4QueryHeader'), list=document.getElementById('searchV4List'), sortBlock=document.getElementById('searchV4SortBlock');
+            const q=document.getElementById('searchV4Query'), list=document.getElementById('searchV4List'), status=document.getElementById('searchV4Status'), sortBlock=document.getElementById('searchV4SortBlock');
             const cats=Array.from(document.querySelectorAll('[data-search-category]')), sorts=Array.from(document.querySelectorAll('[data-search-sort]'));
             let category='all', sort='ja';
             function render(){
@@ -3082,6 +3029,7 @@
                 const needle=norm(q.value);
                 if(needle)items=items.filter(x=>[x.id,x.ja,x.en,x.note,...(x.tags||[])].some(v=>norm(v).includes(needle)));
                 if(constellationMode)items.sort((a,b)=>sort==='en'?a.en.localeCompare(b.en,'en',{sensitivity:'base'}):a.ja.localeCompare(b.ja,'ja',{sensitivity:'base'}));
+                status.textContent=`${items.length}件`;
                 list.innerHTML='';
                 if(!items.length){const e=document.createElement('div');e.className='searchV4Empty';e.textContent='該当する項目がありません';list.appendChild(e);return;}
                 for(const item of items){
