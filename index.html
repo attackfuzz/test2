@@ -2071,6 +2071,278 @@
             line-height: 1.15 !important;
         }
 
+    
+        /* ===== Permanent time controls V11 ===== */
+
+        /* Clock summary is now just a passive current date/time readout. */
+        #clockToggleButton.clock-summary {
+            pointer-events: none !important;
+            cursor: default !important;
+            min-height: 34px !important;
+            padding: 2px 4px !important;
+            border: 0 !important;
+            background: transparent !important;
+            box-shadow: none !important;
+            justify-items: start !important;
+            text-align: left !important;
+        }
+
+        #clockToggleButton::after {
+            content: none !important;
+            display: none !important;
+        }
+
+        #clockToggleButton .clock-summary-time {
+            font-size: 16px !important;
+        }
+
+        #clockToggleButton .clock-summary-date {
+            font-size: 9px !important;
+        }
+
+        /*
+         * Bottom dock occupies the left side.
+         * The permanent dial owns the bottom-right corner.
+         */
+        #bottomDock {
+            left: 8px !important;
+            right: 184px !important;
+            bottom: max(8px, env(safe-area-inset-bottom)) !important;
+            transform: none !important;
+            width: auto !important;
+            max-width: none !important;
+            padding: 6px !important;
+            border-radius: 13px !important;
+        }
+
+        #bottomDock .dock-top {
+            display: flex !important;
+            justify-content: flex-start !important;
+            padding: 0 !important;
+        }
+
+        #clockDayRow,
+        #clockDayRow.clock-open,
+        body.info-sheet-open #clockDayRow {
+            display: grid !important;
+            grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+            gap: 4px !important;
+            max-height: none !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            pointer-events: auto !important;
+            transform: none !important;
+            overflow: visible !important;
+            margin-top: 4px !important;
+        }
+
+        #clockDayRow > button,
+        #clockDayRow .quick-now-wrap > button {
+            min-height: 32px !important;
+            padding: 4px 4px !important;
+            border-radius: 8px !important;
+            font-size: 10px !important;
+            white-space: nowrap;
+        }
+
+        .quick-now-wrap {
+            min-width: 0;
+        }
+
+        #quickNow {
+            width: calc(100% - 25px) !important;
+        }
+
+        #quickNowMenuButton {
+            width: 23px !important;
+            min-width: 23px !important;
+            padding: 0 !important;
+        }
+
+        #bottomDockActions,
+        .dock-bottom {
+            grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+            gap: 4px !important;
+            margin-top: 4px !important;
+        }
+
+        #bottomDockActions button,
+        .dock-bottom button {
+            min-height: 34px !important;
+            padding: 4px 3px !important;
+            border-radius: 8px !important;
+            font-size: 10px !important;
+        }
+
+        /*
+         * Permanent interactive dial.
+         * No compact state, no open/close transition.
+         */
+        #clockPanel,
+        #clockPanel.open,
+        #clockPanel:not(.open),
+        body.info-sheet-open #clockPanel,
+        body.info-sheet-open #clockPanel.open {
+            display: block !important;
+            position: fixed !important;
+            width: 168px !important;
+            height: 168px !important;
+            left: auto !important;
+            right: 8px !important;
+            bottom: max(8px, env(safe-area-inset-bottom)) !important;
+            transform: none !important;
+            transform-origin: 50% 50% !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            pointer-events: auto !important;
+            z-index: 170 !important;
+            transition: none !important;
+            overflow: visible !important;
+        }
+
+        #clockPanel .clock-face,
+        #clockPanel.open .clock-face,
+        #clockPanel:not(.open) .clock-face {
+            position: absolute !important;
+            inset: 0 !important;
+            overflow: visible !important;
+            border-radius: 50% !important;
+        }
+
+        /* Restore one consistent full-dial geometry for the smaller permanent clock. */
+        #clockPanel .clock-number,
+        #clockPanel.open .clock-number,
+        #clockPanel:not(.open) .clock-number {
+            position: absolute !important;
+            left: 50% !important;
+            top: 50% !important;
+            right: auto !important;
+            bottom: auto !important;
+            width: 27px !important;
+            height: 27px !important;
+            min-width: 27px !important;
+            min-height: 27px !important;
+            margin: -13.5px !important;
+            padding: 0 !important;
+            border-radius: 50% !important;
+            font-size: 11px !important;
+            font-weight: 800 !important;
+            line-height: 27px !important;
+            text-align: center !important;
+            transform: rotate(var(--a)) translateY(-69px) rotate(calc(-1 * var(--a))) !important;
+        }
+
+        #clockPanel #clockHandWrap,
+        #clockPanel.open #clockHandWrap,
+        #clockPanel:not(.open) #clockHandWrap {
+            left: 50% !important;
+            top: 50% !important;
+            filter:
+                drop-shadow(0 0 4px rgba(103,247,255,.92))
+                drop-shadow(0 0 8px rgba(25,234,255,.40)) !important;
+        }
+
+        #clockPanel #clockHand,
+        #clockPanel.open #clockHand,
+        #clockPanel:not(.open) #clockHand {
+            left: -9px !important;
+            bottom: 2px !important;
+            width: 18px !important;
+            height: 51px !important;
+            transform: none !important;
+        }
+
+        #clockPanel::after,
+        #clockPanel.open::after,
+        #clockPanel:not(.open)::after {
+            content: none !important;
+            display: none !important;
+        }
+
+        /* Explanations must coexist with the permanent clock/time controls. */
+        body.info-sheet-open #clockToggleButton {
+            opacity: 1 !important;
+            visibility: visible !important;
+            pointer-events: none !important;
+            transform: none !important;
+        }
+
+        body.info-sheet-open #infoSheet {
+            /* leave the lower-right dial visible */
+            bottom: 184px !important;
+            max-height: min(48vh, 430px) !important;
+        }
+
+        /* Keep hints above the permanent bottom controls. */
+        #touchHint {
+            bottom: 188px !important;
+        }
+
+        @media (max-width: 520px) {
+            #bottomDock {
+                right: 154px !important;
+                left: 6px !important;
+                bottom: max(6px, env(safe-area-inset-bottom)) !important;
+                padding: 5px !important;
+            }
+
+            #clockPanel,
+            #clockPanel.open,
+            #clockPanel:not(.open),
+            body.info-sheet-open #clockPanel,
+            body.info-sheet-open #clockPanel.open {
+                width: 140px !important;
+                height: 140px !important;
+                right: 6px !important;
+                bottom: max(6px, env(safe-area-inset-bottom)) !important;
+            }
+
+            #clockPanel .clock-number,
+            #clockPanel.open .clock-number,
+            #clockPanel:not(.open) .clock-number {
+                width: 23px !important;
+                height: 23px !important;
+                min-width: 23px !important;
+                min-height: 23px !important;
+                margin: -11.5px !important;
+                font-size: 10px !important;
+                line-height: 23px !important;
+                transform: rotate(var(--a)) translateY(-57px) rotate(calc(-1 * var(--a))) !important;
+            }
+
+            #clockPanel #clockHand,
+            #clockPanel.open #clockHand,
+            #clockPanel:not(.open) #clockHand {
+                left: -8px !important;
+                width: 16px !important;
+                height: 42px !important;
+            }
+
+            #clockToggleButton .clock-summary-time {
+                font-size: 14px !important;
+            }
+
+            #clockToggleButton .clock-summary-date {
+                font-size: 8px !important;
+            }
+
+            #clockDayRow > button,
+            #clockDayRow .quick-now-wrap > button,
+            #bottomDockActions button,
+            .dock-bottom button {
+                font-size: 9px !important;
+            }
+
+            body.info-sheet-open #infoSheet {
+                bottom: 154px !important;
+                max-height: min(50vh, 410px) !important;
+            }
+
+            #touchHint {
+                bottom: 156px !important;
+            }
+        }
+
     </style>
 </head>
 <body>
@@ -2267,7 +2539,7 @@
 
     <nav id="bottomDock" aria-label="星空クイック操作">
         <div class="dock-row dock-top">
-            <button type="button" id="clockToggleButton" class="clock-summary" aria-expanded="false">
+            <button type="button" id="clockToggleButton" class="clock-summary" aria-expanded="true" aria-disabled="true" tabindex="-1">
                 <span class="clock-summary-time">
                     <span id="quickTimeDisplay">9:00</span>
                     <span id="quickAmPmDisplay" class="clock-ampm-label">PM</span>
@@ -2276,7 +2548,7 @@
             </button>
         </div>
         <div class="dock-row dock-middle" id="clockDayRow">
-            <button type="button" id="quickPrevDay">◀ −12時間</button>
+            <button type="button" id="quickPrevDay">−12時間</button>
 
             <div class="quick-now-wrap">
                 <button type="button" id="quickNow">現時刻</button>
@@ -2289,7 +2561,7 @@
                 </div>
             </div>
 
-            <button type="button" id="quickNextDay">＋12時間 ▶</button>
+            <button type="button" id="quickNextDay">＋12時間</button>
 </div>
         <div class="dock-row dock-bottom">
             <button type="button" id="settingsButton" aria-expanded="false">🔧 設定</button>
@@ -3564,7 +3836,6 @@ bindTapAction(quickNowMenuButton, () => {
                 });
             });
 
-            bindTapAction(clockToggleButton, () => setClockPanelOpen(!clockPanel.classList.contains('open')));
             clockNumberButtons.forEach(button => {
                 bindTapAction(button, () => selectClockHour(Number(button.dataset.hour)));
             });
@@ -3573,6 +3844,7 @@ bindTapAction(quickNowMenuButton, () => {
             clockFace.addEventListener('pointermove', handleClockPointerMove, { passive: false });
             clockFace.addEventListener('pointerup', handleClockPointerUp, { passive: false });
             clockFace.addEventListener('pointercancel', handleClockPointerUp, { passive: false });
+            setClockPanelOpen();
 renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { passive: false });
             renderer.domElement.addEventListener('pointermove', handleCanvasPointerMove, { passive: false });
             renderer.domElement.addEventListener('pointerup', handleCanvasPointerEnd, { passive: false });
@@ -3620,18 +3892,12 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             settingsButton.setAttribute('aria-expanded', String(open));
         }
 
-        function setClockPanelOpen(open) {
-            clockPanel.classList.toggle('open', open);
+        function setClockPanelOpen() {
+            // V11: 時刻ダイヤルは常設。開閉状態を持たない。
+            clockPanel.classList.add('open');
             clockPanel.setAttribute('aria-hidden', 'false');
-            clockToggleButton.setAttribute('aria-expanded', String(open));
-            if (clockDayRow) clockDayRow.classList.toggle('clock-open', open);
-
-            if (!open && quickNowMenu) {
-                quickNowMenu.classList.remove('open');
-                quickNowMenu.setAttribute('aria-hidden', 'true');
-            }
-
-            if (open) setInfoSheetOpen(false);
+            clockToggleButton.setAttribute('aria-expanded', 'true');
+            if (clockDayRow) clockDayRow.classList.add('clock-open');
         }
 
         function setClockPreviewFromMinutes(totalMinutes, isDragging = false) {
@@ -3721,7 +3987,6 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         }
 
         function handleClockPointerDown(event) {
-            if (!clockPanel.classList.contains('open')) return;
             if (clockDragPointerId !== null) return;
 
             event.preventDefault();
@@ -3801,10 +4066,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
             updateClockHandFromSimulation();
 
-            if (!clockDragHasMoved) {
-                setClockPanelOpen(!clockPanel.classList.contains('open'));
-            }
-
+            // タップしても縮小・閉じる動作は行わない。
             clockDragHasMoved = false;
         }
 
@@ -3841,7 +4103,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             infoSheet.setAttribute('aria-hidden', String(!open));
             infoToggleButton.setAttribute('aria-expanded', String(open));
             infoToggleButton.textContent = open ? '✦ 解説を閉じる' : '✦ 解説を見る';
-            if (open) setClockPanelOpen(false);
+            setClockPanelOpen();
         }
 
         function updateInfoSheetForConstellation() {
