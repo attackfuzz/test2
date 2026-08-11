@@ -2343,6 +2343,20 @@
             }
         }
 
+    
+        /* ===== Settings cleanup V12 ===== */
+        #settingsSheetV2 .settingsV2HiddenUi {
+            display: none !important;
+        }
+
+        #settingsSheetV2 #v2LocationPreset {
+            margin-top: 0 !important;
+        }
+
+        #settingsSheetV2 .settingsV2Section {
+            gap: 8px;
+        }
+
     </style>
 </head>
 <body>
@@ -2419,15 +2433,15 @@
                 <button type="button" class="settingsV2LabelButton active" data-v2-label-mode="constellation-ja">星座（日本名）</button>
             </div>
 
-            <div class="settingsV2Status" id="v2StarDisplayStatus">デフォルト: 星座線表示 / 星座（日本名）</div>
+            <div class="settingsV2Status settingsV2HiddenUi" id="v2StarDisplayStatus">デフォルト: 星座線表示 / 星座（日本名）</div>
         </section>
 
         <section class="settingsV2Section">
             <h3>観測地点</h3>
 
             <label class="settingsV2Field">
-                <span>地点プリセット</span>
-                <select id="v2LocationPreset"></select>
+                <span class="settingsV2HiddenUi">地点プリセット</span>
+                <select id="v2LocationPreset" aria-label="地点プリセット"></select>
             </label>
 
             <div class="settingsV2CoordinateGrid">
@@ -2446,10 +2460,10 @@
                 <select id="v2TimeZoneSelect"></select>
             </label>
 
-            <div class="settingsV2Status" id="v2LocationStatus"></div>
+            <div class="settingsV2Status settingsV2HiddenUi" id="v2LocationStatus"></div>
         </section>
 
-        <section class="settingsV2Section">
+        <section class="settingsV2Section settingsV2HiddenUi" id="v2ObservationTimeSection">
             <h3>観測日時</h3>
 
             <label class="settingsV2Field">
