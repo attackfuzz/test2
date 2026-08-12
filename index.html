@@ -2459,7 +2459,61 @@
             width: 100% !important;
             min-width: 0 !important;
         }
-    </style>
+    
+        /* ===== Settings rework V16 ===== */
+        .settingsV2SubTitle {
+            margin-top: 16px;
+            margin-bottom: 7px;
+            color: #67f7ff;
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: .06em;
+            text-shadow: 0 0 7px rgba(25,234,255,.32);
+        }
+        .settingsV2ZoomRowProminent {
+            grid-template-columns: minmax(0,1fr) 62px !important;
+            gap: 10px !important;
+            margin-top: 0 !important;
+            padding: 9px 10px;
+            border: 1px solid rgba(103,247,255,.25);
+            border-radius: 12px;
+            background: rgba(4,25,43,.70);
+            box-shadow: inset 0 0 18px rgba(25,234,255,.045);
+        }
+        #v2ZoomSlider {
+            height: 34px;
+            accent-color: #67f7ff;
+            filter: drop-shadow(0 0 5px rgba(25,234,255,.26));
+        }
+        #v2ZoomSlider::-webkit-slider-runnable-track { height: 7px; border-radius: 999px; background: linear-gradient(90deg, rgba(25,234,255,.88), rgba(103,247,255,.32)); }
+        #v2ZoomSlider::-webkit-slider-thumb { width: 24px; height: 24px; margin-top: -8.5px; border-radius: 50%; background: #dfffff; border: 2px solid #19eaff; box-shadow: 0 0 10px rgba(25,234,255,.78); -webkit-appearance: none; }
+        #v2ZoomSlider::-moz-range-track { height: 7px; border-radius: 999px; background: rgba(103,247,255,.32); }
+        #v2ZoomSlider::-moz-range-progress { height: 7px; border-radius: 999px; background: rgba(25,234,255,.88); }
+        #v2ZoomSlider::-moz-range-thumb { width: 22px; height: 22px; border-radius: 50%; background: #dfffff; border: 2px solid #19eaff; box-shadow: 0 0 10px rgba(25,234,255,.78); }
+
+        .settingsV2SkyModeGrid { display:grid; grid-template-columns:1fr; gap:7px; }
+        .settingsV2ChoiceButton {
+            min-height: 42px; padding: 8px 10px; border: 1px solid rgba(103,247,255,.20); border-radius: 10px;
+            background: rgba(5,23,42,.68); color:#67f7ff; font-size:12px; font-weight:700; text-align:left; touch-action:manipulation;
+        }
+        .settingsV2ChoiceButton.active { border-color:rgba(103,247,255,.72); background:rgba(14,72,92,.66); color:#eaffff; box-shadow:inset 0 0 14px rgba(25,234,255,.09),0 0 10px rgba(25,234,255,.08); }
+        .settingsV2Divider { height:1px; margin:13px 0 11px; background:linear-gradient(90deg,transparent,rgba(103,247,255,.24),transparent); }
+        .settingsV2InnerTitle { margin-bottom:8px !important; }
+        .settingsV2NameModeGrid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:6px; }
+        .settingsV2NameModeGrid .settingsV2LabelButton { min-height:38px !important; padding:6px 7px !important; font-size:10.5px !important; line-height:1.15 !important; text-align:center !important; }
+        .settingsV2NameModeGrid .settingsV2NameNone { grid-column:1/-1; }
+
+        .settingsV2CoordinateInline { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin-top:10px; }
+        .settingsV2CoordinateInline label { display:grid; grid-template-columns:auto minmax(0,1fr); gap:5px; align-items:center; min-width:0; }
+        .settingsV2CoordinateInline span { color:rgba(194,249,252,.72); font-size:11px; white-space:nowrap; }
+        .settingsV2CoordinateInline input { width:100%; min-width:0; min-height:40px; padding:6px 7px; border:1px solid rgba(103,247,255,.20); border-radius:9px; outline:none; background:rgba(3,18,34,.84); color:#d9feff; font-size:12px; font-variant-numeric:tabular-nums; }
+        .settingsV2CoordinateInline input:focus { border-color:rgba(103,247,255,.62); box-shadow:0 0 0 2px rgba(25,234,255,.08); }
+        @media (max-width:360px) {
+            .settingsV2CoordinateInline { gap:5px; }
+            .settingsV2CoordinateInline label { gap:3px; }
+            .settingsV2CoordinateInline input { font-size:11px; padding-inline:5px; }
+        }
+</style>
 </head>
 <body>
 
@@ -2478,9 +2532,10 @@
                 <button type="button" class="settingsV2ModeButton" data-view-mode="center">天球中心</button>
                 <button type="button" class="settingsV2ModeButton" data-view-mode="overview">地球俯瞰</button>
             </div>
-            <div class="settingsV2ZoomRow">
-                <span>ズーム</span>
-                <input id="v2ZoomSlider" type="range" min="0" max="100" step="1" value="100">
+
+            <div class="settingsV2SubTitle">ズーム</div>
+            <div class="settingsV2ZoomRow settingsV2ZoomRowProminent">
+                <input id="v2ZoomSlider" type="range" min="0" max="100" step="1" value="100" aria-label="ズーム">
                 <span id="v2ZoomValue">50mm</span>
             </div>
             <div class="settingsV2ZoomButtons">
@@ -2524,34 +2579,39 @@
         </section>
 
         <section class="settingsV2Section">
-            <h3>星の表示</h3>
-
-            <button type="button" class="settingsV2ToggleButton active" id="v2ConstellationLinesButton">星座線：表示</button>
-
-            <div class="settingsV2LabelGrid settingsV2LabelGrid4" role="group" aria-label="ラベル表示">
-                <button type="button" class="settingsV2LabelButton" data-v2-label-mode="none">表示なし</button>
-                <button type="button" class="settingsV2LabelButton" data-v2-label-mode="star">星名</button>
-                <button type="button" class="settingsV2LabelButton" data-v2-label-mode="constellation-en">星座（英名）</button>
-                <button type="button" class="settingsV2LabelButton active" data-v2-label-mode="constellation-ja">星座（日本名）</button>
+            <h3>星の表示の仕方</h3>
+            <div class="settingsV2SkyModeGrid" role="group" aria-label="星の表示の仕方">
+                <button type="button" class="settingsV2ChoiceButton" id="v2SkyOnlyButton">星空のみ表示</button>
+                <button type="button" class="settingsV2ChoiceButton active" id="v2ConstellationLinesButton">星空に星座線の表示</button>
             </div>
 
-            <div class="settingsV2Status settingsV2HiddenUi" id="v2StarDisplayStatus">デフォルト: 星座線表示 / 星座（日本名）</div>
+            <div class="settingsV2Divider" aria-hidden="true"></div>
+            <h3 class="settingsV2InnerTitle">名前の表示の仕方</h3>
+            <div class="settingsV2NameModeGrid" role="group" aria-label="名前の表示の仕方">
+                <button type="button" class="settingsV2LabelButton settingsV2NameNone" data-v2-label-mode="none">名前表示なし</button>
+                <button type="button" class="settingsV2LabelButton" data-v2-label-mode="star-en">星名（ABC表記）</button>
+                <button type="button" class="settingsV2LabelButton" data-v2-label-mode="star-ja">星名（カナ表記）</button>
+                <button type="button" class="settingsV2LabelButton" data-v2-label-mode="constellation-en">星座名（ABC表記）</button>
+                <button type="button" class="settingsV2LabelButton active" data-v2-label-mode="constellation-ja">星座名（カナ表記）</button>
+            </div>
+
+            <div class="settingsV2Status settingsV2HiddenUi" id="v2StarDisplayStatus">デフォルト: 星空に星座線の表示 / 星座名（カナ表記）</div>
         </section>
 
         <section class="settingsV2Section">
-            <h3>観測地点</h3>
+            <h3>観測地点の設定</h3>
 
             <label class="settingsV2Field">
-                <span class="settingsV2HiddenUi">地点プリセット</span>
-                <select id="v2LocationPreset" aria-label="地点プリセット"></select>
+                <span>観測地点プリセット</span>
+                <select id="v2LocationPreset" aria-label="観測地点プリセット"></select>
             </label>
 
-            <div class="settingsV2CoordinateGrid">
-                <label class="settingsV2Field">
+            <div class="settingsV2CoordinateInline">
+                <label>
                     <span>緯度</span>
                     <input id="v2LatitudeInput" type="number" min="-90" max="90" step="0.0001">
                 </label>
-                <label class="settingsV2Field">
+                <label>
                     <span>経度</span>
                     <input id="v2LongitudeInput" type="number" min="-180" max="180" step="0.0001">
                 </label>
@@ -2833,6 +2893,7 @@
         const v2ZoomValue = document.getElementById('v2ZoomValue');
         const v2ZoomOutButton = document.getElementById('v2ZoomOutButton');
         const v2ZoomInButton = document.getElementById('v2ZoomInButton');
+        const v2SkyOnlyButton = document.getElementById('v2SkyOnlyButton');
         const v2ConstellationLinesButton = document.getElementById('v2ConstellationLinesButton');
         const v2LabelButtons = Array.from(document.querySelectorAll('.settingsV2LabelButton'));
         const v2StarDisplayStatus = document.getElementById('v2StarDisplayStatus');
@@ -3000,18 +3061,19 @@
             const oldLinesToggle = oldControl('constellationLinesToggle');
             const linesVisible = oldLinesToggle ? !!oldLinesToggle.checked : true;
 
+            if (v2SkyOnlyButton) v2SkyOnlyButton.classList.toggle('active', !linesVisible);
             v2ConstellationLinesButton.classList.toggle('active', linesVisible);
-            v2ConstellationLinesButton.textContent = `星座線：${linesVisible ? '表示' : '非表示'}`;
 
             try {
                 if (typeof labelDisplayMode !== 'undefined') {
                     setV2LabelModeActive(labelDisplayMode);
                     const labelText =
-                        labelDisplayMode === 'none' ? '表示なし' :
-                        labelDisplayMode === 'star' ? '星名' :
-                        labelDisplayMode === 'constellation-en' ? '星座（英名）' :
-                        '星座（日本名）';
-                    v2StarDisplayStatus.textContent = `星座線: ${linesVisible ? '表示' : '非表示'} / ラベル: ${labelText}`;
+                        labelDisplayMode === 'none' ? '名前表示なし' :
+                        labelDisplayMode === 'star-en' ? '星名（ABC表記）' :
+                        labelDisplayMode === 'star-ja' ? '星名（カナ表記）' :
+                        labelDisplayMode === 'constellation-en' ? '星座名（ABC表記）' :
+                        '星座名（カナ表記）';
+                    v2StarDisplayStatus.textContent = `${linesVisible ? '星空に星座線の表示' : '星空のみ表示'} / ${labelText}`;
                 }
             } catch (_) {}
         }
@@ -3270,10 +3332,18 @@
             requestAnimationFrame(syncV2ConstellationPicker);
         });
 
+        v2SkyOnlyButton?.addEventListener('click', () => {
+            const oldToggle = oldControl('constellationLinesToggle');
+            if (!oldToggle) return;
+            oldToggle.checked = false;
+            dispatchChange(oldToggle);
+            syncV2StarDisplayFromViewer();
+        });
+
         v2ConstellationLinesButton.addEventListener('click', () => {
             const oldToggle = oldControl('constellationLinesToggle');
             if (!oldToggle) return;
-            oldToggle.checked = !oldToggle.checked;
+            oldToggle.checked = true;
             dispatchChange(oldToggle);
             syncV2StarDisplayFromViewer();
         });
@@ -5539,16 +5609,37 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             });
         }
 
+        const STAR_KANA_LABELS = {
+            Arcturus:'アークトゥルス', Spica:'スピカ', Regulus:'レグルス', Denebola:'デネボラ',
+            'Cor Caroli':'コル・カロリ', CorCaroli:'コル・カロリ', Vega:'ベガ', Altair:'アルタイル',
+            Deneb:'デネブ', Antares:'アンタレス', Shaula:'シャウラ', Nunki:'ヌンキ', Fomalhaut:'フォーマルハウト',
+            Alpheratz:'アルフェラッツ', Markab:'マルカブ', Alderamin:'アルデラミン', Sirius:'シリウス',
+            Betelgeuse:'ベテルギウス', Rigel:'リゲル', Procyon:'プロキオン', Aldebaran:'アルデバラン',
+            Capella:'カペラ', Pollux:'ポルックス', Castor:'カストル', Alnitak:'アルニタク', Polaris:'ポラリス',
+            Canopus:'カノープス', 'Rigil Kentaurus':'リギル・ケンタウルス', RigilKentaurus:'リギル・ケンタウルス',
+            Hadar:'ハダル', Acrux:'アクルックス', Mimosa:'ミモザ'
+        };
+
+        function getStarLabelText(meta) {
+            const raw = String(meta?.starName || '');
+            if (labelDisplayMode === 'star-ja') {
+                return STAR_KANA_LABELS[raw] || STAR_KANA_LABELS[raw.replace(/\s+/g,'')] || raw;
+            }
+            return raw;
+        }
+
         function updateStarLabels() {
             const cameraForward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion).normalize();
 
             Object.entries(starLabelElements).forEach(([key, element]) => {
-                if (labelDisplayMode !== 'star') {
+                if (labelDisplayMode !== 'star-en' && labelDisplayMode !== 'star-ja') {
                     element.style.display = 'none';
                     return;
                 }
 
                 const meta = starLabelMeta[key];
+                const starText = getStarLabelText(meta);
+                if (element.textContent !== starText) element.textContent = starText;
                 const worldPosition = meta?.position;
                 if (!worldPosition) {
                     element.style.display = 'none';
