@@ -2385,13 +2385,37 @@
             transform: translateY(0) scale(1);
             transition: opacity .14s ease, transform .16s ease, visibility 0s;
         }
+        .skyTapPickerHeader {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            padding: 1px 1px 5px 5px;
+        }
         .skyTapPickerTitle {
-            padding: 3px 5px 7px;
+            padding: 2px 0 4px;
             color: #67f7ff;
             font-size: 12px;
             font-weight: 800;
             letter-spacing: .06em;
             text-shadow: 0 0 7px rgba(25,234,255,.32);
+        }
+        #skyTapPickerClose {
+            width: 30px;
+            height: 30px;
+            flex: 0 0 30px;
+            padding: 0;
+            border: 1px solid rgba(103,247,255,.24);
+            border-radius: 8px;
+            background: rgba(5,23,42,.70);
+            color: #67f7ff;
+            font: 700 19px/1 system-ui, sans-serif;
+            text-align: center;
+            touch-action: manipulation;
+        }
+        #skyTapPickerClose:active {
+            transform: scale(.94);
+            background: rgba(14,72,92,.72);
         }
         .skyTapPickerItem {
             width: 100%;
@@ -2777,7 +2801,10 @@
 
 
     <div id="skyTapPicker" aria-hidden="true" aria-label="この辺は何？">
-        <div class="skyTapPickerTitle">この辺は何？</div>
+        <div class="skyTapPickerHeader">
+            <div class="skyTapPickerTitle">この辺は何？</div>
+            <button id="skyTapPickerClose" type="button" aria-label="候補を閉じる">☒</button>
+        </div>
         <div id="skyTapPickerList"></div>
     </div>
 
@@ -3739,6 +3766,39 @@
         const touchHint = document.getElementById('touchHint');
         const skyTapPicker = document.getElementById('skyTapPicker');
         const skyTapPickerList = document.getElementById('skyTapPickerList');
+        const skyTapPickerClose = document.getElementById('skyTapPickerClose');
+        const skyTapExplainedStars = new Map([
+            ["16αBoo", { id: "Arcturus", ja: "アークトゥルス" }],
+            ["67αVir", { id: "Spica", ja: "スピカ" }],
+            ["32αLeo", { id: "Regulus", ja: "レグルス" }],
+            ["94βLeo", { id: "Denebola", ja: "デネボラ" }],
+            ["12α2CVn", { id: "CorCaroli", ja: "コル・カロリ" }],
+            ["3αLyr", { id: "Vega", ja: "ベガ" }],
+            ["53αAql", { id: "Altair", ja: "アルタイル" }],
+            ["50αCyg", { id: "Deneb", ja: "デネブ" }],
+            ["21αSco", { id: "Antares", ja: "アンタレス" }],
+            ["35λSco", { id: "Shaula", ja: "シャウラ" }],
+            ["34σSgr", { id: "Nunki", ja: "ヌキ" }],
+            ["24αPsA", { id: "Fomalhaut", ja: "フォーマルハウト" }],
+            ["21αAnd", { id: "Alpheratz", ja: "アルフェラッツ" }],
+            ["54αPeg", { id: "Markab", ja: "マルカブ" }],
+            ["5αCep", { id: "Alderamin", ja: "アルデラミン" }],
+            ["9αCMa", { id: "Sirius", ja: "シリウス" }],
+            ["58αOri", { id: "Betelgeuse", ja: "ベテルギウス" }],
+            ["19βOri", { id: "Rigel", ja: "リゲル" }],
+            ["10αCMi", { id: "Procyon", ja: "プロキオン" }],
+            ["87αTau", { id: "Aldebaran", ja: "アルデバラン" }],
+            ["13αAur", { id: "Capella", ja: "カペラ" }],
+            ["78βGem", { id: "Pollux", ja: "ポルックス" }],
+            ["66αGem", { id: "Castor", ja: "カストル" }],
+            ["50ζOri", { id: "Alnitak", ja: "アルニタク" }],
+            ["1αUMi", { id: "Polaris", ja: "ポラリス" }],
+            ["αCar", { id: "Canopus", ja: "カノープス" }],
+            ["α1Cen", { id: "RigilKentaurus", ja: "リギル・ケンタウルス" }],
+            ["βCen", { id: "Hadar", ja: "ハダル" }],
+            ["α1Cru", { id: "Acrux", ja: "アクルックス" }],
+            ["βCru", { id: "Mimosa", ja: "ミモザ" }]
+        ]);
 
         const infoToggleButton = document.getElementById('infoToggleButton');
         const infoSheet = document.getElementById('infoSheet');
@@ -4457,6 +4517,12 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             skyTapPicker.setAttribute('aria-hidden', 'true');
         }
 
+        skyTapPickerClose?.addEventListener('click', event => {
+            event.preventDefault();
+            event.stopPropagation();
+            closeSkyTapPicker();
+        });
+
         function projectSkyPointToScreen(localPosition) {
             if (!isFiniteVector3(localPosition)) return null;
             celestialGroup.updateMatrixWorld(true);
@@ -4495,6 +4561,10 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             const lineRadius = 44;
 
             for (const star of skyTapStarCandidates) {
+                // 「この辺は何？」では、解説登録済みの有名星だけを候補にする。
+                const explained = skyTapExplainedStars.get(star.starName);
+                if (!explained || !starBasicComments[explained.id]) continue;
+
                 const screen = projectSkyPointToScreen(star.position);
                 if (!screen) continue;
                 const distance = Math.hypot(screen.x - x, screen.y - y);
@@ -4505,7 +4575,8 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 candidates.push({
                     type: 'star',
                     key: star.starName,
-                    name: resolveTapStarFriendlyName(star),
+                    commentId: explained.id,
+                    name: explained.ja,
                     sub: `${star.constellation}${Number.isFinite(star.magnitude) ? ` / ${star.magnitude.toFixed(1)}等` : ''}`,
                     score: distance + magnitudeBonus,
                     distance
@@ -4523,10 +4594,12 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 if (best > lineRadius || seenConstellations.has(constellation)) continue;
                 seenConstellations.add(constellation);
                 const info = resolveConstellationLabelInfo(constellation);
+                // 解説を持たない星座は候補に出さない。
+                if (!info?.id || !constellationBasicComments[info.id]) continue;
                 candidates.push({
                     type: 'constellation',
                     key: constellation,
-                    name: info?.ja || constellation,
+                    name: info.ja || constellation,
                     sub: info ? `${info.en} / 星座` : '星座',
                     score: best - 5,
                     distance: best
@@ -4555,7 +4628,9 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                     infoSheetTitle.innerHTML =
                         `<span class="info-title-ja">${candidate.name}</span>` +
                         `<span class="info-title-en">${info?.ja || starRecord?.constellation || ''} / 星</span>`;
-                    infoSheetText.textContent = 'この星の詳しい解説は、登録済みの有名星から順次追加します。';
+                    infoSheetText.textContent =
+                        starBasicComments[candidate.commentId] ||
+                        'この星の基本コメントはまだ登録されていません。';
                 }
             }
         }
@@ -4568,7 +4643,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             if (!candidates.length) {
                 const empty = document.createElement('div');
                 empty.className = 'skyTapPickerEmpty';
-                empty.textContent = 'この近くには、いま選べる星や星座がありません。';
+                empty.textContent = 'この近くには、解説できる天体がありません。';
                 skyTapPickerList.appendChild(empty);
             } else {
                 for (const candidate of candidates) {
