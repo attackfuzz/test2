@@ -2357,6 +2357,73 @@
             gap: 8px;
         }
 
+
+        /* ===== この辺は何？ sky tap picker V13 ===== */
+        #skyTapPicker {
+            position: fixed;
+            z-index: 2600;
+            width: min(270px, calc(100vw - 24px));
+            max-height: min(320px, 52vh);
+            overflow-y: auto;
+            padding: 8px;
+            border: 1px solid rgba(103,247,255,.32);
+            border-radius: 14px;
+            background: rgba(3,12,28,.96);
+            box-shadow: 0 14px 38px rgba(0,0,0,.48), inset 0 0 20px rgba(25,234,255,.035);
+            backdrop-filter: blur(12px);
+            color: #eaffff;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transform: translateY(6px) scale(.98);
+            transition: opacity .14s ease, transform .16s ease, visibility 0s linear .16s;
+        }
+        #skyTapPicker.open {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+            transform: translateY(0) scale(1);
+            transition: opacity .14s ease, transform .16s ease, visibility 0s;
+        }
+        .skyTapPickerTitle {
+            padding: 3px 5px 7px;
+            color: #67f7ff;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: .06em;
+            text-shadow: 0 0 7px rgba(25,234,255,.32);
+        }
+        .skyTapPickerItem {
+            width: 100%;
+            min-height: 44px;
+            display: grid;
+            grid-template-columns: 28px minmax(0,1fr);
+            gap: 8px;
+            align-items: center;
+            margin: 3px 0;
+            padding: 7px 8px;
+            border: 1px solid rgba(103,247,255,.15);
+            border-radius: 10px;
+            background: rgba(5,23,42,.68);
+            color: #eaffff;
+            text-align: left;
+            font: inherit;
+            touch-action: manipulation;
+        }
+        .skyTapPickerItem:active {
+            transform: scale(.98);
+            border-color: rgba(103,247,255,.48);
+            background: rgba(14,72,92,.72);
+        }
+        .skyTapPickerIcon {
+            color: #67f7ff;
+            font-size: 18px;
+            text-align: center;
+        }
+        .skyTapPickerName { display:block; font-size:13px; font-weight:800; line-height:1.25; }
+        .skyTapPickerSub { display:block; margin-top:2px; color:rgba(194,249,252,.58); font-size:10px; line-height:1.25; }
+        .skyTapPickerEmpty { padding: 12px 8px; color: rgba(214,252,255,.62); font-size: 12px; line-height:1.5; }
+
     </style>
 </head>
 <body>
@@ -2706,6 +2773,12 @@
         </div>
 
         <div id="controlHint">ドラッグ：視点移動　／　ホイール：ズーム　／　スマホは1本指で視点移動・2本指でピンチズーム</div>
+    </div>
+
+
+    <div id="skyTapPicker" aria-hidden="true" aria-label="この辺は何？">
+        <div class="skyTapPickerTitle">この辺は何？</div>
+        <div id="skyTapPickerList"></div>
     </div>
 
     <div id="touchHint">1本指：見回す　・　2本指：ピンチズーム</div>
@@ -3664,6 +3737,8 @@
         const controlsPanel = document.getElementById('controls');
         const controlsToggle = document.getElementById('controlsToggle');
         const touchHint = document.getElementById('touchHint');
+        const skyTapPicker = document.getElementById('skyTapPicker');
+        const skyTapPickerList = document.getElementById('skyTapPickerList');
 
         const infoToggleButton = document.getElementById('infoToggleButton');
         const infoSheet = document.getElementById('infoSheet');
@@ -3708,6 +3783,8 @@
         const constellationLabelElements = {};
         const starLabelElements = {};
         const starLabelMeta = {};
+        const skyTapStarCandidates = [];
+        let canvasDragMaxDistance = 0;
         let labelDisplayMode = 'constellation-ja';
         let backgroundStarLayers = [];
         let lastConstellationLineClipKey = '';
@@ -4289,6 +4366,8 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             if (activePointers.size === 1) {
                 dragPointerId = event.pointerId;
                 pinchStartDistance = null;
+                canvasDragMaxDistance = 0;
+                closeSkyTapPicker();
                 beginPointerDrag(event.clientX, event.clientY);
                 return;
             }
@@ -4296,6 +4375,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             if (activePointers.size >= 2) {
                 isDragging = false;
                 dragPointerId = null;
+                canvasDragMaxDistance = 999;
                 pinchStartDistance = getActivePointerDistance();
             }
         }
@@ -4307,6 +4387,12 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             const pointer = activePointers.get(event.pointerId);
             pointer.x = event.clientX;
             pointer.y = event.clientY;
+            if (event.pointerId === dragPointerId) {
+                canvasDragMaxDistance = Math.max(
+                    canvasDragMaxDistance,
+                    Math.hypot(event.clientX - dragStartPosition.x, event.clientY - dragStartPosition.y)
+                );
+            }
 
             if (activePointers.size >= 2) {
                 isDragging = false;
@@ -4328,7 +4414,22 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         function handleCanvasPointerEnd(event) {
             if (!activePointers.has(event.pointerId)) return;
             event.preventDefault();
+            const wasSinglePointerTap = (
+                activePointers.size === 1
+                && event.pointerId === dragPointerId
+                && canvasDragMaxDistance <= 10
+            );
+            const tapX = event.clientX;
+            const tapY = event.clientY;
             activePointers.delete(event.pointerId);
+
+            if (wasSinglePointerTap) {
+                isDragging = false;
+                dragPointerId = null;
+                pinchStartDistance = null;
+                openSkyTapPicker(tapX, tapY);
+                return;
+            }
 
             if (activePointers.size >= 2) {
                 isDragging = false;
@@ -4348,6 +4449,167 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             isDragging = false;
             dragPointerId = null;
             pinchStartDistance = null;
+        }
+
+        function closeSkyTapPicker() {
+            if (!skyTapPicker) return;
+            skyTapPicker.classList.remove('open');
+            skyTapPicker.setAttribute('aria-hidden', 'true');
+        }
+
+        function projectSkyPointToScreen(localPosition) {
+            if (!isFiniteVector3(localPosition)) return null;
+            celestialGroup.updateMatrixWorld(true);
+            camera.updateMatrixWorld(true);
+            const world = localPosition.clone().applyMatrix4(celestialGroup.matrixWorld);
+            const projected = world.clone().project(camera);
+            if (!Number.isFinite(projected.x) || !Number.isFinite(projected.y) || !Number.isFinite(projected.z)) return null;
+            if (projected.z < -1 || projected.z > 1) return null;
+            return {
+                x: (projected.x * 0.5 + 0.5) * renderer.domElement.clientWidth,
+                y: (-projected.y * 0.5 + 0.5) * renderer.domElement.clientHeight,
+                z: projected.z
+            };
+        }
+
+        function pointToScreenSegmentDistance(px, py, a, b) {
+            const vx = b.x - a.x;
+            const vy = b.y - a.y;
+            const len2 = vx * vx + vy * vy;
+            if (len2 < 1e-6) return Math.hypot(px - a.x, py - a.y);
+            const t = THREE.MathUtils.clamp(((px - a.x) * vx + (py - a.y) * vy) / len2, 0, 1);
+            return Math.hypot(px - (a.x + vx * t), py - (a.y + vy * t));
+        }
+
+        function resolveTapStarFriendlyName(candidate) {
+            const raw = String(candidate?.displayName || candidate?.starName || '星');
+            // targetStar形式しかない場合でも、識別可能な名称として表示する。
+            return raw;
+        }
+
+        function getSkyTapCandidates(x, y) {
+            const candidates = [];
+            const seenStars = new Set();
+            const seenConstellations = new Set();
+            const starRadius = 48;
+            const lineRadius = 44;
+
+            for (const star of skyTapStarCandidates) {
+                const screen = projectSkyPointToScreen(star.position);
+                if (!screen) continue;
+                const distance = Math.hypot(screen.x - x, screen.y - y);
+                if (distance > starRadius) continue;
+                if (seenStars.has(star.starName)) continue;
+                seenStars.add(star.starName);
+                const magnitudeBonus = Number.isFinite(star.magnitude) ? Math.max(-8, Math.min(12, star.magnitude * 2.2)) : 10;
+                candidates.push({
+                    type: 'star',
+                    key: star.starName,
+                    name: resolveTapStarFriendlyName(star),
+                    sub: `${star.constellation}${Number.isFinite(star.magnitude) ? ` / ${star.magnitude.toFixed(1)}等` : ''}`,
+                    score: distance + magnitudeBonus,
+                    distance
+                });
+            }
+
+            for (const [constellation, segments] of Object.entries(lineSegmentsByConstellation)) {
+                let best = Infinity;
+                for (const segment of segments) {
+                    const a = projectSkyPointToScreen(segment.start);
+                    const b = projectSkyPointToScreen(segment.end);
+                    if (!a || !b) continue;
+                    best = Math.min(best, pointToScreenSegmentDistance(x, y, a, b));
+                }
+                if (best > lineRadius || seenConstellations.has(constellation)) continue;
+                seenConstellations.add(constellation);
+                const info = resolveConstellationLabelInfo(constellation);
+                candidates.push({
+                    type: 'constellation',
+                    key: constellation,
+                    name: info?.ja || constellation,
+                    sub: info ? `${info.en} / 星座` : '星座',
+                    score: best - 5,
+                    distance: best
+                });
+            }
+
+            candidates.sort((a, b) => a.score - b.score || a.distance - b.distance);
+            return candidates.slice(0, 6);
+        }
+
+        function selectSkyTapCandidate(candidate) {
+            closeSkyTapPicker();
+            if (!candidate) return;
+
+            if (candidate.type === 'constellation') {
+                constellationSelect.value = candidate.key;
+                constellationSelect.dispatchEvent(new Event('change', { bubbles: true }));
+                return;
+            }
+
+            if (candidate.type === 'star') {
+                const hit = window.highlightSearchStar?.(candidate.key);
+                if (hit) {
+                    const starRecord = skyTapStarCandidates.find(item => item.starName === candidate.key);
+                    const info = resolveConstellationLabelInfo(starRecord?.constellation);
+                    infoSheetTitle.innerHTML =
+                        `<span class="info-title-ja">${candidate.name}</span>` +
+                        `<span class="info-title-en">${info?.ja || starRecord?.constellation || ''} / 星</span>`;
+                    infoSheetText.textContent = 'この星の詳しい解説は、登録済みの有名星から順次追加します。';
+                }
+            }
+        }
+
+        function openSkyTapPicker(x, y) {
+            if (!skyTapPicker || !skyTapPickerList) return;
+            const candidates = getSkyTapCandidates(x, y);
+            skyTapPickerList.innerHTML = '';
+
+            if (!candidates.length) {
+                const empty = document.createElement('div');
+                empty.className = 'skyTapPickerEmpty';
+                empty.textContent = 'この近くには、いま選べる星や星座がありません。';
+                skyTapPickerList.appendChild(empty);
+            } else {
+                for (const candidate of candidates) {
+                    const button = document.createElement('button');
+                    button.type = 'button';
+                    button.className = 'skyTapPickerItem';
+                    button.innerHTML =
+                        `<span class="skyTapPickerIcon">${candidate.type === 'constellation' ? '◇' : '✦'}</span>` +
+                        `<span><span class="skyTapPickerName"></span><span class="skyTapPickerSub"></span></span>`;
+                    button.querySelector('.skyTapPickerName').textContent = candidate.name;
+                    button.querySelector('.skyTapPickerSub').textContent = candidate.sub;
+                    button.addEventListener('click', event => {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        selectSkyTapCandidate(candidate);
+                    });
+                    skyTapPickerList.appendChild(button);
+                }
+            }
+
+            skyTapPicker.classList.add('open');
+            skyTapPicker.setAttribute('aria-hidden', 'false');
+
+            const margin = 10;
+            const pickerWidth = Math.min(270, window.innerWidth - 24);
+            let left = x + 12;
+            if (left + pickerWidth > window.innerWidth - margin) left = x - pickerWidth - 12;
+            left = Math.max(margin, Math.min(left, window.innerWidth - pickerWidth - margin));
+
+            // まず表示して実寸を測り、下段UIに被りにくい位置へ補正。
+            skyTapPicker.style.left = `${left}px`;
+            skyTapPicker.style.top = `${Math.max(margin, y + 12)}px`;
+            requestAnimationFrame(() => {
+                const rect = skyTapPicker.getBoundingClientRect();
+                const reservedBottom = Math.min(190, window.innerHeight * 0.28);
+                const maxBottom = window.innerHeight - reservedBottom;
+                let top = y + 12;
+                if (top + rect.height > maxBottom) top = y - rect.height - 12;
+                top = Math.max(margin, Math.min(top, window.innerHeight - rect.height - margin));
+                skyTapPicker.style.top = `${top}px`;
+            });
         }
 
         function getActivePointerDistance() {
@@ -4993,6 +5255,14 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 );
 
                 starPositions[name] = position;
+                skyTapStarCandidates.push({
+                    starName: name,
+                    displayName: rawStarName || name,
+                    constellation,
+                    constellationId: star.constellationId || '',
+                    magnitude,
+                    position
+                });
 
                 if (rawStarName) {
                     const starLabelKey = `${rawStarName}@@${constellation}`;
