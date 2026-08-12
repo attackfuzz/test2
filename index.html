@@ -3476,7 +3476,7 @@
                 { id:'Deneb', ja:'デネブ', en:'Deneb', season:'夏', note:'はくちょう座。白鳥の尻尾に位置する、夏の大三角を構成する星。', constellationId:'Cyg', targetStar:'50αCyg' },
                 { id:'Antares', ja:'アンタレス', en:'Antares', season:'夏', note:'さそり座。「火星に対抗するもの」という意味を持つ、赤く妖しく輝く巨大な星。', constellationId:'Sco', targetStar:'21αSco' },
                 { id:'Shaula', ja:'シャウラ', en:'Shaula', season:'夏', note:'さそり座。さそりの猛毒の針の先端に位置する明るい2等星。', constellationId:'Sco', targetStar:'35λSco' },
-                { id:'Nunki', ja:'ヌキ', en:'Nunki', season:'夏', note:'いて座。南斗六星の一部を構成する、日本でなじみのある呼び名の星。', constellationId:'Sgr', targetStar:'34σSgr' },
+                { id:'Nunki', ja:'ヌンキ', en:'Nunki', season:'夏', note:'いて座。南斗六星の一部を構成する、日本でなじみのある呼び名の星。', constellationId:'Sgr', targetStar:'34σSgr' },
 
                 { id:'Fomalhaut', ja:'フォーマルハウト', en:'Fomalhaut', season:'秋', note:'みなみのうお座。秋の夜空でぽつんと一つだけ輝くため「秋の一つ星」と呼ばれる星。', constellationId:'PsA', targetStar:'24αPsA' },
                 { id:'Alpheratz', ja:'アルフェラッツ', en:'Alpheratz', season:'秋', note:'アンドロメダ座。ペガススの大四辺形を構成する、アンドロメダの頭にあたる星。', constellationId:'And', targetStar:'21αAnd' },
@@ -3910,6 +3910,42 @@
         const constellationLabelElements = {};
         const starLabelElements = {};
         const starLabelMeta = {};
+
+        // 有名星30個: 星データ内の識別名 → 画面表示用の固有名。
+        // 「星名（ABC表記）」では en、「星名（カナ表記）」では ja を表示する。
+        const STAR_DISPLAY_NAMES = {
+            '16αBoo': { en:'Arcturus', ja:'アークトゥルス' },
+            '67αVir': { en:'Spica', ja:'スピカ' },
+            '32αLeo': { en:'Regulus', ja:'レグルス' },
+            '94βLeo': { en:'Denebola', ja:'デネボラ' },
+            '12α2CVn': { en:'Cor Caroli', ja:'コル・カロリ' },
+            '3αLyr': { en:'Vega', ja:'ベガ' },
+            '53αAql': { en:'Altair', ja:'アルタイル' },
+            '50αCyg': { en:'Deneb', ja:'デネブ' },
+            '21αSco': { en:'Antares', ja:'アンタレス' },
+            '35λSco': { en:'Shaula', ja:'シャウラ' },
+            '34σSgr': { en:'Nunki', ja:'ヌンキ' },
+            '24αPsA': { en:'Fomalhaut', ja:'フォーマルハウト' },
+            '21αAnd': { en:'Alpheratz', ja:'アルフェラッツ' },
+            '54αPeg': { en:'Markab', ja:'マルカブ' },
+            '5αCep': { en:'Alderamin', ja:'アルデラミン' },
+            '9αCMa': { en:'Sirius', ja:'シリウス' },
+            '58αOri': { en:'Betelgeuse', ja:'ベテルギウス' },
+            '19βOri': { en:'Rigel', ja:'リゲル' },
+            '10αCMi': { en:'Procyon', ja:'プロキオン' },
+            '87αTau': { en:'Aldebaran', ja:'アルデバラン' },
+            '13αAur': { en:'Capella', ja:'カペラ' },
+            '78βGem': { en:'Pollux', ja:'ポルックス' },
+            '66αGem': { en:'Castor', ja:'カストル' },
+            '50ζOri': { en:'Alnitak', ja:'アルニタク' },
+            '1αUMi': { en:'Polaris', ja:'ポラリス' },
+            'αCar': { en:'Canopus', ja:'カノープス' },
+            'α1Cen': { en:'Rigil Kentaurus', ja:'リギル・ケンタウルス' },
+            'βCen': { en:'Hadar', ja:'ハダル' },
+            'α1Cru': { en:'Acrux', ja:'アクルックス' },
+            'βCru': { en:'Mimosa', ja:'ミモザ' }
+        };
+
         const skyTapStarCandidates = [];
         let canvasDragMaxDistance = 0;
         let labelDisplayMode = 'constellation-ja';
@@ -5384,17 +5420,18 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
                 if (rawStarName) {
                     const starLabelKey = `${rawStarName}@@${constellation}`;
-                    const shouldCreateStarLabel = (
-                        !starLabelElements[starLabelKey]
-                        && Number.isFinite(magnitude)
-                        && magnitude <= 2.5
+                    const displayName = STAR_DISPLAY_NAMES[rawStarName];
+                    // 星名表示は、解説を持つ有名星30個だけを対象にする。
+                    const shouldCreateStarLabel = Boolean(
+                        displayName && !starLabelElements[starLabelKey]
                     );
 
                     if (shouldCreateStarLabel) {
-                        createStarLabel(starLabelKey, rawStarName, constellation);
+                        createStarLabel(starLabelKey, displayName.en, constellation);
                         starLabelMeta[starLabelKey] = {
                             position,
                             starName: rawStarName,
+                            displayName,
                             constellation,
                             magnitude
                         };
@@ -5609,23 +5646,10 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             });
         }
 
-        const STAR_KANA_LABELS = {
-            Arcturus:'アークトゥルス', Spica:'スピカ', Regulus:'レグルス', Denebola:'デネボラ',
-            'Cor Caroli':'コル・カロリ', CorCaroli:'コル・カロリ', Vega:'ベガ', Altair:'アルタイル',
-            Deneb:'デネブ', Antares:'アンタレス', Shaula:'シャウラ', Nunki:'ヌンキ', Fomalhaut:'フォーマルハウト',
-            Alpheratz:'アルフェラッツ', Markab:'マルカブ', Alderamin:'アルデラミン', Sirius:'シリウス',
-            Betelgeuse:'ベテルギウス', Rigel:'リゲル', Procyon:'プロキオン', Aldebaran:'アルデバラン',
-            Capella:'カペラ', Pollux:'ポルックス', Castor:'カストル', Alnitak:'アルニタク', Polaris:'ポラリス',
-            Canopus:'カノープス', 'Rigil Kentaurus':'リギル・ケンタウルス', RigilKentaurus:'リギル・ケンタウルス',
-            Hadar:'ハダル', Acrux:'アクルックス', Mimosa:'ミモザ'
-        };
-
         function getStarLabelText(meta) {
-            const raw = String(meta?.starName || '');
-            if (labelDisplayMode === 'star-ja') {
-                return STAR_KANA_LABELS[raw] || STAR_KANA_LABELS[raw.replace(/\s+/g,'')] || raw;
-            }
-            return raw;
+            const displayName = meta?.displayName || STAR_DISPLAY_NAMES[String(meta?.starName || '')];
+            if (!displayName) return '';
+            return labelDisplayMode === 'star-ja' ? displayName.ja : displayName.en;
         }
 
         function updateStarLabels() {
