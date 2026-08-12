@@ -2448,6 +2448,17 @@
         .skyTapPickerSub { display:block; margin-top:2px; color:rgba(194,249,252,.58); font-size:10px; line-height:1.25; }
         .skyTapPickerEmpty { padding: 12px 8px; color: rgba(214,252,255,.62); font-size: 12px; line-height:1.5; }
 
+
+        /* ===== Quick season buttons V15 ===== */
+        #clockDayRow,
+        #clockDayRow.clock-open,
+        body.info-sheet-open #clockDayRow {
+            grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        }
+        #clockDayRow > button {
+            width: 100% !important;
+            min-width: 0 !important;
+        }
     </style>
 </head>
 <body>
@@ -2653,21 +2664,10 @@
             </button>
         </div>
         <div class="dock-row dock-middle" id="clockDayRow">
-            <button type="button" id="quickPrevDay">−12時間</button>
-
-            <div class="quick-now-wrap">
-                <button type="button" id="quickNow">現時刻</button>
-                <button type="button" id="quickNowMenuButton" aria-label="季節プリセットを開く">▾</button>
-
-                <div id="quickNowMenu" aria-hidden="true">
-                    <button type="button" data-quick-preset="now">現在時刻</button>
-                    <button type="button" data-quick-preset="summer">夏の空（8/1 21:00）</button>
-                    <button type="button" data-quick-preset="winter">冬の空（1/15 21:00）</button>
-                </div>
-            </div>
-
-            <button type="button" id="quickNextDay">＋12時間</button>
-</div>
+            <button type="button" id="quickNow">現時刻</button>
+            <button type="button" id="quickSummerSky">夏の空</button>
+            <button type="button" id="quickWinterSky">冬の空</button>
+        </div>
         <div class="dock-row dock-bottom">
             <button type="button" id="settingsButton" aria-expanded="false">🔧 設定</button>
             <button type="button" id="infoToggleButton" aria-expanded="false">✦ 解説を見る</button>
@@ -3808,17 +3808,14 @@
         const settingsButton = document.getElementById('settingsButton');
         const settingsScrim = document.getElementById('settingsScrim');
         const sideSheetClose = document.getElementById('sideSheetClose');
-        const quickPrevDay = document.getElementById('quickPrevDay');
         const quickNow = document.getElementById('quickNow');
-        const quickNextDay = document.getElementById('quickNextDay');
+        const quickSummerSky = document.getElementById('quickSummerSky');
+        const quickWinterSky = document.getElementById('quickWinterSky');
         const quickTimeDisplay = document.getElementById('quickTimeDisplay');
         const quickAmPmDisplay = document.getElementById('quickAmPmDisplay');
         const quickDateDisplay = document.getElementById('quickDateDisplay');
 
         const clockDayRow = document.getElementById('clockDayRow');
-        const quickNowMenuButton = document.getElementById('quickNowMenuButton');
-        const quickNowMenu = document.getElementById('quickNowMenu');
-        const quickPresetButtons = Array.from(document.querySelectorAll('[data-quick-preset]'));
         const clockToggleButton = document.getElementById('clockToggleButton');
         const clockPanel = document.getElementById('clockPanel');
         const clockFace = clockPanel.querySelector('.clock-face');
@@ -3986,40 +3983,16 @@
 
             // Settings V2 handles the settings button independently.
 
-            bindTapAction(quickPrevDay, () => {
-                pauseTimePlayback();
-                simulationUtcMs -= 12 * 60 * 60 * 1000;
-                updateObserverFromSimulation(true);
-            });
             bindTapAction(quickNow, () => {
                 pauseTimePlayback();
                 simulationUtcMs = Date.now();
                 updateObserverFromSimulation(true);
             });
-            bindTapAction(quickNextDay, () => {
-                pauseTimePlayback();
-                simulationUtcMs += 12 * 60 * 60 * 1000;
-                updateObserverFromSimulation(true);
+            bindTapAction(quickSummerSky, () => {
+                setSeasonSkyPreset('summer');
             });
-bindTapAction(quickNowMenuButton, () => {
-                const open = !quickNowMenu.classList.contains('open');
-                quickNowMenu.classList.toggle('open', open);
-                quickNowMenu.setAttribute('aria-hidden', String(!open));
-            });
-
-            quickPresetButtons.forEach(button => {
-                bindTapAction(button, () => {
-                    const preset = button.dataset.quickPreset;
-                    if (preset === 'now') {
-                        pauseTimePlayback();
-                        simulationUtcMs = Date.now();
-                        updateObserverFromSimulation(true);
-                    } else {
-                        setSeasonSkyPreset(preset);
-                    }
-                    quickNowMenu.classList.remove('open');
-                    quickNowMenu.setAttribute('aria-hidden', 'true');
-                });
+            bindTapAction(quickWinterSky, () => {
+                setSeasonSkyPreset('winter');
             });
 
             clockNumberButtons.forEach(button => {
