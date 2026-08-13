@@ -2513,9 +2513,36 @@
             .settingsV2CoordinateInline label { gap:3px; }
             .settingsV2CoordinateInline input { font-size:11px; padding-inline:5px; }
         }
-</style>
+
+
+        /* ===== Sky PNG + metadata export V18 ===== */
+        #skyExportButton {
+            position: fixed;
+            top: max(8px, env(safe-area-inset-top));
+            right: max(8px, env(safe-area-inset-right));
+            z-index: 4200;
+            width: 36px;
+            height: 36px;
+            min-width: 36px;
+            min-height: 36px;
+            padding: 0;
+            border: 1px solid rgba(103,247,255,.30);
+            border-radius: 9px;
+            background: rgba(4,18,34,.48);
+            color: #67f7ff;
+            font-size: 16px;
+            opacity: .58;
+            backdrop-filter: blur(8px);
+            box-shadow: inset 0 0 12px rgba(25,234,255,.04), 0 0 10px rgba(25,234,255,.05);
+            touch-action: manipulation;
+        }
+        #skyExportButton:active { opacity: 1; transform: scale(.96); }
+
+    </style>
 </head>
 <body>
+    <button id="skyExportButton" type="button" aria-label="現在の星空をPNGとメタデータで保存" title="星空図を保存">📷</button>
+
 
     <div id="settingsScrim" aria-hidden="true"></div>
 
@@ -5320,9 +5347,9 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             const sinLst = Math.sin(sidereal);
             const cosLst = Math.cos(sidereal);
 
-            observerUp.set(cosLat * cosLst, sinLat, cosLat * sinLst).normalize();
-            observerNorth.set(-sinLat * cosLst, cosLat, -sinLat * sinLst).normalize();
-            observerEast.set(-sinLst, 0, cosLst).normalize();
+            observerUp.set(cosLat * cosLst, sinLat, -cosLat * sinLst).normalize();
+            observerNorth.set(-sinLat * cosLst, cosLat, sinLat * sinLst).normalize();
+            observerEast.set(-sinLst, 0, -cosLst).normalize();
             observerPosition.copy(observerUp).multiplyScalar(EARTH_RADIUS + OBSERVER_HEIGHT);
 
             const basisMatrix = new THREE.Matrix4().makeBasis(observerEast, observerNorth, observerUp);
@@ -5765,7 +5792,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             return new THREE.Vector3(
                 SKY_RADIUS * Math.sin(phi) * Math.cos(theta),
                 SKY_RADIUS * Math.cos(phi),
-                SKY_RADIUS * Math.sin(phi) * Math.sin(theta)
+                -SKY_RADIUS * Math.sin(phi) * Math.sin(theta)
             );
         }
 
@@ -5881,5 +5908,247 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 .replaceAll("'", '&#039;');
         }
     </script>
+
+
+    <script>
+    // ===== Current sky PNG export with embedded metadata V19 =====
+    (() => {
+        function drawExportLabel(ctx, el, rect, sx, sy) {
+            const r = el.getBoundingClientRect();
+            if (r.width <= 0 || r.height <= 0) return;
+            if (r.right < rect.left || r.left > rect.right || r.bottom < rect.top || r.top > rect.bottom) return;
+
+            const s = getComputedStyle(el);
+            if (s.display === 'none' || s.visibility === 'hidden' || Number(s.opacity || 1) <= 0) return;
+            const labelText = (el.textContent || '').trim();
+            if (!labelText) return;
+
+            const fs = parseFloat(s.fontSize) || 12;
+            const x = (r.left + r.width / 2 - rect.left) * sx;
+            const y = (r.top + r.height / 2 - rect.top) * sy;
+
+            ctx.save();
+            ctx.font = `${s.fontWeight || '600'} ${fs * sy}px ${s.fontFamily || 'sans-serif'}`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.lineWidth = Math.max(2, 3 * sy);
+            ctx.strokeStyle = 'rgba(0,8,18,.9)';
+            ctx.fillStyle = s.color || '#dfffff';
+            ctx.strokeText(labelText, x, y);
+            ctx.fillText(labelText, x, y);
+            ctx.restore();
+        }
+
+        function makeExportStamp(date = new Date()) {
+            return `${date.getFullYear()}${String(date.getMonth()+1).padStart(2,'0')}${String(date.getDate()).padStart(2,'0')}_` +
+                   `${String(date.getHours()).padStart(2,'0')}${String(date.getMinutes()).padStart(2,'0')}${String(date.getSeconds()).padStart(2,'0')}`;
+        }
+
+        function downloadBlob(blob, filename) {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            setTimeout(() => URL.revokeObjectURL(url), 1800);
+        }
+
+        function getSkyExportMetadata() {
+            const locationKey = document.getElementById('locationPreset')?.value || '';
+            let locationName = '入力地点';
+            try { locationName = LOCATION_PRESETS?.[locationKey]?.name || locationName; } catch (_) {}
+
+            let localDateTime = null;
+            try { localDateTime = formatDateInZone(simulationUtcMs, timeZoneSelect.value); } catch (_) {}
+
+            let azimuthDeg = null, altitudeDeg = null;
+            try {
+                azimuthDeg = Number(normalizeDegrees(THREE.MathUtils.radToDeg(groundAzimuth)).toFixed(3));
+                altitudeDeg = Number(THREE.MathUtils.radToDeg(groundAltitude).toFixed(3));
+            } catch (_) {}
+
+            let focalLengthMm = null;
+            try {
+                if (currentViewMode === 'ground' && typeof verticalFovToFocalLength === 'function') {
+                    focalLengthMm = Number(verticalFovToFocalLength(camera.fov).toFixed(2));
+                }
+            } catch (_) {}
+
+            const selectedConstellation = document.getElementById('constellationSelect')?.value || null;
+            return {
+                format: 'star-viewer-sky-export',
+                formatVersion: 2,
+                appVersion: 'V20-fixed-horizontal-orientation',
+                exportedAt: new Date().toISOString(),
+                pngMetadata: {
+                    embedding: 'iTXt',
+                    keyword: 'StarViewerMetadata',
+                    encoding: 'utf-8-json'
+                },
+                observation: {
+                    utc: new Date(simulationUtcMs).toISOString(),
+                    local: localDateTime,
+                    timeZone: document.getElementById('timeZoneSelect')?.value || null,
+                    locationPreset: locationKey || null,
+                    locationName,
+                    latitudeDeg: Number(Number(observerLatitudeDeg).toFixed(6)),
+                    longitudeDeg: Number(Number(observerLongitudeDeg).toFixed(6)),
+                    localSiderealDeg: Number(Number(localSiderealDeg).toFixed(6))
+                },
+                view: {
+                    mode: typeof currentViewMode !== 'undefined' ? currentViewMode : null,
+                    azimuthDeg,
+                    altitudeDeg,
+                    fovDeg: typeof camera !== 'undefined' ? Number(camera.fov.toFixed(3)) : null,
+                    focalLengthMm
+                },
+                display: {
+                    constellationLines: !!document.getElementById('constellationLinesToggle')?.checked,
+                    labelMode: typeof labelDisplayMode !== 'undefined' ? labelDisplayMode : null,
+                    selectedConstellation
+                },
+                image: {
+                    note: 'PNG stores the rendered sky canvas with visible star and constellation labels composited on top.'
+                }
+            };
+        }
+
+        function crc32(bytes) {
+            let crc = 0xffffffff;
+            for (let i = 0; i < bytes.length; i++) {
+                crc ^= bytes[i];
+                for (let j = 0; j < 8; j++) {
+                    crc = (crc >>> 1) ^ (0xedb88320 & -(crc & 1));
+                }
+            }
+            return (crc ^ 0xffffffff) >>> 0;
+        }
+
+        function createPngChunk(type, dataBytes) {
+            const typeBytes = new TextEncoder().encode(type);
+            const data = dataBytes instanceof Uint8Array ? dataBytes : new Uint8Array(dataBytes || 0);
+            const out = new Uint8Array(12 + data.length);
+            const view = new DataView(out.buffer);
+            view.setUint32(0, data.length);
+            out.set(typeBytes, 4);
+            out.set(data, 8);
+
+            const crcInput = new Uint8Array(typeBytes.length + data.length);
+            crcInput.set(typeBytes, 0);
+            crcInput.set(data, typeBytes.length);
+            view.setUint32(8 + data.length, crc32(crcInput));
+            return out;
+        }
+
+        function createITXtChunk(keyword, text) {
+            const enc = new TextEncoder();
+            const keywordBytes = enc.encode(keyword);
+            const textBytes = enc.encode(text);
+            const data = new Uint8Array(
+                keywordBytes.length + 1 + // keyword + NUL
+                1 + // compression flag
+                1 + // compression method
+                1 + // language tag NUL
+                1 + // translated keyword NUL
+                textBytes.length
+            );
+            let p = 0;
+            data.set(keywordBytes, p); p += keywordBytes.length;
+            data[p++] = 0;
+            data[p++] = 0; // uncompressed
+            data[p++] = 0; // compression method
+            data[p++] = 0; // empty language tag
+            data[p++] = 0; // empty translated keyword
+            data.set(textBytes, p);
+            return createPngChunk('iTXt', data);
+        }
+
+        async function embedMetadataInPngBlob(pngBlob, metadata) {
+            const src = new Uint8Array(await pngBlob.arrayBuffer());
+            if (src.length < 12) return pngBlob;
+
+            // Verify PNG signature.
+            const pngSignature = [137,80,78,71,13,10,26,10];
+            for (let i = 0; i < pngSignature.length; i++) {
+                if (src[i] !== pngSignature[i]) return pngBlob;
+            }
+
+            const text = JSON.stringify(metadata, null, 2);
+            const metaChunk = createITXtChunk('StarViewerMetadata', text);
+            const softwareChunk = createITXtChunk('Software', 'Star Viewer V19 export');
+
+            let iendOffset = -1;
+            let pos = 8;
+            const view = new DataView(src.buffer, src.byteOffset, src.byteLength);
+            while (pos + 12 <= src.length) {
+                const length = view.getUint32(pos);
+                const type = String.fromCharCode(src[pos+4], src[pos+5], src[pos+6], src[pos+7]);
+                const chunkTotal = 12 + length;
+                if (pos + chunkTotal > src.length) break;
+                if (type === 'IEND') {
+                    iendOffset = pos;
+                    break;
+                }
+                pos += chunkTotal;
+            }
+            if (iendOffset < 0) return pngBlob;
+
+            const out = new Uint8Array(src.length + metaChunk.length + softwareChunk.length);
+            out.set(src.subarray(0, iendOffset), 0);
+            out.set(softwareChunk, iendOffset);
+            out.set(metaChunk, iendOffset + softwareChunk.length);
+            out.set(src.subarray(iendOffset), iendOffset + softwareChunk.length + metaChunk.length);
+
+            return new Blob([out], { type: 'image/png' });
+        }
+
+        async function exportCurrentSkyView() {
+            const source = (typeof renderer !== 'undefined' && renderer?.domElement) || document.querySelector('canvas');
+            if (!source) return;
+
+            if (typeof renderer !== 'undefined' && typeof scene !== 'undefined' && typeof camera !== 'undefined') {
+                renderer.render(scene, camera);
+            }
+
+            const rect = source.getBoundingClientRect();
+            const out = document.createElement('canvas');
+            out.width = source.width;
+            out.height = source.height;
+            const ctx = out.getContext('2d');
+            if (!ctx) return;
+
+            ctx.drawImage(source, 0, 0, out.width, out.height);
+            const sx = out.width / Math.max(1, rect.width);
+            const sy = out.height / Math.max(1, rect.height);
+            document.querySelectorAll('.constellation-label, .star-label')
+                .forEach(el => drawExportLabel(ctx, el, rect, sx, sy));
+
+            const rawPngBlob = await new Promise(resolve => out.toBlob(resolve, 'image/png'));
+            if (!rawPngBlob) return;
+
+            const stamp = makeExportStamp();
+            const basename = `skyview_${stamp}`;
+            const metadata = getSkyExportMetadata();
+            metadata.image.width = out.width;
+            metadata.image.height = out.height;
+            metadata.image.fileName = `${basename}.png`;
+
+            const embeddedPngBlob = await embedMetadataInPngBlob(rawPngBlob, metadata);
+            downloadBlob(embeddedPngBlob, `${basename}.png`);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('skyExportButton')?.addEventListener('click', exportCurrentSkyView);
+        });
+
+        window.exportCurrentSkyView = exportCurrentSkyView;
+        window.getSkyExportMetadata = getSkyExportMetadata;
+        window.embedMetadataInPngBlob = embedMetadataInPngBlob;
+    })();
+    </script>
+
+
 </body>
 </html>
