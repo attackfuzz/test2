@@ -3542,6 +3542,7 @@
                 {id:'Tanabata',ja:'七夕と織姫・彦星',en:'Tanabata',note:'ベガとアルタイルを結ぶ日本の有名な伝承'},
                 {id:'Constellation88',ja:'なぜ星座は88個？',en:'Why 88 constellations?',note:'現在の全天は88星座に区分されている'},
                 {id:'PolarisChange',ja:'北極星はずっと同じ？',en:'Does Polaris stay forever?',note:'歳差運動で北天の目印は長い時間で変わる'},
+                {id:'Zodiac12',ja:'黄道十二宮',en:'Zodiac',note:'太陽の通り道・黄道に沿う伝統的な12星座をまとめて表示',constellationIds:['Ari','Tau','Gem','Cnc','Leo','Vir','Lib','Sco','Sgr','Cap','Aqr','Psc']},
                 {id:'M78Trivia',ja:'M78は実在する？',en:'M78',note:'オリオン座に実在する反射星雲。作品名でも有名',constellationId:'Ori'}
             ]
         };
@@ -3601,6 +3602,8 @@
                             handled=Boolean(window.highlightSearchAsterism?.(item.targetStars,Boolean(item.closed)));
                         }else if(category==='galaxies'){
                             handled=Boolean(window.highlightSearchGalaxy?.(item.raDeg,item.decDeg));
+                        }else if(item.constellationIds){
+                            handled=Boolean(window.highlightSearchConstellations?.(item.constellationIds));
                         }else if(item.constellationId){
                             handled=pickConstellation(item.constellationId);
                         }
@@ -5163,6 +5166,42 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             });
         }
 
+        function constellationKeyFromId(id) {
+            const info = (typeof constellationCatalog !== 'undefined') ? constellationCatalog[id] : null;
+            if (!info) return null;
+            return `${info.en} (${info.ja})`;
+        }
+
+        window.highlightSearchConstellations = (constellationIds) => {
+            clearSkySearchHighlight();
+            resetConstellationHighlight();
+
+            const keys = (constellationIds || [])
+                .map(constellationKeyFromId)
+                .filter(Boolean);
+            if (!keys.length) return false;
+
+            const selectedSet = new Set(keys);
+
+            Object.entries(constellationLabelElements).forEach(([constellation, element]) => {
+                element.classList.toggle('selected', selectedSet.has(constellation));
+            });
+            Object.entries(starMeshes).forEach(([constellation, points]) => {
+                const selected = selectedSet.has(constellation);
+                points.material.color.set(selected ? 0xff3344 : 0xffffff);
+                points.material.size = selected ? 5 : 2;
+            });
+            Object.entries(lineMeshes).forEach(([constellation, lines]) => {
+                const selected = selectedSet.has(constellation);
+                lines.material.color.set(selected ? 0xff3344 : 0x00ff66);
+                lines.material.opacity = selected ? 1 : 0.75;
+            });
+
+            // 通常の単独選択とは別の「複数星座選択」なので select は未選択のままにする。
+            if (constellationSelect) constellationSelect.value = '';
+            return true;
+        };
+
         function focusCameraOnSkyPosition(targetPosition) {
             if (!isFiniteVector3(targetPosition)) return;
             if (currentViewMode === 'ground') {
@@ -5980,7 +6019,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             return {
                 format: 'star-viewer-sky-export',
                 formatVersion: 2,
-                appVersion: 'V20-fixed-horizontal-orientation',
+                appVersion: 'V21-zodiac12-highlight',
                 exportedAt: new Date().toISOString(),
                 pngMetadata: {
                     embedding: 'iTXt',
