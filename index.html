@@ -5451,12 +5451,12 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         }
 
 
-        // ===== Selected constellation guidance V22 =====
-        let constellationGuidanceRibbon = null;
-        let constellationGuidanceMessage = null;
-        let constellationGuidanceActions = null;
-        let constellationEdgeIndicator = null;
-        let lastConstellationGuidanceUpdate = 0;
+        // ===== Selected constellation guidance V23 (startup-safe) =====
+        var constellationGuidanceRibbon = null;
+        var constellationGuidanceMessage = null;
+        var constellationGuidanceActions = null;
+        var constellationEdgeIndicator = null;
+        var lastConstellationGuidanceUpdate = 0;
         const CONSTELLATION_VISIBLE_ALTITUDE_DEG = 10;
 
         function ensureSelectedConstellationGuidanceUi() {
@@ -6323,7 +6323,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             return {
                 format: 'star-viewer-sky-export',
                 formatVersion: 2,
-                appVersion: 'V21-zodiac12-highlight',
+                appVersion: 'V23-ground-guidance-fixed',
                 exportedAt: new Date().toISOString(),
                 pngMetadata: {
                     embedding: 'iTXt',
