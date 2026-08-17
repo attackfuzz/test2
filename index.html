@@ -2539,6 +2539,80 @@
         #skyExportButton:active { opacity: 1; transform: scale(.96); }
 
     </style>
+<style>
+    /* ===== Selected constellation guidance V22 ===== */
+    #constellationGuidanceRibbon {
+        position: fixed;
+        left: 50%;
+        top: max(10px, env(safe-area-inset-top));
+        transform: translateX(-50%);
+        z-index: 2600;
+        width: min(92vw, 620px);
+        box-sizing: border-box;
+        padding: 9px 10px 10px;
+        border: 1px solid rgba(255, 190, 55, .78);
+        border-radius: 12px;
+        background: rgba(28, 20, 5, .94);
+        color: #ffe9a8;
+        box-shadow: 0 0 18px rgba(255, 168, 32, .16);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        display: none;
+        text-align: center;
+    }
+    #constellationGuidanceRibbon.visible { display: block; }
+    #constellationGuidanceMessage {
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: .02em;
+        line-height: 1.35;
+    }
+    #constellationGuidanceActions {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 7px;
+        flex-wrap: wrap;
+    }
+    .constellationGuidanceButton {
+        appearance: none;
+        border: 1px solid rgba(103,247,255,.72);
+        border-radius: 999px;
+        padding: 7px 12px;
+        background: rgba(6,34,43,.96);
+        color: #cfffff;
+        font: inherit;
+        font-size: 13px;
+        font-weight: 700;
+        cursor: pointer;
+    }
+    .constellationGuidanceButton:active { transform: translateY(1px); }
+    #constellationEdgeIndicator {
+        position: fixed;
+        z-index: 2550;
+        display: none;
+        pointer-events: none;
+        max-width: 46vw;
+        padding: 6px 9px;
+        border: 1px solid rgba(255,70,80,.88);
+        border-radius: 999px;
+        background: rgba(38,5,9,.88);
+        color: #ff7981;
+        font-size: 13px;
+        font-weight: 800;
+        white-space: nowrap;
+        box-shadow: 0 0 14px rgba(255,45,60,.18);
+    }
+    #constellationEdgeIndicator.visible { display: block; }
+    #constellationEdgeIndicator[data-edge="top"] { top: 88px; left: 50%; transform: translateX(-50%); }
+    #constellationEdgeIndicator[data-edge="bottom"] { bottom: 158px; left: 50%; transform: translateX(-50%); }
+    #constellationEdgeIndicator[data-edge="left"] { left: 8px; top: 50%; transform: translateY(-50%); }
+    #constellationEdgeIndicator[data-edge="right"] { right: 8px; top: 50%; transform: translateY(-50%); }
+    #constellationEdgeIndicator[data-edge="top-left"] { top: 88px; left: 8px; }
+    #constellationEdgeIndicator[data-edge="top-right"] { top: 88px; right: 8px; }
+    #constellationEdgeIndicator[data-edge="bottom-left"] { bottom: 158px; left: 8px; }
+    #constellationEdgeIndicator[data-edge="bottom-right"] { bottom: 158px; right: 8px; }
+</style>
 </head>
 <body>
     <button id="skyExportButton" type="button" aria-label="現在の星空をPNGとメタデータで保存" title="星空図を保存">📷</button>
@@ -4956,6 +5030,8 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         function applyViewPreset(name, animateTransition = true) {
             cancelCameraAnimation();
             currentViewMode = name;
+            if (name !== 'ground') hideSelectedConstellationGuidance();
+            else setTimeout(() => updateSelectedConstellationGuidance(true), 80);
             focusOnNorthStar = name === 'center' ? cameraFocusToggle.checked : false;
             groundDepthOccluder.visible = name === 'ground';
             updateModeSpecificControls();
@@ -5374,6 +5450,224 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             return center.normalize().multiplyScalar(SKY_RADIUS);
         }
 
+
+        // ===== Selected constellation guidance V22 =====
+        let constellationGuidanceRibbon = null;
+        let constellationGuidanceMessage = null;
+        let constellationGuidanceActions = null;
+        let constellationEdgeIndicator = null;
+        let lastConstellationGuidanceUpdate = 0;
+        const CONSTELLATION_VISIBLE_ALTITUDE_DEG = 10;
+
+        function ensureSelectedConstellationGuidanceUi() {
+            if (constellationGuidanceRibbon) return;
+
+            constellationGuidanceRibbon = document.createElement('div');
+            constellationGuidanceRibbon.id = 'constellationGuidanceRibbon';
+            constellationGuidanceRibbon.setAttribute('role', 'status');
+            constellationGuidanceRibbon.setAttribute('aria-live', 'polite');
+
+            constellationGuidanceMessage = document.createElement('div');
+            constellationGuidanceMessage.id = 'constellationGuidanceMessage';
+            constellationGuidanceActions = document.createElement('div');
+            constellationGuidanceActions.id = 'constellationGuidanceActions';
+            constellationGuidanceRibbon.append(constellationGuidanceMessage, constellationGuidanceActions);
+            document.body.appendChild(constellationGuidanceRibbon);
+
+            constellationEdgeIndicator = document.createElement('div');
+            constellationEdgeIndicator.id = 'constellationEdgeIndicator';
+            document.body.appendChild(constellationEdgeIndicator);
+        }
+
+        function selectedConstellationDisplayName(key) {
+            const match = String(key || '').match(/\(([^)]+)\)\s*$/);
+            return match ? match[1] : String(key || '選択した星座');
+        }
+
+        function hideSelectedConstellationGuidance() {
+            ensureSelectedConstellationGuidanceUi();
+            constellationGuidanceRibbon.classList.remove('visible');
+            constellationEdgeIndicator.classList.remove('visible');
+            constellationGuidanceActions.innerHTML = '';
+        }
+
+        function makeConstellationGuidanceButton(label, handler) {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'constellationGuidanceButton';
+            button.textContent = label;
+            button.addEventListener('click', handler);
+            return button;
+        }
+
+        function getConstellationGroundState(constellation) {
+            const target = getConstellationCenter(constellation);
+            if (!target) return null;
+
+            const direction = target.clone().sub(observerPosition).normalize();
+            const altitudeRad = Math.asin(THREE.MathUtils.clamp(direction.dot(observerUp), -1, 1));
+            const altitudeDeg = THREE.MathUtils.radToDeg(altitudeRad);
+
+            camera.updateMatrixWorld(true);
+            const cameraForward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion).normalize();
+            const inFront = direction.dot(cameraForward) > 0;
+            const projected = target.clone().project(camera);
+            const onScreen = inFront && projected.x >= -0.96 && projected.x <= 0.96 && projected.y >= -0.94 && projected.y <= 0.94 && projected.z >= -1 && projected.z <= 1;
+
+            const cameraRight = new THREE.Vector3(1, 0, 0).applyQuaternion(camera.quaternion).normalize();
+            const cameraUpDirection = new THREE.Vector3(0, 1, 0).applyQuaternion(camera.quaternion).normalize();
+            const sx = direction.dot(cameraRight);
+            const sy = direction.dot(cameraUpDirection);
+
+            return { target, direction, altitudeDeg, onScreen, sx, sy };
+        }
+
+        function getEdgeIndicatorInfo(sx, sy) {
+            const ax = Math.abs(sx);
+            const ay = Math.abs(sy);
+            const xSide = sx < -0.18 ? 'left' : sx > 0.18 ? 'right' : '';
+            const ySide = sy > 0.18 ? 'top' : sy < -0.18 ? 'bottom' : '';
+            let edge = 'top';
+            let arrow = '↑';
+
+            if (xSide && ySide) {
+                edge = `${ySide}-${xSide}`;
+                if (ySide === 'top' && xSide === 'left') arrow = '↖';
+                if (ySide === 'top' && xSide === 'right') arrow = '↗';
+                if (ySide === 'bottom' && xSide === 'left') arrow = '↙';
+                if (ySide === 'bottom' && xSide === 'right') arrow = '↘';
+            } else if (ax >= ay) {
+                edge = sx < 0 ? 'left' : 'right';
+                arrow = sx < 0 ? '←' : '→';
+            } else {
+                edge = sy < 0 ? 'bottom' : 'top';
+                arrow = sy < 0 ? '↓' : '↑';
+            }
+            return { edge, arrow };
+        }
+
+        function updateSelectedConstellationGuidance(force = false) {
+            ensureSelectedConstellationGuidanceUi();
+            const now = performance.now();
+            if (!force && now - lastConstellationGuidanceUpdate < 120) return;
+            lastConstellationGuidanceUpdate = now;
+
+            if (currentViewMode !== 'ground' || !constellationSelect?.value) {
+                hideSelectedConstellationGuidance();
+                return;
+            }
+
+            const selected = constellationSelect.value;
+            const state = getConstellationGroundState(selected);
+            if (!state) {
+                hideSelectedConstellationGuidance();
+                return;
+            }
+
+            const name = selectedConstellationDisplayName(selected);
+            constellationGuidanceActions.innerHTML = '';
+
+            // Below the geometric horizon: do not show an edge direction indicator.
+            if (state.altitudeDeg <= 0) {
+                constellationEdgeIndicator.classList.remove('visible');
+                constellationGuidanceMessage.textContent = '⚠️ 現在、地平線の下にあります ⚠️';
+                constellationGuidanceActions.append(
+                    makeConstellationGuidanceButton('見える時間帯にする', () => moveSelectedConstellationToNextVisibleTime(selected)),
+                    makeConstellationGuidanceButton('🌐 天球で見る', () => showSelectedConstellationInCelestialMode(selected))
+                );
+                constellationGuidanceRibbon.classList.add('visible');
+                return;
+            }
+
+            if (state.onScreen) {
+                hideSelectedConstellationGuidance();
+                return;
+            }
+
+            const edgeInfo = getEdgeIndicatorInfo(state.sx, state.sy);
+            constellationEdgeIndicator.dataset.edge = edgeInfo.edge;
+            constellationEdgeIndicator.textContent = `${edgeInfo.arrow} ${name}`;
+            constellationEdgeIndicator.classList.add('visible');
+
+            constellationGuidanceMessage.textContent = '⚠️ 画面外に星座があります ⚠️';
+            constellationGuidanceActions.append(
+                makeConstellationGuidanceButton('星座を見る', () => {
+                    focusCameraOnConstellation(selected);
+                    setTimeout(() => updateSelectedConstellationGuidance(true), 80);
+                })
+            );
+            constellationGuidanceRibbon.classList.add('visible');
+        }
+
+        function getConstellationAltitudeAtUtc(constellation, utcMs) {
+            const target = getConstellationCenter(constellation);
+            if (!target) return -90;
+
+            const latitude = THREE.MathUtils.degToRad(observerLatitudeDeg);
+            const sidereal = THREE.MathUtils.degToRad(calculateLocalSiderealTimeDeg(utcMs, observerLongitudeDeg));
+            const sinLat = Math.sin(latitude);
+            const cosLat = Math.cos(latitude);
+            const sinLst = Math.sin(sidereal);
+            const cosLst = Math.cos(sidereal);
+
+            const up = new THREE.Vector3(cosLat * cosLst, sinLat, -cosLat * sinLst).normalize();
+            const observer = up.clone().multiplyScalar(EARTH_RADIUS + OBSERVER_HEIGHT);
+            const direction = target.clone().sub(observer).normalize();
+            return THREE.MathUtils.radToDeg(Math.asin(THREE.MathUtils.clamp(direction.dot(up), -1, 1)));
+        }
+
+        function findNextVisibleConstellationTime(constellation, startUtcMs) {
+            // Future-only search. First find the earliest coarse 10-minute slot that reaches 10° altitude,
+            // then refine inside that interval to one-minute resolution.
+            const coarseStepMs = 10 * 60 * 1000;
+            const fineStepMs = 60 * 1000;
+            const maxSearchMs = 370 * 24 * 60 * 60 * 1000;
+            const endUtcMs = startUtcMs + maxSearchMs;
+
+            let previous = startUtcMs;
+            for (let t = startUtcMs + coarseStepMs; t <= endUtcMs; t += coarseStepMs) {
+                if (getConstellationAltitudeAtUtc(constellation, t) >= CONSTELLATION_VISIBLE_ALTITUDE_DEG) {
+                    for (let fine = previous + fineStepMs; fine <= t; fine += fineStepMs) {
+                        if (getConstellationAltitudeAtUtc(constellation, fine) >= CONSTELLATION_VISIBLE_ALTITUDE_DEG) {
+                            return fine;
+                        }
+                    }
+                    return t;
+                }
+                previous = t;
+            }
+            return null;
+        }
+
+        function moveSelectedConstellationToNextVisibleTime(constellation) {
+            const nextUtcMs = findNextVisibleConstellationTime(constellation, simulationUtcMs);
+            if (nextUtcMs == null) {
+                ensureSelectedConstellationGuidanceUi();
+                constellationGuidanceMessage.textContent = `⚠️ この観測地点では、今後1年以内に高度${CONSTELLATION_VISIBLE_ALTITUDE_DEG}°以上になる時刻が見つかりませんでした`;
+                constellationGuidanceActions.innerHTML = '';
+                constellationGuidanceActions.append(
+                    makeConstellationGuidanceButton('🌐 天球で見る', () => showSelectedConstellationInCelestialMode(constellation))
+                );
+                constellationGuidanceRibbon.classList.add('visible');
+                return;
+            }
+
+            pauseTimePlayback();
+            simulationUtcMs = nextUtcMs;
+            updateObserverFromSimulation(true);
+            updateQuickTimeDisplay();
+            focusCameraOnConstellation(constellation);
+            setTimeout(() => updateSelectedConstellationGuidance(true), 100);
+        }
+
+        function showSelectedConstellationInCelestialMode(constellation) {
+            hideSelectedConstellationGuidance();
+            applyViewPreset('center', true);
+            setTimeout(() => {
+                focusCameraOnConstellation(constellation);
+            }, VIEW_TRANSITION_DURATION + 80);
+        }
+
         function updateObserverFromSimulation(updateDateField) {
             observerLatitudeDeg = THREE.MathUtils.clamp(Number(observerLatitudeDeg) || 0, -90, 90);
             observerLongitudeDeg = normalizeLongitude(Number(observerLongitudeDeg) || 0);
@@ -5445,6 +5739,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             updateCameraAnimation(currentTime);
             updateConstellationLabels();
             updateStarLabels();
+            updateSelectedConstellationGuidance(false);
             renderer.render(scene, camera);
         }
 
@@ -5583,7 +5878,16 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                     lines.material.opacity = constellation === selected ? 1 : 0.75;
                 });
                 updateInfoSheetForConstellation();
-                if (selected) focusCameraOnConstellation(selected);
+                if (selected) {
+                    if (currentViewMode === 'ground') {
+                        updateSelectedConstellationGuidance(true);
+                    } else {
+                        hideSelectedConstellationGuidance();
+                        focusCameraOnConstellation(selected);
+                    }
+                } else {
+                    hideSelectedConstellationGuidance();
+                }
             });
 
             buildBackgroundStarLayers(parseFloat(backgroundMagnitudeSlider.value));
