@@ -2538,7 +2538,104 @@
         }
         #skyExportButton:active { opacity: 1; transform: scale(.96); }
 
-    </style>
+    
+        /* ===== V26 Compass Ring ===== */
+        #clockPanel {
+            overflow: visible !important;
+        }
+
+        #compassRingV26 {
+            --compass-rotation: 0deg;
+            position: absolute;
+            inset: -18px;
+            z-index: 1;
+            border-radius: 50%;
+            pointer-events: none;
+            transform: rotate(var(--compass-rotation));
+            transform-origin: 50% 50%;
+        }
+
+        #clockPanel .clock-face {
+            z-index: 2;
+        }
+
+        #compassRingV26 .compass-ring-guide {
+            position: absolute;
+            inset: 6px;
+            border: 1px solid rgba(103,247,255,.18);
+            border-radius: 50%;
+            box-shadow:
+                inset 0 0 10px rgba(25,234,255,.035),
+                0 0 9px rgba(25,234,255,.035);
+        }
+
+        #compassRingV26 .compass-dir {
+            position: absolute;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            min-width: 24px;
+            height: 22px;
+            color: var(--ui-cyan, #67f7ff);
+            font: 800 13px/1 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            letter-spacing: .04em;
+            white-space: nowrap;
+            text-shadow:
+                0 0 5px rgba(25,234,255,.75),
+                0 0 11px rgba(25,234,255,.25);
+        }
+
+        /*
+         * リング自体は回転させるが、文字は常に正立。
+         * 位置だけ方位リングに追従する。
+         */
+        #compassRingV26 .compass-n {
+            left: 50%;
+            top: 0;
+            transform: translate(-50%, -50%) rotate(calc(-1 * var(--compass-rotation)));
+        }
+        #compassRingV26 .compass-e {
+            right: 0;
+            top: 50%;
+            transform: translate(50%, -50%) rotate(calc(-1 * var(--compass-rotation)));
+        }
+        #compassRingV26 .compass-s {
+            left: 50%;
+            bottom: 0;
+            transform: translate(-50%, 50%) rotate(calc(-1 * var(--compass-rotation)));
+        }
+        #compassRingV26 .compass-w {
+            left: 0;
+            top: 50%;
+            transform: translate(-50%, -50%) rotate(calc(-1 * var(--compass-rotation)));
+        }
+
+        #compassRingV26 .compass-polaris-note {
+            margin-left: 1px;
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: 0;
+            opacity: .88;
+        }
+
+        #compassRingV26.compass-hidden {
+            display: none;
+        }
+
+        @media (max-width: 520px) {
+            #compassRingV26 {
+                inset: -15px;
+            }
+            #compassRingV26 .compass-dir {
+                font-size: 12px;
+            }
+            #compassRingV26 .compass-polaris-note {
+                font-size: 8px;
+            }
+        }
+
+</style>
 <style>
     /* ===== Selected constellation guidance V22 ===== */
     #constellationGuidanceRibbon {
@@ -2783,6 +2880,14 @@
     </aside>
 
     <section id="clockPanel" aria-hidden="true" aria-label="時刻ダイヤル試作">
+        
+        <div id="compassRingV26" aria-hidden="true">
+            <div class="compass-ring-guide"></div>
+            <div class="compass-dir compass-n">N <span class="compass-polaris-note">☆北</span></div>
+            <div class="compass-dir compass-e">E</div>
+            <div class="compass-dir compass-s">S</div>
+            <div class="compass-dir compass-w">W</div>
+        </div>
         <div class="clock-face">
             <button class="clock-number" data-hour="12" style="--a:0deg">12</button>
             <button class="clock-number" data-hour="1" style="--a:30deg">1</button>
@@ -6577,6 +6682,67 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
     })();
     </script>
 
+
+
+    <script>
+    // ===== V26 Compass Ring =====
+    (() => {
+        const ring = document.getElementById('compassRingV26');
+        if (!ring) return;
+
+        function normalize360(deg) {
+            let value = deg % 360;
+            if (value < 0) value += 360;
+            return value;
+        }
+
+        function updateCompassRingV26() {
+            let isGround = true;
+
+            try {
+                isGround = (typeof currentViewMode === 'undefined') || currentViewMode === 'ground';
+            } catch (_) {
+                isGround = true;
+            }
+
+            ring.classList.toggle('compass-hidden', !isGround);
+
+            if (isGround) {
+                let headingDeg = 0;
+
+                try {
+                    if (typeof groundAzimuth !== 'undefined') {
+                        headingDeg = normalize360(THREE.MathUtils.radToDeg(groundAzimuth));
+                    }
+                } catch (_) {
+                    headingDeg = 0;
+                }
+
+                /*
+                 * v26 地上方位:
+                 *   北 0° / 東 90° / 南 180° / 西 270°
+                 *
+                 * 初期リング:
+                 *   N=12時 / E=3時 / S=6時 / W=9時
+                 *
+                 * 現在向いている方位を12時へ移すため、
+                 * リングは headingDeg の逆方向へ回転する。
+                 *
+                 * 北  0°   -> N が12時
+                 * 東 90°   -> E が12時
+                 * 南 180°  -> S が12時
+                 * 西 270°  -> W が12時
+                 */
+                ring.style.setProperty('--compass-rotation', `${-headingDeg}deg`);
+                ring.dataset.heading = headingDeg.toFixed(1);
+            }
+
+            requestAnimationFrame(updateCompassRingV26);
+        }
+
+        requestAnimationFrame(updateCompassRingV26);
+    })();
+    </script>
 
 </body>
 </html>
