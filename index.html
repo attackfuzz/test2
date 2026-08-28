@@ -3854,42 +3854,42 @@
 
     // ===== アステリズム・星団・銀河・天の川・雑学 基本コメント =====
     const topicBasicComments = {
-        "SummerTriangle": "ベガ・アルタイル・デネブを結んだ大きな三角形。
+        "SummerTriangle": `ベガ・アルタイル・デネブを結んだ大きな三角形。
 3つとも別々の星座にある明るい1等星です。
-夏の星座探しは、まずここを見つけると一気に楽になります。",
-        "WinterTriangle": "ベテルギウス・シリウス・プロキオンを結んだ冬の大三角。
+夏の星座探しは、まずここを見つけると一気に楽になります。`,
+        "WinterTriangle": `ベテルギウス・シリウス・プロキオンを結んだ冬の大三角。
 冬の夜空を代表する、とても目立つ星並びです。
-オリオン座の近くを見上げると見つけやすいです。",
-        "BigDipper": "おおぐま座の一部を作る、ひしゃく形の7つ星。
+オリオン座の近くを見上げると見つけやすいです。`,
+        "BigDipper": `おおぐま座の一部を作る、ひしゃく形の7つ星。
 北斗七星という名前で親しまれますが、独立した星座ではありません。
-先端の2星を伸ばすと北極星を探す目印になります。",
-        "M45": "おうし座にある、有名な散開星団です。
+先端の2星を伸ばすと北極星を探す目印になります。`,
+        "M45": `おうし座にある、有名な散開星団です。
 日本では古くから「すばる」の名で親しまれてきました。
-暗い空なら、肉眼でも小さな星の集まりとして見つけられます。",
-        "M44": "かに座にある、たくさんの星が集まった散開星団です。
+暗い空なら、肉眼でも小さな星の集まりとして見つけられます。`,
+        "M44": `かに座にある、たくさんの星が集まった散開星団です。
 英語ではBeehive Cluster、つまり「蜂の巣星団」とも呼ばれます。
-ぼんやりした雲のように見え、双眼鏡で見ると星がぐっと増えます。",
-        "M31": "私たちの天の川銀河のすぐ近くにある巨大な銀河です。
+ぼんやりした雲のように見え、双眼鏡で見ると星がぐっと増えます。`,
+        "M31": `私たちの天の川銀河のすぐ近くにある巨大な銀河です。
 肉眼で見える天体としては、とんでもなく遠い存在です。
-暗い空では、ぼんやりした小さな雲のように見えます。",
-        "MilkyWay": "私たち自身が住んでいる銀河を、内側から見た姿です。
+暗い空では、ぼんやりした小さな雲のように見えます。`,
+        "MilkyWay": `私たち自身が住んでいる銀河を、内側から見た姿です。
 無数の星が重なって、夜空に白い帯のように見えます。
-夏は特に濃く、いて座方向には銀河の中心があります。",
-        "Tanabata": "七夕は、織姫星のベガと彦星のアルタイルの物語です。
+夏は特に濃く、いて座方向には銀河の中心があります。`,
+        "Tanabata": `七夕は、織姫星のベガと彦星のアルタイルの物語です。
 2つの星は夏の大三角の中にあり、天の川をはさんで向かい合います。
-日本の伝承と実際の星空がつながる、親しみやすい話題です。",
-        "Constellation88": "現在、空全体は88個の星座に区分されています。
+日本の伝承と実際の星空がつながる、親しみやすい話題です。`,
+        "Constellation88": `現在、空全体は88個の星座に区分されています。
 これは昔話の数ではなく、国際天文学連合が定めた公式な区分です。
-夜空のどの方向を見ても、必ずどこかの星座の領域に入っています。",
-        "PolarisChange": "北極星は永遠に同じ星ではありません。
+夜空のどの方向を見ても、必ずどこかの星座の領域に入っています。`,
+        "PolarisChange": `北極星は永遠に同じ星ではありません。
 地球の地軸がゆっくり向きを変える歳差運動で、北の目印も長い時間で入れ替わります。
-今はポラリスですが、昔や未来には別の星が北極星になります。",
-        "Zodiac12": "黄道十二宮は、太陽が通る道「黄道」に並ぶ12の星座です。
+今はポラリスですが、昔や未来には別の星が北極星になります。`,
+        "Zodiac12": `黄道十二宮は、太陽が通る道「黄道」に並ぶ12の星座です。
 占いで有名ですが、もともとは実際の夜空にある星座の並びです。
-天球モードで見ると、黄道に沿って帯状に並ぶ様子が追えます。",
-        "M78Trivia": "M78は、オリオン座に実在する反射星雲です。
+天球モードで見ると、黄道に沿って帯状に並ぶ様子が追えます。`,
+        "M78Trivia": `M78は、オリオン座に実在する反射星雲です。
 ウルトラマンの故郷として有名ですが、天文学でもちゃんと使われる番号です。
-オリオン座の三つ星の近くをたどると、その方向にあります。"
+オリオン座の三つ星の近くをたどると、その方向にあります。`
     };
 
     // ===== 88星座 基本コメント（試作） =====
@@ -4941,6 +4941,36 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 });
             }
 
+            // 星座線そのものだけでなく、星座を構成する星の近くをタップしても
+            // その星座を候補に出す。スマホでは「線の上を正確に押す」必要をなくす。
+            const constellationStarBest = new Map();
+            const constellationStarRadius = 62;
+            for (const star of skyTapStarCandidates) {
+                const screen = projectSkyPointToScreen(star.position);
+                if (!screen) continue;
+                const distance = Math.hypot(screen.x - x, screen.y - y);
+                if (distance > constellationStarRadius) continue;
+                const constellation = star.constellation;
+                if (!constellation) continue;
+                const previous = constellationStarBest.get(constellation);
+                if (previous == null || distance < previous) constellationStarBest.set(constellation, distance);
+            }
+
+            for (const [constellation, distance] of constellationStarBest) {
+                if (seenConstellations.has(constellation)) continue;
+                const info = resolveConstellationLabelInfo(constellation);
+                if (!info?.id || !constellationBasicComments[info.id]) continue;
+                seenConstellations.add(constellation);
+                candidates.push({
+                    type: 'constellation',
+                    key: constellation,
+                    name: info.ja || constellation,
+                    sub: `${info.en} / 星座`,
+                    score: distance + 4,
+                    distance
+                });
+            }
+
             for (const [constellation, segments] of Object.entries(lineSegmentsByConstellation)) {
                 let best = Infinity;
                 for (const segment of segments) {
@@ -4949,19 +4979,26 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                     if (!a || !b) continue;
                     best = Math.min(best, pointToScreenSegmentDistance(x, y, a, b));
                 }
-                if (best > lineRadius || seenConstellations.has(constellation)) continue;
-                seenConstellations.add(constellation);
+                if (best > lineRadius) continue;
                 const info = resolveConstellationLabelInfo(constellation);
                 // 解説を持たない星座は候補に出さない。
                 if (!info?.id || !constellationBasicComments[info.id]) continue;
-                candidates.push({
-                    type: 'constellation',
-                    key: constellation,
-                    name: info.ja || constellation,
-                    sub: info ? `${info.en} / 星座` : '星座',
-                    score: best - 5,
-                    distance: best
-                });
+
+                const existing = candidates.find(item => item.type === 'constellation' && item.key === constellation);
+                if (existing) {
+                    existing.score = Math.min(existing.score, best - 5);
+                    existing.distance = Math.min(existing.distance, best);
+                } else {
+                    seenConstellations.add(constellation);
+                    candidates.push({
+                        type: 'constellation',
+                        key: constellation,
+                        name: info.ja || constellation,
+                        sub: `${info.en} / 星座`,
+                        score: best - 5,
+                        distance: best
+                    });
+                }
             }
 
             candidates.sort((a, b) => a.score - b.score || a.distance - b.distance);
@@ -5560,13 +5597,45 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             searchHighlightGroup.add(sprite);
         }
 
+        function normalizeStarLookupKey(value) {
+            return String(value || '')
+                .normalize('NFKC')
+                .replace(/\s+/g, '')
+                .toLowerCase();
+        }
+
+        function resolveSearchStarPosition(starName) {
+            const exact = starPositions[starName];
+            if (isFiniteVector3(exact)) return { key: starName, position: exact };
+
+            const wanted = normalizeStarLookupKey(starName);
+            if (!wanted) return null;
+
+            for (const [key, position] of Object.entries(starPositions)) {
+                if (!isFiniteVector3(position)) continue;
+                if (normalizeStarLookupKey(key) === wanted) return { key, position };
+            }
+
+            // 固有名（Vega / ベガ等）を渡された場合にも、有名星30個の識別名へ解決する。
+            for (const [key, display] of Object.entries(STAR_DISPLAY_NAMES)) {
+                const aliases = [key, display?.en, display?.ja].map(normalizeStarLookupKey);
+                if (!aliases.includes(wanted)) continue;
+                const position = starPositions[key];
+                if (isFiniteVector3(position)) return { key, position };
+            }
+            return null;
+        }
+
         window.highlightSearchStar = (starName) => {
             clearSkySearchHighlight();
             resetConstellationHighlight();
-            const position = starPositions[starName];
-            if (!isFiniteVector3(position)) return false;
-            addSearchPoints([position], 11);
-            focusCameraOnSkyPosition(position);
+            const resolved = resolveSearchStarPosition(starName);
+            if (!resolved) {
+                console.warn('星を見つけられませんでした:', starName);
+                return false;
+            }
+            addSearchPoints([resolved.position], 14);
+            focusCameraOnSkyPosition(resolved.position);
             return true;
         };
 
