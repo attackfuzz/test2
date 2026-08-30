@@ -7055,9 +7055,9 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
     </script>
 
 
-<!-- ===== V45 FULL-CANVAS MESH CONSTELLATION-ART MANIFEST SYSTEM ===== -->
+<!-- ===== V46 FULL-CANVAS CONSTELLATION-ART FIXED ===== -->
 <script src="./constellation_art/manifest.js"></script>
-<script id="constellationArtManagerV45">
+<script id="constellationArtManagerV46">
 (() => {
     'use strict';
 
@@ -7072,16 +7072,16 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
             return await response.json();
         } catch (error) {
-            console.warn('V45 artwork manifest fetch failed:', error);
+            console.warn('V46 artwork manifest fetch failed:', error);
             return null;
         }
     }
 
-    function initConstellationArtManagerV45() {
+    function initConstellationArtManagerV46() {
         loadManifest().then(manifest => {
             try {
                 if (!manifest || !manifest.artworks || !manifest.artworks.length) {
-                    console.warn('V45 artwork manifest is empty.');
+                    console.warn('V46 artwork manifest is empty.');
                     return;
                 }
                 if (
@@ -7092,7 +7092,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                     typeof camera === 'undefined' ||
                     typeof SKY_RADIUS === 'undefined'
                 ) {
-                    console.warn('V45 artwork: viewer globals are not ready.');
+                    console.warn('V46 artwork: viewer globals are not ready.');
                     return;
                 }
 
@@ -7167,7 +7167,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                         if (state.mesh.material) state.mesh.material.dispose();
                         if (state.mesh.geometry) state.mesh.geometry.dispose();
                     } catch (error) {
-                        console.warn('V45 dispose mesh warning:', state.cfg.id, error);
+                        console.warn('V46 dispose mesh warning:', state.cfg.id, error);
                     }
                     state.mesh = null;
                     state.textureReady = false;
@@ -7182,7 +7182,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                     const cfg = state.cfg;
                     const basis = getBasisForEntry(cfg);
                     if (!basis) {
-                        console.warn('V45 artwork basis not found for', cfg.id, cfg.fallbackKey);
+                        console.warn('V46 artwork basis not found for', cfg.id, cfg.fallbackKey);
                         return false;
                     }
 
@@ -7224,7 +7224,14 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                     const positions = [];
                     const uvs = [];
                     const indices = [];
-                    const canvas = cfg.canvas;
+                    const canvas = cfg.canvas || {
+                        width: Number(cfg.export?.image?.width || state.exportWidth),
+                        height: Number(cfg.export?.image?.height || state.exportHeight)
+                    };
+                    if (!Number.isFinite(Number(canvas.width)) || !Number.isFinite(Number(canvas.height)) || Number(canvas.width) <= 0 || Number(canvas.height) <= 0) {
+                        console.warn('V46 invalid canvas dimensions:', cfg.id, canvas);
+                        return false;
+                    }
                     const segX = Number(cfg.segX || 64);
                     const segY = Number(cfg.segY || 60);
                     const radiusScale = Number(cfg.radiusScale || 1.0015);
@@ -7304,11 +7311,12 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                         material.map = texture;
                         material.needsUpdate = true;
                         state.textureReady = true;
+                        state.mesh.visible = true;
                     }, undefined, error => {
                         state.textureReady = false;
                         state.mesh.visible = false;
                         state.mesh.material.opacity = 0;
-                        console.warn('V45 artwork texture load error:', cfg.id, textureUrl, error);
+                        console.warn('V46 artwork texture load error:', cfg.id, textureUrl, error);
                     });
                     return true;
                 }
@@ -7344,7 +7352,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                         state.mesh.visible = state.currentOpacity > 0.01;
                         state.mesh.material.opacity = state.currentOpacity;
                     } catch (error) {
-                        console.warn('V45 artwork visibility error:', state.cfg.id, error);
+                        console.warn('V46 artwork visibility error:', state.cfg.id, error);
                         if (state.mesh) state.mesh.visible = false;
                     }
                 }
@@ -7362,7 +7370,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 };
                 requestAnimationFrame(tick);
 
-                window.constellationArtManagerV45 = {
+                window.constellationArtManagerV46 = {
                     manifest,
                     entries,
                     getState() {
@@ -7393,12 +7401,12 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                     }
                 };
             } catch (error) {
-                console.warn('V45 constellation-art manager init error:', error);
+                console.warn('V46 constellation-art manager init error:', error);
             }
         });
     }
 
-    requestAnimationFrame(initConstellationArtManagerV45);
+    requestAnimationFrame(initConstellationArtManagerV46);
 })();
 </script>
 
