@@ -5899,10 +5899,15 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         }
 
         function moveSelectedConstellationToNextVisibleTime(constellation) {
+            // Guidance actions are direct navigation commands.  Any camera animation left by a
+            // previous operation can otherwise overwrite the new observer/camera state on its
+            // next animation frame, so stop it before changing time.
+            cancelCameraAnimation();
             const nextUtcMs = findNextVisibleConstellationTime(constellation, simulationUtcMs);
             if (nextUtcMs == null) {
                 ensureSelectedConstellationGuidanceUi();
-                constellationGuidanceMessage.textContent = `⚠️ この観測地点では、今後1年以内に高度${CONSTELLATION_VISIBLE_ALTITUDE_DEG}°以上になる時刻が見つかりませんでした`;
+                const name = selectedConstellationDisplayName(constellation);
+                constellationGuidanceMessage.textContent = `⚠️ ${name}は、この観測地点では今後1年以内に高度${CONSTELLATION_VISIBLE_ALTITUDE_DEG}°以上になる時刻が見つかりませんでした`;
                 constellationGuidanceActions.innerHTML = '';
                 constellationGuidanceActions.append(
                     makeConstellationGuidanceButton('🌐 天球で見る', () => showSelectedConstellationInCelestialMode(constellation))
@@ -5913,18 +5918,34 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
             pauseTimePlayback();
             simulationUtcMs = nextUtcMs;
+
+            // Rebuild the observer basis first, then put the ground camera at that new observer
+            // position before asking it to face the selected constellation.
             updateObserverFromSimulation(true);
+            if (currentViewMode !== 'ground') applyViewPreset('ground', false);
+            else applyGroundCameraOrientation();
             updateQuickTimeDisplay();
             focusCameraOnConstellation(constellation);
-            setTimeout(() => updateSelectedConstellationGuidance(true), 100);
+
+            // The target should now be on screen.  Re-evaluate on the next frames instead of
+            // relying on an old cached state/ribbon.
+            hideSelectedConstellationGuidance();
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => updateSelectedConstellationGuidance(true));
+            });
         }
 
         function showSelectedConstellationInCelestialMode(constellation) {
+            // Do not chain two timed animations with setTimeout.  On slower devices the first
+            // transition may still be active and can overwrite the second one.  Enter celestial
+            // mode deterministically, then animate only the final look-at toward the target.
+            cancelCameraAnimation();
             hideSelectedConstellationGuidance();
-            applyViewPreset('center', true);
-            setTimeout(() => {
-                focusCameraOnConstellation(constellation);
-            }, VIEW_TRANSITION_DURATION + 80);
+            applyViewPreset('center', false);
+            focusOnNorthStar = false;
+            cameraFocusToggle.checked = false;
+            focusCameraOnConstellation(constellation);
+            requestAnimationFrame(() => updateSelectedConstellationGuidance(true));
         }
 
         function updateObserverFromSimulation(updateDateField) {
