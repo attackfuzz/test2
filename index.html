@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- 星座表示 + 現行UIデザイン統合版 / V37 always-visible spherical Andromeda artwork with fade and visible-range culling -->
+<!-- 星座表示 + 現行UIデザイン統合版 / V38 PNG metadata verified export + Andromeda fade/range -->
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
@@ -6624,13 +6624,51 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                     mode: typeof currentViewMode !== 'undefined' ? currentViewMode : null,
                     azimuthDeg,
                     altitudeDeg,
-                    fovDeg: typeof camera !== 'undefined' ? Number(camera.fov.toFixed(3)) : null,
-                    focalLengthMm
+                    fovDeg: typeof camera !== 'undefined' ? Number(camera.fov.toFixed(6)) : null,
+                    focalLengthMm,
+
+                    // V38: exact camera state for pixel -> celestial ray reconstruction.
+                    aspect: typeof camera !== 'undefined' ? Number(camera.aspect) : null,
+                    near: typeof camera !== 'undefined' ? Number(camera.near) : null,
+                    far: typeof camera !== 'undefined' ? Number(camera.far) : null,
+                    position: typeof camera !== 'undefined'
+                        ? [camera.position.x, camera.position.y, camera.position.z]
+                        : null,
+                    quaternion: typeof camera !== 'undefined'
+                        ? [camera.quaternion.x, camera.quaternion.y, camera.quaternion.z, camera.quaternion.w]
+                        : null,
+                    up: typeof camera !== 'undefined'
+                        ? [camera.up.x, camera.up.y, camera.up.z]
+                        : null,
+                    projectionMatrix: typeof camera !== 'undefined'
+                        ? camera.projectionMatrix.toArray()
+                        : null,
+                    matrixWorld: typeof camera !== 'undefined'
+                        ? camera.matrixWorld.toArray()
+                        : null,
+                    matrixWorldInverse: typeof camera !== 'undefined'
+                        ? camera.matrixWorldInverse.toArray()
+                        : null
                 },
                 display: {
                     constellationLines: !!document.getElementById('constellationLinesToggle')?.checked,
                     labelMode: typeof labelDisplayMode !== 'undefined' ? labelDisplayMode : null,
                     selectedConstellation
+                },
+                celestial: {
+                    skyRadius: typeof SKY_RADIUS !== 'undefined' ? Number(SKY_RADIUS) : null,
+                    groupPosition: (typeof celestialGroup !== 'undefined')
+                        ? [celestialGroup.position.x, celestialGroup.position.y, celestialGroup.position.z]
+                        : null,
+                    groupQuaternion: (typeof celestialGroup !== 'undefined')
+                        ? [celestialGroup.quaternion.x, celestialGroup.quaternion.y, celestialGroup.quaternion.z, celestialGroup.quaternion.w]
+                        : null,
+                    groupScale: (typeof celestialGroup !== 'undefined')
+                        ? [celestialGroup.scale.x, celestialGroup.scale.y, celestialGroup.scale.z]
+                        : null,
+                    matrixWorld: (typeof celestialGroup !== 'undefined')
+                        ? celestialGroup.matrixWorld.toArray()
+                        : null
                 },
                 image: {
                     note: 'PNG stores the rendered sky canvas with visible star and constellation labels composited on top.'
@@ -6688,43 +6726,202 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             return createPngChunk('iTXt', data);
         }
 
-        async function embedMetadataInPngBlob(pngBlob, metadata) {
-            const src = new Uint8Array(await pngBlob.arrayBuffer());
-            if (src.length < 12) return pngBlob;
 
-            // Verify PNG signature.
-            const pngSignature = [137,80,78,71,13,10,26,10];
-            for (let i = 0; i < pngSignature.length; i++) {
-                if (src[i] !== pngSignature[i]) return pngBlob;
+        // V38 fallback copy:
+        // iTXt keeps readable UTF-8 JSON.
+        // tEXt stores the same JSON as Base64 ASCII for readers that ignore iTXt.
+        function bytesToBase64(bytes) {
+            let binary = '';
+            const CHUNK = 0x8000;
+            for (let i = 0; i < bytes.length; i += CHUNK) {
+                binary += String.fromCharCode(...bytes.subarray(i, i + CHUNK));
+            }
+            return btoa(binary);
+        }
+
+        function base64ToBytes(base64) {
+            const binary = atob(base64);
+            const out = new Uint8Array(binary.length);
+            for (let i = 0; i < binary.length; i++) out[i] = binary.charCodeAt(i);
+            return out;
+        }
+
+        function createTextChunk(keyword, textAscii) {
+            const enc = new TextEncoder();
+            const keyBytes = enc.encode(keyword);
+            const textBytes = enc.encode(textAscii);
+            const data = new Uint8Array(keyBytes.length + 1 + textBytes.length);
+            data.set(keyBytes, 0);
+            data[keyBytes.length] = 0;
+            data.set(textBytes, keyBytes.length + 1);
+            return createPngChunk('tEXt', data);
+        }
+
+        function parsePngMetadataBytes(src) {
+            const found = {};
+            if (!(src instanceof Uint8Array) || src.length < 12) return found;
+
+            const view = new DataView(src.buffer, src.byteOffset, src.byteLength);
+            const decoder = new TextDecoder('utf-8');
+
+            let pos = 8;
+            while (pos + 12 <= src.length) {
+                const length = view.getUint32(pos);
+                const type = String.fromCharCode(src[pos+4], src[pos+5], src[pos+6], src[pos+7]);
+                const dataStart = pos + 8;
+                const dataEnd = dataStart + length;
+                if (dataEnd + 4 > src.length) break;
+
+                const data = src.subarray(dataStart, dataEnd);
+
+                if (type === 'iTXt') {
+                    let p = 0;
+                    while (p < data.length && data[p] !== 0) p++;
+                    const keyword = decoder.decode(data.subarray(0, p));
+                    p++; // keyword NUL
+
+                    const compressionFlag = data[p++] || 0;
+                    p++; // compression method
+
+                    while (p < data.length && data[p] !== 0) p++;
+                    p++; // language tag NUL
+
+                    while (p < data.length && data[p] !== 0) p++;
+                    p++; // translated keyword NUL
+
+                    if (compressionFlag === 0 && p <= data.length) {
+                        found[keyword] = decoder.decode(data.subarray(p));
+                    }
+                } else if (type === 'tEXt') {
+                    let p = 0;
+                    while (p < data.length && data[p] !== 0) p++;
+                    const keyword = decoder.decode(data.subarray(0, p));
+                    const text = decoder.decode(data.subarray(Math.min(p + 1, data.length)));
+                    found[keyword] = text;
+                }
+
+                if (type === 'IEND') break;
+                pos += 12 + length;
             }
 
-            const text = JSON.stringify(metadata, null, 2);
+            return found;
+        }
+
+        async function verifyEmbeddedStarViewerMetadata(pngBlob) {
+            try {
+                const src = new Uint8Array(await pngBlob.arrayBuffer());
+                const found = parsePngMetadataBytes(src);
+
+                let jsonText = found.StarViewerMetadata || null;
+
+                if (!jsonText && found.StarViewerMetadataB64) {
+                    const bytes = base64ToBytes(found.StarViewerMetadataB64);
+                    jsonText = new TextDecoder('utf-8').decode(bytes);
+                }
+
+                if (!jsonText) {
+                    return { ok: false, reason: 'StarViewerMetadata chunk not found' };
+                }
+
+                const parsed = JSON.parse(jsonText);
+                return {
+                    ok: parsed?.format === 'star-viewer-sky-export',
+                    metadata: parsed,
+                    chunks: Object.keys(found)
+                };
+            } catch (error) {
+                return { ok: false, reason: String(error) };
+            }
+        }
+
+        async function embedMetadataInPngBlob(pngBlob, metadata) {
+            const src = new Uint8Array(await pngBlob.arrayBuffer());
+            if (src.length < 12) throw new Error('PNG data is too short.');
+
+            const pngSignature = [137,80,78,71,13,10,26,10];
+            for (let i = 0; i < pngSignature.length; i++) {
+                if (src[i] !== pngSignature[i]) {
+                    throw new Error('PNG signature check failed.');
+                }
+            }
+
+            const text = JSON.stringify(metadata);
+            const utf8 = new TextEncoder().encode(text);
+
+            // Primary: standards-compliant UTF-8 iTXt.
             const metaChunk = createITXtChunk('StarViewerMetadata', text);
-            const softwareChunk = createITXtChunk('Software', 'Star Viewer V19 export');
+
+            // Backup: ASCII Base64 inside tEXt.
+            // Some software exposes tEXt but ignores iTXt.
+            const backupChunk = createTextChunk(
+                'StarViewerMetadataB64',
+                bytesToBase64(utf8)
+            );
+
+            const softwareChunk = createITXtChunk(
+                'Software',
+                'Star Viewer V38 verified PNG export'
+            );
 
             let iendOffset = -1;
             let pos = 8;
             const view = new DataView(src.buffer, src.byteOffset, src.byteLength);
+
             while (pos + 12 <= src.length) {
                 const length = view.getUint32(pos);
                 const type = String.fromCharCode(src[pos+4], src[pos+5], src[pos+6], src[pos+7]);
                 const chunkTotal = 12 + length;
-                if (pos + chunkTotal > src.length) break;
+
+                if (pos + chunkTotal > src.length) {
+                    throw new Error('Malformed PNG chunk structure.');
+                }
+
                 if (type === 'IEND') {
                     iendOffset = pos;
                     break;
                 }
+
                 pos += chunkTotal;
             }
-            if (iendOffset < 0) return pngBlob;
 
-            const out = new Uint8Array(src.length + metaChunk.length + softwareChunk.length);
-            out.set(src.subarray(0, iendOffset), 0);
-            out.set(softwareChunk, iendOffset);
-            out.set(metaChunk, iendOffset + softwareChunk.length);
-            out.set(src.subarray(iendOffset), iendOffset + softwareChunk.length + metaChunk.length);
+            if (iendOffset < 0) {
+                throw new Error('IEND chunk was not found.');
+            }
 
-            return new Blob([out], { type: 'image/png' });
+            const addedLength =
+                softwareChunk.length +
+                metaChunk.length +
+                backupChunk.length;
+
+            const out = new Uint8Array(src.length + addedLength);
+
+            let write = 0;
+            out.set(src.subarray(0, iendOffset), write);
+            write += iendOffset;
+
+            out.set(softwareChunk, write);
+            write += softwareChunk.length;
+
+            out.set(metaChunk, write);
+            write += metaChunk.length;
+
+            out.set(backupChunk, write);
+            write += backupChunk.length;
+
+            out.set(src.subarray(iendOffset), write);
+
+            const blob = new Blob([out], { type: 'image/png' });
+
+            // Critical V38 change:
+            // verify the actual Blob that is about to be downloaded.
+            const verification = await verifyEmbeddedStarViewerMetadata(blob);
+            if (!verification.ok) {
+                throw new Error(
+                    `Metadata self-check failed: ${verification.reason || 'unknown error'}`
+                );
+            }
+
+            return blob;
         }
 
         async function exportCurrentSkyView() {
@@ -6732,6 +6929,9 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             if (!source) return;
 
             if (typeof renderer !== 'undefined' && typeof scene !== 'undefined' && typeof camera !== 'undefined') {
+                camera.updateProjectionMatrix();
+                camera.updateMatrixWorld(true);
+                if (typeof celestialGroup !== 'undefined') celestialGroup.updateMatrixWorld(true);
                 renderer.render(scene, camera);
             }
 
@@ -6758,8 +6958,26 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             metadata.image.height = out.height;
             metadata.image.fileName = `${basename}.png`;
 
-            const embeddedPngBlob = await embedMetadataInPngBlob(rawPngBlob, metadata);
-            downloadBlob(embeddedPngBlob, `${basename}.png`);
+            try {
+                const embeddedPngBlob = await embedMetadataInPngBlob(rawPngBlob, metadata);
+                const verification = await verifyEmbeddedStarViewerMetadata(embeddedPngBlob);
+
+                console.info(
+                    '[StarViewer V38] PNG metadata verified:',
+                    verification.ok,
+                    verification.metadata
+                );
+
+                if (!verification.ok) {
+                    alert('PNGメタデータの埋め込み確認に失敗しました。画像は保存しません。');
+                    return;
+                }
+
+                downloadBlob(embeddedPngBlob, `${basename}.png`);
+            } catch (error) {
+                console.error('[StarViewer V38] PNG metadata export error:', error);
+                alert(`PNGメタデータ埋め込みに失敗しました。\n${error?.message || error}`);
+            }
         }
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -6769,6 +6987,8 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         window.exportCurrentSkyView = exportCurrentSkyView;
         window.getSkyExportMetadata = getSkyExportMetadata;
         window.embedMetadataInPngBlob = embedMetadataInPngBlob;
+        window.verifyEmbeddedStarViewerMetadata = verifyEmbeddedStarViewerMetadata;
+        window.parsePngMetadataBytes = parsePngMetadataBytes;
     })();
     </script>
 
