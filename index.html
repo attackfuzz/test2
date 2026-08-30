@@ -7055,9 +7055,9 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
     </script>
 
 
-<!-- ===== V44 FULL-CANVAS CONSTELLATION-ART MANIFEST SYSTEM ===== -->
+<!-- ===== V45 FULL-CANVAS MESH CONSTELLATION-ART MANIFEST SYSTEM ===== -->
 <script src="./constellation_art/manifest.js"></script>
-<script id="constellationArtManagerV44">
+<script id="constellationArtManagerV45">
 (() => {
     'use strict';
 
@@ -7072,16 +7072,16 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
             return await response.json();
         } catch (error) {
-            console.warn('V44 artwork manifest fetch failed:', error);
+            console.warn('V45 artwork manifest fetch failed:', error);
             return null;
         }
     }
 
-    function initConstellationArtManagerV44() {
+    function initConstellationArtManagerV45() {
         loadManifest().then(manifest => {
             try {
                 if (!manifest || !manifest.artworks || !manifest.artworks.length) {
-                    console.warn('V44 artwork manifest is empty.');
+                    console.warn('V45 artwork manifest is empty.');
                     return;
                 }
                 if (
@@ -7092,12 +7092,12 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                     typeof camera === 'undefined' ||
                     typeof SKY_RADIUS === 'undefined'
                 ) {
-                    console.warn('V44 artwork: viewer globals are not ready.');
+                    console.warn('V45 artwork: viewer globals are not ready.');
                     return;
                 }
 
                 const artworkGroup = new THREE.Group();
-                artworkGroup.name = 'ConstellationArtworkGroupV44';
+                artworkGroup.name = 'ConstellationArtworkGroupV45';
                 celestialGroup.add(artworkGroup);
 
                 const textureLoader = new THREE.TextureLoader();
@@ -7167,7 +7167,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                         if (state.mesh.material) state.mesh.material.dispose();
                         if (state.mesh.geometry) state.mesh.geometry.dispose();
                     } catch (error) {
-                        console.warn('V44 dispose mesh warning:', state.cfg.id, error);
+                        console.warn('V45 dispose mesh warning:', state.cfg.id, error);
                     }
                     state.mesh = null;
                     state.textureReady = false;
@@ -7179,11 +7179,10 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 function buildEntry(state) {
                     if (state.mesh || state.buildTried) return Boolean(state.mesh);
                     state.buildTried = true;
-
                     const cfg = state.cfg;
                     const basis = getBasisForEntry(cfg);
                     if (!basis) {
-                        console.warn('V44 artwork basis not found for', cfg.id, cfg.fallbackKey);
+                        console.warn('V45 artwork basis not found for', cfg.id, cfg.fallbackKey);
                         return false;
                     }
 
@@ -7226,7 +7225,6 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                     const uvs = [];
                     const indices = [];
                     const canvas = cfg.canvas;
-                    const bounds = cfg.opaqueBounds;
                     const segX = Number(cfg.segX || 64);
                     const segY = Number(cfg.segY || 60);
                     const radiusScale = Number(cfg.radiusScale || 1.0015);
@@ -7240,29 +7238,19 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
                     for (let gy = 0; gy <= segY; gy++) {
                         const fy = gy / segY;
-                        const rawPy = bounds.y + fy * bounds.height;
+                        const rawPy = fy * canvas.height;
                         for (let gx = 0; gx <= segX; gx++) {
                             const fx = gx / segX;
-                            const rawPx = bounds.x + fx * bounds.width;
-
-                            // IMPORTANT V44 change:
-                            // rawPx/rawPy are absolute coordinates on the FULL aligned canvas.
-                            // We only apply optional tiny corrections around the full-canvas center.
+                            const rawPx = fx * canvas.width;
                             const px = pivotX + ((rawPx - pivotX) / Math.max(1e-6, scaleX)) + offsetXPx;
                             const py = pivotY + ((rawPy - pivotY) / Math.max(1e-6, scaleY)) + offsetYPx;
-
                             const hitLocal = pixelToCelestialLocal(px, py);
-                            if (!hitLocal) {
-                                positions.push(0, 0, 0);
-                            } else {
+                            if (!hitLocal) positions.push(0, 0, 0);
+                            else {
                                 const localPos = hitLocal.clone().normalize().multiplyScalar(state.exportSkyRadius * radiusScale);
                                 positions.push(localPos.x, localPos.y, localPos.z);
                             }
-
-                            // UVs also refer to the FULL canvas, not a cropped texture.
-                            const u = px / Math.max(1e-6, canvas.width);
-                            const v = 1 - (py / Math.max(1e-6, canvas.height));
-                            uvs.push(u, v);
+                            uvs.push(fx, 1 - fy);
                         }
                     }
 
@@ -7307,26 +7295,21 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
                     const basePath = manifest.imageBasePath || './constellation_art/';
                     const textureUrl = /^\.?\//.test(cfg.file) ? cfg.file : (basePath + cfg.file);
-                    textureLoader.load(
-                        textureUrl,
-                        texture => {
-                            if (typeof THREE.sRGBEncoding !== 'undefined') texture.encoding = THREE.sRGBEncoding;
-                            texture.minFilter = THREE.LinearFilter;
-                            texture.magFilter = THREE.LinearFilter;
-                            texture.generateMipmaps = false;
-                            texture.needsUpdate = true;
-                            material.map = texture;
-                            material.needsUpdate = true;
-                            state.textureReady = true;
-                        },
-                        undefined,
-                        error => {
-                            state.textureReady = false;
-                            state.mesh.visible = false;
-                            state.mesh.material.opacity = 0;
-                            console.warn('V44 artwork texture load error:', cfg.id, textureUrl, error);
-                        }
-                    );
+                    textureLoader.load(textureUrl, texture => {
+                        if (typeof THREE.sRGBEncoding !== 'undefined') texture.encoding = THREE.sRGBEncoding;
+                        texture.minFilter = THREE.LinearFilter;
+                        texture.magFilter = THREE.LinearFilter;
+                        texture.generateMipmaps = false;
+                        texture.needsUpdate = true;
+                        material.map = texture;
+                        material.needsUpdate = true;
+                        state.textureReady = true;
+                    }, undefined, error => {
+                        state.textureReady = false;
+                        state.mesh.visible = false;
+                        state.mesh.material.opacity = 0;
+                        console.warn('V45 artwork texture load error:', cfg.id, textureUrl, error);
+                    });
                     return true;
                 }
 
@@ -7361,7 +7344,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                         state.mesh.visible = state.currentOpacity > 0.01;
                         state.mesh.material.opacity = state.currentOpacity;
                     } catch (error) {
-                        console.warn('V44 artwork visibility error:', state.cfg.id, error);
+                        console.warn('V45 artwork visibility error:', state.cfg.id, error);
                         if (state.mesh) state.mesh.visible = false;
                     }
                 }
@@ -7369,19 +7352,17 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 manifest.artworks.filter(cfg => cfg && cfg.enabled !== false).forEach(cfg => {
                     entries.set(cfg.id, { cfg, mesh:null, buildTried:false, textureReady:false, currentOpacity:0, targetOpacity:0, constellationKey:null });
                 });
-
                 entries.forEach(state => buildEntry(state));
                 if (constellationSelect && typeof constellationSelect.addEventListener === 'function') {
                     constellationSelect.addEventListener('change', () => entries.forEach(updateState));
                 }
-
                 const tick = () => {
                     entries.forEach(updateState);
                     requestAnimationFrame(tick);
                 };
                 requestAnimationFrame(tick);
 
-                window.constellationArtManagerV44 = {
+                window.constellationArtManagerV45 = {
                     manifest,
                     entries,
                     getState() {
@@ -7394,7 +7375,6 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                                 selected: Boolean(state.constellationKey && constellationSelect && constellationSelect.value === state.constellationKey),
                                 key: state.constellationKey,
                                 canvas: state.cfg.canvas,
-                                opaqueBounds: state.cfg.opaqueBounds,
                                 align: state.cfg.align || null
                             };
                         });
@@ -7413,12 +7393,12 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                     }
                 };
             } catch (error) {
-                console.warn('V44 constellation-art manager init error:', error);
+                console.warn('V45 constellation-art manager init error:', error);
             }
         });
     }
 
-    requestAnimationFrame(initConstellationArtManagerV44);
+    requestAnimationFrame(initConstellationArtManagerV45);
 })();
 </script>
 
