@@ -1,0 +1,332 @@
+window.CONSTELLATION_ART_MANIFEST = {
+  "version": 1,
+  "managerVersion": "v42",
+  "imageBasePath": "./constellation_art/",
+  "notes": [
+    "External constellation artwork folder + manifest-driven management.",
+    "PNG files are stored outside index.html.",
+    "This package includes And, Tau, Ari, Cnc."
+  ],
+  "artworks": [
+    {
+      "id": "And",
+      "nameJa": "アンドロメダ座",
+      "fallbackKey": "Andromeda (アンドロメダ座)",
+      "enabled": true,
+      "file": "And.png",
+      "segX": 64,
+      "segY": 60,
+      "radiusScale": 1.0015,
+      "baseOpacity": 0.68,
+      "selectedOpacity": 0.92,
+      "fullVisMarginDeg": 6.0,
+      "fadeOutMarginDeg": 24.0,
+      "fadeSmoothing": 0.16,
+      "originalOverlaySize": [
+        2048,
+        1045
+      ],
+      "resizedCanvas": {
+        "width": 2494,
+        "height": 1273
+      },
+      "crop": {
+        "x": 817,
+        "y": 68,
+        "width": 1010,
+        "height": 1037
+      },
+      "export": {
+        "image": {
+          "width": 2494,
+          "height": 1273,
+          "fileName": "skyview_20260830_205942.png"
+        },
+        "view": {
+          "mode": "ground",
+          "fovDeg": 52.911467,
+          "aspect": 1.9587750294464075,
+          "near": 0.5,
+          "far": 250000,
+          "position": [
+            261.56370357916416,
+            584.2667958131848,
+            770.4671506820688
+          ],
+          "quaternion": [
+            0.4918497795906743,
+            -0.3702400030790292,
+            -0.23127240947520353,
+            0.7533387067263831
+          ],
+          "up": [
+            0.26111979991930134,
+            0.5832752279257111,
+            0.7691595793970937
+          ]
+        },
+        "celestial": {
+          "skyRadius": 100000,
+          "matrixWorld": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      }
+    },
+    {
+      "id": "Tau",
+      "nameJa": "おうし座",
+      "fallbackKey": "Taurus (おうし座)",
+      "enabled": true,
+      "file": "Tau.png",
+      "segX": 64,
+      "segY": 60,
+      "radiusScale": 1.0015,
+      "baseOpacity": 0.68,
+      "selectedOpacity": 0.92,
+      "fullVisMarginDeg": 6.0,
+      "fadeOutMarginDeg": 24.0,
+      "fadeSmoothing": 0.16,
+      "originalOverlaySize": [
+        2048,
+        1045
+      ],
+      "resizedCanvas": {
+        "width": 2494,
+        "height": 1273
+      },
+      "crop": {
+        "x": 730,
+        "y": 270,
+        "width": 785,
+        "height": 642
+      },
+      "export": {
+        "image": {
+          "width": 2494,
+          "height": 1273,
+          "fileName": "skyview_20260831_000557.png"
+        },
+        "view": {
+          "mode": "ground",
+          "fovDeg": 56.151467,
+          "aspect": 1.9587750294464075,
+          "near": 0.5,
+          "far": 250000,
+          "position": [
+            416.52209378198177,
+            584.2667958131848,
+            -698.9596173611666
+          ],
+          "quaternion": [
+            0.11756123833203502,
+            -0.22491370668783395,
+            -0.03970012403194931,
+            0.9664455907797529
+          ],
+          "up": [
+            0.4158152079285033,
+            0.5832752279257111,
+            -0.697773402576786
+          ]
+        },
+        "celestial": {
+          "skyRadius": 100000,
+          "matrixWorld": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      }
+    },
+    {
+      "id": "Ari",
+      "nameJa": "おひつじ座",
+      "fallbackKey": "Aries (おひつじ座)",
+      "enabled": true,
+      "file": "Ari.png",
+      "segX": 64,
+      "segY": 60,
+      "radiusScale": 1.0015,
+      "baseOpacity": 0.68,
+      "selectedOpacity": 0.92,
+      "fullVisMarginDeg": 6.0,
+      "fadeOutMarginDeg": 24.0,
+      "fadeSmoothing": 0.16,
+      "originalOverlaySize": [
+        2048,
+        1045
+      ],
+      "resizedCanvas": {
+        "width": 2494,
+        "height": 1273
+      },
+      "crop": {
+        "x": 907,
+        "y": 218,
+        "width": 664,
+        "height": 773
+      },
+      "export": {
+        "image": {
+          "width": 2494,
+          "height": 1273,
+          "fileName": "skyview_20260830_235658.png"
+        },
+        "view": {
+          "mode": "ground",
+          "fovDeg": 46.431467,
+          "aspect": 1.9587750294464075,
+          "near": 0.5,
+          "far": 250000,
+          "position": [
+            771.5923514355742,
+            584.2667958131848,
+            258.22556905991274
+          ],
+          "quaternion": [
+            0.26978500722192594,
+            -0.34789273712153573,
+            -0.37263950768614895,
+            0.8169005390179247
+          ],
+          "up": [
+            0.7702828705556296,
+            0.5832752279257111,
+            0.2577873305978963
+          ]
+        },
+        "celestial": {
+          "skyRadius": 100000,
+          "matrixWorld": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      }
+    },
+    {
+      "id": "Cnc",
+      "nameJa": "かに座",
+      "fallbackKey": "Cancer (かに座)",
+      "enabled": true,
+      "file": "Cnc.png",
+      "segX": 64,
+      "segY": 60,
+      "radiusScale": 1.0015,
+      "baseOpacity": 0.68,
+      "selectedOpacity": 0.92,
+      "fullVisMarginDeg": 6.0,
+      "fadeOutMarginDeg": 24.0,
+      "fadeSmoothing": 0.16,
+      "originalOverlaySize": [
+        2048,
+        1045
+      ],
+      "resizedCanvas": {
+        "width": 2494,
+        "height": 1273
+      },
+      "crop": {
+        "x": 951,
+        "y": 249,
+        "width": 708,
+        "height": 697
+      },
+      "export": {
+        "image": {
+          "width": 2494,
+          "height": 1273,
+          "fileName": "skyview_20260830_230012.png"
+        },
+        "view": {
+          "mode": "ground",
+          "fovDeg": 46.431467,
+          "aspect": 1.9587750294464075,
+          "near": 0.5,
+          "far": 250000,
+          "position": [
+            -71.35989185840234,
+            584.2667958131848,
+            -810.5201830578628
+          ],
+          "quaternion": [
+            -0.02092350094043712,
+            0.39435279715808486,
+            -0.5027890625645028,
+            0.7689286293587321
+          ],
+          "up": [
+            -0.07123878592233436,
+            0.5832752279257111,
+            -0.8091446371746659
+          ]
+        },
+        "celestial": {
+          "skyRadius": 100000,
+          "matrixWorld": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      }
+    }
+  ]
+};
