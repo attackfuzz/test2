@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- 星座表示 + 現行UIデザイン統合版 / V35 spherical Andromeda artwork from user transparent PNG -->
+<!-- 星座表示 + 現行UIデザイン統合版 / V37 always-visible spherical Andromeda artwork with fade and visible-range culling -->
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
@@ -6835,7 +6835,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
     </script>
 
 
-<!-- ===== V35 SPHERICAL ANDROMEDA ARTWORK FROM USER TRANSPARENT PNG =====
+<!-- ===== V37 ALWAYS-VISIBLE SPHERICAL ANDROMEDA ARTWORK WITH FADE AND VISIBLE-RANGE CULLING =====
      Important:
      This addon is intentionally placed AFTER the original V29 viewer has fully
      initialized. It does not modify initializeStarData(), initializeUi(), animate(),
@@ -6856,7 +6856,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 typeof constellationSelect === 'undefined' ||
                 typeof SKY_RADIUS === 'undefined'
             ) {
-                console.warn('V35 artwork: viewer globals are not ready.');
+                console.warn('V37 artwork: viewer globals are not ready.');
                 return;
             }
 
@@ -6891,9 +6891,23 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             const SEG_Y = 60;
             const RADIUS_SCALE = 1.0015;
 
+            // V37:
+            // 1) 星座絵は常時存在する
+            // 2) ただし「画面近傍だけ」表示対象にする
+            // 3) 出入りはフェードで自然につなぐ
+            const BASE_OPACITY = 0.68;
+            const SELECTED_OPACITY = 0.92;
+            const FULL_VIS_MARGIN_DEG = 6.0;
+            const FADE_OUT_MARGIN_DEG = 24.0;
+            const FADE_SMOOTHING = 0.16;
+
             let artworkMesh = null;
             let artworkTexture = null;
             let artworkTextureReady = false;
+            let artworkCurrentOpacity = 0;
+            let artworkTargetOpacity = 0;
+            let andromedaCenterDirection = null;
+            let andromedaAngularRadius = 0;
 
             function pixelToTangent(px, py) {
                 const w = H[2][0] * px + H[2][1] * py + H[2][2];
@@ -6951,7 +6965,14 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
                 const axisY = normal.clone().cross(axisX).normalize();
 
-                return { key, normal, axisX, axisY };
+                let angularRadius = 0;
+                unique.forEach(position => {
+                    const dir = position.clone().normalize();
+                    const dot = THREE.MathUtils.clamp(normal.dot(dir), -1, 1);
+                    angularRadius = Math.max(angularRadius, Math.acos(dot));
+                });
+
+                return { key, normal, axisX, axisY, angularRadius };
             }
 
             function buildMesh() {
@@ -6959,9 +6980,12 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
                 const basis = getBasis();
                 if (!basis) {
-                    console.warn('V35 artwork: Andromeda line data was not found.');
+                    console.warn('V37 artwork: Andromeda line data was not found.');
                     return false;
                 }
+
+                andromedaCenterDirection = basis.normal.clone();
+                andromedaAngularRadius = basis.angularRadius || 0;
 
                 const positions = [];
                 const uvs = [];
@@ -7053,7 +7077,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                         texture.needsUpdate = true;
 
                         material.map = texture;
-                        material.opacity = 0.88;
+                        material.opacity = 0;
                         material.needsUpdate = true;
 
                         artworkTextureReady = true;
@@ -7064,11 +7088,55 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                         artworkTextureReady = false;
                         material.opacity = 0;
                         if (artworkMesh) artworkMesh.visible = false;
-                        console.warn('V34 embedded artwork texture load error:', error);
+                        console.warn('V37 embedded artwork texture load error:', error);
                     }
                 );
 
                 return true;
+            }
+
+            function computeVisibleRangeBlend() {
+                try {
+                    if (
+                        !artworkTextureReady ||
+                        !andromedaCenterDirection ||
+                        typeof camera === 'undefined' ||
+                        !camera
+                    ) {
+                        return 0;
+                    }
+
+                    const forward = new THREE.Vector3();
+                    camera.getWorldDirection(forward);
+
+                    if (forward.lengthSq() < 1e-10) return 0;
+
+                    const dot = THREE.MathUtils.clamp(
+                        forward.normalize().dot(andromedaCenterDirection),
+                        -1,
+                        1
+                    );
+                    const angle = Math.acos(dot);
+
+                    const verticalHalfFov = THREE.MathUtils.degToRad(
+                        ((camera.fov || 60) * 0.5)
+                    );
+                    const horizontalHalfFov = Math.atan(
+                        Math.tan(verticalHalfFov) * Math.max(1e-6, camera.aspect || 1)
+                    );
+                    const halfView = Math.max(verticalHalfFov, horizontalHalfFov);
+
+                    const fullAngle = halfView + andromedaAngularRadius + THREE.MathUtils.degToRad(FULL_VIS_MARGIN_DEG);
+                    const fadeEndAngle = halfView + andromedaAngularRadius + THREE.MathUtils.degToRad(FADE_OUT_MARGIN_DEG);
+
+                    if (angle <= fullAngle) return 1;
+                    if (angle >= fadeEndAngle) return 0;
+
+                    return 1 - ((angle - fullAngle) / Math.max(1e-6, fadeEndAngle - fullAngle));
+                } catch (error) {
+                    console.warn('V37 range blend error:', error);
+                    return 0;
+                }
             }
 
             function updateVisibility() {
@@ -7076,19 +7144,34 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                     if (!artworkMesh && !buildMesh()) return;
 
                     const andromedaKey = getAndromedaKey();
-                    artworkMesh.visible = (
-                        artworkTextureReady &&
-                        Boolean(andromedaKey) &&
+                    const selected = Boolean(
+                        andromedaKey &&
+                        constellationSelect &&
                         constellationSelect.value === andromedaKey
                     );
+
+                    const rangeBlend = computeVisibleRangeBlend();
+                    const baseOpacity = selected ? SELECTED_OPACITY : BASE_OPACITY;
+                    artworkTargetOpacity = artworkTextureReady ? (baseOpacity * rangeBlend) : 0;
+
+                    artworkCurrentOpacity += (artworkTargetOpacity - artworkCurrentOpacity) * FADE_SMOOTHING;
+                    if (Math.abs(artworkTargetOpacity - artworkCurrentOpacity) < 0.002) {
+                        artworkCurrentOpacity = artworkTargetOpacity;
+                    }
+
+                    artworkMesh.visible = artworkCurrentOpacity > 0.01;
+                    if (artworkMesh.material) {
+                        artworkMesh.material.opacity = artworkCurrentOpacity;
+                    }
                 } catch (error) {
-                    // Never let artwork failure affect the viewer.
-                    console.warn('V35 artwork visibility error:', error);
+                    // 星座絵側が失敗してもビューア本体へ影響させない。
+                    console.warn('V37 artwork visibility error:', error);
                     if (artworkMesh) artworkMesh.visible = false;
                 }
             }
 
-            // This listener is additive. V29's original selection listener remains untouched.
+            // 選択は表示/非表示には使わず、強調度だけ更新する。
+            // V29本来の星座選択処理には触れない。
             constellationSelect.addEventListener('change', updateVisibility);
 
             // Build only after V29 is already alive.
@@ -7096,13 +7179,19 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 try {
                     buildMesh();
                     updateVisibility();
+
+                    const tick = () => {
+                        updateVisibility();
+                        requestAnimationFrame(tick);
+                    };
+                    requestAnimationFrame(tick);
                 } catch (error) {
-                    console.warn('V35 artwork init error:', error);
+                    console.warn('V37 artwork init error:', error);
                 }
             });
 
             // Debug hooks only; they do not participate in viewer operation.
-            window.andromedaArtworkV35 = {
+            window.andromedaArtworkV37 = {
                 rebuild() {
                     try {
                         if (artworkMesh) {
@@ -7119,12 +7208,20 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 },
                 setVisible(value) {
                     if (artworkMesh) artworkMesh.visible = Boolean(value);
+                },
+                getState() {
+                    return {
+                        textureReady: artworkTextureReady,
+                        currentOpacity: artworkCurrentOpacity,
+                        targetOpacity: artworkTargetOpacity,
+                        angularRadiusDeg: andromedaAngularRadius * 180 / Math.PI
+                    };
                 }
             };
         } catch (error) {
             // Critical design rule of V33:
             // even a complete artwork failure must not stop V29.
-            console.warn('V35 spherical artwork disabled safely:', error);
+            console.warn('V37 spherical artwork disabled safely:', error);
         }
     }
 
