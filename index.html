@@ -2709,6 +2709,199 @@
     #constellationEdgeIndicator[data-edge="top-right"] { top: 88px; right: 8px; }
     #constellationEdgeIndicator[data-edge="bottom-left"] { bottom: 158px; left: 8px; }
     #constellationEdgeIndicator[data-edge="bottom-right"] { bottom: 158px; right: 8px; }
+
+
+        /* ===== V48 SVG Sun/Moon rotating board + cover UI trial ===== */
+        #clockPanel .clock-face {
+            isolation: isolate;
+        }
+        #sunMoonBoardV47 {
+            position: absolute;
+            inset: 14px;
+            z-index: 0;
+            pointer-events: none;
+            border-radius: 50%;
+            opacity: 0.96;
+            filter:
+                drop-shadow(0 0 8px rgba(103,247,255,.14))
+                drop-shadow(0 0 18px rgba(25,234,255,.08));
+        }
+        #sunMoonBoardV47 svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        #sunMoonBoardV47 .sm-outline {
+            stroke: rgba(103,247,255,.55);
+            stroke-width: 2;
+            fill: none;
+        }
+        #sunMoonBoardV47 .sm-inner-outline {
+            stroke: rgba(103,247,255,.22);
+            stroke-width: 1.2;
+            fill: none;
+        }
+        #sunMoonBoardV47 .sm-divider {
+            stroke: rgba(103,247,255,.18);
+            stroke-width: 1.2;
+        }
+        #sunMoonBoardV47 .sm-label {
+            font: 700 11px/1 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            letter-spacing: .18em;
+            text-anchor: middle;
+            dominant-baseline: middle;
+            fill: rgba(103,247,255,.92);
+        }
+        #sunMoonBoardV47 .sm-star {
+            fill: rgba(103,247,255,.55);
+        }
+        #sunMoonBoardV47 .sm-sun-core {
+            fill: rgba(255,182,52,.92);
+            stroke: rgba(255,222,120,.95);
+            stroke-width: 1.2;
+        }
+        #sunMoonBoardV47 .sm-sun-ray {
+            stroke: rgba(255,185,73,.72);
+            stroke-width: 2;
+            stroke-linecap: round;
+        }
+        #sunMoonBoardV47 .sm-moon-main {
+            fill: rgba(120,172,255,.90);
+        }
+        #sunMoonBoardV47 .sm-moon-cut {
+            fill: rgba(11,22,58,.95);
+        }
+        #sunMoonBoardV47 .sm-night-dot {
+            fill: rgba(158,199,255,.92);
+        }
+        #clockPanel #sunMoonBoardV47 + .clock-number,
+        #clockPanel #sunMoonBoardV47 ~ .clock-number {
+            z-index: 2;
+        }
+        #clockPanel #clockHandWrap {
+            z-index: 3;
+        }
+        #clockPanel #clockCenter {
+            z-index: 4;
+        }
+
+
+        /* ===== V48 Rotating sun/moon board with cover windows ===== */
+        #sunMoonBoardRotatorV48 {
+            position: absolute;
+            inset: 14px;
+            z-index: 0;
+            pointer-events: none;
+            border-radius: 50%;
+            transform-origin: 50% 50%;
+            will-change: transform;
+            opacity: 0.98;
+            filter:
+                drop-shadow(0 0 8px rgba(103,247,255,.12))
+                drop-shadow(0 0 18px rgba(25,234,255,.08));
+        }
+        #sunMoonBoardV48,
+        #sunMoonCoverV48,
+        #sunMoonBoardRotatorV48 svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        #sunMoonBoardV48 {
+            overflow: visible;
+        }
+        #sunMoonCoverV48 {
+            position: absolute;
+            inset: 14px;
+            z-index: 1;
+            pointer-events: none;
+            border-radius: 50%;
+        }
+        #sunMoonBoardRotatorV48 .sm-board-base {
+            fill: rgba(7,16,42,.62);
+            stroke: rgba(103,247,255,.30);
+            stroke-width: 1.2;
+        }
+        #sunMoonBoardRotatorV48 .sm-board-inner {
+            fill: rgba(5,12,33,.28);
+            stroke: rgba(103,247,255,.12);
+            stroke-width: 1;
+        }
+        #sunMoonBoardRotatorV48 .sm-day-arc {
+            fill: rgba(255,146,48,.20);
+        }
+        #sunMoonBoardRotatorV48 .sm-night-arc {
+            fill: rgba(34,84,186,.22);
+        }
+        #sunMoonBoardRotatorV48 .sm-ring-guide {
+            stroke: rgba(103,247,255,.16);
+            stroke-width: 1;
+            fill: none;
+        }
+        #sunMoonBoardRotatorV48 .sm-board-tick {
+            stroke: rgba(103,247,255,.20);
+            stroke-width: 1.2;
+            stroke-linecap: round;
+        }
+        #sunMoonBoardRotatorV48 .sm-sun-core {
+            fill: rgba(255,188,74,.96);
+            stroke: rgba(255,225,153,.92);
+            stroke-width: 1.2;
+        }
+        #sunMoonBoardRotatorV48 .sm-sun-ray {
+            stroke: rgba(255,185,73,.82);
+            stroke-width: 2;
+            stroke-linecap: round;
+        }
+        #sunMoonBoardRotatorV48 .sm-moon-main {
+            fill: rgba(151,192,255,.96);
+        }
+        #sunMoonBoardRotatorV48 .sm-moon-cut {
+            fill: rgba(10,22,58,.95);
+        }
+        #sunMoonBoardRotatorV48 .sm-star {
+            fill: rgba(165,201,255,.85);
+        }
+        #sunMoonBoardRotatorV48 .sm-horizon {
+            stroke: rgba(103,247,255,.16);
+            stroke-width: 1;
+            stroke-dasharray: 3 4;
+        }
+        #sunMoonCoverV48 .cover-shell {
+            fill: rgba(8,16,37,.88);
+            stroke: rgba(103,247,255,.40);
+            stroke-width: 1.6;
+        }
+        #sunMoonCoverV48 .cover-rim {
+            fill: none;
+            stroke: rgba(103,247,255,.18);
+            stroke-width: 1.1;
+        }
+        #sunMoonCoverV48 .cover-window-rim {
+            fill: none;
+            stroke: rgba(103,247,255,.32);
+            stroke-width: 1.1;
+        }
+        #sunMoonCoverV48 .cover-label {
+            font: 700 10px/1 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            letter-spacing: .18em;
+            text-anchor: middle;
+            dominant-baseline: middle;
+            fill: rgba(103,247,255,.94);
+        }
+        #sunMoonCoverV48 .cover-notch {
+            fill: rgba(103,247,255,.44);
+        }
+        #clockPanel #sunMoonBoardRotatorV48,
+        #clockPanel #sunMoonCoverV48 {
+            transition: opacity .18s ease;
+        }
+        #clockPanel #sunMoonCoverV48 ~ .clock-number,
+        #clockPanel #sunMoonBoardRotatorV48 ~ .clock-number {
+            z-index: 2;
+        }
+        #clockPanel #clockHandWrap { z-index: 3; }
+        #clockPanel #clockCenter { z-index: 4; }
 </style>
 </head>
 <body>
@@ -2889,6 +3082,65 @@
             <div class="compass-dir compass-w">W</div>
         </div>
         <div class="clock-face">
+            <div id="sunMoonBoardRotatorV48" aria-hidden="true">
+                <svg id="sunMoonBoardV48" viewBox="0 0 200 200" role="img" aria-label="rotating sun moon board">
+                    <circle cx="100" cy="100" r="76" class="sm-board-base"/>
+                    <circle cx="100" cy="100" r="64" class="sm-board-inner"/>
+                    <path class="sm-day-arc" d="M100 24 A76 76 0 0 1 100 176 L100 100 Z" transform="rotate(-90 100 100)"/>
+                    <path class="sm-night-arc" d="M100 24 A76 76 0 0 0 100 176 L100 100 Z" transform="rotate(-90 100 100)"/>
+                    <circle cx="100" cy="100" r="58" class="sm-ring-guide"/>
+                    <circle cx="100" cy="100" r="44" class="sm-ring-guide" opacity="0.65"/>
+                    <line x1="100" y1="32" x2="100" y2="46" class="sm-board-tick"/>
+                    <line x1="100" y1="154" x2="100" y2="168" class="sm-board-tick"/>
+                    <line x1="32" y1="100" x2="46" y2="100" class="sm-board-tick"/>
+                    <line x1="154" y1="100" x2="168" y2="100" class="sm-board-tick"/>
+                    <line x1="52" y1="52" x2="61" y2="61" class="sm-board-tick" opacity="0.8"/>
+                    <line x1="139" y1="139" x2="148" y2="148" class="sm-board-tick" opacity="0.8"/>
+                    <line x1="52" y1="148" x2="61" y2="139" class="sm-board-tick" opacity="0.8"/>
+                    <line x1="139" y1="61" x2="148" y2="52" class="sm-board-tick" opacity="0.8"/>
+                    <line x1="42" y1="100" x2="158" y2="100" class="sm-horizon"/>
+                    <g class="sm-sun" transform="translate(100 56)">
+                        <circle r="12" class="sm-sun-core"/>
+                        <line x1="0" y1="-20" x2="0" y2="-28" class="sm-sun-ray"/>
+                        <line x1="0" y1="20" x2="0" y2="28" class="sm-sun-ray"/>
+                        <line x1="-20" y1="0" x2="-28" y2="0" class="sm-sun-ray"/>
+                        <line x1="20" y1="0" x2="28" y2="0" class="sm-sun-ray"/>
+                        <line x1="-14" y1="-14" x2="-20" y2="-20" class="sm-sun-ray"/>
+                        <line x1="14" y1="-14" x2="20" y2="-20" class="sm-sun-ray"/>
+                        <line x1="-14" y1="14" x2="-20" y2="20" class="sm-sun-ray"/>
+                        <line x1="14" y1="14" x2="20" y2="20" class="sm-sun-ray"/>
+                    </g>
+                    <g class="sm-moon" transform="translate(100 144)">
+                        <circle r="15" class="sm-moon-main"/>
+                        <circle cx="7" cy="-4" r="15" class="sm-moon-cut"/>
+                    </g>
+                    <circle cx="72" cy="132" r="2" class="sm-star"/>
+                    <circle cx="82" cy="148" r="1.8" class="sm-star"/>
+                    <circle cx="124" cy="138" r="1.9" class="sm-star"/>
+                    <circle cx="138" cy="150" r="1.6" class="sm-star"/>
+                    <circle cx="146" cy="128" r="1.4" class="sm-star"/>
+                </svg>
+            </div>
+            <div id="sunMoonCoverV48" aria-hidden="true">
+                <svg viewBox="0 0 200 200" role="img" aria-label="sun moon cover">
+                    <defs>
+                        <mask id="sunMoonCoverMaskV48">
+                            <rect x="0" y="0" width="200" height="200" fill="white"/>
+                            <circle cx="100" cy="60" r="20" fill="black"/>
+                            <circle cx="100" cy="140" r="20" fill="black"/>
+                        </mask>
+                    </defs>
+                    <circle cx="100" cy="100" r="76" class="cover-shell" mask="url(#sunMoonCoverMaskV48)"/>
+                    <circle cx="100" cy="100" r="76" class="cover-rim"/>
+                    <circle cx="100" cy="100" r="64" class="cover-rim" opacity="0.9"/>
+                    <circle cx="100" cy="60" r="20" class="cover-window-rim"/>
+                    <circle cx="100" cy="140" r="20" class="cover-window-rim"/>
+                    <text x="100" y="32" class="cover-label">SUN</text>
+                    <text x="100" y="168" class="cover-label">MOON</text>
+                    <path class="cover-notch" d="M98 18 L102 18 L104 25 L96 25 Z"/>
+                    <path class="cover-notch" d="M98 182 L102 182 L104 175 L96 175 Z"/>
+                </svg>
+            </div>
             <button class="clock-number" data-hour="12" style="--a:0deg">12</button>
             <button class="clock-number" data-hour="1" style="--a:30deg">1</button>
             <button class="clock-number" data-hour="2" style="--a:60deg">2</button>
@@ -4483,6 +4735,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             }
 
             updateClockHandFromSimulation();
+            updateSunMoonBoardFromSimulation();
         }
 
         function getClockAngleFromPointer(event) {
@@ -4515,6 +4768,16 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             const angle = minute12h * 0.5;
             clockHandWrap.style.transform =
                 `translate(-50%,-50%) rotate(${angle}deg)`;
+        }
+
+
+        function updateSunMoonBoardFromSimulation() {
+            const rotator = document.getElementById('sunMoonBoardRotatorV48');
+            if (!rotator) return;
+            const parts = getZonedParts(new Date(simulationUtcMs), timeZoneSelect.value);
+            const totalMinutes = parts.hour * 60 + parts.minute;
+            const rotationDeg = (totalMinutes - 720) * 0.25;
+            rotator.style.transform = `rotate(${rotationDeg}deg)`;
         }
 
         function handleClockPointerDown(event) {
@@ -4574,6 +4837,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             pauseTimePlayback();
             updateObserverFromSimulation(true);
             updateClockHandFromSimulation();
+            updateSunMoonBoardFromSimulation();
         }
 
         function handleClockPointerUp(event) {
