@@ -2711,241 +2711,75 @@
     #constellationEdgeIndicator[data-edge="bottom-right"] { bottom: 158px; right: 8px; }
 
 
-        /* ===== V48 SVG Sun/Moon rotating board + cover UI trial ===== */
-        #clockPanel .clock-face {
-            isolation: isolate;
-        }
-        #sunMoonBoardV47 {
+        /* ===== V50 ORIGINAL SVG TEST: no redraw ===== */
+        #sunMoonBoardRotatorV50,
+        #sunMoonCoverV50 {
             position: absolute;
-            inset: 14px;
-            z-index: 0;
-            pointer-events: none;
+            inset: 8px;
             border-radius: 50%;
-            opacity: 0.96;
-            filter:
-                drop-shadow(0 0 8px rgba(103,247,255,.14))
-                drop-shadow(0 0 18px rgba(25,234,255,.08));
-        }
-        #sunMoonBoardV47 svg {
-            width: 100%;
-            height: 100%;
-            display: block;
-        }
-        #sunMoonBoardV47 .sm-outline {
-            stroke: rgba(103,247,255,.55);
-            stroke-width: 2;
-            fill: none;
-        }
-        #sunMoonBoardV47 .sm-inner-outline {
-            stroke: rgba(103,247,255,.22);
-            stroke-width: 1.2;
-            fill: none;
-        }
-        #sunMoonBoardV47 .sm-divider {
-            stroke: rgba(103,247,255,.18);
-            stroke-width: 1.2;
-        }
-        #sunMoonBoardV47 .sm-label {
-            font: 700 11px/1 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            letter-spacing: .18em;
-            text-anchor: middle;
-            dominant-baseline: middle;
-            fill: rgba(103,247,255,.92);
-        }
-        #sunMoonBoardV47 .sm-star {
-            fill: rgba(103,247,255,.55);
-        }
-        #sunMoonBoardV47 .sm-sun-core {
-            fill: rgba(255,182,52,.92);
-            stroke: rgba(255,222,120,.95);
-            stroke-width: 1.2;
-        }
-        #sunMoonBoardV47 .sm-sun-ray {
-            stroke: rgba(255,185,73,.72);
-            stroke-width: 2;
-            stroke-linecap: round;
-        }
-        #sunMoonBoardV47 .sm-moon-main {
-            fill: rgba(120,172,255,.90);
-        }
-        #sunMoonBoardV47 .sm-moon-cut {
-            fill: rgba(11,22,58,.95);
-        }
-        #sunMoonBoardV47 .sm-night-dot {
-            fill: rgba(158,199,255,.92);
-        }
-        #clockPanel #sunMoonBoardV47 + .clock-number,
-        #clockPanel #sunMoonBoardV47 ~ .clock-number {
-            z-index: 2;
-        }
-        #clockPanel #clockHandWrap {
-            z-index: 3;
-        }
-        #clockPanel #clockCenter {
-            z-index: 4;
-        }
-
-
-        /* ===== V48 Rotating sun/moon board with cover windows ===== */
-        #sunMoonBoardRotatorV48 {
-            position: absolute;
-            inset: 14px;
-            z-index: 0;
             pointer-events: none;
-            border-radius: 50%;
-            transform-origin: 50% 50%;
-            will-change: transform;
-            opacity: 0.98;
-            filter:
-                drop-shadow(0 0 8px rgba(103,247,255,.12))
-                drop-shadow(0 0 18px rgba(25,234,255,.08));
         }
-        #sunMoonBoardV48,
-        #sunMoonCoverV48,
-        #sunMoonBoardRotatorV48 svg {
-            width: 100%;
-            height: 100%;
-            display: block;
-        }
-        #sunMoonBoardV48 {
-            overflow: visible;
-        }
-        #sunMoonCoverV48 {
-            position: absolute;
-            inset: 14px;
-            z-index: 1;
-            pointer-events: none;
-            border-radius: 50%;
-        }
-        #sunMoonBoardRotatorV48 .sm-board-base {
-            fill: rgba(7,16,42,.62);
-            stroke: rgba(103,247,255,.30);
-            stroke-width: 1.2;
-        }
-        #sunMoonBoardRotatorV48 .sm-board-inner {
-            fill: rgba(5,12,33,.28);
-            stroke: rgba(103,247,255,.12);
-            stroke-width: 1;
-        }
-        #sunMoonBoardRotatorV48 .sm-day-arc {
-            fill: rgba(255,146,48,.20);
-        }
-        #sunMoonBoardRotatorV48 .sm-night-arc {
-            fill: rgba(34,84,186,.22);
-        }
-        #sunMoonBoardRotatorV48 .sm-ring-guide {
-            stroke: rgba(103,247,255,.16);
-            stroke-width: 1;
-            fill: none;
-        }
-        #sunMoonBoardRotatorV48 .sm-board-tick {
-            stroke: rgba(103,247,255,.20);
-            stroke-width: 1.2;
-            stroke-linecap: round;
-        }
-        #sunMoonBoardRotatorV48 .sm-sun-core {
-            fill: rgba(255,188,74,.96);
-            stroke: rgba(255,225,153,.92);
-            stroke-width: 1.2;
-        }
-        #sunMoonBoardRotatorV48 .sm-sun-ray {
-            stroke: rgba(255,185,73,.82);
-            stroke-width: 2;
-            stroke-linecap: round;
-        }
-        #sunMoonBoardRotatorV48 .sm-moon-main {
-            fill: rgba(151,192,255,.96);
-        }
-        #sunMoonBoardRotatorV48 .sm-moon-cut {
-            fill: rgba(10,22,58,.95);
-        }
-        #sunMoonBoardRotatorV48 .sm-star {
-            fill: rgba(165,201,255,.85);
-        }
-        #sunMoonBoardRotatorV48 .sm-horizon {
-            stroke: rgba(103,247,255,.16);
-            stroke-width: 1;
-            stroke-dasharray: 3 4;
-        }
-        #sunMoonCoverV48 .cover-shell {
-            fill: rgba(8,16,37,.88);
-            stroke: rgba(103,247,255,.40);
-            stroke-width: 1.6;
-        }
-        #sunMoonCoverV48 .cover-rim {
-            fill: none;
-            stroke: rgba(103,247,255,.18);
-            stroke-width: 1.1;
-        }
-        #sunMoonCoverV48 .cover-window-rim {
-            fill: none;
-            stroke: rgba(103,247,255,.32);
-            stroke-width: 1.1;
-        }
-        #sunMoonCoverV48 .cover-label {
-            font: 700 10px/1 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            letter-spacing: .18em;
-            text-anchor: middle;
-            dominant-baseline: middle;
-            fill: rgba(103,247,255,.94);
-        }
-        #sunMoonCoverV48 .cover-notch {
-            fill: rgba(103,247,255,.44);
-        }
-        #clockPanel #sunMoonBoardRotatorV48,
-        #clockPanel #sunMoonCoverV48 {
-            transition: opacity .18s ease;
-        }
-        #clockPanel #sunMoonCoverV48 ~ .clock-number,
-        #clockPanel #sunMoonBoardRotatorV48 ~ .clock-number {
-            z-index: 2;
-        }
-        #clockPanel #clockHandWrap { z-index: 3; }
-        #clockPanel #clockCenter { z-index: 4; }
-
-
-        /* ===== V49 external SVG asset slots for exact test ===== */
-        #sunMoonBoardRotatorV49,
-        #sunMoonCoverV49 {
-            position: absolute;
-            inset: 14px;
-            pointer-events: none;
-            border-radius: 50%;
-        }
-        #sunMoonBoardRotatorV49 {
+        #sunMoonBoardRotatorV50 {
             z-index: 0;
             transform-origin: 50% 50%;
             will-change: transform;
         }
-        #sunMoonCoverV49 {
-            z-index: 1;
-        }
-        #sunMoonBoardRotatorV49 > img,
-        #sunMoonCoverV49 > img {
+        #sunMoonCoverV50 { z-index: 1; }
+        #sunMoonBoardImgV50,
+        #sunMoonCoverImgV50 {
+            display: block;
             width: 100%;
             height: 100%;
-            display: block;
             object-fit: contain;
+            object-position: center;
             user-select: none;
             -webkit-user-drag: none;
         }
-        #sunMoonAssetHintV49 {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            width: 82%;
+        #clockPanel .clock-number { z-index: 3 !important; }
+        #clockPanel #clockHandWrap { z-index: 4 !important; }
+        #clockPanel #clockCenter { z-index: 5 !important; }
+
+        #svgTestPanelV50 {
+            position: fixed;
+            left: 10px;
+            top: max(10px, env(safe-area-inset-top));
+            z-index: 3100;
+            width: min(310px, calc(100vw - 20px));
+            padding: 9px;
+            border: 1px solid rgba(103,247,255,.30);
+            border-radius: 11px;
+            background: rgba(3,15,29,.90);
+            color: #dffeff;
+            box-shadow: 0 10px 28px rgba(0,0,0,.35);
+            font: 12px/1.45 system-ui, sans-serif;
+        }
+        #svgTestPanelV50 strong { color: #67f7ff; }
+        #svgTestPanelV50 .v50-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+            margin-top: 7px;
+        }
+        #svgTestPanelV50 label,
+        #svgTestPanelV50 button {
+            min-height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             padding: 6px 8px;
-            border: 1px solid rgba(103,247,255,.22);
-            border-radius: 10px;
-            background: rgba(6,14,38,.72);
-            color: rgba(103,247,255,.85);
-            font-size: 10px;
-            line-height: 1.35;
+            border: 1px solid rgba(103,247,255,.24);
+            border-radius: 8px;
+            background: rgba(6,28,48,.82);
+            color: #67f7ff;
+            cursor: pointer;
             text-align: center;
-            z-index: 1;
-            pointer-events: none;
-            display: none;
+        }
+        #svgTestPanelV50 input[type=file] { display:none; }
+        #svgTestStatusV50 { margin-top: 6px; opacity:.78; font-size:10px; }
+        #svgTestPanelV50.collapsed .v50-body { display:none; }
+        #svgTestToggleV50 { width:100%; margin-top:6px; }
+        @media (max-width: 520px) {
+            #svgTestPanelV50 { width: 250px; font-size: 11px; }
         }
 </style>
 </head>
@@ -3127,13 +2961,12 @@
             <div class="compass-dir compass-w">W</div>
         </div>
         <div class="clock-face">
-            <div id="sunMoonBoardRotatorV49" aria-hidden="true">
-                <img id="sunMoonBoardImgV49" src="./clock_assets/sunmoon_board.svg" alt="">
+            <div id="sunMoonBoardRotatorV50" aria-hidden="true">
+                <img id="sunMoonBoardImgV50" src="./サンムーン(1).svg" alt="">
             </div>
-            <div id="sunMoonCoverV49" aria-hidden="true">
-                <img id="sunMoonCoverImgV49" src="./clock_assets/cover_ui.svg" alt="">
+            <div id="sunMoonCoverV50" aria-hidden="true">
+                <img id="sunMoonCoverImgV50" src="./UI(1).svg" alt="">
             </div>
-            <div id="sunMoonAssetHintV49">clock_assets/sunmoon_board.svg と clock_assets/cover_ui.svg を配置すると、元のSVGをそのまま使って表示できます。</div>
             <button class="clock-number" data-hour="12" style="--a:0deg">12</button>
             <button class="clock-number" data-hour="1" style="--a:30deg">1</button>
             <button class="clock-number" data-hour="2" style="--a:60deg">2</button>
@@ -3150,6 +2983,20 @@
             <div id="clockCenter"></div>
 </div>
     </section>
+
+
+    <aside id="svgTestPanelV50" aria-label="SVG原物テスト">
+        <strong>V50 SVG原物テスト</strong>
+        <div class="v50-body">
+            <div>元SVGを再描画せず、そのまま重ねています。板だけ24時間で1周します。</div>
+            <div class="v50-row">
+                <label>サンムーンSVG<input id="sunMoonFileV50" type="file" accept="image/svg+xml,.svg"></label>
+                <label>カバーUI SVG<input id="coverFileV50" type="file" accept="image/svg+xml,.svg"></label>
+            </div>
+            <div id="svgTestStatusV50">相対パスから自動読込中…</div>
+        </div>
+        <button type="button" id="svgTestToggleV50">テストUIを隠す</button>
+    </aside>
 
     <section id="infoSheet" aria-hidden="true" aria-label="星座解説">
         <div class="info-sheet-handle" aria-hidden="true"></div>
@@ -4401,6 +4248,10 @@
         const clockPanel = document.getElementById('clockPanel');
         const clockFace = clockPanel.querySelector('.clock-face');
         const clockHandWrap = document.getElementById('clockHandWrap');
+        const sunMoonBoardRotatorV50 = document.getElementById('sunMoonBoardRotatorV50');
+        const sunMoonBoardImgV50 = document.getElementById('sunMoonBoardImgV50');
+        const sunMoonCoverImgV50 = document.getElementById('sunMoonCoverImgV50');
+
         const clockPreview = document.getElementById('clockPreview');
         const clockNumberButtons = Array.from(document.querySelectorAll('.clock-number'));
         let clockDragPointerId = null;
@@ -4728,7 +4579,6 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             }
 
             updateClockHandFromSimulation();
-            updateSunMoonBoardFromSimulation();
         }
 
         function getClockAngleFromPointer(event) {
@@ -4761,46 +4611,65 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             const angle = minute12h * 0.5;
             clockHandWrap.style.transform =
                 `translate(-50%,-50%) rotate(${angle}deg)`;
+            updateSunMoonBoardV50();
         }
 
 
-        function updateSunMoonBoardFromSimulationV48_DISABLED() {
-            const rotator = document.getElementById('sunMoonBoardRotatorV48');
-            if (!rotator) return;
+        function updateSunMoonBoardV50() {
+            if (!sunMoonBoardRotatorV50) return;
             const parts = getZonedParts(new Date(simulationUtcMs), timeZoneSelect.value);
             const totalMinutes = parts.hour * 60 + parts.minute;
-            const rotationDeg = (totalMinutes - 720) * 0.25;
-            rotator.style.transform = `rotate(${rotationDeg}deg)`;
+            // 00:00=0deg, 06:00=90deg, 12:00=180deg, 18:00=270deg
+            const rotationDeg = totalMinutes / 4;
+            sunMoonBoardRotatorV50.style.transform = `rotate(${rotationDeg}deg)`;
         }
 
-        function updateSunMoonBoardFromSimulation() {
-            const rotator = document.getElementById('sunMoonBoardRotatorV49');
-            if (!rotator) return;
-            const parts = getZonedParts(new Date(simulationUtcMs), timeZoneSelect.value);
-            const totalMinutes = parts.hour * 60 + parts.minute;
-            const rotationDeg = (totalMinutes - 720) * 0.25;
-            rotator.style.transform = `rotate(${rotationDeg}deg)`;
-        }
-
-        function initClockExternalSvgAssetsV49() {
-            const hint = document.getElementById('sunMoonAssetHintV49');
-            const board = document.getElementById('sunMoonBoardImgV49');
-            const cover = document.getElementById('sunMoonCoverImgV49');
-            let okBoard = false;
-            let okCover = false;
-            const refresh = () => {
-                if (!hint) return;
-                hint.style.display = okBoard && okCover ? 'none' : 'block';
+        function initOriginalSvgTestV50() {
+            const boardInput = document.getElementById('sunMoonFileV50');
+            const coverInput = document.getElementById('coverFileV50');
+            const status = document.getElementById('svgTestStatusV50');
+            const panel = document.getElementById('svgTestPanelV50');
+            const toggle = document.getElementById('svgTestToggleV50');
+            let boardOk = false;
+            let coverOk = false;
+            const objectUrls = [];
+            const updateStatus = () => {
+                if (!status) return;
+                status.textContent = `板: ${boardOk ? 'OK' : '未読込'} / カバー: ${coverOk ? 'OK' : '未読込'}`;
             };
-            if (board) {
-                board.addEventListener('load', () => { okBoard = true; refresh(); });
-                board.addEventListener('error', () => { okBoard = false; refresh(); });
+            if (sunMoonBoardImgV50) {
+                sunMoonBoardImgV50.addEventListener('load', () => { boardOk = true; updateStatus(); });
+                sunMoonBoardImgV50.addEventListener('error', () => { boardOk = false; updateStatus(); });
+                if (sunMoonBoardImgV50.complete && sunMoonBoardImgV50.naturalWidth > 0) boardOk = true;
             }
-            if (cover) {
-                cover.addEventListener('load', () => { okCover = true; refresh(); });
-                cover.addEventListener('error', () => { okCover = false; refresh(); });
+            if (sunMoonCoverImgV50) {
+                sunMoonCoverImgV50.addEventListener('load', () => { coverOk = true; updateStatus(); });
+                sunMoonCoverImgV50.addEventListener('error', () => { coverOk = false; updateStatus(); });
+                if (sunMoonCoverImgV50.complete && sunMoonCoverImgV50.naturalWidth > 0) coverOk = true;
             }
-            refresh();
+            const bindInput = (input, img, which) => {
+                if (!input || !img) return;
+                input.addEventListener('change', () => {
+                    const file = input.files && input.files[0];
+                    if (!file) return;
+                    const url = URL.createObjectURL(file);
+                    objectUrls.push(url);
+                    img.src = url;
+                    if (which === 'board') boardOk = true; else coverOk = true;
+                    updateStatus();
+                });
+            };
+            bindInput(boardInput, sunMoonBoardImgV50, 'board');
+            bindInput(coverInput, sunMoonCoverImgV50, 'cover');
+            if (toggle && panel) {
+                toggle.addEventListener('click', () => {
+                    const collapsed = panel.classList.toggle('collapsed');
+                    toggle.textContent = collapsed ? 'テストUIを表示' : 'テストUIを隠す';
+                });
+            }
+            window.addEventListener('beforeunload', () => objectUrls.forEach(url => URL.revokeObjectURL(url)));
+            updateStatus();
+            updateSunMoonBoardV50();
         }
 
         function handleClockPointerDown(event) {
@@ -4860,7 +4729,6 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             pauseTimePlayback();
             updateObserverFromSimulation(true);
             updateClockHandFromSimulation();
-            updateSunMoonBoardFromSimulation();
         }
 
         function handleClockPointerUp(event) {
@@ -7697,5 +7565,6 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 })();
 </script>
 
+<script>window.addEventListener("load",()=>{try{initOriginalSvgTestV50();}catch(e){console.warn(e);}});</script>
 </body>
 </html>
