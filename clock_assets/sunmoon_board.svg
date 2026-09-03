@@ -1,6 +1,28 @@
-<!-- Replace this placeholder with your original sun/moon board SVG exported from Excel -->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-  <rect width="100" height="100" fill="none"/>
-  <text x="50" y="45" font-size="7" text-anchor="middle" fill="#66e8ff">sunmoon_board.svg</text>
-  <text x="50" y="58" font-size="5" text-anchor="middle" fill="#66e8ff">replace this file</text>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" sodipodi:docname="sunmoon_board.svg" inkscape:version="1.3 (vectorviewereditor)" width="908" height="888" viewBox="0 0 908 888">
+  <sodipodi:namedview id="namedview1" inkscape:cx="454" inkscape:cy="444" inkscape:zoom="0.3474" showguides="true" showpageshadow="true" showborder="true"/>
+  <defs>
+    <radialGradient id="fill1" gradientUnits="userSpaceOnUse" gradientTransform="matrix(0.0004,0,0,0.0004,4232,498)" cx="1256299" cy="1910972" r="1393584">
+      <stop offset="0" stop-color="#f7ffa7"/>
+      <stop offset="0.37" stop-color="#f7ffa7"/>
+      <stop offset="0.76" stop-color="#dceaf7"/>
+      <stop offset="1" stop-color="#dceaf7"/>
+    </radialGradient>
+    <radialGradient id="fill2" gradientUnits="userSpaceOnUse" gradientTransform="matrix(0.0004,0,0,0.0004,4232,519)" cx="1256610" cy="634503" r="1407715" fx="1256610" fy="634503">
+      <stop offset="0" stop-color="#000000"/>
+      <stop offset="0.37" stop-color="#000000"/>
+      <stop offset="1" stop-color="#a2d8f0"/>
+    </radialGradient>
+  </defs>
+  <g inkscape:groupmode="layer" inkscape:label="Layer 1" id="node-b14109ed">
+    <g id="node-fe13e0f2" transform="matrix(1,0,0,1,-4229.8301,-523.316)">
+      <path d="M5138.45 974.381 C5126.1 1224.81 4913.3 1417.81 4663.14 1405.45 C4428.32 1393.84 4241.29 1204.5 4232.33 969.3 Z" id="node-20136ec2" sodipodi:nodetypes="scs" fill="url(#fill1)" fill-opacity="1" fill-rule="evenodd" stroke="none" marker-start="none" marker-mid="none" marker-end="none"/>
+      <path d="M4232.02 976.975 C4229.83 726.247 4431.08 521.213 4681.53 519.018 C4931.98 516.822 5136.79 718.298 5138.98 969.025 C5139 970.677 5139 972.328 5139 973.979 Z" id="node-992fd39d" sodipodi:nodetypes="sccs" fill="url(#fill2)" fill-opacity="1" fill-rule="evenodd" stroke="none" marker-start="none" marker-mid="none" marker-end="none"/>
+      <path d="M4713 736 C4667.16 736 4630 702.869 4630 662 C4630 621.131 4667.16 588 4713 588 C4678.16 632.445 4678.16 691.555 4713 736 Z" id="node-91b968c1" sodipodi:nodetypes="czc" fill="#f7ffa7" fill-opacity="1" fill-rule="evenodd" stroke="none" marker-start="none" marker-mid="none" marker-end="none"/>
+      <path d="M4816.5 709.002 L4842.86 709.002 L4851 681.5 L4859.14 709.002 L4885.5 709.002 L4864.18 725.998 L4872.32 753.5 L4851 736.503 L4829.68 753.5 L4837.82 725.998 Z" id="node-de774ab7" sodipodi:nodetypes="cccccccccc" fill="#f7ffa7" fill-opacity="1" fill-rule="evenodd" stroke="#042433" stroke-opacity="1" stroke-width="6.875" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8" stroke-dasharray="none" marker-start="none" marker-mid="none" marker-end="none"/>
+      <path d="M4926.5 816.529 L4948.65 816.53 L4955.5 787.5 L4962.35 816.53 L4984.5 816.529 L4966.58 834.47 L4973.42 863.5 L4955.5 845.558 L4937.58 863.5 L4944.42 834.47 Z" id="node-39dd3ab3" sodipodi:nodetypes="cccccccccc" fill="#f7ffa7" fill-opacity="1" fill-rule="evenodd" stroke="#042433" stroke-opacity="1" stroke-width="6.875" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8" stroke-dasharray="none" marker-start="none" marker-mid="none" marker-end="none"/>
+      <path d="M4486.5 646.495 L4515.53 646.495 L4524.5 612.5 L4533.47 646.495 L4562.5 646.495 L4539.01 667.505 L4547.99 701.5 L4524.5 680.49 L4501.01 701.5 L4509.99 667.505 Z" id="node-0ca99038" sodipodi:nodetypes="cccccccccc" fill="#f7ffa7" fill-opacity="1" fill-rule="evenodd" stroke="#042433" stroke-opacity="1" stroke-width="6.875" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8" stroke-dasharray="none" marker-start="none" marker-mid="none" marker-end="none"/>
+      <path d="M4414.5 812.508 L4443.15 812.508 L4452 791.5 L4460.85 812.508 L4489.5 812.508 L4466.32 825.492 L4475.18 846.5 L4452 833.516 L4428.82 846.5 L4437.68 825.492 Z" id="node-0e4daf43" sodipodi:nodetypes="cccccccccc" fill="#f7ffa7" fill-opacity="1" fill-rule="evenodd" stroke="#042433" stroke-opacity="1" stroke-width="6.875" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8" stroke-dasharray="none" marker-start="none" marker-mid="none" marker-end="none"/>
+    </g>
+  </g>
 </svg>
