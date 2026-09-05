@@ -2515,28 +2515,25 @@
         }
 
 
-        /* ===== Sky PNG + metadata export V18 ===== */
+        /* ===== Sky PNG + metadata export V55: settings-only ===== */
         #skyExportButton {
-            position: fixed;
-            top: max(8px, env(safe-area-inset-top));
-            right: max(8px, env(safe-area-inset-right));
-            z-index: 4200;
-            width: 36px;
-            height: 36px;
-            min-width: 36px;
-            min-height: 36px;
-            padding: 0;
+            position: static;
+            width: 100%;
+            min-width: 0;
+            height: 32px;
+            min-height: 32px;
+            padding: 3px 8px;
             border: 1px solid rgba(103,247,255,.30);
-            border-radius: 9px;
+            border-radius: 7px;
             background: rgba(4,18,34,.48);
             color: #67f7ff;
-            font-size: 16px;
-            opacity: .58;
+            font-size: 10px;
+            opacity: 1;
             backdrop-filter: blur(8px);
             box-shadow: inset 0 0 12px rgba(25,234,255,.04), 0 0 10px rgba(25,234,255,.05);
             touch-action: manipulation;
         }
-        #skyExportButton:active { opacity: 1; transform: scale(.96); }
+        #skyExportButton:active { opacity: 1; transform: scale(.99); }
 
     
         /* ===== V26 Compass Ring ===== */
@@ -2891,8 +2888,8 @@
         }
 
 
-        /* ===== V54 version badge + export inside settings ===== */
-        #settingsVersionV54 {
+        /* ===== V55 version badge + export at settings bottom ===== */
+        #settingsVersionV56 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -2932,26 +2929,99 @@
             box-sizing: border-box !important;
         }
 
+
+        /* ===== V55 export button at very bottom of Settings ===== */
+        .settingsV55ExportSection {
+            margin-top: 0 !important;
+            padding-bottom: max(18px, env(safe-area-inset-bottom)) !important;
+        }
+        .settingsV55ExportButton {
+            width: 100% !important;
+            height: 32px !important;
+            min-height: 32px !important;
+            border-radius: 7px !important;
+            font-size: 10px !important;
+        }
+
+
+        /* ===== V56 one-line manga link + full-screen manga test ===== */
+        #constellationQuickLinksV56 {
+            display: none;
+            align-items: center;
+            gap: 10px;
+            min-height: 24px;
+            margin-top: 5px;
+            white-space: nowrap;
+        }
+
+        #constellationQuickLinksV56.visible {
+            display: flex;
+        }
+
+        #constellationMangaButtonV56 {
+            appearance: none;
+            -webkit-appearance: none;
+            border: 0;
+            padding: 2px 0;
+            margin: 0;
+            background: transparent;
+            color: #67f7ff;
+            font: 700 12px/1.25 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+            cursor: pointer;
+        }
+
+        #constellationMangaButtonV56:active {
+            opacity: .62;
+        }
+
+        #constellationMangaOverlayV56 {
+            position: fixed;
+            inset: 0;
+            z-index: 20000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+            width: 100vw;
+            height: 100dvh;
+            padding: 0;
+            background: #000;
+            overflow: hidden;
+            touch-action: manipulation;
+            cursor: pointer;
+        }
+
+        #constellationMangaOverlayV56.visible {
+            display: flex;
+        }
+
+        #constellationMangaImageV56 {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            object-position: center;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-user-drag: none;
+            pointer-events: none;
+        }
+
+        body.constellation-manga-open-v56 {
+            overflow: hidden !important;
+        }
+
 </style>
 </head>
 <body>
-    
-
-
-    
-        <div class="settingsV2Section settingsV54ExportSection">
-            <div class="settingsV2SectionTitle">画面出力</div>
-            <div class="settingsV54ExportButtonWrap">
-                <button id="skyExportButton" type="button" aria-label="現在の星空をPNGとメタデータで保存" title="星空図を保存">📷</button>
-            </div>
-        </div>
-
 <div id="settingsScrim" aria-hidden="true"></div>
 
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV54" aria-label="バージョン">V54</div>
+        <div id="settingsVersionV56" aria-label="バージョン">V56</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -3075,7 +3145,15 @@
 
             <div class="settingsV2Status" id="v2TimeStatus"></div>
         </section>
-    </aside>
+    
+        <section class="settingsV2Section settingsV55ExportSection">
+            <h3>画面出力</h3>
+            <button id="skyExportButton" class="settingsV2ActionButton settingsV55ExportButton"
+                    type="button"
+                    aria-label="現在の画面をPNGとメタデータで保存"
+                    title="現在の画面を保存">画面をエクスポートする</button>
+        </section>
+</aside>
 
     <div id="searchScrimV3" aria-hidden="true"></div>
 
@@ -3142,6 +3220,15 @@
     <section id="constellationQuickCommentV53" aria-hidden="true" aria-label="星座コメント">
         <button type="button" id="constellationQuickCommentCloseV53" aria-label="コメントを閉じる">×</button>
         <p id="constellationQuickCommentTextV53"></p>
+        <div id="constellationQuickLinksV56" aria-label="関連リンク">
+            <button type="button" id="constellationMangaButtonV56">マンガ</button>
+        </div>
+    </section>
+
+    <section id="constellationMangaOverlayV56" aria-hidden="true" aria-label="星座マンガ">
+        <img id="constellationMangaImageV56"
+             src="./manga_art/And.png"
+             alt="アンドロメダ座マンガ">
     </section>
 
     <section id="infoSheet" aria-hidden="true" aria-label="星座解説">
@@ -4966,10 +5053,19 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         function showConstellationQuickCommentV53(constellationId) {
             const panel = document.getElementById('constellationQuickCommentV53');
             const text = document.getElementById('constellationQuickCommentTextV53');
+            const links = document.getElementById('constellationQuickLinksV56');
+            const mangaButton = document.getElementById('constellationMangaButtonV56');
             if (!panel || !text) return;
+
             const comment = constellationBasicComments[constellationId] ||
                 'この星座の基本コメントはまだ登録されていません。';
             text.textContent = comment;
+
+            const hasManga = constellationId === 'And';
+            if (links) links.classList.toggle('visible', hasManga);
+            if (mangaButton) mangaButton.hidden = !hasManga;
+
+            panel.dataset.constellationId = constellationId || '';
             panel.classList.add('visible');
             panel.setAttribute('aria-hidden', 'false');
         }
@@ -4999,9 +5095,44 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             setTimeout(() => updateSelectedConstellationGuidance(true), 420);
         });
 
+        function openConstellationMangaV56() {
+            const panel = document.getElementById('constellationQuickCommentV53');
+            const overlay = document.getElementById('constellationMangaOverlayV56');
+            if (!overlay || panel?.dataset.constellationId !== 'And') return;
+
+            overlay.classList.add('visible');
+            overlay.setAttribute('aria-hidden', 'false');
+            document.body.classList.add('constellation-manga-open-v56');
+        }
+
+        function closeConstellationMangaV56() {
+            const overlay = document.getElementById('constellationMangaOverlayV56');
+            if (!overlay) return;
+
+            overlay.classList.remove('visible');
+            overlay.setAttribute('aria-hidden', 'true');
+            document.body.classList.remove('constellation-manga-open-v56');
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             const close = document.getElementById('constellationQuickCommentCloseV53');
+            const mangaButton = document.getElementById('constellationMangaButtonV56');
+            const mangaOverlay = document.getElementById('constellationMangaOverlayV56');
+
             close?.addEventListener('click', hideConstellationQuickCommentV53);
+
+            mangaButton?.addEventListener('click', (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                openConstellationMangaV56();
+            });
+
+            // Full-screen manga is intentionally minimal:
+            // touch/click anywhere closes it and returns to the 3-line comment state.
+            mangaOverlay?.addEventListener('pointerup', (event) => {
+                event.preventDefault();
+                closeConstellationMangaV56();
+            });
         });
 
         function bindTapAction(button, handler) {
