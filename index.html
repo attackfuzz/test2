@@ -2,81 +2,37 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Clock 3-Layer SVG Alignment Test</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sun/Moon SVG alignment test</title>
 <style>
-  :root{color-scheme:dark; font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
-  *{box-sizing:border-box}
-  body{margin:0; min-height:100vh; background:#07111d; color:#eaf8ff; display:grid; grid-template-rows:auto 1fr auto; overflow:hidden}
-  header{padding:10px 14px; background:#0b1926; border-bottom:1px solid #244052; font-size:14px}
-  header b{color:#bfefff}
-  main{display:grid; place-items:center; min-height:0; padding:12px}
-  #stage{
-    position:relative;
-    width:min(82vmin,680px);
-    aspect-ratio:1;
-    border-radius:50%;
-    background:radial-gradient(circle,rgba(15,32,49,.92),rgba(3,10,17,.96));
-    box-shadow:0 0 0 1px rgba(180,235,255,.12),0 18px 60px rgba(0,0,0,.48);
-    overflow:visible;
-  }
-  .layer{position:absolute; inset:0; transform-origin:50% 50%; pointer-events:none}
-  .layer img{display:block; width:100%; height:100%; object-fit:contain; user-select:none; -webkit-user-drag:none}
-  #sunLayer{z-index:1}
-  #coverLayer{z-index:2}
-  #compassLayer{z-index:3}
-  #centerDot{position:absolute;z-index:10;left:50%;top:50%;width:8px;height:8px;border-radius:50%;background:#ff4778;transform:translate(-50%,-50%);box-shadow:0 0 0 2px rgba(255,255,255,.9)}
-  #crossH,#crossV{position:absolute;z-index:9;background:rgba(255,71,120,.28);pointer-events:none}
-  #crossH{left:0;right:0;top:50%;height:1px}.hide-guides #crossH{display:none}
-  #crossV{top:0;bottom:0;left:50%;width:1px}.hide-guides #crossV{display:none}
-  #stage.hide-guides #centerDot{display:none}
-  footer{padding:10px 12px 14px;background:#0b1926;border-top:1px solid #244052;display:grid;gap:8px}
-  .row{display:grid;grid-template-columns:125px minmax(130px,1fr) 58px;gap:10px;align-items:center;font-size:12px}
-  input[type=range]{width:100%}
-  .checks{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:12px;align-items:center}
-  button{border:1px solid #31536a;background:#10283a;color:#eaf8ff;border-radius:7px;padding:6px 10px}
-  .note{font-size:11px;color:#a9c4d3;line-height:1.45}
+html,body{margin:0;min-height:100%;background:#061022;color:#8ff7ff;font-family:system-ui,sans-serif}
+.wrap{min-height:100vh;display:grid;place-items:center}
+.clock{position:relative;width:min(78vw,520px);aspect-ratio:1034/974}
+.layer{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:block}
+#boardWrap{position:absolute;inset:0;transform-origin:50% 50%;}
+#board{width:100%;height:100%;display:block}
+#cover{z-index:2}
+.controls{position:fixed;left:16px;bottom:16px;right:16px;display:flex;gap:12px;align-items:center;background:#07182dcc;padding:10px 12px;border-radius:10px}
+input[type=range]{flex:1}
+.value{min-width:80px;text-align:right}
 </style>
 </head>
 <body>
-<header><b>3層SVG重ね合わせテスト</b>　サンムーン板／カバーUI／コンパス板を共通中心で表示</header>
-<main>
-  <div id="stage">
-    <div id="sunLayer" class="layer"><img src="clock_assets/sunmoon_board.svg" alt=""></div>
-    <div id="coverLayer" class="layer"><img src="clock_assets/cover_ui.svg" alt=""></div>
-    <div id="compassLayer" class="layer"><img src="clock_assets/compass.svg" alt=""></div>
-    <div id="crossH"></div><div id="crossV"></div><div id="centerDot"></div>
+<div class="wrap">
+  <div class="clock">
+    <div id="boardWrap"><img id="board" class="layer" src="clock_assets/sunmoon_board.svg" alt=""></div>
+    <img id="cover" class="layer" src="clock_assets/cover_ui.svg" alt="">
   </div>
-</main>
-<footer>
-  <div class="row"><label for="sunRot">サンムーン回転</label><input id="sunRot" type="range" min="-180" max="180" value="0" step="1"><output id="sunOut">0°</output></div>
-  <div class="row"><label for="compassRot">コンパス回転</label><input id="compassRot" type="range" min="-180" max="180" value="0" step="1"><output id="compassOut">0°</output></div>
-  <div class="row"><label for="coverScale">カバー倍率</label><input id="coverScale" type="range" min="0.92" max="1.08" value="1" step="0.001"><output id="scaleOut">1.000</output></div>
-  <div class="checks">
-    <label><input id="showSun" type="checkbox" checked> サンムーン</label>
-    <label><input id="showCover" type="checkbox" checked> カバー</label>
-    <label><input id="showCompass" type="checkbox" checked> コンパス</label>
-    <label><input id="guides" type="checkbox" checked> 中心ガイド</label>
-    <button id="reset">リセット</button>
-  </div>
-  <div class="note">3枚とも 1482×1482 / viewBox="0 0 1482 1482" に正規化。Excel由来の crop clipPath は外し、元図形の座標・形・色は維持しています。</div>
-</footer>
+</div>
+<div class="controls">
+  <span>回転</span><input id="rot" type="range" min="0" max="360" value="0"><span id="val" class="value">0°</span>
+</div>
 <script>
-const $=id=>document.getElementById(id);
-const sun=$('sunLayer'), cover=$('coverLayer'), compass=$('compassLayer'), stage=$('stage');
-function update(){
-  const sr=+$('sunRot').value, cr=+$('compassRot').value, cs=+$('coverScale').value;
-  sun.style.transform=`rotate(${sr}deg)`;
-  compass.style.transform=`rotate(${cr}deg)`;
-  cover.style.transform=`scale(${cs})`;
-  $('sunOut').value=sr+'°'; $('compassOut').value=cr+'°'; $('scaleOut').value=cs.toFixed(3);
-  sun.style.display=$('showSun').checked?'block':'none';
-  cover.style.display=$('showCover').checked?'block':'none';
-  compass.style.display=$('showCompass').checked?'block':'none';
-  stage.classList.toggle('hide-guides',!$('guides').checked);
-}
-['sunRot','compassRot','coverScale','showSun','showCover','showCompass','guides'].forEach(id=>$(id).addEventListener('input',update));
-$('reset').onclick=()=>{$('sunRot').value=0;$('compassRot').value=0;$('coverScale').value=1;$('showSun').checked=$('showCover').checked=$('showCompass').checked=$('guides').checked=true;update()};
-update();
+const rot=document.getElementById('rot');
+const wrap=document.getElementById('boardWrap');
+const val=document.getElementById('val');
+function update(){wrap.style.transform=`rotate(${rot.value}deg)`;val.textContent=rot.value+'°';}
+rot.addEventListener('input',update);update();
 </script>
-</body></html>
+</body>
+</html>
