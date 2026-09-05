@@ -2033,7 +2033,7 @@
             line-height: 1.05 !important;
         }
         .searchV4CategoryButton.wide { grid-column: auto !important; }
-        .searchV4CategoryButtonTrivia { grid-column: 1 / -1 !important; }
+        .searchV4CategoryButtonTrivia { grid-column: auto !important; }
         #searchV4SortBlock { margin-top: 0 !important; }
         #searchV4SortBlock .searchV4SectionLabel {
             margin: 0 0 4px !important;
@@ -2738,6 +2738,94 @@
         #clockPanel #clockHandWrap { z-index: 3; }
         #clockPanel #clockCenter { z-index: 4; }
         #clockPanel .clock-face { isolation: isolate; }
+
+        /* ===== V52 settings size unification =====
+           Search category button baseline:
+           32px high / 7px radius / 10px text
+        */
+        #settingsSheetV2 .settingsV2ModeButton,
+        #settingsSheetV2 .settingsV2PickerButton,
+        #settingsSheetV2 .settingsV2ChoiceButton,
+        #settingsSheetV2 .settingsV2LabelButton,
+        #settingsSheetV2 .settingsV2ActionButton,
+        #settingsSheetV2 .settingsV2TimeSteps button,
+        #settingsSheetV2 .settingsV2ZoomButton,
+        #settingsSheetV2 #v2ConstellationClear {
+            box-sizing: border-box !important;
+            min-height: 32px !important;
+            height: 32px !important;
+            padding: 3px 6px !important;
+            border-radius: 7px !important;
+            font-size: 10px !important;
+            line-height: 1.05 !important;
+        }
+
+        #settingsSheetV2 .settingsV2ModeGrid,
+        #settingsSheetV2 .settingsV2SortGrid,
+        #settingsSheetV2 .settingsV2FilterGrid,
+        #settingsSheetV2 .settingsV2NameModeGrid,
+        #settingsSheetV2 .settingsV2TimeSteps {
+            gap: 4px !important;
+        }
+
+        #settingsSheetV2 .settingsV2SkyModeGrid {
+            gap: 4px !important;
+        }
+
+        #settingsSheetV2 .settingsV2ZoomButtons {
+            grid-template-columns: 44px minmax(0,1fr) 44px !important;
+            gap: 4px !important;
+            margin-top: 6px !important;
+        }
+
+        #settingsSheetV2 .settingsV2ZoomCenter {
+            min-height: 32px !important;
+            height: 32px !important;
+            border-radius: 7px !important;
+            font-size: 10px !important;
+        }
+
+        #settingsSheetV2 .settingsV2ZoomButton {
+            font-size: 18px !important;
+            padding: 0 !important;
+        }
+
+        #settingsSheetV2 .settingsV2NameModeGrid .settingsV2LabelButton {
+            min-height: 32px !important;
+            height: 32px !important;
+            padding: 3px 4px !important;
+            font-size: 10px !important;
+            line-height: 1.05 !important;
+        }
+
+        #settingsSheetV2 .settingsV2Field select,
+        #settingsSheetV2 .settingsV2Field input,
+        #settingsSheetV2 .settingsV2CoordinateInline input,
+        #settingsSheetV2 #v2ConstellationSelect {
+            box-sizing: border-box !important;
+            min-height: 32px !important;
+            height: 32px !important;
+            padding: 3px 7px !important;
+            border-radius: 7px !important;
+            font-size: 10px !important;
+        }
+
+        #settingsSheetV2 .settingsV2CoordinateInline {
+            gap: 4px !important;
+        }
+
+        #settingsSheetV2 .settingsV2CoordinateInline span,
+        #settingsSheetV2 .settingsV2Field > span,
+        #settingsSheetV2 .settingsV2Field > label,
+        #settingsSheetV2 .settingsV2PickerLabel {
+            font-size: 10px !important;
+        }
+
+        #settingsSheetV2 .settingsV2Section {
+            padding-top: 10px !important;
+            padding-bottom: 10px !important;
+        }
+
 </style>
 </head>
 <body>
@@ -2889,12 +2977,8 @@
                     <button class="searchV4CategoryButton" type="button" data-search-category="summer">夏星座</button>
                     <button class="searchV4CategoryButton" type="button" data-search-category="winter">冬星座</button>
                     <button class="searchV4CategoryButton" type="button" data-search-category="recommended">おすすめ</button>
-                    <button class="searchV4CategoryButton" type="button" data-search-category="asterisms">アステリズム</button>
                     <button class="searchV4CategoryButton" type="button" data-search-category="stars">星名</button>
-                    <button class="searchV4CategoryButton" type="button" data-search-category="galaxies">銀河</button>
-                    <button class="searchV4CategoryButton" type="button" data-search-category="clusters">星団</button>
-                    <button class="searchV4CategoryButton" type="button" data-search-category="milkyway">天の川</button>
-                    <button class="searchV4CategoryButton searchV4CategoryButtonTrivia" type="button" data-search-category="trivia">おすすめ天文雑学</button>
+                    <button class="searchV4CategoryButton searchV4CategoryButtonTrivia" type="button" data-search-category="trivia">天文雑学</button>
                 </div>
             </div>
             <div id="searchV4SortBlock">
@@ -3791,6 +3875,14 @@
                     if(category==='recommended')items=items.filter(x=>RECOMMENDED.has(x.id));
                     if(category==='summer')items=items.filter(x=>SUMMER.has(x.id));
                     if(category==='winter')items=items.filter(x=>WINTER.has(x.id));
+                }else if(category==='trivia'){
+                    items=[
+                        ...TOPICS.trivia.map(x=>({...x,topicKind:'trivia'})),
+                        ...TOPICS.asterisms.map(x=>({...x,topicKind:'asterisms'})),
+                        ...TOPICS.clusters.map(x=>({...x,topicKind:'clusters'})),
+                        ...TOPICS.galaxies.map(x=>({...x,topicKind:'galaxies'})),
+                        ...TOPICS.milkyway.map(x=>({...x,topicKind:'milkyway'}))
+                    ];
                 }else items=[...(TOPICS[category]||[])];
                 const needle=norm(q.value);
                 if(needle)items=items.filter(x=>[x.id,x.ja,x.en,x.note,...(x.tags||[])].some(v=>norm(v).includes(needle)));
@@ -3801,7 +3893,8 @@
                     const b=document.createElement('button');b.type='button';b.className='searchV4Item';
                     b.innerHTML=`<span><span class="searchV4ItemJa"></span><span class="searchV4ItemSub"></span></span><span class="searchV4ItemId"></span>`;
                     b.querySelector('.searchV4ItemJa').textContent=item.ja;
-                    b.querySelector('.searchV4ItemSub').textContent=constellationMode?item.en:`${item.en||''}${item.note?' / '+item.note:''}`;
+                    const kindLabel = item.topicKind==='asterisms'?'星の並び':item.topicKind==='clusters'?'星団':item.topicKind==='galaxies'?'銀河':item.topicKind==='milkyway'?'天の川':item.topicKind==='trivia'?'雑学':'';
+                    b.querySelector('.searchV4ItemSub').textContent=constellationMode?item.en:`${kindLabel?kindLabel+' / ':''}${item.en||''}${item.note?' / '+item.note:''}`;
                     b.querySelector('.searchV4ItemId').textContent=item.id;
                     b.addEventListener('click',()=>{
                         let handled=false;
@@ -3810,19 +3903,19 @@
                         }else if(category==='stars' && item.targetStar){
                             handled=Boolean(window.highlightSearchStar?.(item.targetStar));
                             if (handled) window.selectSearchStarInfo?.(item);
-                        }else if(category==='asterisms' && item.targetStars){
+                        }else if((category==='asterisms' || item.topicKind==='asterisms') && item.targetStars){
                             handled=Boolean(window.highlightSearchAsterism?.(item.targetStars,Boolean(item.closed)));
                             if (handled) window.selectSearchTopicInfo?.(item,'アステリズム');
-                        }else if(category==='clusters'){
+                        }else if(category==='clusters' || item.topicKind==='clusters'){
                             if(item.constellationId) handled=pickConstellation(item.constellationId);
                             if (handled) window.selectSearchTopicInfo?.(item,'星団');
-                        }else if(category==='galaxies'){
+                        }else if(category==='galaxies' || item.topicKind==='galaxies'){
                             handled=Boolean(window.highlightSearchGalaxy?.(item.raDeg,item.decDeg));
                             if (handled) window.selectSearchTopicInfo?.(item,'銀河');
-                        }else if(category==='milkyway'){
+                        }else if(category==='milkyway' || item.topicKind==='milkyway'){
                             handled=true;
                             window.selectSearchTopicInfo?.(item,'天の川');
-                        }else if(category==='trivia'){
+                        }else if(category==='trivia' || item.topicKind==='trivia'){
                             if(item.constellationIds){
                                 handled=Boolean(window.highlightSearchConstellations?.(item.constellationIds));
                             }else if(item.constellationId){
