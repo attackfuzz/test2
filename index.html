@@ -2826,6 +2826,70 @@
             padding-bottom: 10px !important;
         }
 
+
+        /* ===== V53 Search constellation -> center + default 3-line comment ===== */
+        #constellationQuickCommentV53 {
+            position: fixed;
+            left: 50%;
+            bottom: max(10px, env(safe-area-inset-bottom));
+            transform: translate(-50%, 18px);
+            width: min(720px, calc(100vw - 18px));
+            box-sizing: border-box;
+            z-index: 5200;
+            padding: 11px 38px 11px 14px;
+            border: 1px solid rgba(103,247,255,.24);
+            border-radius: 12px;
+            background: rgba(4,14,32,.88);
+            box-shadow: 0 10px 34px rgba(0,0,0,.34);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .16s ease, transform .16s ease;
+        }
+        #constellationQuickCommentV53.visible {
+            opacity: 1;
+            transform: translate(-50%, 0);
+            pointer-events: auto;
+        }
+        #constellationQuickCommentTextV53 {
+            margin: 0;
+            color: rgba(255,255,255,.94);
+            font-size: 13px;
+            line-height: 1.55;
+            text-align: left;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 3;
+            overflow: hidden;
+        }
+        #constellationQuickCommentCloseV53 {
+            position: absolute;
+            top: 5px;
+            right: 7px;
+            width: 28px;
+            height: 28px;
+            padding: 0;
+            border: 0;
+            border-radius: 50%;
+            background: rgba(22,42,66,.80);
+            color: rgba(255,255,255,.82);
+            font: 700 18px/28px system-ui, sans-serif;
+            text-align: center;
+            cursor: pointer;
+        }
+        @media (max-width: 520px) {
+            #constellationQuickCommentV53 {
+                width: calc(100vw - 12px);
+                padding: 10px 34px 10px 12px;
+                border-radius: 10px;
+            }
+            #constellationQuickCommentTextV53 {
+                font-size: 12.5px;
+                line-height: 1.5;
+            }
+        }
+
 </style>
 </head>
 <body>
@@ -3021,6 +3085,11 @@
             <div id="clockHandWrap"><div id="clockHand"></div></div>
             <div id="clockCenter"></div>
 </div>
+    </section>
+
+    <section id="constellationQuickCommentV53" aria-hidden="true" aria-label="星座コメント">
+        <button type="button" id="constellationQuickCommentCloseV53" aria-label="コメントを閉じる">×</button>
+        <p id="constellationQuickCommentTextV53"></p>
     </section>
 
     <section id="infoSheet" aria-hidden="true" aria-label="星座解説">
@@ -3853,7 +3922,12 @@
                 const t=String(o.textContent||'').trim(),v=String(o.value||'').trim();
                 if([id,info.en,info.ja,legacy].includes(v)||[id,info.en,info.ja,legacy].includes(t)){sel.value=o.value;hit=true;break;}
             }
-            if(hit)sel.dispatchEvent(new Event('change',{bubbles:true}));
+            if(hit){
+                sel.dispatchEvent(new Event('change',{bubbles:true}));
+                document.dispatchEvent(new CustomEvent('search-constellation-picked',{
+                    detail:{ id, selectedValue: sel.value }
+                }));
+            }
             return hit;
         }
         document.addEventListener('DOMContentLoaded',()=>{
@@ -4835,6 +4909,48 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 constellationBasicComments[info.id] ||
                 'この星座の基本コメントはまだ登録されていません。';
         }
+
+
+        function showConstellationQuickCommentV53(constellationId) {
+            const panel = document.getElementById('constellationQuickCommentV53');
+            const text = document.getElementById('constellationQuickCommentTextV53');
+            if (!panel || !text) return;
+            const comment = constellationBasicComments[constellationId] ||
+                'この星座の基本コメントはまだ登録されていません。';
+            text.textContent = comment;
+            panel.classList.add('visible');
+            panel.setAttribute('aria-hidden', 'false');
+        }
+
+        function hideConstellationQuickCommentV53() {
+            const panel = document.getElementById('constellationQuickCommentV53');
+            if (!panel) return;
+            panel.classList.remove('visible');
+            panel.setAttribute('aria-hidden', 'true');
+        }
+
+        document.addEventListener('search-constellation-picked', (event) => {
+            const detail = event.detail || {};
+            const selectedValue = detail.selectedValue || constellationSelect?.value;
+            if (!selectedValue) return;
+
+            // Search selection is a direct request to "show me this constellation",
+            // so center it even in ground mode (subject to the ground horizon limits).
+            focusCameraOnConstellation(selectedValue);
+
+            // Avoid showing the old titled info sheet at the same time.
+            if (typeof setInfoSheetOpen === 'function') setInfoSheetOpen(false);
+
+            showConstellationQuickCommentV53(detail.id);
+
+            // Re-check visibility guidance after the camera settles/moves.
+            setTimeout(() => updateSelectedConstellationGuidance(true), 420);
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const close = document.getElementById('constellationQuickCommentCloseV53');
+            close?.addEventListener('click', hideConstellationQuickCommentV53);
+        });
 
         function bindTapAction(button, handler) {
             let activePointerId = null;
