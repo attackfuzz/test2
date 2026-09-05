@@ -2827,7 +2827,7 @@
         }
 
 
-        /* ===== V53 Search constellation -> center + default 3-line comment ===== */
+        /* ===== V54 Search constellation -> center + default 3-line comment ===== */
         #constellationQuickCommentV53 {
             position: fixed;
             left: 50%;
@@ -2890,17 +2890,69 @@
             }
         }
 
+
+        /* ===== V54 version badge + export inside settings ===== */
+        #settingsVersionV54 {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 42px;
+            height: 24px;
+            margin-left: auto;
+            padding: 0 8px;
+            box-sizing: border-box;
+            border: 1px solid rgba(103,247,255,.28);
+            border-radius: 999px;
+            background: rgba(7,24,45,.66);
+            color: rgba(143,247,255,.92);
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: .08em;
+            line-height: 1;
+        }
+
+        .settingsV54ExportSection {
+            padding-bottom: 14px !important;
+        }
+
+        .settingsV54ExportButtonWrap {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 4px;
+        }
+
+        .settingsV54ExportButtonWrap > button {
+            width: 100% !important;
+            min-height: 32px !important;
+            height: 32px !important;
+            padding: 3px 6px !important;
+            border-radius: 7px !important;
+            font-size: 10px !important;
+            line-height: 1.05 !important;
+            box-sizing: border-box !important;
+        }
+
 </style>
 </head>
 <body>
-    <button id="skyExportButton" type="button" aria-label="現在の星空をPNGとメタデータで保存" title="星空図を保存">📷</button>
+    
 
 
-    <div id="settingsScrim" aria-hidden="true"></div>
+    
+        <div class="settingsV2Section settingsV54ExportSection">
+            <div class="settingsV2SectionTitle">画面出力</div>
+            <div class="settingsV54ExportButtonWrap">
+                <button id="skyExportButton" type="button" aria-label="現在の星空をPNGとメタデータで保存" title="星空図を保存">📷</button>
+            </div>
+        </div>
+
+<div id="settingsScrim" aria-hidden="true"></div>
 
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
+        <div id="settingsVersionV54" aria-label="バージョン">V54</div>
+
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
         </div>
