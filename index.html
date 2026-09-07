@@ -2889,7 +2889,7 @@
 
 
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV57 {
+        #settingsVersionV58 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3029,7 +3029,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV57" aria-label="バージョン">V57</div>
+        <div id="settingsVersionV58" aria-label="バージョン">V58</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -4992,9 +4992,22 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             infoSheet?.setAttribute('aria-hidden', 'true');
 
             if (open) {
-                const selectedId = constellationSelect?.value || '';
-                if (selectedId) {
-                    showConstellationQuickCommentV53(selectedId);
+                const selected = constellationSelect?.value || '';
+                if (selected) {
+                    let resolvedId = selected;
+                    for (const item of Object.values(constellationCatalog)) {
+                        const legacy = `${item.en} (${item.ja})`;
+                        if (
+                            selected === legacy ||
+                            selected === item.id ||
+                            selected === item.en ||
+                            selected === item.ja
+                        ) {
+                            resolvedId = item.id;
+                            break;
+                        }
+                    }
+                    showConstellationQuickCommentV53(resolvedId);
                 }
             }
 
@@ -5075,12 +5088,25 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             if (!panel || !text) return;
 
             let resolvedId = constellationId || '';
-            if (!constellationBasicComments[resolvedId] && constellationSelect) {
-                const option = Array.from(constellationSelect.options || []).find(opt =>
-                    opt.value === resolvedId ||
-                    opt.dataset?.constellationId === resolvedId
-                );
-                if (option?.dataset?.constellationId) resolvedId = option.dataset.constellationId;
+
+            // V58: normalize any selector/search representation to the catalog ID.
+            // Search passes IDs such as "And", while the legacy selector may contain
+            // "Andromeda (アンドロメダ座)", English name, or Japanese name.
+            if (!constellationBasicComments[resolvedId]) {
+                let info = null;
+                for (const item of Object.values(constellationCatalog)) {
+                    const legacy = `${item.en} (${item.ja})`;
+                    if (
+                        resolvedId === legacy ||
+                        resolvedId === item.id ||
+                        resolvedId === item.en ||
+                        resolvedId === item.ja
+                    ) {
+                        info = item;
+                        break;
+                    }
+                }
+                if (info?.id) resolvedId = info.id;
             }
 
             const comment = constellationBasicComments[resolvedId] ||
