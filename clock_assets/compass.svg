@@ -2,7 +2,7 @@
   <defs>
     <style>
       .cls-1 {
-        fill: #02004b;
+        fill: #172137;
         stroke: #040035;
         stroke-width: 1px;
       }
@@ -15,7 +15,7 @@
       }
 
       .cls-3 {
-        fill: #040035;
+        fill: url(#linear-gradient-2);
       }
 
       .cls-4 {
@@ -27,6 +27,12 @@
     <linearGradient id="linear-gradient" x1="278" y1="545" x2="278" y2="10" gradientUnits="userSpaceOnUse">
       <stop offset="0"/>
       <stop offset="1" stop-color="#2e3e62"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-2" x1="382.133" y1="524" x2="172.867" y2="31" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#000002"/>
+      <stop offset="0.517" stop-color="#000002"/>
+      <stop offset="0.986" stop-color="#3c455a"/>
+      <stop offset="1" stop-color="#3c455a"/>
     </linearGradient>
   </defs>
   <circle id="楕円形_1_のコピー_5" data-name="楕円形 1 のコピー 5" class="cls-1" cx="277.5" cy="277.5" r="276.5"/>
