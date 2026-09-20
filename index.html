@@ -2889,7 +2889,7 @@
 
 
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV58 {
+        #settingsVersionV61 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3021,15 +3021,198 @@
             pointer-events: none !important;
         }
 
+
+        /* ===== V59 temporary constellation-art coordinate editor ===== */
+        .settingsV59ArtEditorButton.active {
+            border-color: rgba(255,190,80,.80) !important;
+            background: rgba(91,52,8,.72) !important;
+            color: #ffe6a3 !important;
+            box-shadow: inset 0 0 14px rgba(255,174,45,.12), 0 0 12px rgba(255,174,45,.10) !important;
+        }
+        .settingsV59ArtEditorHint {
+            margin: 6px 0 0;
+            color: rgba(194,249,252,.54);
+            font-size: 9.5px;
+            line-height: 1.35;
+        }
+
+        #constellationArtEditorHudV59 {
+            position: fixed;
+            top: max(8px, env(safe-area-inset-top));
+            left: 50%;
+            transform: translate(-50%, -8px);
+            z-index: 19000;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 4px 9px;
+            width: min(560px, calc(100vw - 16px));
+            box-sizing: border-box;
+            padding: 7px 10px;
+            border: 1px solid rgba(255,190,80,.42);
+            border-radius: 10px;
+            background: rgba(24,19,7,.88);
+            color: #ffe7a4;
+            box-shadow: 0 8px 24px rgba(0,0,0,.30);
+            backdrop-filter: blur(7px);
+            -webkit-backdrop-filter: blur(7px);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity .14s ease, transform .14s ease, visibility .14s;
+        }
+        #constellationArtEditorHudV59.visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, 0);
+        }
+        #constellationArtEditorHudV59 strong {
+            font-size: 11px;
+            letter-spacing: .04em;
+        }
+        #constellationArtEditorHudV59 span {
+            font-size: 11px;
+            color: #fff4cf;
+        }
+        #constellationArtEditorHudV59 small {
+            flex-basis: 100%;
+            text-align: center;
+            font-size: 9px;
+            color: rgba(255,239,194,.66);
+        }
+        body.constellation-art-editor-v59 canvas {
+            cursor: move;
+        }
+
+
+        .settingsV60JsonButton {
+            margin-top: 6px !important;
+            width: 100% !important;
+            min-height: 32px !important;
+            height: 32px !important;
+            border-radius: 7px !important;
+            font-size: 10px !important;
+        }
+
+
+        /* ===== V61 four-layer SVG clock ===== */
+        #clockPanel {
+            isolation: isolate !important;
+            overflow: visible !important;
+        }
+
+        #clockPanel .clock-face,
+        #clockPanel.open .clock-face,
+        #clockPanel:not(.open) .clock-face,
+        #clockPanel.clock-night .clock-face,
+        #clockPanel.clock-day .clock-face {
+            position: absolute !important;
+            inset: 0 !important;
+            z-index: 50 !important;
+            background: transparent !important;
+            background-image: none !important;
+            border: 0 !important;
+            box-shadow: none !important;
+            outline: none !important;
+            border-radius: 50% !important;
+            overflow: visible !important;
+            isolation: auto !important;
+        }
+
+        /* Old HTML dial graphics are retired in V61. */
+        #clockPanel .clock-number {
+            display: none !important;
+        }
+
+        #clockPanel #clockCenter {
+            display: none !important;
+        }
+
+        .clockSvgLayerV61 {
+            position: absolute !important;
+            inset: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            pointer-events: none !important;
+            transform-origin: 50% 50% !important;
+            border-radius: 50%;
+        }
+
+        .clockSvgLayerV61 > img {
+            display: block !important;
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: contain !important;
+            user-select: none !important;
+            -webkit-user-drag: none !important;
+            pointer-events: none !important;
+        }
+
+        /* 1. Bottom: rotating compass */
+        #compassRingV26 {
+            --compass-rotation: 0deg;
+            inset: 0 !important;
+            z-index: 10 !important;
+            transform: rotate(var(--compass-rotation)) !important;
+            transform-origin: 50% 50% !important;
+        }
+
+        /* 2. Fixed watch face */
+        #watchFaceLayerV61 {
+            z-index: 20 !important;
+        }
+
+        /* 3. Rotating sun/moon board */
+        #sunMoonBoardWrapV51 {
+            inset: 0 !important;
+            z-index: 30 !important;
+            transform-origin: 50% 50% !important;
+            will-change: transform;
+        }
+
+        /* 4. Fixed top cover */
+        #sunMoonCoverV61 {
+            inset: 0 !important;
+            z-index: 40 !important;
+        }
+
+        /* 5. Keep only the original HTML hand above the SVGs */
+        #clockPanel #clockHandWrap,
+        #clockPanel.open #clockHandWrap,
+        #clockPanel:not(.open) #clockHandWrap {
+            z-index: 60 !important;
+            left: 50% !important;
+            top: 50% !important;
+            pointer-events: none !important;
+        }
+
+        #clockPanel #clockHand,
+        #clockPanel.open #clockHand,
+        #clockPanel:not(.open) #clockHand {
+            z-index: 61 !important;
+        }
+
+        /* Retire older V51 cover element styling if any stale selector remains. */
+        #sunMoonCoverV51 {
+            display: none !important;
+        }
+
 </style>
 </head>
 <body>
+<div id="constellationArtEditorHudV59" aria-hidden="true">
+    <strong>星座絵エディタ ON</strong>
+    <span id="constellationArtEditorTargetV59">星座絵を選択してください</span>
+    <small>1本指: 移動　2本指: 拡大縮小・回転</small>
+</div>
+
 <div id="settingsScrim" aria-hidden="true"></div>
 
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV58" aria-label="バージョン">V58</div>
+        <div id="settingsVersionV61" aria-label="バージョン">V61</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -3161,6 +3344,18 @@
                     aria-label="現在の画面をPNGとメタデータで保存"
                     title="現在の画面を保存">画面をエクスポートする</button>
         </section>
+
+        <section class="settingsV2Section settingsV59ArtEditorSection">
+            <h3>開発用</h3>
+            <button id="constellationArtEditorToggleV59"
+                    class="settingsV2ActionButton settingsV59ArtEditorButton"
+                    type="button"
+                    aria-pressed="false">星座絵座標エディタ：OFF</button>
+            <p class="settingsV59ArtEditorHint">1本指：移動 / 2本指：拡大縮小・回転</p>
+            <button id="constellationArtEditorDownloadJsonV60"
+                    class="settingsV2ActionButton settingsV60JsonButton"
+                    type="button">調整JSONをダウンロード</button>
+        </section>
 </aside>
 
     <div id="searchScrimV3" aria-hidden="true"></div>
@@ -3194,35 +3389,26 @@
         </div>
     </aside>
 
-    <section id="clockPanel" aria-hidden="true" aria-label="時刻ダイヤル試作">
-        
-        <div id="compassRingV26" aria-hidden="true">
-            <div class="compass-ring-guide"></div>
-            <div class="compass-dir compass-n">N <span class="compass-polaris-note">☆北</span></div>
-            <div class="compass-dir compass-e">E</div>
-            <div class="compass-dir compass-s">S</div>
-            <div class="compass-dir compass-w">W</div>
+    <section id="clockPanel" aria-hidden="true" aria-label="時刻ダイヤル">
+        <div id="compassRingV26" class="clockSvgLayerV61 clockCompassLayerV61" aria-hidden="true">
+            <img src="./clock_assets/compass.svg" alt="">
         </div>
+
+        <div id="watchFaceLayerV61" class="clockSvgLayerV61 clockWatchLayerV61" aria-hidden="true">
+            <img src="./clock_assets/watch_ui.svg" alt="">
+        </div>
+
+        <div id="sunMoonBoardWrapV51" class="clockSvgLayerV61 clockSunMoonLayerV61" aria-hidden="true">
+            <img id="sunMoonBoardV51" src="./clock_assets/sunmoon_board.svg" alt="">
+        </div>
+
+        <div id="sunMoonCoverV61" class="clockSvgLayerV61 clockCoverLayerV61" aria-hidden="true">
+            <img src="./clock_assets/cover_ui.svg" alt="">
+        </div>
+
         <div class="clock-face">
-            <div id="sunMoonBoardWrapV51" aria-hidden="true">
-                <img id="sunMoonBoardV51" src="./clock_assets/sunmoon_board.svg" alt="">
-            </div>
-            <img id="sunMoonCoverV51" src="./clock_assets/cover_ui.svg" alt="" aria-hidden="true">
-            <button class="clock-number" data-hour="12" style="--a:0deg">12</button>
-            <button class="clock-number" data-hour="1" style="--a:30deg">1</button>
-            <button class="clock-number" data-hour="2" style="--a:60deg">2</button>
-            <button class="clock-number" data-hour="3" style="--a:90deg">3</button>
-            <button class="clock-number" data-hour="4" style="--a:120deg">4</button>
-            <button class="clock-number" data-hour="5" style="--a:150deg">5</button>
-            <button class="clock-number" data-hour="6" style="--a:180deg">6</button>
-            <button class="clock-number" data-hour="7" style="--a:210deg">7</button>
-            <button class="clock-number" data-hour="8" style="--a:240deg">8</button>
-            <button class="clock-number" data-hour="9" style="--a:270deg">9</button>
-            <button class="clock-number" data-hour="10" style="--a:300deg">10</button>
-            <button class="clock-number" data-hour="11" style="--a:330deg">11</button>
             <div id="clockHandWrap"><div id="clockHand"></div></div>
-            <div id="clockCenter"></div>
-</div>
+        </div>
     </section>
 
     <section id="constellationQuickCommentV53" aria-hidden="true" aria-label="星座コメント">
@@ -7727,6 +7913,10 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                     const scaleY = Number(align.scaleY ?? align.scale ?? 1.0);
                     const offsetXPx = Number(align.offsetXPx ?? 0.0);
                     const offsetYPx = Number(align.offsetYPx ?? 0.0);
+                    const rotationDeg = Number(align.rotationDeg ?? 0.0);
+                    const rotationRad = THREE.MathUtils.degToRad(rotationDeg);
+                    const rotationCos = Math.cos(rotationRad);
+                    const rotationSin = Math.sin(rotationRad);
                     const pivotX = canvas.width * 0.5;
                     const pivotY = canvas.height * 0.5;
 
@@ -7736,8 +7926,12 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                         for (let gx = 0; gx <= segX; gx++) {
                             const fx = gx / segX;
                             const rawPx = fx * canvas.width;
-                            const px = pivotX + ((rawPx - pivotX) / Math.max(1e-6, scaleX)) + offsetXPx;
-                            const py = pivotY + ((rawPy - pivotY) / Math.max(1e-6, scaleY)) + offsetYPx;
+                            const dx = (rawPx - pivotX) / Math.max(1e-6, scaleX);
+                            const dy = (rawPy - pivotY) / Math.max(1e-6, scaleY);
+                            const rotatedX = dx * rotationCos - dy * rotationSin;
+                            const rotatedY = dx * rotationSin + dy * rotationCos;
+                            const px = pivotX + rotatedX + offsetXPx;
+                            const py = pivotY + rotatedY + offsetYPx;
                             const hitLocal = pixelToCelestialLocal(px, py);
                             if (!hitLocal) positions.push(0, 0, 0);
                             else {
@@ -7808,6 +8002,85 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                     return true;
                 }
 
+
+                function rebuildAlignmentGeometryV59(state) {
+                    if (!state || !state.mesh || !state.exportCamera) return false;
+                    const cfg = state.cfg;
+                    const canvas = cfg.canvas || {
+                        width: Number(cfg.export?.image?.width || state.exportWidth),
+                        height: Number(cfg.export?.image?.height || state.exportHeight)
+                    };
+                    const canvasWidth = Number(canvas.width);
+                    const canvasHeight = Number(canvas.height);
+                    if (!(canvasWidth > 0) || !(canvasHeight > 0)) return false;
+
+                    function pixelToCelestialLocalV59(px, py) {
+                        const ndcX = (px / state.exportWidth) * 2 - 1;
+                        const ndcY = 1 - (py / state.exportHeight) * 2;
+                        const rayOriginWorld = state.exportCamera.position.clone();
+                        const nearPointWorld = new THREE.Vector3(ndcX, ndcY, 0.0).unproject(state.exportCamera);
+                        const rayDirWorld = nearPointWorld.sub(rayOriginWorld).normalize();
+                        const originLocal = rayOriginWorld.clone().applyMatrix4(state.exportCelestialWorldInverse);
+                        const point2World = rayOriginWorld.clone().add(rayDirWorld.clone().multiplyScalar(state.exportSkyRadius * 2.0));
+                        const point2Local = point2World.applyMatrix4(state.exportCelestialWorldInverse);
+                        const dirLocal = point2Local.sub(originLocal).normalize();
+                        const b = originLocal.dot(dirLocal);
+                        const c = originLocal.lengthSq() - state.exportSkyRadius * state.exportSkyRadius;
+                        const disc = b * b - c;
+                        if (!(disc >= 0)) return null;
+                        const sqrtDisc = Math.sqrt(disc);
+                        let t = -b + sqrtDisc;
+                        if (t <= 0) t = -b - sqrtDisc;
+                        if (t <= 0) return null;
+                        return originLocal.add(dirLocal.multiplyScalar(t));
+                    }
+
+                    const segX = Number(cfg.segX || 64);
+                    const segY = Number(cfg.segY || 60);
+                    const radiusScale = Number(cfg.radiusScale || 1.0015);
+                    const align = cfg.align || {};
+                    const scaleX = Number(align.scaleX ?? align.scale ?? 1.0);
+                    const scaleY = Number(align.scaleY ?? align.scale ?? 1.0);
+                    const offsetXPx = Number(align.offsetXPx ?? 0.0);
+                    const offsetYPx = Number(align.offsetYPx ?? 0.0);
+                    const rotationDeg = Number(align.rotationDeg ?? 0.0);
+                    const rotationRad = THREE.MathUtils.degToRad(rotationDeg);
+                    const cosA = Math.cos(rotationRad);
+                    const sinA = Math.sin(rotationRad);
+                    const pivotX = canvasWidth * 0.5;
+                    const pivotY = canvasHeight * 0.5;
+                    const positions = [];
+
+                    for (let gy = 0; gy <= segY; gy++) {
+                        const fy = gy / segY;
+                        const rawPy = fy * canvasHeight;
+                        for (let gx = 0; gx <= segX; gx++) {
+                            const fx = gx / segX;
+                            const rawPx = fx * canvasWidth;
+                            const dx = (rawPx - pivotX) / Math.max(1e-6, scaleX);
+                            const dy = (rawPy - pivotY) / Math.max(1e-6, scaleY);
+                            const rotatedX = dx * cosA - dy * sinA;
+                            const rotatedY = dx * sinA + dy * cosA;
+                            const px = pivotX + rotatedX + offsetXPx;
+                            const py = pivotY + rotatedY + offsetYPx;
+                            const hitLocal = pixelToCelestialLocalV59(px, py);
+                            if (!hitLocal) positions.push(0, 0, 0);
+                            else {
+                                const localPos = hitLocal.clone().normalize()
+                                    .multiplyScalar(state.exportSkyRadius * radiusScale);
+                                positions.push(localPos.x, localPos.y, localPos.z);
+                            }
+                        }
+                    }
+
+                    const attr = state.mesh.geometry?.getAttribute('position');
+                    if (!attr || attr.count * 3 !== positions.length) return false;
+                    attr.array.set(positions);
+                    attr.needsUpdate = true;
+                    state.mesh.geometry.computeBoundingSphere();
+                    return true;
+                }
+
                 function computeVisibleRangeBlend(state) {
                     if (!state.textureReady || !state.centerDirectionLocal || !camera) return 0;
                     const forwardWorld = new THREE.Vector3();
@@ -7830,8 +8103,14 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                     try {
                         if (!state.mesh && !buildEntry(state)) return;
                         const selected = Boolean(state.constellationKey && constellationSelect && constellationSelect.value === state.constellationKey);
-                        const rangeBlend = computeVisibleRangeBlend(state);
-                        const baseOpacity = selected ? Number(state.cfg.selectedOpacity ?? 0.92) : Number(state.cfg.baseOpacity ?? 0.68);
+                        const editorForced = Boolean(
+                            window.constellationArtEditorV59?.enabled &&
+                            window.constellationArtEditorV59?.activeId === state.cfg.id
+                        );
+                        const rangeBlend = editorForced ? 1 : computeVisibleRangeBlend(state);
+                        const baseOpacity = editorForced
+                            ? 0.94
+                            : (selected ? Number(state.cfg.selectedOpacity ?? 0.92) : Number(state.cfg.baseOpacity ?? 0.68));
                         state.targetOpacity = state.textureReady ? (baseOpacity * rangeBlend) : 0;
                         const smoothing = Number(state.cfg.fadeSmoothing ?? 0.16);
                         state.currentOpacity += (state.targetOpacity - state.currentOpacity) * smoothing;
@@ -7883,6 +8162,24 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                         buildEntry(state);
                         return true;
                     },
+                    setAlignmentLive(id, partial) {
+                        const state = entries.get(id);
+                        if (!state || !state.mesh) return false;
+                        state.cfg.align = Object.assign({}, state.cfg.align || {}, partial || {});
+                        return rebuildAlignmentGeometryV59(state);
+                    },
+                    getAlignment(id) {
+                        const state = entries.get(id);
+                        return state ? Object.assign({}, state.cfg.align || {}) : null;
+                    },
+                    getSelectedArtworkId() {
+                        let found = null;
+                        entries.forEach((state, id) => {
+                            if (found) return;
+                            if (state.constellationKey && constellationSelect?.value === state.constellationKey) found = id;
+                        });
+                        return found;
+                    },
                     exportManifestText() {
                         return JSON.stringify(manifest, null, 2);
                     }
@@ -7894,6 +8191,405 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
     }
 
     requestAnimationFrame(initConstellationArtManagerV46);
+})();
+</script>
+
+
+<script id="constellationArtEditorV59Script">
+(() => {
+    'use strict';
+
+    const STORAGE_KEY = 'constellationArtEditorV59.alignments';
+    const pointers = new Map();
+    let enabled = false;
+    let activeId = null;
+    let gesture = null;
+    let moved = false;
+
+    function manager() {
+        return window.constellationArtManagerV46 || null;
+    }
+
+    function normalizeAngleDelta(deg) {
+        while (deg > 180) deg -= 360;
+        while (deg < -180) deg += 360;
+        return deg;
+    }
+
+    function getPointerPair() {
+        const values = Array.from(pointers.values());
+        return values.length >= 2 ? [values[0], values[1]] : null;
+    }
+
+    function pairMetrics(pair) {
+        const [a, b] = pair;
+        const dx = b.x - a.x;
+        const dy = b.y - a.y;
+        return {
+            distance: Math.max(1, Math.hypot(dx, dy)),
+            angle: Math.atan2(dy, dx) * 180 / Math.PI,
+            midX: (a.x + b.x) * 0.5,
+            midY: (a.y + b.y) * 0.5
+        };
+    }
+
+    function currentAlignment() {
+        const m = manager();
+        if (!m || !activeId) return null;
+        const align = m.getAlignment(activeId) || {};
+        return {
+            offsetXPx: Number(align.offsetXPx ?? 0),
+            offsetYPx: Number(align.offsetYPx ?? 0),
+            scaleX: Number(align.scaleX ?? align.scale ?? 1),
+            scaleY: Number(align.scaleY ?? align.scale ?? 1),
+            rotationDeg: Number(align.rotationDeg ?? 0)
+        };
+    }
+
+    function updateActiveId() {
+        const m = manager();
+        activeId = m?.getSelectedArtworkId?.() || null;
+        if (window.constellationArtEditorV59) {
+            window.constellationArtEditorV59.activeId = activeId;
+        }
+        updateHud();
+        return activeId;
+    }
+
+    function updateHud() {
+        const hud = document.getElementById('constellationArtEditorHudV59');
+        const target = document.getElementById('constellationArtEditorTargetV59');
+        if (!hud || !target) return;
+        hud.classList.toggle('visible', enabled);
+        hud.setAttribute('aria-hidden', String(!enabled));
+        target.textContent = activeId
+            ? `編集中: ${activeId}`
+            : '星座絵のある星座を選択してください';
+    }
+
+    function updateToggle() {
+        const button = document.getElementById('constellationArtEditorToggleV59');
+        if (!button) return;
+        button.classList.toggle('active', enabled);
+        button.setAttribute('aria-pressed', String(enabled));
+        button.textContent = `星座絵座標エディタ：${enabled ? 'ON' : 'OFF'}`;
+    }
+
+    function saveAll() {
+        const m = manager();
+        if (!m) return;
+        const obj = {};
+        m.entries?.forEach?.((state, id) => {
+            obj[id] = Object.assign({}, state.cfg.align || {});
+        });
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(obj));
+        } catch (_) {}
+    }
+
+
+    function collectAlignmentJsonV60() {
+        const m = manager();
+        const result = {
+            version: 60,
+            exportedAt: new Date().toISOString(),
+            type: 'constellation-art-alignment',
+            alignments: {}
+        };
+        if (!m) return result;
+
+        m.entries?.forEach?.((state, id) => {
+            const align = Object.assign({}, state.cfg.align || {});
+            result.alignments[id] = {
+                offsetXPx: Number(align.offsetXPx ?? 0),
+                offsetYPx: Number(align.offsetYPx ?? 0),
+                scaleX: Number(align.scaleX ?? align.scale ?? 1),
+                scaleY: Number(align.scaleY ?? align.scale ?? 1),
+                rotationDeg: Number(align.rotationDeg ?? 0)
+            };
+        });
+        return result;
+    }
+
+    function downloadAlignmentJsonV60() {
+        saveAll();
+
+        const data = collectAlignmentJsonV60();
+        const blob = new Blob(
+            [JSON.stringify(data, null, 2)],
+            { type: 'application/json;charset=utf-8' }
+        );
+        const url = URL.createObjectURL(blob);
+
+        const now = new Date();
+        const stamp =
+            String(now.getFullYear()) +
+            String(now.getMonth() + 1).padStart(2, '0') +
+            String(now.getDate()).padStart(2, '0') + '_' +
+            String(now.getHours()).padStart(2, '0') +
+            String(now.getMinutes()).padStart(2, '0') +
+            String(now.getSeconds()).padStart(2, '0');
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `constellation_art_alignment_${stamp}.json`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+
+        setTimeout(() => URL.revokeObjectURL(url), 1500);
+    }
+
+    function restoreSaved() {
+        const m = manager();
+        if (!m) return;
+        let saved = null;
+        try {
+            saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
+        } catch (_) {}
+        if (!saved || typeof saved !== 'object') return;
+        Object.entries(saved).forEach(([id, align]) => {
+            if (align && typeof align === 'object') m.setAlignmentLive?.(id, align);
+        });
+    }
+
+    function setEnabled(next) {
+        enabled = Boolean(next);
+        pointers.clear();
+        gesture = null;
+        moved = false;
+        document.body.classList.toggle('constellation-art-editor-v59', enabled);
+        if (enabled) {
+            updateActiveId();
+            const sheet = document.getElementById('settingsSheetV2');
+            const scrim = document.getElementById('settingsScrimV2');
+            sheet?.classList.remove('open');
+            sheet?.setAttribute('aria-hidden', 'true');
+            scrim?.classList.remove('open');
+            scrim?.setAttribute('aria-hidden', 'true');
+        }
+        updateToggle();
+        updateHud();
+    }
+
+    function screenToExportDelta(dx, dy) {
+        const m = manager();
+        const state = activeId ? m?.entries?.get(activeId) : null;
+        const canvas = renderer?.domElement;
+        const rect = canvas?.getBoundingClientRect?.();
+        if (!state || !rect || rect.width <= 0 || rect.height <= 0) return { x: 0, y: 0 };
+        return {
+            x: dx * (Number(state.exportWidth || state.cfg?.export?.image?.width || 1) / rect.width),
+            y: dy * (Number(state.exportHeight || state.cfg?.export?.image?.height || 1) / rect.height)
+        };
+    }
+
+    function apply(partial) {
+        const m = manager();
+        if (!m || !activeId) return;
+        m.setAlignmentLive?.(activeId, partial);
+    }
+
+    function beginSingle(pointer) {
+        const align = currentAlignment();
+        if (!align) return;
+        gesture = {
+            type: 'single',
+            startX: pointer.x,
+            startY: pointer.y,
+            align
+        };
+        moved = false;
+    }
+
+    function beginPinch() {
+        const pair = getPointerPair();
+        const align = currentAlignment();
+        if (!pair || !align) return;
+        const metrics = pairMetrics(pair);
+        gesture = {
+            type: 'pinch',
+            startDistance: metrics.distance,
+            startAngle: metrics.angle,
+            startMidX: metrics.midX,
+            startMidY: metrics.midY,
+            align
+        };
+        moved = false;
+    }
+
+    function handleDown(event) {
+        if (!enabled) return;
+        updateActiveId();
+        if (!activeId) return;
+
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+        pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+        try { renderer.domElement.setPointerCapture(event.pointerId); } catch (_) {}
+
+        if (pointers.size === 1) {
+            beginSingle(pointers.get(event.pointerId));
+        } else if (pointers.size >= 2) {
+            beginPinch();
+        }
+    }
+
+    function handleMove(event) {
+        if (!enabled || !activeId || !pointers.has(event.pointerId)) return;
+
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+        const p = pointers.get(event.pointerId);
+        p.x = event.clientX;
+        p.y = event.clientY;
+
+        if (pointers.size >= 2) {
+            if (!gesture || gesture.type !== 'pinch') beginPinch();
+            if (!gesture) return;
+            const pair = getPointerPair();
+            const metrics = pairMetrics(pair);
+            const ratio = metrics.distance / Math.max(1, gesture.startDistance);
+            const angleDelta = normalizeAngleDelta(metrics.angle - gesture.startAngle);
+            const midDelta = screenToExportDelta(
+                metrics.midX - gesture.startMidX,
+                metrics.midY - gesture.startMidY
+            );
+
+            // Existing align scale is inverse to visual size:
+            // a wider pinch should visually enlarge the artwork, hence divide by ratio.
+            const nextScaleX = Math.min(4, Math.max(0.25, gesture.align.scaleX / ratio));
+            const nextScaleY = Math.min(4, Math.max(0.25, gesture.align.scaleY / ratio));
+
+            apply({
+                offsetXPx: gesture.align.offsetXPx + midDelta.x,
+                offsetYPx: gesture.align.offsetYPx + midDelta.y,
+                scaleX: nextScaleX,
+                scaleY: nextScaleY,
+                rotationDeg: gesture.align.rotationDeg + angleDelta
+            });
+            moved = moved || Math.abs(ratio - 1) > 0.01 || Math.abs(angleDelta) > 0.5 ||
+                Math.hypot(midDelta.x, midDelta.y) > 1;
+            return;
+        }
+
+        if (!gesture || gesture.type !== 'single') beginSingle(p);
+        if (!gesture) return;
+        const delta = screenToExportDelta(
+            p.x - gesture.startX,
+            p.y - gesture.startY
+        );
+        apply({
+            offsetXPx: gesture.align.offsetXPx + delta.x,
+            offsetYPx: gesture.align.offsetYPx + delta.y
+        });
+        moved = moved || Math.hypot(delta.x, delta.y) > 1;
+    }
+
+    function moveCenterToTap(clientX, clientY) {
+        const m = manager();
+        const state = activeId ? m?.entries?.get(activeId) : null;
+        if (!state?.mesh || !renderer?.domElement) return;
+
+        state.mesh.geometry.computeBoundingSphere();
+        const centerLocal = state.mesh.geometry.boundingSphere?.center?.clone();
+        if (!centerLocal) return;
+
+        state.mesh.updateMatrixWorld(true);
+        const centerWorld = state.mesh.localToWorld(centerLocal);
+        const projected = centerWorld.clone().project(camera);
+        const rect = renderer.domElement.getBoundingClientRect();
+        const currentX = rect.left + (projected.x * 0.5 + 0.5) * rect.width;
+        const currentY = rect.top + (-projected.y * 0.5 + 0.5) * rect.height;
+        const delta = screenToExportDelta(clientX - currentX, clientY - currentY);
+        const align = currentAlignment();
+        if (!align) return;
+
+        apply({
+            offsetXPx: align.offsetXPx + delta.x,
+            offsetYPx: align.offsetYPx + delta.y
+        });
+    }
+
+    function handleEnd(event) {
+        if (!enabled || !pointers.has(event.pointerId)) return;
+
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+        const ended = pointers.get(event.pointerId);
+        const wasSingle = pointers.size === 1;
+        pointers.delete(event.pointerId);
+        try {
+            if (renderer.domElement.hasPointerCapture(event.pointerId)) {
+                renderer.domElement.releasePointerCapture(event.pointerId);
+            }
+        } catch (_) {}
+
+        if (wasSingle && !moved && ended) {
+            // Literal tap: move the artwork center to the tapped point.
+            moveCenterToTap(ended.x, ended.y);
+        }
+
+        if (pointers.size >= 2) {
+            beginPinch();
+        } else if (pointers.size === 1) {
+            const remaining = Array.from(pointers.values())[0];
+            beginSingle(remaining);
+        } else {
+            gesture = null;
+            saveAll();
+        }
+    }
+
+    function init() {
+        const button = document.getElementById('constellationArtEditorToggleV59');
+        if (!button || typeof renderer === 'undefined' || !renderer.domElement) {
+            requestAnimationFrame(init);
+            return;
+        }
+        if (!manager()) {
+            requestAnimationFrame(init);
+            return;
+        }
+
+        restoreSaved();
+        updateActiveId();
+        updateToggle();
+        updateHud();
+
+        button.addEventListener('click', () => setEnabled(!enabled));
+
+        const jsonButton = document.getElementById('constellationArtEditorDownloadJsonV60');
+        jsonButton?.addEventListener('click', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            downloadAlignmentJsonV60();
+        });
+
+        constellationSelect?.addEventListener('change', () => {
+            updateActiveId();
+        });
+
+        const canvas = renderer.domElement;
+        canvas.addEventListener('pointerdown', handleDown, { capture: true, passive: false });
+        canvas.addEventListener('pointermove', handleMove, { capture: true, passive: false });
+        canvas.addEventListener('pointerup', handleEnd, { capture: true, passive: false });
+        canvas.addEventListener('pointercancel', handleEnd, { capture: true, passive: false });
+
+        window.constellationArtEditorV59 = {
+            get enabled() { return enabled; },
+            set enabled(v) { setEnabled(v); },
+            activeId,
+            save: saveAll,
+            downloadJson: downloadAlignmentJsonV60,
+            refreshTarget: updateActiveId
+        };
+    }
+
+    requestAnimationFrame(init);
 })();
 </script>
 
