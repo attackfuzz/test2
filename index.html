@@ -2889,7 +2889,7 @@
 
 
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV61 {
+        #settingsVersionV62 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3198,6 +3198,16 @@
             display: none !important;
         }
 
+
+        /* ===== V62 compass rotation fix ===== */
+        #compassRingV26 {
+            transform: none !important;
+        }
+        #compassImageV62 {
+            transform-origin: 50% 50% !important;
+            will-change: transform;
+        }
+
 </style>
 </head>
 <body>
@@ -3212,7 +3222,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV61" aria-label="バージョン">V61</div>
+        <div id="settingsVersionV62" aria-label="バージョン">V62</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -3391,7 +3401,7 @@
 
     <section id="clockPanel" aria-hidden="true" aria-label="時刻ダイヤル">
         <div id="compassRingV26" class="clockSvgLayerV61 clockCompassLayerV61" aria-hidden="true">
-            <img src="./clock_assets/compass.svg" alt="">
+            <img id="compassImageV62" src="./clock_assets/compass.svg" alt="">
         </div>
 
         <div id="watchFaceLayerV61" class="clockSvgLayerV61 clockWatchLayerV61" aria-hidden="true">
@@ -7716,7 +7726,10 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                  * 南 180°  -> S が12時
                  * 西 270°  -> W が12時
                  */
-                ring.style.setProperty('--compass-rotation', `${-headingDeg}deg`);
+                const compassImage = document.getElementById('compassImageV62');
+                if (compassImage) {
+                    compassImage.style.transform = `rotate(${-headingDeg}deg)`;
+                }
                 ring.dataset.heading = headingDeg.toFixed(1);
             }
 
