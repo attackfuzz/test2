@@ -1,1 +1,32 @@
-<svg width="1482" height="1481" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" overflow="hidden"><defs><clipPath id="clip0"><rect x="3" y="0" width="1482" height="1481"/></clipPath><linearGradient x1="744" y1="1481" x2="744" y2="-1.68054e-13" gradientUnits="userSpaceOnUse" spreadMethod="reflect" id="fill1"><stop offset="0" stop-color="#FFFF00"/><stop offset="0.66" stop-color="#C1E5F5"/><stop offset="1" stop-color="#C1E5F5"/></linearGradient></defs><g clip-path="url(#clip0)" transform="translate(-3 0)"><path d="M3.0001 740.5C3.0001 331.533 334.757-9.42755e-14 744-1.88551e-13 1153.24-3.77102e-13 1485 331.533 1485 740.5 1485 1149.47 1153.24 1481 744 1481 334.757 1481 3.0001 1149.47 3.0001 740.5Z" fill="url(#fill1)" fill-rule="evenodd"/><path d="M821 973.5 784.883 986.057 784.883 960.943ZM794.78 911.626 778.328 945.476 760.164 927.718ZM731.5 886 744.344 921.31 718.656 921.31ZM668.212 911.626 702.836 927.718 684.672 945.476ZM642 973.5 678.117 960.943 678.117 986.057ZM668.212 1035.37 684.672 1001.52 702.836 1019.28ZM731.5 1061 718.656 1025.69 744.344 1025.69ZM794.78 1035.37 760.164 1019.28 778.328 1001.52ZM686.75 973.5C686.75 949.337 706.785 929.75 731.5 929.75 756.215 929.75 776.25 949.337 776.25 973.5 776.25 997.662 756.215 1017.25 731.5 1017.25 706.785 1017.25 686.75 997.662 686.75 973.5Z" fill="#FF0000" fill-rule="evenodd"/><path d="M762.979 553.005C725.191 568.38 683.694 554.144 670.292 521.207 656.89 488.27 676.658 449.104 714.446 433.729 686.71 473.807 698.065 523.65 739.807 545.055 746.969 548.728 754.771 551.404 762.979 553.005Z" stroke="#215F9A" stroke-width="5.72917" stroke-miterlimit="8" fill="#DCEAF7" fill-rule="evenodd"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="555" height="555" viewBox="0 0 555 555">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: url(#linear-gradient);
+      }
+
+      .cls-2 {
+        fill: #ff9600;
+      }
+
+      .cls-2, .cls-3 {
+        stroke: #fff;
+        stroke-width: 1px;
+      }
+
+      .cls-3 {
+        fill: #ffd79d;
+        fill-rule: evenodd;
+      }
+    </style>
+    <linearGradient id="linear-gradient" x1="277" y1="418" x2="277" y2="137" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f37d3d"/>
+      <stop offset="0.486" stop-color="#f6d09f"/>
+      <stop offset="0.544" stop-color="#2e3e62"/>
+      <stop offset="1" stop-color="#2e3e62"/>
+    </linearGradient>
+  </defs>
+  <ellipse id="楕円形_1_のコピー_9" data-name="楕円形 1 のコピー 9" class="cls-1" cx="277" cy="277.5" rx="135" ry="140.5"/>
+  <circle id="楕円形_1" data-name="楕円形 1" class="cls-2" cx="278.5" cy="351.5" r="27.5"/>
+  <path id="楕円形_1_のコピー" data-name="楕円形 1 のコピー" class="cls-3" d="M286.5,192c-21.8,30,.858,55,0,55A27.5,27.5,0,0,1,259,219.5C259,204.312,269.3,192,286.5,192Z"/>
+</svg>
