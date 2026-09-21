@@ -1,32 +1,26 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="555" height="555" viewBox="0 0 555 555">
+<svg id="グループ_4" data-name="グループ 4" xmlns="http://www.w3.org/2000/svg" width="555" height="555" viewBox="0 0 555 555">
   <defs>
     <style>
       .cls-1 {
-        fill: url(#linear-gradient);
+        fill: transparent;
       }
 
-      .cls-2 {
-        fill: #ff9600;
-      }
-
-      .cls-2, .cls-3 {
+      .cls-1, .cls-2, .cls-3 {
         stroke: #fff;
         stroke-width: 1px;
       }
 
-      .cls-3 {
+      .cls-2 {
         fill: #ffd79d;
         fill-rule: evenodd;
       }
+
+      .cls-3 {
+        fill: #ff9600;
+      }
     </style>
-    <linearGradient id="linear-gradient" x1="277" y1="418" x2="277" y2="137" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#f37d3d"/>
-      <stop offset="0.486" stop-color="#f6d09f"/>
-      <stop offset="0.544" stop-color="#2e3e62"/>
-      <stop offset="1" stop-color="#2e3e62"/>
-    </linearGradient>
   </defs>
-  <ellipse id="楕円形_1_のコピー_9" data-name="楕円形 1 のコピー 9" class="cls-1" cx="277" cy="277.5" rx="135" ry="140.5"/>
-  <circle id="楕円形_1" data-name="楕円形 1" class="cls-2" cx="278.5" cy="351.5" r="27.5"/>
-  <path id="楕円形_1_のコピー" data-name="楕円形 1 のコピー" class="cls-3" d="M286.5,192c-21.8,30,.858,55,0,55A27.5,27.5,0,0,1,259,219.5C259,204.312,269.3,192,286.5,192Z"/>
+  <circle id="楕円形_1_のコピー_8" data-name="楕円形 1 のコピー 8" class="cls-1" cx="277.5" cy="277.5" r="115.875"/>
+  <path id="楕円形_1_のコピー" data-name="楕円形 1 のコピー" class="cls-2" d="M286.5,192c-21.8,30,.858,55,0,55A27.5,27.5,0,0,1,259,219.5C259,204.312,269.3,192,286.5,192Z"/>
+  <circle id="楕円形_1" data-name="楕円形 1" class="cls-3" cx="278.5" cy="351.5" r="27.5"/>
 </svg>
