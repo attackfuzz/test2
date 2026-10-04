@@ -2889,7 +2889,7 @@
 
 
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV63 {
+        #settingsVersionV66 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3222,7 +3222,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV63" aria-label="バージョン">V63</div>
+        <div id="settingsVersionV66" aria-label="バージョン">V66</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -3361,7 +3361,7 @@
                     class="settingsV2ActionButton settingsV59ArtEditorButton"
                     type="button"
                     aria-pressed="false">星座絵座標エディタ：OFF</button>
-            <p class="settingsV59ArtEditorHint">1本指：移動 / 2本指：拡大縮小・回転 / 3文字.png自動認識</p>
+            <p class="settingsV59ArtEditorHint">1本指：移動 / 2本指：拡大縮小・回転 / alignment.json登録済み / マンガフォルダ対応</p>
             <button id="constellationArtEditorDownloadJsonV60"
                     class="settingsV2ActionButton settingsV60JsonButton"
                     type="button">調整JSONをダウンロード</button>
@@ -3431,7 +3431,7 @@
 
     <section id="constellationMangaOverlayV56" aria-hidden="true" aria-label="星座マンガ">
         <img id="constellationMangaImageV56"
-             src="./manga_art/And.png"
+             src=""
              alt="アンドロメダ座マンガ">
     </section>
 
@@ -4288,7 +4288,7 @@
                 sortBlock.style.display=constellationMode?'':'none';
                 let items=[];
                 if(constellationMode){
-                    items=Object.values(constellationCatalog).map(x=>({id:x.id,ja:x.ja,en:x.en,tags:x.searchTags||[]}));
+                    items=Object.values(constellationCatalog).map(x=>({id:x.id,ja:(x.displayJa||x.ja),en:x.en,tags:[...(x.searchTags||[]),x.ja]}));
                     if(category==='recommended')items=items.filter(x=>RECOMMENDED.has(x.id));
                     if(category==='summer')items=items.filter(x=>SUMMER.has(x.id));
                     if(category==='winter')items=items.filter(x=>WINTER.has(x.id));
@@ -4359,6 +4359,120 @@
     </script>
 
     <script src="stars.js"></script>
+
+    <script>
+    // ===== V65: 88星座 日本語表示名を「ひらがな＋カタカナ＋座」に統一 =====
+    // constellationCatalog.ja は内部キー互換のため変更せず、
+    // 画面表示・五十音順には displayJa を使う。
+    const CONSTELLATION_DISPLAY_JA_V65 = {
+        And:'アンドロメダ座',
+        Ant:'ポンプ座',
+        Aps:'ふうちょう座',
+        Aqr:'みずがめ座',
+        Aql:'わし座',
+        Ara:'さいだん座',
+        Ari:'おひつじ座',
+        Aur:'ぎょしゃ座',
+        Boo:'うしかい座',
+        Cae:'ちょうこくぐ座',
+        Cam:'きりん座',
+        Cnc:'かに座',
+        CVn:'りょうけん座',
+        CMa:'おおいぬ座',
+        CMi:'こいぬ座',
+        Cap:'やぎ座',
+        Car:'りゅうこつ座',
+        Cas:'カシオペヤ座',
+        Cen:'ケンタウルス座',
+        Cep:'ケフェウス座',
+        Cet:'くじら座',
+        Cha:'カメレオン座',
+        Cir:'コンパス座',
+        Col:'はと座',
+        Com:'かみのけ座',
+        CrA:'みなみのかんむり座',
+        CrB:'かんむり座',
+        Crv:'からす座',
+        Crt:'コップ座',
+        Cru:'みなみじゅうじ座',
+        Cyg:'はくちょう座',
+        Del:'いるか座',
+        Dor:'かじき座',
+        Dra:'りゅう座',
+        Equ:'こうま座',
+        Eri:'エリダヌス座',
+        For:'ろ座',
+        Gem:'ふたご座',
+        Gru:'つる座',
+        Her:'ヘルクレス座',
+        Hor:'とけい座',
+        Hya:'うみへび座',
+        Hyi:'みずへび座',
+        Ind:'インディアン座',
+        Lac:'とかげ座',
+        Leo:'しし座',
+        LMi:'こじし座',
+        Lep:'うさぎ座',
+        Lib:'てんびん座',
+        Lup:'おおかみ座',
+        Lyn:'やまねこ座',
+        Lyr:'こと座',
+        Men:'テーブルさん座',
+        Mic:'けんびきょう座',
+        Mon:'いっかくじゅう座',
+        Mus:'はえ座',
+        Nor:'じょうぎ座',
+        Oct:'はちぶんぎ座',
+        Oph:'へびつかい座',
+        Ori:'オリオン座',
+        Pav:'くじゃく座',
+        Peg:'ペガスス座',
+        Per:'ペルセウス座',
+        Phe:'ほうおう座',
+        Pic:'がか座',
+        Psc:'うお座',
+        PsA:'みなみのうお座',
+        Pup:'とも座',
+        Pyx:'らしんばん座',
+        Ret:'レチクル座',
+        Sge:'や座',
+        Sgr:'いて座',
+        Sco:'さそり座',
+        Scl:'ちょうこくしつ座',
+        Sct:'たて座',
+        Ser:'へび座',
+        Sex:'ろくぶんぎ座',
+        Tau:'おうし座',
+        Tel:'ぼうえんきょう座',
+        Tri:'さんかく座',
+        TrA:'みなみのさんかく座',
+        Tuc:'きょしちょう座',
+        UMa:'おおぐま座',
+        UMi:'こぐま座',
+        Vel:'ほ座',
+        Vir:'おとめ座',
+        Vol:'とびうお座',
+        Vul:'こぎつね座'
+    };
+
+    if (typeof constellationCatalog !== 'undefined') {
+        for (const [id, displayJa] of Object.entries(CONSTELLATION_DISPLAY_JA_V65)) {
+            if (constellationCatalog[id]) {
+                constellationCatalog[id].displayJa = displayJa;
+            }
+        }
+    }
+
+    function constellationDisplayJaV65(infoOrId) {
+        if (!infoOrId) return '';
+        if (typeof infoOrId === 'string') {
+            const info = (typeof constellationCatalog !== 'undefined') ? constellationCatalog[infoOrId] : null;
+            return info?.displayJa || info?.ja || CONSTELLATION_DISPLAY_JA_V65[infoOrId] || infoOrId;
+        }
+        return infoOrId.displayJa || infoOrId.ja || '';
+    }
+    </script>
+
 
     <script>
     // ===== 星名30個 基本コメント =====
@@ -5267,7 +5381,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             }
 
             infoSheetTitle.innerHTML =
-                `<span class="info-title-ja">${info.ja}</span>` +
+                `<span class="info-title-ja">${info.displayJa || info.ja}</span>` +
                 `<span class="info-title-en">${info.en} / ${info.id}</span>`;
 
             infoSheetText.textContent =
@@ -5309,11 +5423,17 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 'この星座の基本コメントはまだ登録されていません。';
             text.textContent = comment;
 
-            const hasManga = resolvedId === 'And';
+            const mangaEntry = window.constellationMangaManagerV66?.get(resolvedId) || null;
+            const hasManga = Boolean(mangaEntry);
             if (links) links.classList.toggle('visible', hasManga);
-            if (mangaButton) mangaButton.hidden = !hasManga;
+            if (mangaButton) {
+                mangaButton.hidden = !hasManga;
+                mangaButton.textContent = mangaEntry?.category === '雑学' ? 'マンガ・雑学' : 'マンガ';
+            }
 
             panel.dataset.constellationId = resolvedId || '';
+            panel.dataset.mangaSrc = mangaEntry?.src || '';
+            panel.dataset.mangaCategory = mangaEntry?.category || '';
             panel.classList.add('visible');
             panel.setAttribute('aria-hidden', 'false');
         }
@@ -5346,8 +5466,12 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         function openConstellationMangaV56() {
             const panel = document.getElementById('constellationQuickCommentV53');
             const overlay = document.getElementById('constellationMangaOverlayV56');
-            if (!overlay || panel?.dataset.constellationId !== 'And') return;
+            const image = document.getElementById('constellationMangaImageV56');
+            const src = panel?.dataset.mangaSrc || '';
+            if (!overlay || !image || !src) return;
 
+            image.src = src;
+            image.alt = `${constellationDisplayJaV65(panel?.dataset.constellationId || '')}マンガ`;
             overlay.classList.add('visible');
             overlay.setAttribute('aria-hidden', 'false');
             document.body.classList.add('constellation-manga-open-v56');
@@ -6727,7 +6851,11 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 const position = convertToCartesian(ra, dec);
                 const rawStarName = String(star.starName || '').trim();
                 const name = String(rawStarName || `star-${Object.keys(starPositions).length}`);
-                const constellation = String((constellationCatalog[star.constellationId]?.en || star.constellationId || '未分類') + ' (' + (constellationCatalog[star.constellationId]?.ja || '') + ')');
+                const constellationInfo = constellationCatalog[star.constellationId];
+                const constellation = String(
+                    (constellationInfo?.en || star.constellationId || '未分類') +
+                    ' (' + (constellationInfo?.displayJa || constellationInfo?.ja || '') + ')'
+                );
                 const magnitude = Number(
                     star.magnitude ?? star.mag ?? star.vmag ?? star.visualMag ?? 99
                 );
@@ -6903,7 +7031,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         function getConstellationLabelText(value) {
             const info = resolveConstellationLabelInfo(value);
             if (!info) return String(value || '');
-            return labelDisplayMode === 'constellation-en' ? info.en : info.ja;
+            return labelDisplayMode === 'constellation-en' ? info.en : (info.displayJa || info.ja);
         }
 
         function applySmartConstellationLabelSize(element, text) {
@@ -7748,6 +7876,20 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
     'use strict';
 
     const MANIFEST_URL = './constellation_art/manifest.json';
+    const ALIGNMENT_URL_V64 = './constellation_art/alignment.json';
+
+    async function loadRegisteredAlignmentV64() {
+        try {
+            const response = await fetch(ALIGNMENT_URL_V64, { cache: 'no-store' });
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const data = await response.json();
+            return (data && typeof data.alignments === 'object') ? data : { alignments: {} };
+        } catch (error) {
+            console.warn('V64 registered alignment fetch failed:', error);
+            return { alignments: {} };
+        }
+    }
+
 
     async function loadManifest() {
         if (window.CONSTELLATION_ART_MANIFEST && window.CONSTELLATION_ART_MANIFEST.artworks) {
@@ -7764,7 +7906,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
     }
 
     function initConstellationArtManagerV46() {
-        loadManifest().then(manifest => {
+        Promise.all([loadManifest(), loadRegisteredAlignmentV64()]).then(([manifest, alignmentData]) => {
             try {
                 if (!manifest || !manifest.artworks || !manifest.artworks.length) {
                     console.warn('V46 artwork manifest is empty.');
@@ -8338,6 +8480,21 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 }
 
 
+                const registeredAlignmentsV64 =
+                    (alignmentData && alignmentData.alignments && typeof alignmentData.alignments === 'object')
+                        ? alignmentData.alignments
+                        : {};
+
+                // V64: alignment.json is the persistent baseline.
+                // Apply it to manifest-based artwork before any geometry is built.
+                manifest.artworks.forEach(cfg => {
+                    if (!cfg?.id) return;
+                    const saved = registeredAlignmentsV64[cfg.id];
+                    if (saved && typeof saved === 'object') {
+                        cfg.align = Object.assign({}, cfg.align || {}, saved);
+                    }
+                });
+
                 manifest.artworks.filter(cfg => cfg && cfg.enabled !== false).forEach(cfg => {
                     entries.set(cfg.id, {
                         cfg,
@@ -8388,13 +8545,13 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                                 fullVisMarginDeg: 6,
                                 fadeOutMarginDeg: 24,
                                 fadeSmoothing: 0.16,
-                                align: {
+                                align: Object.assign({
                                     offsetXPx: 0,
                                     offsetYPx: 0,
                                     scaleX: 1,
                                     scaleY: 1,
                                     rotationDeg: 0
-                                }
+                                }, registeredAlignmentsV64[id] || {})
                             };
 
                             manifest.artworks.push(cfg);
@@ -8891,6 +9048,92 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
     }
 
     requestAnimationFrame(init);
+})();
+</script>
+
+
+<script id="constellationMangaManagerV66Script">
+(() => {
+    'use strict';
+
+    const BASE_PATH = './constellation_manga/';
+    const CANDIDATES = [
+        { id:'And', name:'アンドロメダ座', category:'星座' },
+        { id:'Sgr', name:'いて座', category:'星座' },
+        { id:'Del', name:'いるか座', category:'星座' },
+        { id:'Eri', name:'エリダヌス座', category:'星座' },
+        { id:'Tau', name:'おうし座', category:'星座' },
+        { id:'CMa', name:'おおいぬ座', category:'星座' },
+        { id:'UMa', name:'おおぐま座', category:'星座' },
+        { id:'UMi', name:'こぐま座', category:'星座' },
+        { id:'Vir', name:'おとめ座', category:'星座' },
+        { id:'Ari', name:'おひつじ座', category:'星座' },
+        { id:'Ori', name:'オリオン座', category:'星座' },
+        { id:'Cnc', name:'かに座', category:'星座' },
+        { id:'Com', name:'かみのけ座', category:'星座' },
+        { id:'Crv', name:'からす座', category:'星座' },
+        { id:'Aur', name:'ぎょしゃ座', category:'星座' },
+        { id:'Leo', name:'しし座', category:'星座' },
+        { id:'Cap', name:'やぎ座', category:'星座' },
+        { id:'Aql', name:'わし座', category:'星座' }
+    ];
+
+    const found = new Map();
+
+    function filenameOf(item) {
+        return `${item.name}_${item.category}.png`;
+    }
+
+    function refreshCurrentCommentLink() {
+        const panel = document.getElementById('constellationQuickCommentV53');
+        if (!panel?.classList.contains('visible')) return;
+        const id = panel.dataset.constellationId || '';
+        if (!id) return;
+
+        const entry = found.get(id) || null;
+        const links = document.getElementById('constellationQuickLinksV56');
+        const button = document.getElementById('constellationMangaButtonV56');
+        if (!links || !button) return;
+
+        links.classList.toggle('visible', Boolean(entry));
+        button.hidden = !entry;
+
+        if (entry) {
+            panel.dataset.mangaSrc = entry.src;
+            panel.dataset.mangaCategory = entry.category;
+            button.textContent = entry.category === '雑学' ? 'マンガ・雑学' : 'マンガ';
+        } else {
+            panel.dataset.mangaSrc = '';
+            panel.dataset.mangaCategory = '';
+        }
+    }
+
+    function probe(item) {
+        const filename = filenameOf(item);
+        const src = BASE_PATH + encodeURIComponent(filename);
+        const img = new Image();
+
+        img.onload = () => {
+            found.set(item.id, { ...item, filename, src });
+            refreshCurrentCommentLink();
+            window.dispatchEvent(new CustomEvent('constellation-manga-found-v66', {
+                detail: { id:item.id, filename, category:item.category }
+            }));
+        };
+
+        img.onerror = () => {};
+        img.src = src;
+    }
+
+    CANDIDATES.forEach(probe);
+
+    window.constellationMangaManagerV66 = {
+        get(id) { return found.get(id) || null; },
+        has(id) { return found.has(id); },
+        list() { return Array.from(found.values()); },
+        candidates: CANDIDATES.slice(),
+        basePath: BASE_PATH
+    };
 })();
 </script>
 
