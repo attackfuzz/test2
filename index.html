@@ -2889,7 +2889,7 @@
 
 
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV66 {
+        #settingsVersionV67 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3208,6 +3208,16 @@
             will-change: transform;
         }
 
+
+        .settingsV67ResetButton {
+            margin-top: 6px !important;
+            width: 100% !important;
+            min-height: 32px !important;
+            height: 32px !important;
+            border-radius: 7px !important;
+            font-size: 10px !important;
+        }
+
 </style>
 </head>
 <body>
@@ -3222,7 +3232,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV66" aria-label="バージョン">V66</div>
+        <div id="settingsVersionV67" aria-label="バージョン">V67</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -3362,6 +3372,9 @@
                     type="button"
                     aria-pressed="false">星座絵座標エディタ：OFF</button>
             <p class="settingsV59ArtEditorHint">1本指：移動 / 2本指：拡大縮小・回転 / alignment.json登録済み / マンガフォルダ対応</p>
+            <button id="constellationArtEditorResetCurrentV67"
+                    class="settingsV2ActionButton settingsV67ResetButton"
+                    type="button">選択中の星座絵をリセット</button>
             <button id="constellationArtEditorDownloadJsonV60"
                     class="settingsV2ActionButton settingsV60JsonButton"
                     type="button">調整JSONをダウンロード</button>
@@ -8503,7 +8516,8 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                         textureReady:false,
                         currentOpacity:0,
                         targetOpacity:0,
-                        constellationKey:null
+                        constellationKey:null,
+                        baseAlign: Object.assign({}, cfg.align || {})
                     });
                 });
                 entries.forEach(state => buildEntry(state));
@@ -8563,7 +8577,8 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                                 currentOpacity:0,
                                 targetOpacity:0,
                                 constellationKey:null,
-                                discoveredV63:true
+                                discoveredV63:true,
+                                baseAlign: Object.assign({}, cfg.align || {})
                             };
                             entries.set(id, state);
                             buildEntry(state);
@@ -8633,6 +8648,24 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                             if (state.constellationKey && constellationSelect?.value === state.constellationKey) found = id;
                         });
                         return found;
+                    },
+                    resetAlignmentToBase(id) {
+                        const state = entries.get(id);
+                        if (!state) return false;
+                        const base = Object.assign({
+                            offsetXPx: 0,
+                            offsetYPx: 0,
+                            scaleX: 1,
+                            scaleY: 1,
+                            rotationDeg: 0
+                        }, state.baseAlign || {});
+                        state.cfg.align = Object.assign({}, base);
+                        if (state.mesh) {
+                            return rebuildAlignmentGeometryV59(state);
+                        }
+                        disposeMesh(state);
+                        buildEntry(state);
+                        return true;
                     },
                     exportManifestText() {
                         return JSON.stringify(manifest, null, 2);
@@ -8739,6 +8772,18 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         try {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(obj));
         } catch (_) {}
+    }
+
+
+    function resetCurrentAlignmentV67() {
+        const m = manager();
+        updateActiveId();
+        if (!m || !activeId) return false;
+        const ok = m.resetAlignmentToBase?.(activeId);
+        if (!ok) return false;
+        saveAll();
+        updateHud();
+        return true;
     }
 
 
@@ -9023,6 +9068,13 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             downloadAlignmentJsonV60();
         });
 
+        const resetButton = document.getElementById('constellationArtEditorResetCurrentV67');
+        resetButton?.addEventListener('click', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            resetCurrentAlignmentV67();
+        });
+
         constellationSelect?.addEventListener('change', () => {
             updateActiveId();
         });
@@ -9042,6 +9094,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             set enabled(v) { setEnabled(v); },
             activeId,
             save: saveAll,
+            resetCurrent: resetCurrentAlignmentV67,
             downloadJson: downloadAlignmentJsonV60,
             refreshTarget: updateActiveId
         };
