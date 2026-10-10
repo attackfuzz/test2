@@ -2889,7 +2889,7 @@
 
 
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV67 {
+        #settingsVersionV68 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3218,6 +3218,15 @@
             font-size: 10px !important;
         }
 
+
+        /* ===== V68 reset button click reliability ===== */
+        #constellationArtEditorResetCurrentV67 {
+            pointer-events: auto !important;
+            position: relative !important;
+            z-index: 5 !important;
+            touch-action: manipulation !important;
+        }
+
 </style>
 </head>
 <body>
@@ -3232,7 +3241,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV67" aria-label="バージョン">V67</div>
+        <div id="settingsVersionV68" aria-label="バージョン">V68</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -8667,6 +8676,27 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                         buildEntry(state);
                         return true;
                     },
+                    resolveSelectedArtworkIdV68() {
+                        const oldValue = constellationSelect?.value || '';
+                        const v2Value = document.getElementById('v2ConstellationSelect')?.value || '';
+                        const selectedValue = oldValue || v2Value;
+                        if (!selectedValue) return null;
+
+                        let found = null;
+                        entries.forEach((state, id) => {
+                            if (found) return;
+                            if (state.constellationKey === selectedValue) found = id;
+                        });
+
+                        if (found) return found;
+
+                        // Fallback: compare through constellation IDs.
+                        for (const [id, state] of entries.entries()) {
+                            const expectedKey = resolveConstellationKey(id, state.cfg?.fallbackKey);
+                            if (expectedKey === selectedValue) return id;
+                        }
+                        return null;
+                    },
                     exportManifestText() {
                         return JSON.stringify(manifest, null, 2);
                     }
@@ -9068,13 +9098,6 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             downloadAlignmentJsonV60();
         });
 
-        const resetButton = document.getElementById('constellationArtEditorResetCurrentV67');
-        resetButton?.addEventListener('click', (event) => {
-            event.preventDefault();
-            event.stopPropagation();
-            resetCurrentAlignmentV67();
-        });
-
         constellationSelect?.addEventListener('change', () => {
             updateActiveId();
         });
@@ -9187,6 +9210,74 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         candidates: CANDIDATES.slice(),
         basePath: BASE_PATH
     };
+})();
+</script>
+
+
+<script id="constellationArtResetV68Script">
+(() => {
+    'use strict';
+
+    function showButtonMessage(button, text, ms = 1300) {
+        if (!button) return;
+        const original = button.dataset.originalLabel || button.textContent;
+        button.dataset.originalLabel = original;
+        button.textContent = text;
+        clearTimeout(button._v68Timer);
+        button._v68Timer = setTimeout(() => {
+            button.textContent = button.dataset.originalLabel || original;
+        }, ms);
+    }
+
+    function persistCurrentAlignmentsV68(manager) {
+        if (!manager?.entries) return;
+        const obj = {};
+        manager.entries.forEach((state, id) => {
+            obj[id] = Object.assign({}, state.cfg?.align || {});
+        });
+        try {
+            localStorage.setItem('constellationArtEditorV59.alignments', JSON.stringify(obj));
+        } catch (_) {}
+    }
+
+    function resetSelectedArtworkV68(button) {
+        const manager = window.constellationArtManagerV46;
+        if (!manager) {
+            showButtonMessage(button, 'まだ準備中です');
+            return;
+        }
+
+        const id = manager.resolveSelectedArtworkIdV68?.()
+            || manager.getSelectedArtworkId?.()
+            || null;
+
+        if (!id) {
+            showButtonMessage(button, '星座絵を選択してください', 1700);
+            return;
+        }
+
+        const ok = manager.resetAlignmentToBase?.(id);
+        if (!ok) {
+            showButtonMessage(button, 'リセットできませんでした', 1700);
+            return;
+        }
+
+        persistCurrentAlignmentsV68(manager);
+
+        // Keep the editor HUD target synchronized if the editor exists.
+        window.constellationArtEditorV59?.refreshTarget?.();
+
+        showButtonMessage(button, `${id} をリセットしました`, 1500);
+    }
+
+    // Delegated listener: works regardless of when the art editor initializes.
+    document.addEventListener('click', (event) => {
+        const button = event.target?.closest?.('#constellationArtEditorResetCurrentV67');
+        if (!button) return;
+        event.preventDefault();
+        event.stopPropagation();
+        resetSelectedArtworkV68(button);
+    }, true);
 })();
 </script>
 
