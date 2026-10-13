@@ -2889,7 +2889,7 @@
 
 
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV68 {
+        #settingsVersionV71 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3241,7 +3241,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV68" aria-label="バージョン">V68</div>
+        <div id="settingsVersionV71" aria-label="バージョン">V71</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -3380,7 +3380,7 @@
                     class="settingsV2ActionButton settingsV59ArtEditorButton"
                     type="button"
                     aria-pressed="false">星座絵座標エディタ：OFF</button>
-            <p class="settingsV59ArtEditorHint">1本指：移動 / 2本指：拡大縮小・回転 / alignment.json登録済み / マンガフォルダ対応</p>
+            <p class="settingsV59ArtEditorHint">1本指：移動 / 2本指：拡大縮小・回転 / alignment.json登録済み / マンガフォルダ対応 / 自動配置の左右反転修正 / 探すID統一</p>
             <button id="constellationArtEditorResetCurrentV67"
                     class="settingsV2ActionButton settingsV67ResetButton"
                     type="button">選択中の星座絵をリセット</button>
@@ -4278,22 +4278,51 @@
         };
         const norm=v=>String(v||'').trim().toLowerCase();
         function pickConstellation(id){
-            const sel=document.getElementById('constellationSelect');
-            const info=typeof constellationCatalog!=='undefined'?constellationCatalog[id]:null;
-            if(!sel||!info)return false;
-            const legacy=`${info.en} (${info.ja})`;
-            let hit=false;
-            for(const o of Array.from(sel.options)){
-                const t=String(o.textContent||'').trim(),v=String(o.value||'').trim();
-                if([id,info.en,info.ja,legacy].includes(v)||[id,info.en,info.ja,legacy].includes(t)){sel.value=o.value;hit=true;break;}
-            }
-            if(hit){
-                sel.dispatchEvent(new Event('change',{bubbles:true}));
-                document.dispatchEvent(new CustomEvent('search-constellation-picked',{
-                    detail:{ id, selectedValue: sel.value }
-                }));
-            }
-            return hit;
+            const sel = document.getElementById('constellationSelect');
+            const info = (typeof constellationCatalog !== 'undefined')
+                ? constellationCatalog[id]
+                : null;
+
+            if (!sel || !info || !id) return false;
+
+            // V71: Search always carries the constellation ID.
+            // The display label is never used as the primary identifier.
+            const option = Array.from(sel.options).find(o => {
+                const rawValue = String(o.value || '').trim();
+                const rawText = String(o.textContent || '').trim();
+
+                if (rawValue === id) return true;
+
+                const byValue = (typeof resolveConstellationLabelInfo === 'function')
+                    ? resolveConstellationLabelInfo(rawValue)
+                    : null;
+                if (byValue?.id === id) return true;
+
+                const byText = (typeof resolveConstellationLabelInfo === 'function')
+                    ? resolveConstellationLabelInfo(rawText)
+                    : null;
+                return byText?.id === id;
+            });
+
+            if (!option) return false;
+
+            sel.value = option.value;
+            sel.dataset.selectedConstellationId = id;
+
+            sel.dispatchEvent(new CustomEvent('change', {
+                bubbles: true,
+                detail: { constellationId: id }
+            }));
+
+            document.dispatchEvent(new CustomEvent('search-constellation-picked', {
+                detail: {
+                    id,
+                    constellationId: id,
+                    selectedValue: sel.value
+                }
+            }));
+
+            return true;
         }
         document.addEventListener('DOMContentLoaded',()=>{
             // old constellation picker is superseded by Search V4
@@ -6490,27 +6519,76 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             return true;
         };
 
-        function focusCameraOnConstellation(constellation) {
-            const targetPosition = getConstellationCenter(constellation);
-            if (!targetPosition) return;
+        function focusCameraOnConstellation(valueOrId) {
+            const id = resolveConstellationIdV71(valueOrId);
+            if (!id) return false;
 
-            if (currentViewMode === 'ground') {
-                const direction = targetPosition.clone().sub(camera.position).normalize();
-                groundAltitude = Math.asin(THREE.MathUtils.clamp(direction.dot(observerUp), -1, 1));
-                const horizontal = direction.clone().addScaledVector(observerUp, -direction.dot(observerUp));
-                if (horizontal.lengthSq() > 1e-10) {
-                    horizontal.normalize();
-                    groundAzimuth = Math.atan2(horizontal.dot(observerEast), horizontal.dot(observerNorth));
+            const info = constellationCatalog[id];
+            const candidateKeys = new Set([
+                id,
+                info?.en,
+                info?.ja,
+                info?.displayJa,
+                info ? `${info.en} (${info.ja})` : null,
+                info ? `${info.en} (${info.displayJa || info.ja})` : null
+            ].filter(Boolean));
+
+            let key = null;
+
+            // Prefer the actual star-line key whose label resolves back to this ID.
+            if (typeof lineSegmentsByConstellation !== 'undefined') {
+                for (const candidate of Object.keys(lineSegmentsByConstellation)) {
+                    if (candidateKeys.has(candidate)) {
+                        key = candidate;
+                        break;
+                    }
+                    const resolved = resolveConstellationLabelInfo(candidate);
+                    if (resolved?.id === id) {
+                        key = candidate;
+                        break;
+                    }
                 }
-                groundAltitude = THREE.MathUtils.clamp(groundAltitude, GROUND_MIN_ALTITUDE, GROUND_MAX_ALTITUDE);
-                applyGroundCameraOrientation();
-                updateSkyStatus();
-            } else {
-                focusOnNorthStar = false;
-                cameraFocusToggle.checked = false;
-                startCameraLookAtAnimation(targetPosition);
             }
-            clearActiveViewPreset();
+
+            // Existing project helper remains a useful fallback.
+            if (!key && typeof constellationKeyFromId === 'function') {
+                key = constellationKeyFromId(id);
+            }
+
+            if (!key) key = id;
+
+            const segments =
+                (typeof lineSegmentsByConstellation !== 'undefined')
+                    ? lineSegmentsByConstellation[key]
+                    : null;
+
+            if (!segments || !segments.length) return false;
+
+            const points = [];
+            for (const seg of segments) {
+                if (seg?.a?.position) points.push(seg.a.position);
+                if (seg?.b?.position) points.push(seg.b.position);
+                if (Array.isArray(seg) && seg.length >= 2) {
+                    if (seg[0]?.position) points.push(seg[0].position);
+                    if (seg[1]?.position) points.push(seg[1].position);
+                }
+            }
+
+            if (!points.length) return false;
+
+            const center = new THREE.Vector3();
+            for (const p of points) center.add(p);
+            center.normalize().multiplyScalar(celestialRadius);
+
+            if (typeof setCameraLookDirectionToCelestialPoint === 'function') {
+                setCameraLookDirectionToCelestialPoint(center);
+                return true;
+            }
+
+            const targetDir = center.clone().normalize();
+            const lookTarget = camera.position.clone().add(targetDir.multiplyScalar(1000));
+            camera.lookAt(lookTarget);
+            return true;
         }
 
         function getConstellationCenter(constellation) {
@@ -7042,13 +7120,49 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
         function resolveConstellationLabelInfo(value) {
             if (!value || typeof constellationCatalog === 'undefined') return null;
-            if (constellationCatalog[value]) return constellationCatalog[value];
+
+            const raw = String(value).trim();
+            if (constellationCatalog[raw]) return constellationCatalog[raw];
+
             for (const info of Object.values(constellationCatalog)) {
-                const legacy = `${info.en} (${info.ja})`;
-                if (value === legacy || value === info.en || value === info.ja) return info;
+                const displayJa = info.displayJa || info.ja;
+                const aliases = [
+                    info.id,
+                    info.en,
+                    info.ja,
+                    displayJa,
+                    `${info.en} (${info.ja})`,
+                    `${info.en} (${displayJa})`
+                ].filter(Boolean);
+
+                if (aliases.includes(raw)) return info;
+
+                // Star-line data may use a decorated/legacy label.
+                // Resolve it back to the catalog entry when one of the unique labels is embedded.
+                if (
+                    (info.en && raw.includes(info.en)) ||
+                    (info.ja && raw.includes(info.ja)) ||
+                    (displayJa && raw.includes(displayJa))
+                ) {
+                    return info;
+                }
             }
             return null;
         }
+
+
+        function resolveConstellationIdV71(value) {
+            if (!value) return null;
+            const raw = String(value).trim();
+
+            if (typeof constellationCatalog !== 'undefined' && constellationCatalog[raw]) {
+                return raw;
+            }
+
+            const info = resolveConstellationLabelInfo(raw);
+            return info?.id || null;
+        }
+
 
         function getConstellationLabelText(value) {
             const info = resolveConstellationLabelInfo(value);
@@ -8066,6 +8180,11 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                         tangentX = new THREE.Vector3(1, 0, 0).cross(normal);
                     }
                     tangentX.normalize();
+
+                    // V69: auto-placed constellation art is viewed from inside the celestial sphere.
+                    // Invert the horizontal basis so the image no longer appears left-right mirrored.
+                    tangentX.multiplyScalar(-1);
+
                     const tangentY = new THREE.Vector3().crossVectors(normal, tangentX).normalize();
 
                     state.autoNormal = normal;
@@ -9277,6 +9396,28 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         event.preventDefault();
         event.stopPropagation();
         resetSelectedArtworkV68(button);
+    }, true);
+})();
+</script>
+
+
+<script id="constellationIdBridgeV71">
+(() => {
+    'use strict';
+
+    function syncCanonicalId() {
+        const sel = document.getElementById('constellationSelect');
+        if (!sel || typeof resolveConstellationIdV71 !== 'function') return;
+        const id = resolveConstellationIdV71(sel.value)
+            || resolveConstellationIdV71(sel.options?.[sel.selectedIndex]?.textContent || '');
+        if (id) sel.dataset.selectedConstellationId = id;
+    }
+
+    document.addEventListener('DOMContentLoaded', syncCanonicalId, { once:true });
+
+    document.addEventListener('change', (event) => {
+        if (event.target?.id !== 'constellationSelect') return;
+        syncCanonicalId();
     }, true);
 })();
 </script>
