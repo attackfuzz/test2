@@ -2889,7 +2889,7 @@
 
 
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV74 {
+        #settingsVersionV77 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3241,7 +3241,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV74" aria-label="バージョン">V74</div>
+        <div id="settingsVersionV77" aria-label="バージョン">V77</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -3380,7 +3380,7 @@
                     class="settingsV2ActionButton settingsV59ArtEditorButton"
                     type="button"
                     aria-pressed="false">星座絵座標エディタ：OFF</button>
-            <p class="settingsV59ArtEditorHint">1本指：移動 / 2本指：拡大縮小・回転 / alignment.json登録済み / マンガフォルダ対応 / 自動配置の左右反転修正 / 内部ID小文字統一</p>
+            <p class="settingsV59ArtEditorHint">1本指：移動 / 2本指：拡大縮小・回転 / alignment.json登録済み / マンガフォルダ対応 / 自動配置の左右反転修正 / 内部ID小文字統一 / 星座絵あれば自動表示 / ナビゲーションID統一</p>
             <button id="constellationArtEditorResetCurrentV67"
                     class="settingsV2ActionButton settingsV67ResetButton"
                     type="button">選択中の星座絵をリセット</button>
@@ -4277,54 +4277,57 @@
             ]
         };
         const norm=v=>String(v||'').trim().toLowerCase();
-        function pickConstellation(internalId){
-            const sel=document.getElementById('constellationSelect');
-            const info=window.constellationMasterV74?.getInfo(internalId);
-            if(!sel||!info)return false;
+        function pickConstellation(valueOrId){
+            const sel = document.getElementById('constellationSelect');
+            const info = window.constellationMasterV74?.getInfo(valueOrId);
+            if (!sel || !info) return false;
 
-            const legacy=`${info.en} (${info.ja})`;
-            const aliases=[
-                info.internalId,
-                info.iauId,
-                info.en,
-                info.ja,
-                info.displayJa,
-                legacy,
-                `${info.en} (${info.displayJa||info.ja})`
-            ].filter(Boolean);
+            const internalId = info.internalId || String(info.id || '').toLowerCase();
+            const rendererKey =
+                (typeof resolveRendererConstellationKeyV76 === 'function')
+                    ? resolveRendererConstellationKeyV76(internalId)
+                    : null;
 
-            let hit=false;
-            for(const o of Array.from(sel.options)){
-                const t=String(o.textContent||'').trim();
-                const v=String(o.value||'').trim();
-                const resolvedV=window.constellationMasterV74?.getInfo(v);
-                const resolvedT=window.constellationMasterV74?.getInfo(t);
-                if(
-                    aliases.includes(v) ||
-                    aliases.includes(t) ||
-                    resolvedV?.internalId===info.internalId ||
-                    resolvedT?.internalId===info.internalId
-                ){
-                    sel.value=o.value;
-                    hit=true;
-                    break;
+            if (!rendererKey) {
+                console.warn('V76 renderer key not found:', internalId, info.iauId || info.id);
+                return false;
+            }
+
+            // Select the option that points at the actual renderer key.
+            let option = Array.from(sel.options).find(o => String(o.value || '').trim() === rendererKey);
+
+            // Compatibility fallback for select options whose value is not
+            // exactly the renderer key.
+            if (!option) {
+                option = Array.from(sel.options).find(o => {
+                    const value = String(o.value || '').trim();
+                    const text = String(o.textContent || '').trim();
+                    return resolveRendererConstellationKeyV76(value) === rendererKey ||
+                           resolveRendererConstellationKeyV76(text) === rendererKey;
+                });
+            }
+
+            if (!option) {
+                console.warn('V76 selector option not found:', internalId, rendererKey);
+                return false;
+            }
+
+            sel.value = option.value;
+            sel.dataset.internalConstellationId = internalId;
+            sel.dispatchEvent(new Event('change', { bubbles:true }));
+
+            document.dispatchEvent(new CustomEvent('search-constellation-picked', {
+                detail: {
+                    id: internalId,
+                    internalId,
+                    iauId: info.iauId || info.id,
+                    rendererKey,
+                    selectedValue: option.value
                 }
-            }
-
-            if(hit){
-                sel.dataset.internalConstellationId=info.internalId;
-                sel.dispatchEvent(new Event('change',{bubbles:true}));
-                document.dispatchEvent(new CustomEvent('search-constellation-picked',{
-                    detail:{
-                        id:info.internalId,
-                        internalId:info.internalId,
-                        iauId:info.iauId,
-                        selectedValue:sel.value
-                    }
-                }));
-            }
-            return hit;
+            }));
+            return true;
         }
+
         document.addEventListener('DOMContentLoaded',()=>{
             // old constellation picker is superseded by Search V4
             for(const sec of Array.from(document.querySelectorAll('#settingsSheetV2 .settingsV2Section'))){
@@ -5553,19 +5556,19 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
         document.addEventListener('search-constellation-picked', (event) => {
             const detail = event.detail || {};
-            const selectedValue = detail.selectedValue || constellationSelect?.value;
-            if (!selectedValue) return;
+            const internalId =
+                detail.internalId ||
+                detail.id ||
+                window.constellationMasterV74?.toInternalId(detail.selectedValue || constellationSelect?.value);
 
-            // Search selection is a direct request to "show me this constellation",
-            // so center it even in ground mode (subject to the ground horizon limits).
-            focusCameraOnConstellation(selectedValue);
+            if (!internalId) return;
 
-            // Avoid showing the old titled info sheet at the same time.
+            // V76: every navigation path reaches the same center resolver.
+            focusCameraOnConstellation(internalId);
+
             if (typeof setInfoSheetOpen === 'function') setInfoSheetOpen(false);
+            showConstellationQuickCommentV53(internalId);
 
-            showConstellationQuickCommentV53(detail.id);
-
-            // Re-check visibility guidance after the camera settles/moves.
             setTimeout(() => updateSelectedConstellationGuidance(true), 420);
         });
 
@@ -6598,9 +6601,70 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             clearActiveViewPreset();
         }
 
+        // ===== V76: one constellation resolver for all navigation =====
+        // Accepts internal lowercase ID (uma), official IAU ID (UMa),
+        // Japanese/English display names, or a legacy renderer key.
+        // Returns the actual key that exists in starPositionLists.
+        function resolveRendererConstellationKeyV76(value) {
+            if (!value || typeof starPositionLists === 'undefined') return null;
+
+            const raw = String(value).trim();
+
+            // Fast path: already an actual renderer key.
+            if (starPositionLists[raw]?.length) return raw;
+
+            const info =
+                window.constellationMasterV74?.getInfo(raw) ||
+                (typeof resolveConstellationLabelInfo === 'function'
+                    ? resolveConstellationLabelInfo(raw)
+                    : null);
+
+            if (!info) return null;
+
+            const candidates = [
+                `${info.en} (${info.ja})`,
+                `${info.en} (${info.displayJa || info.ja})`,
+                info.en,
+                info.ja,
+                info.displayJa,
+                info.iauId,
+                info.id,
+                info.internalId
+            ].filter(Boolean);
+
+            for (const candidate of candidates) {
+                if (starPositionLists[candidate]?.length) return candidate;
+            }
+
+            // Final compatibility boundary:
+            // inspect only the actual renderer keys and ask whether they
+            // resolve to the same catalog entry.
+            for (const rendererKey of Object.keys(starPositionLists)) {
+                const resolved =
+                    window.constellationMasterV74?.getInfo(rendererKey) ||
+                    (typeof resolveConstellationLabelInfo === 'function'
+                        ? resolveConstellationLabelInfo(rendererKey)
+                        : null);
+
+                if (
+                    resolved &&
+                    (resolved.internalId || String(resolved.id || '').toLowerCase()) ===
+                    (info.internalId || String(info.id || '').toLowerCase())
+                ) {
+                    return rendererKey;
+                }
+            }
+
+            return null;
+        }
+
         function getConstellationCenter(constellation) {
-            const positions = starPositionLists[constellation];
+            const rendererKey = resolveRendererConstellationKeyV76(constellation);
+            if (!rendererKey) return null;
+
+            const positions = starPositionLists[rendererKey];
             if (!positions || positions.length === 0) return null;
+
             const center = new THREE.Vector3();
             positions.forEach(position => center.add(position));
             center.divideScalar(positions.length);
@@ -6638,6 +6702,14 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         }
 
         function selectedConstellationDisplayName(key) {
+            const info =
+                window.constellationMasterV74?.getInfo(key) ||
+                (typeof resolveConstellationLabelInfo === 'function'
+                    ? resolveConstellationLabelInfo(key)
+                    : null);
+
+            if (info) return info.displayJa || info.ja || info.en;
+
             const match = String(key || '').match(/\(([^)]+)\)\s*$/);
             return match ? match[1] : String(key || '選択した星座');
         }
@@ -6729,7 +6801,10 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 return;
             }
 
-            const selected = constellationSelect.value;
+            const selectedRaw = constellationSelect.value;
+            const selected =
+                window.constellationMasterV74?.toInternalId(selectedRaw) ||
+                selectedRaw;
             const state = getConstellationViewState(selected, currentViewMode === 'ground');
             if (!state) {
                 hideSelectedConstellationGuidance();
@@ -8650,70 +8725,101 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                         ? Object.values(constellationCatalog)
                         : [];
 
+                    function buildCandidateFiles(info) {
+                        const iauId = String(info?.iauId || info?.id || '').trim();
+                        const internalId = String(info?.internalId || iauId.toLowerCase()).trim();
+                        if (!internalId) return [];
+
+                        const capitalized = internalId.charAt(0).toUpperCase() + internalId.slice(1);
+
+                        return [
+                            internalId + '.png',   // V74/V75 recommended style: uma.png
+                            iauId + '.png',        // exact official IAU style: UMa.png
+                            capitalized + '.png'   // legacy common style: Uma.png / Ori.png
+                        ].filter((name, index, arr) => name && arr.indexOf(name) === index);
+                    }
+
                     catalogItems.forEach(info => {
                         const iauId = String(info?.iauId || info?.id || '').trim();
                         const internalId = String(info?.internalId || iauId.toLowerCase()).trim();
                         if (!/^[a-z]{3}$/.test(internalId)) return;
                         if (entries.has(internalId)) return;
 
-                        const url = basePath + internalId + '.png';
-                        const probe = new Image();
+                        const candidates = buildCandidateFiles(info);
+                        if (!candidates.length) return;
 
-                        probe.onload = () => {
+                        const tryCandidate = (index = 0) => {
+                            if (index >= candidates.length) return;
                             if (entries.has(internalId)) return;
 
-                            const cfg = {
-                                id: internalId,
-                                internalId,
-                                iauId,
-                                nameJa: info.displayJa || info.ja || internalId,
-                                fallbackKey: `${info.en} (${info.ja})`,
-                                enabled: true,
-                                file: internalId + '.png',
-                                autoPlacement: true,
-                                imageWidth: Number(probe.naturalWidth || 1024),
-                                imageHeight: Number(probe.naturalHeight || 1024),
-                                segX: 40,
-                                segY: 40,
-                                radiusScale: 1.0015,
-                                baseOpacity: 0.68,
-                                selectedOpacity: 0.94,
-                                fullVisMarginDeg: 6,
-                                fadeOutMarginDeg: 24,
-                                fadeSmoothing: 0.16,
-                                align: Object.assign({
-                                    offsetXPx: 0,
-                                    offsetYPx: 0,
-                                    scaleX: 1,
-                                    scaleY: 1,
-                                    rotationDeg: 0
-                                }, registeredAlignmentsV64[internalId] || registeredAlignmentsV64[iauId] || {})
+                            const filename = candidates[index];
+                            const url = basePath + filename;
+                            const probe = new Image();
+
+                            probe.onload = () => {
+                                if (entries.has(internalId)) return;
+
+                                const cfg = {
+                                    id: internalId,
+                                    internalId,
+                                    iauId,
+                                    nameJa: info.displayJa || info.ja || internalId,
+                                    fallbackKey: `${info.en} (${info.ja})`,
+                                    enabled: true,
+                                    file: filename,
+                                    autoPlacement: true,
+                                    imageWidth: Number(probe.naturalWidth || 1024),
+                                    imageHeight: Number(probe.naturalHeight || 1024),
+                                    segX: 40,
+                                    segY: 40,
+                                    radiusScale: 1.0015,
+                                    baseOpacity: 0.68,
+                                    selectedOpacity: 0.94,
+                                    fullVisMarginDeg: 6,
+                                    fadeOutMarginDeg: 24,
+                                    fadeSmoothing: 0.16,
+                                    align: Object.assign({
+                                        offsetXPx: 0,
+                                        offsetYPx: 0,
+                                        scaleX: 1,
+                                        scaleY: 1,
+                                        rotationDeg: 0
+                                    },
+                                        registeredAlignmentsV64[internalId] ||
+                                        registeredAlignmentsV64[iauId] ||
+                                        {}
+                                    )
+                                };
+
+                                manifest.artworks.push(cfg);
+                                const state = {
+                                    cfg,
+                                    mesh:null,
+                                    buildTried:false,
+                                    textureReady:false,
+                                    currentOpacity:0,
+                                    targetOpacity:0,
+                                    constellationKey:null,
+                                    discoveredV63:true,
+                                    baseAlign: Object.assign({}, cfg.align || {})
+                                };
+                                entries.set(internalId, state);
+                                buildEntry(state);
+
+                                console.info(`V75 artwork discovered: ${filename} -> ${internalId} (${iauId})`);
+                                window.dispatchEvent(new CustomEvent('constellation-art-discovered-v63', {
+                                    detail: { id: internalId, internalId, iauId, file: filename }
+                                }));
                             };
 
-                            manifest.artworks.push(cfg);
-                            const state = {
-                                cfg,
-                                mesh:null,
-                                buildTried:false,
-                                textureReady:false,
-                                currentOpacity:0,
-                                targetOpacity:0,
-                                constellationKey:null,
-                                discoveredV63:true,
-                                baseAlign: Object.assign({}, cfg.align || {})
+                            probe.onerror = () => {
+                                tryCandidate(index + 1);
                             };
-                            entries.set(internalId, state);
-                            buildEntry(state);
 
-                            console.info(`V74 artwork discovered: ${internalId}.png (${iauId})`);
-                            window.dispatchEvent(new CustomEvent('constellation-art-discovered-v63', {
-                                detail: { id: internalId, internalId, iauId, file: internalId + '.png' }
-                            }));
+                            probe.src = url;
                         };
 
-                        // Missing files are expected and intentionally ignored.
-                        probe.onerror = () => {};
-                        probe.src = url;
+                        tryCandidate(0);
                     });
                 }
 
