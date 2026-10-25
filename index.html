@@ -2891,7 +2891,7 @@
 
 
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV83_1 {
+        #settingsVersionV83_2 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3243,7 +3243,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV83_1" aria-label="バージョン">V83.1</div>
+        <div id="settingsVersionV83_2" aria-label="バージョン">V83.2</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -5406,11 +5406,11 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             const mangaButton = document.getElementById('constellationMangaButtonV56');
             if (!panel || !text) return;
 
-            const info = window.constellationMasterV74?.getInfo(constellationId)
-                || resolveConstellationLabelInfo(constellationId);
+            const internalId = ConstellationRegistryV80.normalizeId(constellationId);
+            if (!internalId) return;
 
-            const internalId = info?.internalId || String(constellationId || '').toLowerCase();
-            const iauId = info?.iauId || info?.id || constellationId || '';
+            const info = CONSTELLATIONS_V2[internalId];
+            const iauId = info.iau;
 
             const comment = constellationBasicComments[iauId] ||
                 'この星座の基本コメントはまだ登録されていません。';
@@ -6269,13 +6269,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             ViewerStateV80.selectedConstellationId = null;
             if (constellationSelect) constellationSelect.value = '';
 
-            window.dispatchEvent(new CustomEvent('viewer-constellation-selection', {
-                detail: {
-                    id: null,
-                    previousId,
-                    source: 'reset'
-                }
-            }));
+            notifyConstellationSelectionV83_2(null, previousId, 'reset');
 
             Object.values(runtimeConstellationsV80).forEach(runtime => {
                 runtime.labelElement?.classList.remove('selected');
@@ -6294,7 +6288,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
         function setConstellationVisualSelectedV80(id, selected) {
             if (!id) return;
-            const runtime = runtimeConstellationsV80[id];
+            const runtime = runtimeConstellationsV80[id] || ensureRuntimeConstellationV80(id);
             if (!runtime) return;
 
             runtime.labelElement?.classList.toggle('selected', selected);
@@ -6310,6 +6304,23 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             }
         }
 
+        function notifyConstellationSelectionV83_2(id, previousId, source) {
+            try {
+                window.dispatchEvent(new CustomEvent('viewer-constellation-selection', {
+                    detail: {
+                        id,
+                        previousId,
+                        source: source || 'unknown'
+                    }
+                }));
+            } catch (error) {
+                console.warn(
+                    'Selection notification failed; core selection remains active.',
+                    error
+                );
+            }
+        }
+
         function selectConstellationV80(value, options = {}) {
             const id = ConstellationRegistryV80.normalizeId(value);
             const previousId = ViewerStateV80.selectedConstellationId;
@@ -6320,36 +6331,38 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
             ViewerStateV80.selectedConstellationId = id || null;
 
-            // Legacy select is presentation-only during migration.
             if (constellationSelect && constellationSelect.value !== (id || '')) {
                 constellationSelect.value = id || '';
             }
 
-            window.dispatchEvent(new CustomEvent('viewer-constellation-selection', {
-                detail: {
-                    id: ViewerStateV80.selectedConstellationId,
-                    previousId,
-                    source: options.source || 'unknown'
-                }
-            }));
-
             if (!id) {
+                hideConstellationQuickCommentV53();
                 hideSelectedConstellationGuidance();
+                notifyConstellationSelectionV83_2(null, previousId, options.source);
                 return false;
             }
 
             setConstellationVisualSelectedV80(id, true);
             clearSkySearchHighlight();
 
-            if (options.showComment) {
+            if (options.showComment !== false) {
                 showConstellationQuickCommentV53(id);
             }
 
             if (options.focus) {
                 focusCameraOnConstellation(id);
-            } else if (currentViewMode === 'ground') {
+            } else if (
+                currentViewMode === 'ground' ||
+                currentViewMode === 'center'
+            ) {
                 updateSelectedConstellationGuidance(true);
             }
+
+            notifyConstellationSelectionV83_2(
+                id,
+                previousId,
+                options.source
+            );
 
             return true;
         }
@@ -6392,13 +6405,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             ViewerStateV80.selectedConstellationId = null;
             if (constellationSelect) constellationSelect.value = '';
 
-            window.dispatchEvent(new CustomEvent('viewer-constellation-selection', {
-                detail: {
-                    id: null,
-                    previousId,
-                    source: 'multi-highlight'
-                }
-            }));
+            notifyConstellationSelectionV83_2(null, previousId, 'multi-highlight');
 
             hideSelectedConstellationGuidance();
             return true;
