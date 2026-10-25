@@ -2889,7 +2889,7 @@
 
 
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV80 {
+        #settingsVersionV81 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3241,7 +3241,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV80" aria-label="バージョン">V80</div>
+        <div id="settingsVersionV81" aria-label="バージョン">V81</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -4863,12 +4863,6 @@
         let clockSelectedMinutes12h = 0;
 
         const starPositions = {};
-        const starMeshes = {};
-        const lineMeshes = {};
-        const lineSegmentsByConstellation = {};
-        const starPositionLists = {};
-        const constellationFirstStarPositions = {};
-        const constellationLabelElements = {};
         const starLabelElements = {};
         const starLabelMeta = {};
 
@@ -5760,7 +5754,10 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 });
             }
 
-            for (const [constellation, segments] of Object.entries(lineSegmentsByConstellation)) {
+            for (const [constellation, runtime] of Object.entries(runtimeConstellationsV80)) {
+                const segments = runtime.segments || [];
+                if (!segments.length) continue;
+
                 let best = Infinity;
                 for (const segment of segments) {
                     const a = projectSkyPointToScreen(segment.start);
@@ -6260,32 +6257,37 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         function resetConstellationHighlight() {
             ViewerStateV80.selectedConstellationId = null;
             if (constellationSelect) constellationSelect.value = '';
-            Object.values(constellationLabelElements).forEach(el => el.classList.remove('selected'));
-            Object.values(starMeshes).forEach(points => {
-                points.material.color.set(0xffffff);
-                points.material.size = 2;
-            });
-            Object.values(lineMeshes).forEach(lines => {
-                lines.material.color.set(0x00ff66);
-                lines.material.opacity = 0.75;
+
+            Object.values(runtimeConstellationsV80).forEach(runtime => {
+                runtime.labelElement?.classList.remove('selected');
+
+                if (runtime.starMesh?.material) {
+                    runtime.starMesh.material.color.set(0xffffff);
+                    runtime.starMesh.material.size = 2;
+                }
+
+                if (runtime.lineMesh?.material) {
+                    runtime.lineMesh.material.color.set(0x00ff66);
+                    runtime.lineMesh.material.opacity = 0.75;
+                }
             });
         }
 
         function setConstellationVisualSelectedV80(id, selected) {
             if (!id) return;
             const runtime = runtimeConstellationsV80[id];
-            const label = runtime?.labelElement || constellationLabelElements[id];
-            const starMesh = runtime?.starMesh || starMeshes[id];
-            const lineMesh = runtime?.lineMesh || lineMeshes[id];
+            if (!runtime) return;
 
-            label?.classList.toggle('selected', selected);
-            if (starMesh?.material) {
-                starMesh.material.color.set(selected ? 0xff3344 : 0xffffff);
-                starMesh.material.size = selected ? 5 : 2;
+            runtime.labelElement?.classList.toggle('selected', selected);
+
+            if (runtime.starMesh?.material) {
+                runtime.starMesh.material.color.set(selected ? 0xff3344 : 0xffffff);
+                runtime.starMesh.material.size = selected ? 5 : 2;
             }
-            if (lineMesh?.material) {
-                lineMesh.material.color.set(selected ? 0xff3344 : 0x00ff66);
-                lineMesh.material.opacity = selected ? 1 : 0.75;
+
+            if (runtime.lineMesh?.material) {
+                runtime.lineMesh.material.color.set(selected ? 0xff3344 : 0x00ff66);
+                runtime.lineMesh.material.opacity = selected ? 1 : 0.75;
             }
         }
 
@@ -6341,18 +6343,20 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
             const selectedSet = new Set(keys);
 
-            Object.entries(constellationLabelElements).forEach(([constellation, element]) => {
-                element.classList.toggle('selected', selectedSet.has(constellation));
-            });
-            Object.entries(starMeshes).forEach(([constellation, points]) => {
-                const selected = selectedSet.has(constellation);
-                points.material.color.set(selected ? 0xff3344 : 0xffffff);
-                points.material.size = selected ? 5 : 2;
-            });
-            Object.entries(lineMeshes).forEach(([constellation, lines]) => {
-                const selected = selectedSet.has(constellation);
-                lines.material.color.set(selected ? 0xff3344 : 0x00ff66);
-                lines.material.opacity = selected ? 1 : 0.75;
+            Object.entries(runtimeConstellationsV80).forEach(([id, runtime]) => {
+                const selected = selectedSet.has(id);
+
+                runtime.labelElement?.classList.toggle('selected', selected);
+
+                if (runtime.starMesh?.material) {
+                    runtime.starMesh.material.color.set(selected ? 0xff3344 : 0xffffff);
+                    runtime.starMesh.material.size = selected ? 5 : 2;
+                }
+
+                if (runtime.lineMesh?.material) {
+                    runtime.lineMesh.material.color.set(selected ? 0xff3344 : 0x00ff66);
+                    runtime.lineMesh.material.opacity = selected ? 1 : 0.75;
+                }
             });
 
             // 通常の単独選択とは別の「複数星座選択」なので単独選択状態を解除する。
@@ -6559,25 +6563,24 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         // ===== V76: one constellation resolver for all navigation =====
         // Accepts internal lowercase ID (uma), official IAU ID (UMa),
         // Japanese/English display names, or a legacy renderer key.
-        // Returns the actual key that exists in starPositionLists.
+        // Returns the canonical runtime constellation ID when runtime data exists.
         function resolveRendererConstellationKeyV76(value) {
             const id = ConstellationRegistryV80.normalizeId(value);
-            return id && starPositionLists[id]?.length ? id : null;
+            return id && runtimeConstellationsV80[id]?.starPositions?.length ? id : null;
         }
 
         function getConstellationCenter(value) {
             const id = ConstellationRegistryV80.normalizeId(value);
             if (!id) return null;
-            const runtime = runtimeConstellationsV80[id];
-            if (runtime?.center) return runtime.center.clone();
 
-            const positions = starPositionLists[id];
-            if (!positions?.length) return null;
-            const center = new THREE.Vector3();
-            positions.forEach(position => center.add(position));
-            center.divideScalar(positions.length);
-            if (center.lengthSq() < 0.0001) center.copy(positions[0]);
-            return center.normalize().multiplyScalar(SKY_RADIUS);
+            const runtime = runtimeConstellationsV80[id];
+            if (!runtime) return null;
+
+            if (!runtime.center && runtime.starPositions.length) {
+                runtime.center = calculateRuntimeConstellationCenterV80(runtime);
+            }
+
+            return runtime.center?.clone() || null;
         }
 
 
@@ -6950,10 +6953,6 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 starPositions[name] = position;
                 constellations.add(id);
 
-                // Temporary rendering-cache mirrors. These are no longer independent source data.
-                starPositionLists[id] = runtime.starPositions;
-                if (!constellationFirstStarPositions[id]) constellationFirstStarPositions[id] = runtime.labelAnchor;
-
                 skyTapStarCandidates.push({
                     starName: name,
                     displayName: rawStarName || name,
@@ -7000,7 +6999,6 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 starGroup.add(points);
 
                 runtime.starMesh = points;
-                starMeshes[id] = points;
             }
 
             // Phase 1: normalize legacy starline constellation labels to the same internal ID.
@@ -7022,8 +7020,12 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 }
 
                 const runtime = ensureRuntimeConstellationV80(id);
-                runtime.segments.push({ start, end, starName1: line.starName1, starName2: line.starName2 });
-                lineSegmentsByConstellation[id] = runtime.segments;
+                runtime.segments.push({
+                    start,
+                    end,
+                    starName1: line.starName1,
+                    starName2: line.starName2
+                });
                 constellations.add(id);
             });
 
@@ -7044,7 +7046,6 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 lineGroup.add(segments);
 
                 runtime.lineMesh = segments;
-                lineMeshes[id] = segments;
             }
             lineGroup.visible = constellationLinesToggle.checked;
 
@@ -7057,9 +7058,8 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                     option.textContent = CONSTELLATIONS_V2[id].ja;
                     constellationSelect.appendChild(option);
 
-                    createConstellationLabel(id);
                     const runtime = ensureRuntimeConstellationV80(id);
-                    runtime.labelElement = constellationLabelElements[id] || null;
+                    runtime.labelElement = createConstellationLabel(id);
                 });
 
             constellationSelect.addEventListener('change', () => {
@@ -7088,20 +7088,24 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             if (!force && clipKey === lastConstellationLineClipKey) return;
             lastConstellationLineClipKey = clipKey;
 
-            // 星座線は元の天球上の端点のまま描画する。
-            // 地上モードで見えない半球は groundDepthOccluder が深度で隠す。
-            Object.entries(lineSegmentsByConstellation).forEach(([constellation, sourceSegments]) => {
-                const mesh = lineMeshes[constellation];
+            // Runtime is the single source of constellation line geometry.
+            Object.values(runtimeConstellationsV80).forEach(runtime => {
+                const mesh = runtime.lineMesh;
                 if (!mesh) return;
 
                 const positions = [];
-                sourceSegments.forEach(segment => {
+                runtime.segments.forEach(segment => {
                     if (!isFiniteVector3(segment.start) || !isFiniteVector3(segment.end)) return;
                     positions.push(segment.start, segment.end);
                 });
 
-                const replacementGeometry = new THREE.BufferGeometry().setFromPoints(positions);
-                if (positions.length > 0) replacementGeometry.computeBoundingSphere();
+                const replacementGeometry =
+                    new THREE.BufferGeometry().setFromPoints(positions);
+
+                if (positions.length > 0) {
+                    replacementGeometry.computeBoundingSphere();
+                }
+
                 mesh.geometry.dispose();
                 mesh.geometry = replacementGeometry;
             });
@@ -7127,13 +7131,13 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             else if (length >= 9) element.classList.add('constellation-label-medium');
         }
 
-        function createConstellationLabel(constellation) {
+        function createConstellationLabel(id) {
             const element = document.createElement('div');
             element.className = 'constellation-label';
-            element.textContent = constellation;
+            element.textContent = CONSTELLATIONS_V2[id]?.ja || id;
             element.style.display = 'none';
             constellationLabelsLayer.appendChild(element);
-            constellationLabelElements[constellation] = element;
+            return element;
         }
 
         function createStarLabel(key, starName, constellation) {
@@ -7146,9 +7150,14 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         }
 
         function updateConstellationLabels() {
-            const cameraForward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion).normalize();
+            const cameraForward = new THREE.Vector3(0, 0, -1)
+                .applyQuaternion(camera.quaternion)
+                .normalize();
 
-            Object.entries(constellationLabelElements).forEach(([constellation, element]) => {
+            Object.entries(runtimeConstellationsV80).forEach(([id, runtime]) => {
+                const element = runtime.labelElement;
+                if (!element) return;
+
                 if (
                     labelDisplayMode !== 'constellation-en' &&
                     labelDisplayMode !== 'constellation-ja'
@@ -7157,37 +7166,51 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                     return;
                 }
 
-                const labelText = getConstellationLabelText(constellation);
+                const info = CONSTELLATIONS_V2[id];
+                const labelText =
+                    labelDisplayMode === 'constellation-en'
+                        ? info?.en || id
+                        : info?.ja || id;
+
                 if (element.textContent !== labelText) {
                     element.textContent = labelText;
                 }
                 applySmartConstellationLabelSize(element, labelText);
 
-                const worldPosition = constellationFirstStarPositions[constellation];
+                const worldPosition = runtime.labelAnchor || runtime.center;
                 if (!worldPosition) {
                     element.style.display = 'none';
                     return;
                 }
 
                 const toLabel = worldPosition.clone().sub(camera.position);
+
                 if (currentViewMode === 'ground' && toLabel.dot(observerUp) <= 0) {
                     element.style.display = 'none';
                     return;
                 }
+
                 if (toLabel.normalize().dot(cameraForward) <= 0) {
                     element.style.display = 'none';
                     return;
                 }
 
                 const projected = worldPosition.clone().project(camera);
-                if (projected.z < -1 || projected.z > 1 || Math.abs(projected.x) > 1.08 || Math.abs(projected.y) > 1.08) {
+                if (
+                    projected.z < -1 ||
+                    projected.z > 1 ||
+                    Math.abs(projected.x) > 1.08 ||
+                    Math.abs(projected.y) > 1.08
+                ) {
                     element.style.display = 'none';
                     return;
                 }
 
                 element.style.display = 'block';
-                element.style.left = `${(projected.x * 0.5 + 0.5) * window.innerWidth}px`;
-                element.style.top = `${(-projected.y * 0.5 + 0.5) * window.innerHeight}px`;
+                element.style.left =
+                    `${(projected.x * 0.5 + 0.5) * window.innerWidth}px`;
+                element.style.top =
+                    `${(-projected.y * 0.5 + 0.5) * window.innerHeight}px`;
             });
         }
 
@@ -7999,7 +8022,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 if (
                     typeof THREE === 'undefined' ||
                     typeof celestialGroup === 'undefined' ||
-                    typeof lineSegmentsByConstellation === 'undefined' ||
+                    typeof runtimeConstellationsV80 === 'undefined' ||
                     typeof constellationSelect === 'undefined' ||
                     typeof camera === 'undefined' ||
                     typeof SKY_RADIUS === 'undefined'
@@ -8020,7 +8043,8 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
                 function getBasisForEntry(entry) {
                     const key = resolveConstellationKey(entry.internalId || entry.id);
-                    const segments = lineSegmentsByConstellation[key];
+                    const runtime = key ? runtimeConstellationsV80[key] : null;
+                    const segments = runtime?.segments;
                     if (!segments || !segments.length) return null;
 
                     const unique = new Map();
