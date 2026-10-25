@@ -1315,6 +1315,34 @@
         }
 
     
+        /* ===== V87.1 permanent clock anchor repair ===== */
+        #clockPanel,
+        #clockPanel.open,
+        #clockPanel:not(.open) {
+            position: fixed !important;
+            left: auto !important;
+            top: auto !important;
+            right: 18px !important;
+            bottom: 154px !important;
+            inset: auto 18px 154px auto !important;
+            z-index: 150 !important;
+        }
+
+        @media (max-width: 520px) {
+            #clockPanel,
+            #clockPanel.open,
+            #clockPanel:not(.open) {
+                left: auto !important;
+                top: auto !important;
+                right: 14px !important;
+                bottom: 151px !important;
+                inset: auto 14px 151px auto !important;
+                width: 94px !important;
+                height: 94px !important;
+                transform: none !important;
+            }
+        }
+
         /* ===== Stable Settings Side Sheet V2 ===== */
         #controls { display: none !important; }
         #settingsScrim { display: none !important; }
@@ -2078,8 +2106,17 @@
          */
         #clockPanel,
         #clockPanel.open,
-        #clockPanel:not(.open),
-
+        #clockPanel:not(.open) {
+            position: fixed !important;
+            left: auto !important;
+            right: 18px !important;
+            bottom: 154px !important;
+            top: auto !important;
+            inset: auto 18px 154px auto !important;
+            transform: translateY(0) scale(.92) !important;
+            transform-origin: 72% 100% !important;
+            overflow: visible !important;
+        }
 
         #clockPanel .clock-face,
         #clockPanel.open .clock-face,
@@ -2159,8 +2196,18 @@
 
             #clockPanel,
             #clockPanel.open,
-            #clockPanel:not(.open),
-
+            #clockPanel:not(.open) {
+                position: fixed !important;
+                left: auto !important;
+                right: 14px !important;
+                bottom: 151px !important;
+                top: auto !important;
+                inset: auto 14px 151px auto !important;
+                width: 94px !important;
+                height: 94px !important;
+                transform: none !important;
+                overflow: visible !important;
+            }
 
             #clockPanel .clock-number,
             #clockPanel.open .clock-number,
@@ -2750,7 +2797,7 @@
 
         /* ===== V54 Search constellation -> center + default 3-line comment ===== */
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV87 {
+        #settingsVersionV87_1 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3069,7 +3116,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV87" aria-label="バージョン">V87</div>
+        <div id="settingsVersionV87_1" aria-label="バージョン">V87.1</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -6446,6 +6493,60 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             constellationDescriptionRibbonV85.setAttribute('aria-hidden', 'true');
         }
 
+        function refreshConstellationDescriptionMediaV87_1() {
+            if (
+                !constellationDescriptionVisibleV85 ||
+                !constellationDescriptionRibbonV85
+            ) {
+                return;
+            }
+
+            const id =
+                constellationDescriptionRibbonV85.dataset.constellationId || '';
+            if (!id) {
+                constellationDescriptionLinksV85?.classList.remove('visible');
+                if (constellationDescriptionMangaV85) {
+                    constellationDescriptionMangaV85.hidden = true;
+                }
+                return;
+            }
+
+            let entry = null;
+            try {
+                const manager = window.constellationMangaManagerV66;
+                if (manager && typeof manager.get === 'function') {
+                    entry = manager.get(id) || null;
+                }
+            } catch (error) {
+                console.warn('Description media refresh failed:', error);
+            }
+
+            const hasManga = Boolean(entry);
+
+            if (constellationDescriptionLinksV85) {
+                constellationDescriptionLinksV85.classList.toggle(
+                    'visible',
+                    hasManga
+                );
+            }
+
+            if (constellationDescriptionMangaV85) {
+                constellationDescriptionMangaV85.hidden = !hasManga;
+            }
+
+            if (!hasManga) {
+                constellationDescriptionRibbonV85.dataset.mangaSrc = '';
+                constellationDescriptionRibbonV85.dataset.mangaCategory = '';
+                return;
+            }
+
+            constellationDescriptionRibbonV85.dataset.mangaSrc = entry.src || '';
+            constellationDescriptionRibbonV85.dataset.mangaCategory =
+                entry.category || '';
+            constellationDescriptionMangaV85.textContent =
+                entry.category === '雑学' ? 'マンガ・雑学' : 'マンガ';
+        }
+
         function showConstellationDescriptionV85(value) {
             ensureConstellationDescriptionUiV85();
 
@@ -6466,33 +6567,17 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             constellationDescriptionRibbonV85.dataset.mangaSrc = '';
             constellationDescriptionRibbonV85.dataset.mangaCategory = '';
 
-            let mangaEntry = null;
-            try {
-                const manager = window.constellationMangaManagerV66;
-                if (manager && typeof manager.get === 'function') {
-                    mangaEntry = manager.get(id) || null;
-                }
-            } catch (error) {
-                console.warn('V85 description manga lookup failed:', error);
-            }
-
-            const hasManga = Boolean(mangaEntry);
-            constellationDescriptionLinksV85.classList.toggle('visible', hasManga);
-            constellationDescriptionMangaV85.hidden = !hasManga;
-
-            if (mangaEntry) {
-                constellationDescriptionRibbonV85.dataset.mangaSrc = mangaEntry.src || '';
-                constellationDescriptionRibbonV85.dataset.mangaCategory = mangaEntry.category || '';
-                constellationDescriptionMangaV85.textContent =
-                    mangaEntry.category === '雑学' ? 'マンガ・雑学' : 'マンガ';
-            }
-
             constellationDescriptionVisibleV85 = true;
             constellationDescriptionRibbonV85.classList.add('visible');
             constellationDescriptionRibbonV85.setAttribute('aria-hidden', 'false');
+
+            refreshConstellationDescriptionMediaV87_1();
             layoutConstellationDescriptionV85();
             return true;
         }
+
+        window.refreshConstellationDescriptionMediaV87_1 =
+            refreshConstellationDescriptionMediaV87_1;
 
         function ensureSelectedConstellationGuidanceUi() {
             if (constellationGuidanceRibbon) return;
@@ -9207,6 +9292,11 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
         img.onload = () => {
             found.set(item.id, { ...item, filename, src });
+
+            try {
+                window.refreshConstellationDescriptionMediaV87_1?.();
+            } catch (_) {}
+
             window.dispatchEvent(new CustomEvent('constellation-manga-found-v66', {
                 detail: { id:item.id, filename, category:item.category }
             }));
