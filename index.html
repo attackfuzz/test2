@@ -2862,6 +2862,8 @@
         }
         #constellationQuickCommentCloseV53 {
             position: absolute;
+            z-index: 2;
+            touch-action: manipulation;
             top: 5px;
             right: 7px;
             width: 28px;
@@ -2889,7 +2891,7 @@
 
 
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV83 {
+        #settingsVersionV83_1 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3241,7 +3243,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV83" aria-label="バージョン">V83</div>
+        <div id="settingsVersionV83_1" aria-label="バージョン">V83.1</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -5381,6 +5383,22 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         }
 
 
+        const quickCommentStateV83_1 = {
+            visible: false
+        };
+
+        function setQuickCommentVisibleV83_1(visible) {
+            const panel = document.getElementById('constellationQuickCommentV53');
+            if (!panel) return;
+
+            quickCommentStateV83_1.visible = Boolean(visible);
+            panel.classList.toggle('visible', quickCommentStateV83_1.visible);
+            panel.setAttribute(
+                'aria-hidden',
+                String(!quickCommentStateV83_1.visible)
+            );
+        }
+
         function showConstellationQuickCommentV53(constellationId) {
             const panel = document.getElementById('constellationQuickCommentV53');
             const text = document.getElementById('constellationQuickCommentTextV53');
@@ -5410,16 +5428,13 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             panel.dataset.iauId = iauId;
             panel.dataset.mangaSrc = mangaEntry?.src || '';
             panel.dataset.mangaCategory = mangaEntry?.category || '';
-            panel.classList.add('visible');
-            panel.setAttribute('aria-hidden', 'false');
+            setQuickCommentVisibleV83_1(true);
         }
 
         function hideConstellationQuickCommentV53() {
-            const panel = document.getElementById('constellationQuickCommentV53');
-            if (!panel) return;
-            panel.classList.remove('visible');
-            panel.setAttribute('aria-hidden', 'true');
+            setQuickCommentVisibleV83_1(false);
         }
+
 
 
         function openConstellationMangaV56() {
@@ -5451,10 +5466,23 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             const mangaOverlay = document.getElementById('constellationMangaOverlayV56');
 
             if (close) {
-                bindTapAction(close, (event) => {
+                const closeQuickComment = (event) => {
                     event?.preventDefault?.();
                     event?.stopPropagation?.();
                     hideConstellationQuickCommentV53();
+                };
+
+                // Close immediately on pointer press so touch/click synthesis,
+                // pointer capture, or canvas gesture handling cannot reopen or
+                // swallow the close action.
+                close.addEventListener('pointerdown', closeQuickComment, {
+                    capture: true,
+                    passive: false
+                });
+
+                // Keyboard activation / browsers without Pointer Events.
+                close.addEventListener('click', closeQuickComment, {
+                    capture: true
                 });
             }
 
