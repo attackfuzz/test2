@@ -2808,7 +2808,7 @@
 
         /* ===== V54 Search constellation -> center + default 3-line comment ===== */
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV87_2 {
+        #settingsVersionV88 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3127,7 +3127,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV87_2" aria-label="バージョン">V87.2</div>
+        <div id="settingsVersionV88" aria-label="バージョン">V88</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -4311,23 +4311,11 @@
             return id ? CONSTELLATIONS_V2[id] : null;
         }
 
-        function compatibilityInfo(value) {
-            const id = normalizeId(value);
-            if (!id) return null;
-            const info = CONSTELLATIONS_V2[id];
-            return {
-                ...info,
-                id: info.iau,
-                iauId: info.iau,
-                internalId: id,
-                displayJa: info.ja
-            };
-        }
+
 
         return Object.freeze({
             normalizeId,
             get,
-            compatibilityInfo,
             byIau
         });
     })();
@@ -4366,15 +4354,7 @@
         return center.normalize().multiplyScalar(SKY_RADIUS);
     }
 
-    // Compatibility facade while the remaining legacy modules are migrated.
-    window.constellationMasterV74 = {
-        getInfo: value => ConstellationRegistryV80.compatibilityInfo(value),
-        toInternalId: value => ConstellationRegistryV80.normalizeId(value),
-        toIauId: value => ConstellationRegistryV80.get(value)?.iau || null,
-        byInternalId: Object.fromEntries(
-            Object.keys(CONSTELLATIONS_V2).map(id => [id, ConstellationRegistryV80.compatibilityInfo(id)])
-        )
-    };
+    // Canonical constellation exports for later script modules.
     window.CONSTELLATIONS_V2 = CONSTELLATIONS_V2;
     window.ConstellationRegistryV80 = ConstellationRegistryV80;
     window.ViewerStateV80 = ViewerStateV80;
@@ -5521,7 +5501,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             for (const [constellation, distance] of constellationStarBest) {
                 if (seenConstellations.has(constellation)) continue;
                 const info = resolveConstellationLabelInfo(constellation);
-                if (!info?.id || !constellationBasicComments[info.id]) continue;
+                if (!info?.iau || !constellationBasicComments[info.iau]) continue;
                 seenConstellations.add(constellation);
                 candidates.push({
                     type: 'constellation',
@@ -5547,7 +5527,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 if (best > lineRadius) continue;
                 const info = resolveConstellationLabelInfo(constellation);
                 // 解説を持たない星座は候補に出さない。
-                if (!info?.id || !constellationBasicComments[info.id]) continue;
+                if (!info?.iau || !constellationBasicComments[info.iau]) continue;
 
                 const existing = candidates.find(item => item.type === 'constellation' && item.key === constellation);
                 if (existing) {
@@ -7129,13 +7109,24 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
 
         function resolveConstellationLabelInfo(value) {
-            return ConstellationRegistryV80.compatibilityInfo(value);
+            const id = ConstellationRegistryV80.normalizeId(value);
+            if (!id) return null;
+
+            const info = CONSTELLATIONS_V2[id];
+            return {
+                id,
+                iau: info.iau,
+                en: info.en,
+                ja: info.ja,
+                aliases: info.aliases,
+                groups: info.groups
+            };
         }
 
         function getConstellationLabelText(value) {
             const info = resolveConstellationLabelInfo(value);
             if (!info) return String(value || '');
-            return labelDisplayMode === 'constellation-en' ? info.en : (info.displayJa || info.ja);
+            return labelDisplayMode === 'constellation-en' ? info.en : info.ja;
         }
 
         function applySmartConstellationLabelSize(element, text) {
@@ -8057,7 +8048,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 }
 
                 function getBasisForEntry(entry) {
-                    const key = resolveConstellationKey(entry.internalId || entry.id);
+                    const key = resolveConstellationKey(entry.id);
                     const runtime = key ? runtimeConstellationsV80[key] : null;
                     const segments = runtime?.segments;
                     if (!segments || !segments.length) return null;
@@ -8605,17 +8596,19 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 manifest.artworks.forEach(cfg => {
                     if (!cfg?.id) return;
 
-                    const info = window.constellationMasterV74?.getInfo(cfg.id);
-                    const iauId = info?.iauId || String(cfg.id);
-                    const internalId = info?.internalId || String(cfg.id).toLowerCase();
+                    const internalId =
+                        ConstellationRegistryV80.normalizeId(cfg.id);
+                    if (!internalId) return;
 
-                    cfg.iauId = iauId;
-                    cfg.internalId = internalId;
+                    const info = CONSTELLATIONS_V2[internalId];
+                    const iauId = info.iau;
+
+                    cfg.id = internalId;
+                    cfg.iau = iauId;
 
                     const saved =
                         registeredAlignmentsV64[internalId] ||
-                        registeredAlignmentsV64[iauId] ||
-                        registeredAlignmentsV64[cfg.id];
+                        registeredAlignmentsV64[iauId];
 
                     if (saved && typeof saved === 'object') {
                         cfg.align = Object.assign({}, cfg.align || {}, saved);
@@ -8623,7 +8616,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 });
 
                 manifest.artworks.filter(cfg => cfg && cfg.enabled !== false).forEach(cfg => {
-                    const internalId = cfg.internalId || String(cfg.id).toLowerCase();
+                    const internalId = ConstellationRegistryV80.normalizeId(cfg.id);
                     entries.set(internalId, {
                         cfg,
                         mesh:null,
@@ -8642,27 +8635,26 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 // Existing manifest entries keep their original metadata-based placement.
                 function discoverServerArtworkV63() {
                     const basePath = manifest.imageBasePath || './constellation_art/';
-                    const catalogItems = (typeof constellationCatalog !== 'undefined')
-                        ? Object.values(constellationCatalog)
-                        : [];
+                    const catalogItems = Object.entries(CONSTELLATIONS_V2)
+                        .map(([id, info]) => ({ id, ...info }));
 
                     function buildCandidateFiles(info) {
-                        const iauId = String(info?.iauId || info?.id || '').trim();
-                        const internalId = String(info?.internalId || iauId.toLowerCase()).trim();
-                        if (!internalId) return [];
-
-                        const capitalized = internalId.charAt(0).toUpperCase() + internalId.slice(1);
+                        const internalId = info?.id || '';
+                        const iauId = info?.iau || '';
+                        if (!internalId || !iauId) return [];
 
                         return [
-                            internalId + '.png',   // V74/V75 recommended style: uma.png
-                            iauId + '.png',        // exact official IAU style: UMa.png
-                            capitalized + '.png'   // legacy common style: Uma.png / Ori.png
-                        ].filter((name, index, arr) => name && arr.indexOf(name) === index);
+                            internalId + '.png',
+                            iauId + '.png'
+                        ].filter(
+                            (name, index, arr) =>
+                                name && arr.indexOf(name) === index
+                        );
                     }
 
                     catalogItems.forEach(info => {
-                        const iauId = String(info?.iauId || info?.id || '').trim();
-                        const internalId = String(info?.internalId || iauId.toLowerCase()).trim();
+                        const internalId = String(info?.id || '').trim();
+                        const iauId = String(info?.iau || '').trim();
                         if (!/^[a-z]{3}$/.test(internalId)) return;
                         if (entries.has(internalId)) return;
 
@@ -8682,9 +8674,8 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
                                 const cfg = {
                                     id: internalId,
-                                    internalId,
-                                    iauId,
-                                    nameJa: info.displayJa || info.ja || internalId,
+                                    iau: iauId,
+                                    nameJa: info.ja || internalId,
                                     fallbackKey: `${info.en} (${info.ja})`,
                                     enabled: true,
                                     file: filename,
@@ -8729,7 +8720,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
                                 console.info(`V75 artwork discovered: ${filename} -> ${internalId} (${iauId})`);
                                 window.dispatchEvent(new CustomEvent('constellation-art-discovered-v63', {
-                                    detail: { id: internalId, internalId, iauId, file: filename }
+                                    detail: { id: internalId, iau: iauId, file: filename }
                                 }));
                             };
 
@@ -9014,9 +9005,14 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         if (!saved || typeof saved !== 'object') return;
         Object.entries(saved).forEach(([id, align]) => {
             const internalId =
-                window.constellationMasterV74?.toInternalId(id) ||
-                String(id || '').toLowerCase();
-            if (align && typeof align === 'object') m.setAlignmentLive?.(internalId, align);
+                ConstellationRegistryV80.normalizeId(id);
+            if (
+                internalId &&
+                align &&
+                typeof align === 'object'
+            ) {
+                m.setAlignmentLive?.(internalId, align);
+            }
         });
     }
 
@@ -9267,82 +9263,55 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
     'use strict';
 
     const BASE_PATH = './constellation_manga/';
-    const CANDIDATES = [
-        { id:'and', name:'アンドロメダ座', category:'星座' },
-        { id:'sgr', name:'いて座', category:'星座' },
-        { id:'del', name:'いるか座', category:'星座' },
-        { id:'eri', name:'エリダヌス座', category:'星座' },
-        { id:'tau', name:'おうし座', category:'星座' },
-        { id:'cma', name:'おおいぬ座', category:'星座' },
-        { id:'uma', name:'おおぐま座', category:'星座' },
-        { id:'umi', name:'こぐま座', category:'星座' },
-        { id:'vir', name:'おとめ座', category:'星座' },
-        { id:'ari', name:'おひつじ座', category:'星座' },
-        { id:'ori', name:'オリオン座', category:'星座' },
-        { id:'cnc', name:'かに座', category:'星座' },
-        { id:'com', name:'かみのけ座', category:'星座' },
-        { id:'crv', name:'からす座', category:'星座' },
-        { id:'aur', name:'ぎょしゃ座', category:'星座' },
-        { id:'leo', name:'しし座', category:'星座' },
-        { id:'cap', name:'やぎ座', category:'星座' },
-        { id:'aql', name:'わし座', category:'星座' }
-    ];
 
-    // Canonical packaged manga assets.
-    // This is data, not per-selection logic: the manager knows immediately
-    // which files ship with the viewer instead of waiting for Image probing.
-    const MANGA_MANIFEST_V87_2 = [
-        {
-            id: 'and',
-            filename: 'アンドロメダ座_星座.png',
-            category: '星座',
-            name: 'アンドロメダ座'
-        }
-    ];
+    const CANDIDATES = Object.entries(CONSTELLATIONS_V2)
+        .map(([id, info]) => ({
+            id,
+            iau: info.iau,
+            name: info.ja,
+            category: '星座'
+        }));
 
-    const found = new Map(
-        MANGA_MANIFEST_V87_2.map(item => [
-            item.id,
-            {
-                ...item,
-                src: BASE_PATH + encodeURIComponent(item.filename)
-            }
-        ])
-    );
+    const found = new Map();
 
     function filenameOf(item) {
-        return `${item.name}_${item.category}.png`;
+        return `${item.iau}_manga.png`;
     }
-
-
 
     function probe(item) {
         const filename = filenameOf(item);
-        const src = BASE_PATH + encodeURIComponent(filename);
+        const src = BASE_PATH + filename;
         const img = new Image();
 
         img.onload = () => {
-            found.set(item.id, { ...item, filename, src });
+            found.set(item.id, {
+                ...item,
+                filename,
+                src
+            });
 
             try {
                 window.refreshConstellationDescriptionMediaV87_1?.();
             } catch (_) {}
 
-            window.dispatchEvent(new CustomEvent('constellation-manga-found-v66', {
-                detail: { id:item.id, filename, category:item.category }
-            }));
+            window.dispatchEvent(
+                new CustomEvent('constellation-manga-found-v66', {
+                    detail: {
+                        id: item.id,
+                        iau: item.iau,
+                        filename,
+                        category: item.category
+                    }
+                })
+            );
         };
 
         img.onerror = () => {};
         img.src = src;
     }
 
-    CANDIDATES
-        .filter(item => !found.has(item.id))
-        .forEach(probe);
+    CANDIDATES.forEach(probe);
 
-    // If a description was opened before this manager initialized,
-    // refresh it now using the deterministic manifest.
     try {
         window.refreshConstellationDescriptionMediaV87_1?.();
     } catch (_) {}
@@ -9352,7 +9321,6 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         has(id) { return found.has(id); },
         list() { return Array.from(found.values()); },
         candidates: CANDIDATES.slice(),
-        manifest: MANGA_MANIFEST_V87_2.slice(),
         basePath: BASE_PATH
     };
 })();
