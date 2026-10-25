@@ -2808,7 +2808,7 @@
 
         /* ===== V54 Search constellation -> center + default 3-line comment ===== */
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV88 {
+        #settingsVersionV88_1 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3113,6 +3113,37 @@
             touch-action: manipulation !important;
         }
 
+
+        /* ===== V88.1 permanent clock scale: 1.5x ===== */
+        #clockPanel,
+        #clockPanel.open,
+        #clockPanel:not(.open) {
+            width: 156px !important;
+            height: 156px !important;
+            right: 18px !important;
+            left: auto !important;
+            top: auto !important;
+            bottom: 50px !important;
+            inset: auto 18px 50px auto !important;
+            transform: none !important;
+            transform-origin: 100% 100% !important;
+        }
+
+        @media (max-width: 520px) {
+            #clockPanel,
+            #clockPanel.open,
+            #clockPanel:not(.open) {
+                width: 141px !important;
+                height: 141px !important;
+                right: 14px !important;
+                left: auto !important;
+                top: auto !important;
+                bottom: 57px !important;
+                inset: auto 14px 57px auto !important;
+                transform: none !important;
+            }
+        }
+
 </style>
 </head>
 <body>
@@ -3127,7 +3158,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV88" aria-label="バージョン">V88</div>
+        <div id="settingsVersionV88_1" aria-label="バージョン">V88.1</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -9272,7 +9303,25 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             category: '星座'
         }));
 
-    const found = new Map();
+    // Generated from packaged constellation_manga/*_manga.png assets.
+    // The naming rule remains the single source of truth.
+    const AVAILABLE_MANGA_IAU = new Set(["And"]);
+
+    const found = new Map(
+        CANDIDATES
+            .filter(item => AVAILABLE_MANGA_IAU.has(item.iau))
+            .map(item => {
+                const filename = `${item.iau}_manga.png`;
+                return [
+                    item.id,
+                    {
+                        ...item,
+                        filename,
+                        src: BASE_PATH + filename
+                    }
+                ];
+            })
+    );
 
     function filenameOf(item) {
         return `${item.iau}_manga.png`;
@@ -9310,7 +9359,9 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         img.src = src;
     }
 
-    CANDIDATES.forEach(probe);
+    CANDIDATES
+        .filter(item => !found.has(item.id))
+        .forEach(probe);
 
     try {
         window.refreshConstellationDescriptionMediaV87_1?.();
@@ -9321,6 +9372,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         has(id) { return found.has(id); },
         list() { return Array.from(found.values()); },
         candidates: CANDIDATES.slice(),
+        availableIau: Array.from(AVAILABLE_MANGA_IAU),
         basePath: BASE_PATH
     };
 })();
