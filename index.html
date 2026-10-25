@@ -764,7 +764,7 @@
             height: 104px !important;
             right: 18px !important;
             left: auto !important;
-            bottom: 154px !important;
+            bottom: 50px !important;
 
             transform: translateY(0) scale(.92) !important;
             transform-origin: 72% 100%;
@@ -892,7 +892,7 @@
                 width: 94px !important;
                 height: 94px !important;
                 right: 14px !important;
-                bottom: 151px !important;
+                bottom: 57px !important;
             }
 
             #clockPanel.open {
@@ -1323,8 +1323,8 @@
             left: auto !important;
             top: auto !important;
             right: 18px !important;
-            bottom: 154px !important;
-            inset: auto 18px 154px auto !important;
+            bottom: 50px !important;
+            inset: auto 18px 50px auto !important;
             z-index: 150 !important;
         }
 
@@ -1335,8 +1335,8 @@
                 left: auto !important;
                 top: auto !important;
                 right: 14px !important;
-                bottom: 151px !important;
-                inset: auto 14px 151px auto !important;
+                bottom: 57px !important;
+                inset: auto 14px 57px auto !important;
                 width: 94px !important;
                 height: 94px !important;
                 transform: none !important;
@@ -2110,9 +2110,9 @@
             position: fixed !important;
             left: auto !important;
             right: 18px !important;
-            bottom: 154px !important;
+            bottom: 50px !important;
             top: auto !important;
-            inset: auto 18px 154px auto !important;
+            inset: auto 18px 50px auto !important;
             transform: translateY(0) scale(.92) !important;
             transform-origin: 72% 100% !important;
             overflow: visible !important;
@@ -2200,9 +2200,9 @@
                 position: fixed !important;
                 left: auto !important;
                 right: 14px !important;
-                bottom: 151px !important;
+                bottom: 57px !important;
                 top: auto !important;
-                inset: auto 14px 151px auto !important;
+                inset: auto 14px 57px auto !important;
                 width: 94px !important;
                 height: 94px !important;
                 transform: none !important;
@@ -2613,7 +2613,13 @@
         display: none;
         margin-top: 6px;
     }
-    #constellationDescriptionLinksV85.visible { display: block; }
+    #constellationDescriptionLinksV85.visible {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        min-height: 24px;
+        overflow: visible;
+    }
     #constellationDescriptionMangaV85 {
         appearance: none;
         border: 0;
@@ -2624,6 +2630,11 @@
         text-decoration: underline;
         text-underline-offset: 3px;
         cursor: pointer;
+    }
+    #constellationDescriptionMangaV85:not([hidden]) {
+        display: inline-flex;
+        align-items: center;
+        min-height: 22px;
     }
 
     #constellationGuidanceMessage {
@@ -2797,7 +2808,7 @@
 
         /* ===== V54 Search constellation -> center + default 3-line comment ===== */
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV87_1 {
+        #settingsVersionV87_2 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3116,7 +3127,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV87_1" aria-label="バージョン">V87.1</div>
+        <div id="settingsVersionV87_2" aria-label="バージョン">V87.2</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -9277,7 +9288,27 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         { id:'aql', name:'わし座', category:'星座' }
     ];
 
-    const found = new Map();
+    // Canonical packaged manga assets.
+    // This is data, not per-selection logic: the manager knows immediately
+    // which files ship with the viewer instead of waiting for Image probing.
+    const MANGA_MANIFEST_V87_2 = [
+        {
+            id: 'and',
+            filename: 'アンドロメダ座_星座.png',
+            category: '星座',
+            name: 'アンドロメダ座'
+        }
+    ];
+
+    const found = new Map(
+        MANGA_MANIFEST_V87_2.map(item => [
+            item.id,
+            {
+                ...item,
+                src: BASE_PATH + encodeURIComponent(item.filename)
+            }
+        ])
+    );
 
     function filenameOf(item) {
         return `${item.name}_${item.category}.png`;
@@ -9306,13 +9337,22 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         img.src = src;
     }
 
-    CANDIDATES.forEach(probe);
+    CANDIDATES
+        .filter(item => !found.has(item.id))
+        .forEach(probe);
+
+    // If a description was opened before this manager initialized,
+    // refresh it now using the deterministic manifest.
+    try {
+        window.refreshConstellationDescriptionMediaV87_1?.();
+    } catch (_) {}
 
     window.constellationMangaManagerV66 = {
         get(id) { return found.get(id) || null; },
         has(id) { return found.has(id); },
         list() { return Array.from(found.values()); },
         candidates: CANDIDATES.slice(),
+        manifest: MANGA_MANIFEST_V87_2.slice(),
         basePath: BASE_PATH
     };
 })();
