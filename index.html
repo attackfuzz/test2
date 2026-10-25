@@ -2889,7 +2889,7 @@
 
 
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV81_1 {
+        #settingsVersionV82 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3241,7 +3241,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV81_1" aria-label="バージョン">V81.1</div>
+        <div id="settingsVersionV82" aria-label="バージョン">V82</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -3589,14 +3589,6 @@
             <div class="small-note">星の位置は地方恒星時から計算します。大気差・歳差・章動・昼光はまだ含めません。</div>
         </div>
 
-        <div class="section center-only" id="centerSettings">
-            <label class="check-label">
-                <input type="checkbox" id="cameraFocusToggle" checked>
-                北極星固定
-            </label>
-            <div class="small-note">天球中心では1本指ドラッグで常に平行移動します。</div>
-        </div>
-
         <div class="section">
             <div class="section-title">星の表示</div>
             <label class="check-label">
@@ -3614,7 +3606,7 @@
             </div>
         </div>
 
-        <div id="controlHint">ドラッグ：視点移動　／　ホイール：ズーム　／　スマホは1本指で視点移動・2本指でピンチズーム</div>
+        <div id="controlHint">ドラッグ：見回す　／　ホイール：ズーム　／　スマホは1本指で見回し・2本指でピンチズーム</div>
     </div>
 
 
@@ -4772,7 +4764,6 @@
         scene.add(celestialGroup);
 
         const constellationSelect = document.getElementById('constellationSelect');
-        const cameraFocusToggle = document.getElementById('cameraFocusToggle');
         const constellationLabelsLayer = document.getElementById('constellationLabels');
         const groundLensSlider = document.getElementById('groundLensSlider');
         const lensValue = document.getElementById('lensValue');
@@ -4920,7 +4911,6 @@
         let groundAltitude = THREE.MathUtils.degToRad(30);
         let currentViewMode = 'ground';
         let activeViewPreset = 'center';
-        let focusOnNorthStar = true;
         let cameraAnimation = null;
         let isDragging = false;
         let previousPointerPosition = { x: 0, y: 0 };
@@ -4961,12 +4951,6 @@
 
             viewButtons.forEach(button => {
                 bindTapAction(button, () => applyViewPreset(button.dataset.view, true));
-            });
-
-            cameraFocusToggle.addEventListener('change', () => {
-                cancelCameraAnimation();
-                focusOnNorthStar = cameraFocusToggle.checked;
-                if (focusOnNorthStar && currentViewMode === 'center') lookAtNorthStar();
             });
 
             groundLensSlider.addEventListener('input', () => {
@@ -5467,7 +5451,13 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             const mangaButton = document.getElementById('constellationMangaButtonV56');
             const mangaOverlay = document.getElementById('constellationMangaOverlayV56');
 
-            close?.addEventListener('click', hideConstellationQuickCommentV53);
+            if (close) {
+                bindTapAction(close, (event) => {
+                    event?.preventDefault?.();
+                    event?.stopPropagation?.();
+                    hideConstellationQuickCommentV53();
+                });
+            }
 
             mangaButton?.addEventListener('click', (event) => {
                 event.preventDefault();
@@ -5924,90 +5914,83 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             const incrementalDelta = getDragDelta(currentPosition, previousPosition);
             const totalDelta = getDragDelta(currentPosition, dragStartPosition);
 
-            if (currentViewMode === 'ground') {
-                rotateGroundCamera(incrementalDelta);
+            if (currentViewMode === 'ground' || currentViewMode === 'center') {
+                rotateSkyCamera(incrementalDelta);
             } else if (currentViewMode === 'overview') {
                 orbitAroundEarth(incrementalDelta);
-            } else if (currentViewMode === 'center') {
-                // V79: 天球中心モードの1本指ドラッグは常に「移動」。
-                // 北極星固定ONなら北極星を見続けながら移動、
-                // OFFなら現在の向きを維持して画面平面内を平行移動する。
-                if (focusOnNorthStar) moveFocusCamera(incrementalDelta);
-                else moveFreeCenterCameraV79(incrementalDelta);
             } else {
                 rotateFreeCameraAnchored(totalDelta);
             }
         }
 
-        function rotateGroundCamera(delta) {
+        function getSkyAltitudeLimits() {
+            if (currentViewMode === 'ground') {
+                return {
+                    min: GROUND_MIN_ALTITUDE,
+                    max: GROUND_MAX_ALTITUDE
+                };
+            }
+
+            const poleEpsilon = THREE.MathUtils.degToRad(0.1);
+            return {
+                min: -Math.PI / 2 + poleEpsilon,
+                max: Math.PI / 2 - poleEpsilon
+            };
+        }
+
+        function rotateSkyCamera(delta) {
             groundAzimuth -= delta.x * ROTATION_SPEED;
             groundAltitude -= delta.y * ROTATION_SPEED;
-            groundAltitude = THREE.MathUtils.clamp(groundAltitude, GROUND_MIN_ALTITUDE, GROUND_MAX_ALTITUDE);
-            applyGroundCameraOrientation();
+
+            const limits = getSkyAltitudeLimits();
+            groundAltitude = THREE.MathUtils.clamp(
+                groundAltitude,
+                limits.min,
+                limits.max
+            );
+
+            applySkyCameraOrientation();
             clearActiveViewPreset();
-            updateSkyStatus();
-        }
 
-        function applyGroundCameraOrientation() {
-            camera.position.copy(observerPosition);
-            const cosAltitude = Math.cos(groundAltitude);
-            const direction = new THREE.Vector3()
-                .addScaledVector(observerNorth, Math.cos(groundAzimuth) * cosAltitude)
-                .addScaledVector(observerEast, Math.sin(groundAzimuth) * cosAltitude)
-                .addScaledVector(observerUp, Math.sin(groundAltitude))
-                .normalize();
-
-            camera.up.copy(observerUp);
-            camera.lookAt(camera.position.clone().add(direction));
-            syncCameraQuaternion();
-        }
-
-        function syncGroundAnglesFromCamera() {
-            const direction = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion).normalize();
-            groundAltitude = Math.asin(THREE.MathUtils.clamp(direction.dot(observerUp), -1, 1));
-            groundAltitude = THREE.MathUtils.clamp(groundAltitude, GROUND_MIN_ALTITUDE, GROUND_MAX_ALTITUDE);
-
-            const horizontal = direction.clone().addScaledVector(observerUp, -direction.dot(observerUp));
-            if (horizontal.lengthSq() > 1e-10) {
-                horizontal.normalize();
-                groundAzimuth = Math.atan2(horizontal.dot(observerEast), horizontal.dot(observerNorth));
+            if (currentViewMode === 'ground') {
+                updateSkyStatus();
             }
         }
 
-        function moveFocusCamera(delta) {
-            camera.position.x -= delta.x * 0.5;
-            camera.position.y += delta.y * 0.5;
-            lookAtNorthStar();
-            clearActiveViewPreset();
+        function getSkyCameraAnchor() {
+            return currentViewMode === 'ground'
+                ? observerPosition
+                : new THREE.Vector3(0, 0, 0);
         }
 
-        function moveFreeCenterCameraV79(delta) {
-            // Move in the current camera's screen plane without changing its orientation.
-            // This keeps a constellation-centered view intact after Search / 天球で見る.
-            const right = new THREE.Vector3(1, 0, 0)
-                .applyQuaternion(camera.quaternion)
+        function getSkyDirectionFromAngles() {
+            const cosAltitude = Math.cos(groundAltitude);
+            return new THREE.Vector3()
+                .addScaledVector(
+                    observerNorth,
+                    Math.cos(groundAzimuth) * cosAltitude
+                )
+                .addScaledVector(
+                    observerEast,
+                    Math.sin(groundAzimuth) * cosAltitude
+                )
+                .addScaledVector(
+                    observerUp,
+                    Math.sin(groundAltitude)
+                )
                 .normalize();
-            const up = new THREE.Vector3(0, 1, 0)
-                .applyQuaternion(camera.quaternion)
-                .normalize();
+        }
 
-            const PAN_SPEED = 0.5;
-            camera.position
-                .addScaledVector(right, -delta.x * PAN_SPEED)
-                .addScaledVector(up, delta.y * PAN_SPEED);
+        function applySkyCameraOrientation() {
+            const anchor = getSkyCameraAnchor();
+            const direction = getSkyDirectionFromAngles();
 
-            // Preserve the exact look direction.
+            camera.position.copy(anchor);
+            camera.up.copy(observerUp);
+            camera.lookAt(anchor.clone().add(direction));
             syncCameraQuaternion();
-            clearActiveViewPreset();
         }
 
-        function rotateFreeCameraAnchored(totalDelta) {
-            const yaw = new THREE.Quaternion().setFromAxisAngle(dragStartUp, -totalDelta.x * ROTATION_SPEED);
-            const pitch = new THREE.Quaternion().setFromAxisAngle(dragStartRight, -totalDelta.y * ROTATION_SPEED);
-            cameraQuaternion.copy(dragStartQuaternion).premultiply(yaw).premultiply(pitch);
-            camera.quaternion.copy(cameraQuaternion);
-            clearActiveViewPreset();
-        }
 
         function orbitAroundEarth(delta) {
             const radius = Math.max(camera.position.length(), EARTH_RADIUS + OBSERVER_HEIGHT + 10);
@@ -6057,8 +6040,10 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             currentViewMode = name;
             if (name !== 'ground') hideSelectedConstellationGuidance();
             else setTimeout(() => updateSelectedConstellationGuidance(true), 80);
-            focusOnNorthStar = name === 'center' ? cameraFocusToggle.checked : false;
             groundDepthOccluder.visible = name === 'ground';
+            if (typeof groundGroup !== 'undefined') {
+                groundGroup.visible = name === 'ground';
+            }
             updateModeSpecificControls();
             setActiveViewPreset(name);
 
@@ -6094,11 +6079,12 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 targetGridOpacity = 0;
             } else {
                 targetPosition = new THREE.Vector3(0, 0, 0);
-                targetLookAt = northStarPosition.clone();
-                targetUp = new THREE.Vector3(0, 1, 0);
-                targetFov = 75;
+                const skyDirection = getSkyDirectionFromAngles();
+                targetLookAt = targetPosition.clone().add(skyDirection);
+                targetUp = observerUp.clone();
+                targetFov = camera.fov;
                 targetEarthOpacity = 0;
-                targetGroundOpacity = 0.05;
+                targetGroundOpacity = 0;
                 targetGridOpacity = 0;
             }
 
@@ -6110,8 +6096,11 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 camera.updateProjectionMatrix();
                 earthMaterial.opacity = targetEarthOpacity;
                 groundMaterial.opacity = targetGroundOpacity;
-                if (name === 'ground') applyGroundCameraOrientation();
-                else syncCameraQuaternion();
+                if (name === 'ground' || name === 'center') {
+                    applySkyCameraOrientation();
+                } else {
+                    syncCameraQuaternion();
+                }
                 refreshConstellationLineGeometry(true);
                 return;
             }
@@ -6219,7 +6208,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 const endUp = cameraAnimation.endUp.clone();
                 cameraAnimation = null;
                 camera.up.copy(endUp);
-                if (currentViewMode === 'ground') applyGroundCameraOrientation();
+                if (currentViewMode === 'ground') applySkyCameraOrientation();
                 else syncCameraQuaternion();
             }
         }
@@ -6227,12 +6216,6 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         function cancelCameraAnimation() {
             if (!cameraAnimation) return;
             cameraAnimation = null;
-            syncCameraQuaternion();
-        }
-
-        function lookAtNorthStar() {
-            camera.up.set(0, 1, 0);
-            camera.lookAt(northStarPosition);
             syncCameraQuaternion();
         }
 
@@ -6377,11 +6360,13 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                     groundAzimuth = Math.atan2(horizontal.dot(observerEast), horizontal.dot(observerNorth));
                 }
                 groundAltitude = THREE.MathUtils.clamp(groundAltitude, GROUND_MIN_ALTITUDE, GROUND_MAX_ALTITUDE);
-                applyGroundCameraOrientation();
+                applySkyCameraOrientation();
                 updateSkyStatus();
             } else {
-                focusOnNorthStar = false;
-                cameraFocusToggle.checked = false;
+                const direction = targetPosition.clone()
+                    .sub(camera.position)
+                    .normalize();
+                syncSkyAnglesFromDirection(direction);
                 startCameraLookAtAnimation(targetPosition);
             }
             clearActiveViewPreset();
@@ -6537,6 +6522,32 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             return true;
         };
 
+        function syncSkyAnglesFromDirection(direction) {
+            const normalized = direction.clone().normalize();
+
+            groundAltitude = Math.asin(
+                THREE.MathUtils.clamp(normalized.dot(observerUp), -1, 1)
+            );
+
+            const horizontal = normalized.clone()
+                .addScaledVector(observerUp, -normalized.dot(observerUp));
+
+            if (horizontal.lengthSq() > 1e-10) {
+                horizontal.normalize();
+                groundAzimuth = Math.atan2(
+                    horizontal.dot(observerEast),
+                    horizontal.dot(observerNorth)
+                );
+            }
+
+            const limits = getSkyAltitudeLimits();
+            groundAltitude = THREE.MathUtils.clamp(
+                groundAltitude,
+                limits.min,
+                limits.max
+            );
+        }
+
         function focusCameraOnConstellation(constellation) {
             const targetPosition = getConstellationCenter(constellation);
             if (!targetPosition) return;
@@ -6550,11 +6561,9 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                     groundAzimuth = Math.atan2(horizontal.dot(observerEast), horizontal.dot(observerNorth));
                 }
                 groundAltitude = THREE.MathUtils.clamp(groundAltitude, GROUND_MIN_ALTITUDE, GROUND_MAX_ALTITUDE);
-                applyGroundCameraOrientation();
+                applySkyCameraOrientation();
                 updateSkyStatus();
             } else {
-                focusOnNorthStar = false;
-                cameraFocusToggle.checked = false;
                 startCameraLookAtAnimation(targetPosition);
             }
             clearActiveViewPreset();
@@ -6815,7 +6824,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             // position before asking it to face the selected constellation.
             updateObserverFromSimulation(true);
             if (currentViewMode !== 'ground') applyViewPreset('ground', false);
-            else applyGroundCameraOrientation();
+            else applySkyCameraOrientation();
             updateQuickTimeDisplay();
             focusCameraOnConstellation(constellation);
 
@@ -6834,8 +6843,6 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             cancelCameraAnimation();
             hideSelectedConstellationGuidance();
             applyViewPreset('center', false);
-            focusOnNorthStar = false;
-            cameraFocusToggle.checked = false;
             focusCameraOnConstellation(constellation);
             requestAnimationFrame(() => updateSelectedConstellationGuidance(true));
         }
@@ -6859,7 +6866,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
             const basisMatrix = new THREE.Matrix4().makeBasis(observerEast, observerNorth, observerUp);
 
-            if (currentViewMode === 'ground' && !cameraAnimation) applyGroundCameraOrientation();
+            if (currentViewMode === 'ground' && !cameraAnimation) applySkyCameraOrientation();
             refreshConstellationLineGeometry(false);
             if (updateDateField) setDateInputFromUtc(simulationUtcMs);
             updateSkyStatus();
