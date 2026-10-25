@@ -2808,7 +2808,7 @@
 
         /* ===== V54 Search constellation -> center + default 3-line comment ===== */
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV88_3 {
+        #settingsVersionV89 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3177,7 +3177,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV88_3" aria-label="バージョン">V88.3</div>
+        <div id="settingsVersionV89" aria-label="バージョン">V89</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -4227,7 +4227,7 @@
                 if(constellationMode){
                     items=Object.entries(CONSTELLATIONS_V2).map(([id,x])=>({
                         id,
-                        iauId:x.iau,
+                        iau:x.iau,
                         ja:x.ja,
                         en:x.en,
                         tags:[...(x.aliases||[])],
@@ -4340,7 +4340,6 @@
                     legacy?.id,
                     legacy?.en,
                     legacy?.ja,
-                    legacy?.displayJa,
                     legacy?.en && legacy?.ja ? `${legacy.en} (${legacy.ja})` : null
                 ]) {
                     if (value) aliasToId.set(norm(value), id);
@@ -5230,7 +5229,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             ensureConstellationDescriptionUiV85();
 
             constellationDescriptionRibbonV85.dataset.constellationId = '';
-            constellationDescriptionRibbonV85.dataset.iauId = '';
+            constellationDescriptionRibbonV85.dataset.iau = '';
             constellationDescriptionRibbonV85.dataset.mangaSrc = '';
             constellationDescriptionRibbonV85.dataset.mangaCategory = '';
 
@@ -6633,13 +6632,13 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             }
 
             const info = CONSTELLATIONS_V2[id];
-            const iauId = info?.iau || '';
+            const iau = info?.iau || '';
             constellationDescriptionTextV85.textContent =
-                constellationBasicComments[iauId] ||
+                constellationBasicComments[iau] ||
                 'この星座の基本コメントはまだ登録されていません。';
 
             constellationDescriptionRibbonV85.dataset.constellationId = id;
-            constellationDescriptionRibbonV85.dataset.iauId = iauId;
+            constellationDescriptionRibbonV85.dataset.iau = iau;
             constellationDescriptionRibbonV85.dataset.mangaSrc = '';
             constellationDescriptionRibbonV85.dataset.mangaCategory = '';
 
@@ -8681,19 +8680,18 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 manifest.artworks.forEach(cfg => {
                     if (!cfg?.id) return;
 
-                    const internalId =
+                    const constellationId =
                         ConstellationRegistryV80.normalizeId(cfg.id);
-                    if (!internalId) return;
+                    if (!constellationId) return;
 
-                    const info = CONSTELLATIONS_V2[internalId];
-                    const iauId = info.iau;
+                    const info = CONSTELLATIONS_V2[constellationId];
 
-                    cfg.id = internalId;
-                    cfg.iau = iauId;
+                    cfg.id = constellationId;
+                    cfg.iau = info.iau;
 
                     const saved =
-                        registeredAlignmentsV64[internalId] ||
-                        registeredAlignmentsV64[iauId];
+                        registeredAlignmentsV64[constellationId] ||
+                        registeredAlignmentsV64[info.iau];
 
                     if (saved && typeof saved === 'object') {
                         cfg.align = Object.assign({}, cfg.align || {}, saved);
@@ -8701,8 +8699,8 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 });
 
                 manifest.artworks.filter(cfg => cfg && cfg.enabled !== false).forEach(cfg => {
-                    const internalId = ConstellationRegistryV80.normalizeId(cfg.id);
-                    entries.set(internalId, {
+                    const constellationId = ConstellationRegistryV80.normalizeId(cfg.id);
+                    entries.set(constellationId, {
                         cfg,
                         mesh:null,
                         buildTried:false,
@@ -8724,13 +8722,11 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                         .map(([id, info]) => ({ id, ...info }));
 
                     function buildCandidateFiles(info) {
-                        const internalId = info?.id || '';
-                        const iauId = info?.iau || '';
-                        if (!internalId || !iauId) return [];
+                        if (!info?.id || !info?.iau) return [];
 
                         return [
-                            internalId + '.png',
-                            iauId + '.png'
+                            `${info.id}.png`,
+                            `${info.iau}.png`
                         ].filter(
                             (name, index, arr) =>
                                 name && arr.indexOf(name) === index
@@ -8738,29 +8734,28 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                     }
 
                     catalogItems.forEach(info => {
-                        const internalId = String(info?.id || '').trim();
-                        const iauId = String(info?.iau || '').trim();
-                        if (!/^[a-z]{3}$/.test(internalId)) return;
-                        if (entries.has(internalId)) return;
+                        const constellationId = String(info?.id || '').trim();
+                        if (!/^[a-z]{3}$/.test(constellationId)) return;
+                        if (!info?.iau || entries.has(constellationId)) return;
 
                         const candidates = buildCandidateFiles(info);
                         if (!candidates.length) return;
 
                         const tryCandidate = (index = 0) => {
                             if (index >= candidates.length) return;
-                            if (entries.has(internalId)) return;
+                            if (entries.has(constellationId)) return;
 
                             const filename = candidates[index];
                             const url = basePath + filename;
                             const probe = new Image();
 
                             probe.onload = () => {
-                                if (entries.has(internalId)) return;
+                                if (entries.has(constellationId)) return;
 
                                 const cfg = {
-                                    id: internalId,
-                                    iau: iauId,
-                                    nameJa: info.ja || internalId,
+                                    id: constellationId,
+                                    iau: info.iau,
+                                    nameJa: info.ja || constellationId,
                                     fallbackKey: `${info.en} (${info.ja})`,
                                     enabled: true,
                                     file: filename,
@@ -8782,8 +8777,8 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                                         scaleY: 1,
                                         rotationDeg: 0
                                     },
-                                        registeredAlignmentsV64[internalId] ||
-                                        registeredAlignmentsV64[iauId] ||
+                                        registeredAlignmentsV64[constellationId] ||
+                                        registeredAlignmentsV64[info.iau] ||
                                         {}
                                     )
                                 };
@@ -8800,13 +8795,21 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                                     discoveredV63:true,
                                     baseAlign: Object.assign({}, cfg.align || {})
                                 };
-                                entries.set(internalId, state);
+                                entries.set(constellationId, state);
                                 buildEntry(state);
 
-                                console.info(`V75 artwork discovered: ${filename} -> ${internalId} (${iauId})`);
-                                window.dispatchEvent(new CustomEvent('constellation-art-discovered-v63', {
-                                    detail: { id: internalId, iau: iauId, file: filename }
-                                }));
+                                console.info(
+                                    `V75 artwork discovered: ${filename} -> ${constellationId} (${info.iau})`
+                                );
+                                window.dispatchEvent(
+                                    new CustomEvent('constellation-art-discovered-v63', {
+                                        detail: {
+                                            id: constellationId,
+                                            iau: info.iau,
+                                            file: filename
+                                        }
+                                    })
+                                );
                             };
 
                             probe.onerror = () => {
@@ -9089,14 +9092,14 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         } catch (_) {}
         if (!saved || typeof saved !== 'object') return;
         Object.entries(saved).forEach(([id, align]) => {
-            const internalId =
+            const constellationId =
                 ConstellationRegistryV80.normalizeId(id);
             if (
-                internalId &&
+                constellationId &&
                 align &&
                 typeof align === 'object'
             ) {
-                m.setAlignmentLive?.(internalId, align);
+                m.setAlignmentLive?.(constellationId, align);
             }
         });
     }
