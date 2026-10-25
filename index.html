@@ -133,7 +133,7 @@
         #controls.collapsed > :not(.controls-header) {
             display: none !important;
         }
-        #constellationSelect { width: 100%; }
+
         .control-row {
             display: flex;
             gap: 7px;
@@ -611,33 +611,6 @@
             pointer-events: none;
         }
 
-        #infoSheet {
-            position: fixed;
-            left: 50%;
-            bottom: calc(max(8px, env(safe-area-inset-bottom)) + 166px);
-            z-index: 180;
-            width: min(520px, calc(100vw - 16px));
-            max-height: min(44dvh, 380px);
-            overflow: hidden;
-            transform: translate(-50%, calc(100% + 180px));
-            opacity: 0;
-            pointer-events: none;
-            transition: transform 330ms cubic-bezier(.2,.82,.2,1), opacity 220ms ease;
-            border: 1px solid rgba(160,195,255,.22);
-            border-radius: 18px 18px 14px 14px;
-            background: rgba(3,9,27,.95);
-            color: #fff;
-            backdrop-filter: blur(13px);
-            box-shadow: 0 -12px 36px rgba(0,0,0,.42);
-        }
-        #infoSheet.open { transform: translate(-50%,0); opacity: 1; pointer-events: auto; }
-        .info-sheet-handle { width:46px; height:5px; margin:9px auto 2px; border-radius:999px; background:rgba(190,215,255,.42); }
-        .info-sheet-header { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:8px 14px 10px; border-bottom:1px solid rgba(150,190,255,.13); }
-        #infoSheetTitle { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:16px; font-weight:800; color:#d9ebff; }
-        #infoSheetClose { min-width:62px; min-height:40px; padding:6px 10px; border:1px solid rgba(160,195,255,.3); border-radius:10px; color:#fff; background:rgba(24,34,68,.95); font:inherit; }
-        .info-sheet-body { overflow-y:auto; max-height:calc(min(44dvh,380px) - 92px); padding:14px 16px 18px; touch-action:pan-y; -webkit-overflow-scrolling:touch; }
-        #infoSheetText { margin:0; font-size:14px; line-height:1.75; color:rgba(255,255,255,.88); user-select:text; -webkit-user-select:text; white-space:pre-line; }
-        .info-sheet-note { margin-top:12px; font-size:11px; line-height:1.5; color:rgba(190,210,240,.60); }
 
         #touchHint { bottom: calc(max(8px, env(safe-area-inset-bottom)) + 170px); }
         @media (max-width: 520px) {
@@ -647,7 +620,7 @@
             #clockToggleButton { font-size: 17px !important; }
             #clockPanel { width: min(284px, 76vw); bottom: calc(max(8px, env(safe-area-inset-bottom)) + 160px); }
             .clock-number { transform: rotate(var(--a)) translateY(-112px) rotate(calc(-1 * var(--a))); }
-            #infoSheet { bottom: calc(max(8px, env(safe-area-inset-bottom)) + 160px); }
+
         }
 
     
@@ -1068,11 +1041,7 @@
         #settingsSheet h3,
         #settingsSheet label,
         #settingsSheet button,
-        #infoSheet h2,
-        #infoSheet h3,
-        #infoSheet .sheet-handle {
-            color: var(--ui-cyan) !important;
-        }
+
 
         /* Compact clock should clearly look tappable */
         #clockPanel:not(.open) {
@@ -1138,20 +1107,11 @@
             right: auto !important; bottom: auto !important; transform: none !important;
         }
 
-        body.info-sheet-open #clockPanel {
-            bottom: calc(154px + min(42vh, 360px)) !important;
-        }
-        body.info-sheet-open #clockPanel.open {
-            bottom: calc(185px + min(42vh, 360px)) !important;
-        }
+
 
         @media (max-width: 520px) {
-            body.info-sheet-open #clockPanel {
-                bottom: calc(151px + min(38vh, 310px)) !important;
-            }
-            body.info-sheet-open #clockPanel.open {
-                bottom: calc(184px + min(38vh, 310px)) !important;
-            }
+
+
         }
 
     
@@ -1339,45 +1299,19 @@
                 bottom 260ms cubic-bezier(.2,.8,.2,1) !important;
         }
 
-        body.info-sheet-open #clockToggleButton {
-            opacity: 0 !important;
-            visibility: hidden !important;
-            pointer-events: none !important;
-            transform: translateY(8px) !important;
-        }
 
-        body.info-sheet-open #clockPanel,
-        body.info-sheet-open #clockPanel.open {
-            opacity: 0 !important;
-            visibility: hidden !important;
-            pointer-events: none !important;
-            transform: translateY(16px) scale(.88) !important;
-        }
 
         /* 以前の「解説時に時計を上へ退避」は無効化 */
-        body.info-sheet-open #clockPanel,
-        body.info-sheet-open #clockPanel.open {
-            bottom: 151px !important;
-        }
+
 
         /* 解説中は時計操作列も閉じる */
-        body.info-sheet-open #clockDayRow {
-            max-height: 0 !important;
-            opacity: 0 !important;
-            pointer-events: none !important;
-            transform: translateY(8px) !important;
-            overflow: hidden !important;
-        }
+
 
         /* 時計が消える分、ボトムシートを少し広く使える */
-        body.info-sheet-open #infoSheet {
-            max-height: min(58vh, 520px);
-        }
+
 
         @media (max-width: 520px) {
-            body.info-sheet-open #infoSheet {
-                max-height: min(56vh, 460px);
-            }
+
         }
 
     
@@ -1946,32 +1880,7 @@
 
     
         /* ===== 88星座 基本コメント試作 ===== */
-        #infoSheetTitle .info-title-ja {
-            display: block;
-            color: #eaffff;
-            font-size: 19px;
-            font-weight: 800;
-            line-height: 1.25;
-        }
-        #infoSheetTitle .info-title-en {
-            display: block;
-            margin-top: 3px;
-            color: rgba(103,247,255,.72);
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: .05em;
-        }
-        #infoSheetText {
-            line-height: 1.75;
-            font-size: 14px;
-        }
-        .info-basic-label {
-            margin: 0 0 7px;
-            color: #67f7ff;
-            font-size: 11px;
-            font-weight: 800;
-            letter-spacing: .08em;
-        }
+
 
     
         /* ===== Mobile-friendly sky label modes ===== */
@@ -2123,18 +2032,7 @@
 
         #clockDayRow,
         #clockDayRow.clock-open,
-        body.info-sheet-open #clockDayRow {
-            display: grid !important;
-            grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-            gap: 4px !important;
-            max-height: none !important;
-            opacity: 1 !important;
-            visibility: visible !important;
-            pointer-events: auto !important;
-            transform: none !important;
-            overflow: visible !important;
-            margin-top: 4px !important;
-        }
+
 
         #clockDayRow > button,
         #clockDayRow .quick-now-wrap > button {
@@ -2181,24 +2079,7 @@
         #clockPanel,
         #clockPanel.open,
         #clockPanel:not(.open),
-        body.info-sheet-open #clockPanel,
-        body.info-sheet-open #clockPanel.open {
-            display: block !important;
-            position: fixed !important;
-            width: 168px !important;
-            height: 168px !important;
-            left: auto !important;
-            right: 8px !important;
-            bottom: max(8px, env(safe-area-inset-bottom)) !important;
-            transform: none !important;
-            transform-origin: 50% 50% !important;
-            opacity: 1 !important;
-            visibility: visible !important;
-            pointer-events: auto !important;
-            z-index: 170 !important;
-            transition: none !important;
-            overflow: visible !important;
-        }
+
 
         #clockPanel .clock-face,
         #clockPanel.open .clock-face,
@@ -2260,18 +2141,8 @@
         }
 
         /* Explanations must coexist with the permanent clock/time controls. */
-        body.info-sheet-open #clockToggleButton {
-            opacity: 1 !important;
-            visibility: visible !important;
-            pointer-events: none !important;
-            transform: none !important;
-        }
 
-        body.info-sheet-open #infoSheet {
-            /* leave the lower-right dial visible */
-            bottom: 184px !important;
-            max-height: min(48vh, 430px) !important;
-        }
+
 
         /* Keep hints above the permanent bottom controls. */
         #touchHint {
@@ -2289,13 +2160,7 @@
             #clockPanel,
             #clockPanel.open,
             #clockPanel:not(.open),
-            body.info-sheet-open #clockPanel,
-            body.info-sheet-open #clockPanel.open {
-                width: 140px !important;
-                height: 140px !important;
-                right: 6px !important;
-                bottom: max(6px, env(safe-area-inset-bottom)) !important;
-            }
+
 
             #clockPanel .clock-number,
             #clockPanel.open .clock-number,
@@ -2333,10 +2198,6 @@
                 font-size: 9px !important;
             }
 
-            body.info-sheet-open #infoSheet {
-                bottom: 154px !important;
-                max-height: min(50vh, 410px) !important;
-            }
 
             #touchHint {
                 bottom: 156px !important;
@@ -2452,9 +2313,7 @@
         /* ===== Quick season buttons V15 ===== */
         #clockDayRow,
         #clockDayRow.clock-open,
-        body.info-sheet-open #clockDayRow {
-            grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-        }
+
         #clockDayRow > button {
             width: 100% !important;
             min-width: 0 !important;
@@ -2890,73 +2749,8 @@
 
 
         /* ===== V54 Search constellation -> center + default 3-line comment ===== */
-        #constellationQuickCommentV53 {
-            position: fixed;
-            left: 50%;
-            bottom: max(10px, env(safe-area-inset-bottom));
-            transform: translate(-50%, 18px);
-            width: min(720px, calc(100vw - 18px));
-            box-sizing: border-box;
-            z-index: 5200;
-            padding: 11px 38px 11px 14px;
-            border: 1px solid rgba(103,247,255,.24);
-            border-radius: 12px;
-            background: rgba(4,14,32,.88);
-            box-shadow: 0 10px 34px rgba(0,0,0,.34);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity .16s ease, transform .16s ease;
-        }
-        #constellationQuickCommentV53.visible {
-            opacity: 1;
-            transform: translate(-50%, 0);
-            pointer-events: auto;
-        }
-        #constellationQuickCommentTextV53 {
-            margin: 0;
-            color: rgba(255,255,255,.94);
-            font-size: 13px;
-            line-height: 1.55;
-            text-align: left;
-            display: -webkit-box;
-            -webkit-box-orient: vertical;
-            -webkit-line-clamp: 3;
-            overflow: hidden;
-        }
-        #constellationQuickCommentCloseV53 {
-            position: absolute;
-            z-index: 2;
-            touch-action: manipulation;
-            top: 5px;
-            right: 7px;
-            width: 28px;
-            height: 28px;
-            padding: 0;
-            border: 0;
-            border-radius: 50%;
-            background: rgba(22,42,66,.80);
-            color: rgba(255,255,255,.82);
-            font: 700 18px/28px system-ui, sans-serif;
-            text-align: center;
-            cursor: pointer;
-        }
-        @media (max-width: 520px) {
-            #constellationQuickCommentV53 {
-                width: calc(100vw - 12px);
-                padding: 10px 34px 10px 12px;
-                border-radius: 10px;
-            }
-            #constellationQuickCommentTextV53 {
-                font-size: 12.5px;
-                line-height: 1.5;
-            }
-        }
-
-
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV85 {
+        #settingsVersionV87 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3012,36 +2806,7 @@
 
 
         /* ===== V56 one-line manga link + full-screen manga test ===== */
-        #constellationQuickLinksV56 {
-            display: none;
-            align-items: center;
-            gap: 10px;
-            min-height: 24px;
-            margin-top: 5px;
-            white-space: nowrap;
-        }
 
-        #constellationQuickLinksV56.visible {
-            display: flex;
-        }
-
-        #constellationMangaButtonV56 {
-            appearance: none;
-            -webkit-appearance: none;
-            border: 0;
-            padding: 2px 0;
-            margin: 0;
-            background: transparent;
-            color: #67f7ff;
-            font: 700 12px/1.25 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            text-decoration: underline;
-            text-underline-offset: 3px;
-            cursor: pointer;
-        }
-
-        #constellationMangaButtonV56:active {
-            opacity: .62;
-        }
 
         #constellationMangaOverlayV56 {
             position: fixed;
@@ -3082,11 +2847,7 @@
 
 
         /* ===== V57 old info sheet retired; 解説を見る opens quick 3-line comment ===== */
-        #infoSheet {
-            display: none !important;
-            visibility: hidden !important;
-            pointer-events: none !important;
-        }
+
 
 
         /* ===== V59 temporary constellation-art coordinate editor ===== */
@@ -3308,7 +3069,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV85" aria-label="バージョン">V85</div>
+        <div id="settingsVersionV87" aria-label="バージョン">V87</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -3509,35 +3270,12 @@
             <div id="clockHandWrap"><div id="clockHand"></div></div>
         </div>
     </section>
-
-    <section id="constellationQuickCommentV53" aria-hidden="true" aria-label="星座コメント">
-        <button type="button" id="constellationQuickCommentCloseV53" aria-label="コメントを閉じる">×</button>
-        <p id="constellationQuickCommentTextV53"></p>
-        <div id="constellationQuickLinksV56" aria-label="関連リンク">
-            <button type="button" id="constellationMangaButtonV56">マンガ</button>
-        </div>
-    </section>
-
-    <section id="constellationMangaOverlayV56" aria-hidden="true" aria-label="星座マンガ">
+<section id="constellationMangaOverlayV56" aria-hidden="true" aria-label="星座マンガ">
         <img id="constellationMangaImageV56"
              src=""
              alt="アンドロメダ座マンガ">
     </section>
-
-    <section id="infoSheet" aria-hidden="true" aria-label="星座解説">
-        <div class="info-sheet-handle" aria-hidden="true"></div>
-        <div class="info-sheet-header">
-            <div id="infoSheetTitle">夜空のガイド</div>
-            <button type="button" id="infoSheetClose">閉じる</button>
-        </div>
-        <div class="info-sheet-body">
-            <div class="info-basic-label">基本コメント</div>
-            <p id="infoSheetText">星座を選ぶと、ここにその星座の基本コメントを表示します。</p>
-            <div class="info-sheet-note">基本コメント試作版。追加解説や一行小ネタは今後ここから分けて追加します。</div>
-        </div>
-    </section>
-
-    <nav id="bottomDock" aria-label="星空クイック操作">
+<nav id="bottomDock" aria-label="星空クイック操作">
         <div class="dock-row dock-top">
             <button type="button" id="clockToggleButton" class="clock-summary" aria-expanded="true" aria-disabled="true" tabindex="-1">
                 <span class="clock-summary-time">
@@ -3564,12 +3302,7 @@
             <span class="controls-title">星空設定</span>
             <button type="button" id="controlsToggle" aria-expanded="true">メニューをたたむ</button>
         </div>
-
-        <select id="constellationSelect">
-            <option value="">星座を選択してください</option>
-        </select>
-
-        <div class="control-row view-mode-row">
+<div class="control-row view-mode-row">
             <span class="row-label">視点</span>
             <button type="button" class="view-button active" data-view="ground" aria-pressed="true">地上</button>
             <button type="button" class="view-button" data-view="center" aria-pressed="false">天球中心</button>
@@ -3815,22 +3548,27 @@
         }
 
         function renderV2ConstellationOptions() {
-            const oldSelect = oldControl('constellationSelect');
-            if (!oldSelect) return;
+            const selectedValue = ViewerStateV80.selectedConstellationId || '';
+            const selectedInfo = selectedValue ? CONSTELLATIONS_V2[selectedValue] : null;
 
-            if (!v2ConstellationOptions.length) {
-                v2ConstellationOptions = Array.from(oldSelect.options)
-                    .filter(option => option.value)
-                    .map(option => ({
-                        value: option.value,
-                        text: option.textContent || option.value
-                    }));
-            }
+            const source = Object.keys(CONSTELLATIONS_V2).map(id => ({
+                value: id,
+                text: CONSTELLATIONS_V2[id].ja,
+                en: CONSTELLATIONS_V2[id].en,
+                groups: CONSTELLATIONS_V2[id].groups || []
+            }));
 
-            const selectedValue = oldSelect.value;
-            const visibleOptions = v2ConstellationOptions
-                .filter(matchesV2ConstellationFilter)
-                .sort(compareV2Constellations);
+            let visibleOptions = source.filter(item => {
+                if (v2ConstellationFilter === 'all') return true;
+                return item.groups.includes(v2ConstellationFilter);
+            });
+
+            visibleOptions.sort((a, b) => {
+                if (v2ConstellationSort === 'en') {
+                    return a.en.localeCompare(b.en, 'en');
+                }
+                return a.text.localeCompare(b.text, 'ja');
+            });
 
             v2ConstellationSelect.innerHTML = '';
             const first = document.createElement('option');
@@ -3847,20 +3585,26 @@
                 v2ConstellationSelect.appendChild(option);
             });
 
-            const selectedStillVisible = visibleOptions.some(item => item.value === selectedValue);
+            const selectedStillVisible = visibleOptions.some(
+                item => item.value === selectedValue
+            );
             v2ConstellationSelect.value = selectedStillVisible ? selectedValue : '';
 
             v2SortButtons.forEach(button => {
-                button.classList.toggle('active', button.dataset.v2Sort === v2ConstellationSort);
+                button.classList.toggle(
+                    'active',
+                    button.dataset.v2Sort === v2ConstellationSort
+                );
             });
+
             v2FilterButtons.forEach(button => {
-                button.classList.toggle('active', button.dataset.v2Filter === v2ConstellationFilter);
+                button.classList.toggle(
+                    'active',
+                    button.dataset.v2Filter === v2ConstellationFilter
+                );
             });
 
-            const selectedText = oldSelect.value
-                ? (oldSelect.options[oldSelect.selectedIndex]?.textContent || oldSelect.value)
-                : '未選択';
-
+            const selectedText = selectedInfo?.ja || '未選択';
             const filterLabel =
                 v2ConstellationFilter === 'summer' ? '夏星座' :
                 v2ConstellationFilter === 'winter' ? '冬星座' :
@@ -4130,22 +3874,26 @@
         });
 
         v2ConstellationSelect.addEventListener('change', () => {
-            const oldSelect = oldControl('constellationSelect');
-            if (!oldSelect) return;
+            const id = ConstellationRegistryV80.normalizeId(
+                v2ConstellationSelect.value
+            );
 
-            oldSelect.value = v2ConstellationSelect.value;
-            dispatchChange(oldSelect);
+            window.selectConstellationV80?.(id, {
+                focus: currentViewMode !== 'ground',
+                showComment: Boolean(id),
+                source: 'settings-v2'
+            });
 
             requestAnimationFrame(syncV2ConstellationPicker);
         });
 
         v2ConstellationClear.addEventListener('click', () => {
-            const oldSelect = oldControl('constellationSelect');
-            if (!oldSelect) return;
-
-            oldSelect.value = '';
-            dispatchChange(oldSelect);
-
+            window.selectConstellationV80?.(null, {
+                focus: false,
+                showComment: false,
+                source: 'settings-v2-clear'
+            });
+            hideConstellationDescriptionV85();
             requestAnimationFrame(syncV2ConstellationPicker);
         });
 
@@ -4839,7 +4587,6 @@
         celestialGroup.add(backgroundStarGroup, starGroup, lineGroup, searchHighlightGroup);
         scene.add(celestialGroup);
 
-        const constellationSelect = document.getElementById('constellationSelect');
         const constellationLabelsLayer = document.getElementById('constellationLabels');
         const groundLensSlider = document.getElementById('groundLensSlider');
         const lensValue = document.getElementById('lensValue');
@@ -4899,10 +4646,6 @@
         ]);
 
         const infoToggleButton = document.getElementById('infoToggleButton');
-        const infoSheet = document.getElementById('infoSheet');
-        const infoSheetClose = document.getElementById('infoSheetClose');
-        const infoSheetTitle = document.getElementById('infoSheetTitle');
-        const infoSheetText = document.getElementById('infoSheetText');
         const settingsButton = document.getElementById('settingsButton');
         const settingsScrim = document.getElementById('settingsScrim');
         const sideSheetClose = document.getElementById('sideSheetClose');
@@ -5099,8 +4842,13 @@
                 lastAnimationTime = performance.now();
             });
 
-            bindTapAction(infoToggleButton, () => setInfoSheetOpen(!infoSheet.classList.contains('open')));
-            bindTapAction(infoSheetClose, () => setInfoSheetOpen(false));
+            bindTapAction(infoToggleButton, () => {
+                const selected = ViewerStateV80.selectedConstellationId;
+                if (selected) {
+                    showConstellationDescriptionV85(selected);
+                }
+                setClockPanelOpen();
+            });
 
             // Settings V2 handles the settings button independently.
 
@@ -5387,219 +5135,52 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             updateSunMoonBoardV51();
         }
 
-        function setInfoSheetOpen(open) {
-            // V57: old info sheet is retired.
-            document.body.classList.remove('info-sheet-open');
-            infoSheet?.classList.remove('open');
-            infoSheet?.setAttribute('aria-hidden', 'true');
 
-            if (open) {
-                const selected = constellationSelect?.value || '';
-                if (selected) {
-                    const resolvedId = ConstellationRegistryV80.normalizeId(selected);
-                    showConstellationDescriptionV85(resolvedId);
-                }
-            }
 
-            infoToggleButton.setAttribute('aria-expanded', 'false');
-            infoToggleButton.textContent = '✦ 解説を見る';
-            setClockPanelOpen();
+        function showDescriptionTextV87(title, text, kindLabel = '') {
+            ensureConstellationDescriptionUiV85();
+
+            constellationDescriptionRibbonV85.dataset.constellationId = '';
+            constellationDescriptionRibbonV85.dataset.iauId = '';
+            constellationDescriptionRibbonV85.dataset.mangaSrc = '';
+            constellationDescriptionRibbonV85.dataset.mangaCategory = '';
+
+            const heading = kindLabel ? `${title} / ${kindLabel}` : title;
+            constellationDescriptionTextV85.textContent =
+                heading ? `${heading}\n${text || ''}` : (text || '');
+
+            constellationDescriptionLinksV85.classList.remove('visible');
+            constellationDescriptionMangaV85.hidden = true;
+
+            constellationDescriptionVisibleV85 = true;
+            constellationDescriptionRibbonV85.classList.add('visible');
+            constellationDescriptionRibbonV85.setAttribute('aria-hidden', 'false');
+            layoutConstellationDescriptionV85();
         }
 
         window.selectSearchStarInfo = function(item) {
             if (!item) return;
-
-            infoSheetTitle.innerHTML =
-                `<span class="info-title-ja">${item.ja || item.id}</span>` +
-                `<span class="info-title-en">${item.en || item.id} / 星名</span>`;
-
-            infoSheetText.textContent =
+            const title = item.ja || item.id || '星';
+            const text =
                 starBasicComments[item.id] ||
                 'この星の基本コメントはまだ登録されていません。';
+            showDescriptionTextV87(title, text, '星名');
         };
 
         window.selectSearchTopicInfo = function(item, kindLabel = '天体') {
             if (!item) return;
-
-            infoSheetTitle.innerHTML =
-                `<span class="info-title-ja">${item.ja || item.id}</span>` +
-                `<span class="info-title-en">${item.en || item.id} / ${kindLabel}</span>`;
-
-            infoSheetText.textContent =
+            const title = item.ja || item.id || kindLabel;
+            const text =
                 topicBasicComments[item.id] ||
                 item.note ||
                 'この項目の基本コメントはまだ登録されていません。';
+            showDescriptionTextV87(title, text, kindLabel);
         };
 
-        function updateInfoSheetForConstellation() {
-            const selected = ViewerStateV80.selectedConstellationId;
-
-            if (!selected) {
-                infoSheetTitle.textContent = '夜空のガイド';
-                infoSheetText.textContent = '星座を選ぶと、ここにその星座の基本コメントを表示します。';
-                return;
-            }
-
-            const info = resolveConstellationLabelInfo(selected);
-
-            if (!info) {
-                infoSheetTitle.textContent = selected;
-                infoSheetText.textContent = 'この星座の基本コメントはまだ登録されていません。';
-                return;
-            }
-
-            infoSheetTitle.innerHTML =
-                `<span class="info-title-ja">${info.displayJa || info.ja}</span>` +
-                `<span class="info-title-en">${info.en} / ${info.internalId || String(info.id).toLowerCase()}</span>`;
-
-            infoSheetText.textContent =
-                constellationBasicComments[info.id] ||
-                'この星座の基本コメントはまだ登録されていません。';
-        }
-
-
-        const quickCommentStateV84 = {
-            visible: false
-        };
-
-        function layoutQuickCommentV84_2() {
-            const panel = document.getElementById('constellationQuickCommentV53');
-            if (!panel) return;
-
-            const dock = document.getElementById('bottomDock');
-            const safeGap = 10;
-            let bottomPx = safeGap;
-
-            if (dock) {
-                const rect = dock.getBoundingClientRect();
-                if (
-                    Number.isFinite(rect.top) &&
-                    Number.isFinite(rect.bottom) &&
-                    rect.height > 0
-                ) {
-                    bottomPx = Math.max(
-                        safeGap,
-                        window.innerHeight - rect.top + safeGap
-                    );
-                }
-            }
-
-            panel.style.bottom = `${bottomPx}px`;
-        }
-
-        function setQuickCommentVisibleV84(visible) {
-            const panel = document.getElementById('constellationQuickCommentV53');
-            if (!panel) return;
-
-            quickCommentStateV84.visible = Boolean(visible);
-
-            if (quickCommentStateV84.visible) {
-                layoutQuickCommentV84_2();
-
-                // Explicit presentation state.
-                // Do not depend on historical CSS class interactions.
-                panel.style.display = 'block';
-                panel.style.visibility = 'visible';
-                panel.style.opacity = '1';
-                panel.style.pointerEvents = 'auto';
-                panel.style.transform = 'translate(-50%, 0)';
-                panel.style.zIndex = '5200';
-
-                panel.classList.add('visible');
-                panel.setAttribute('aria-hidden', 'false');
-            } else {
-                panel.style.opacity = '0';
-                panel.style.pointerEvents = 'none';
-                panel.style.visibility = 'hidden';
-                panel.style.display = 'none';
-
-                panel.classList.remove('visible');
-                panel.setAttribute('aria-hidden', 'true');
-            }
-        }
-
-        function showConstellationQuickCommentV53(constellationId) {
-            const panel = document.getElementById('constellationQuickCommentV53');
-            const text = document.getElementById('constellationQuickCommentTextV53');
-            if (!panel || !text) return false;
-
-            const internalId = ConstellationRegistryV80.normalizeId(constellationId);
-            if (!internalId) return false;
-
-            const info = CONSTELLATIONS_V2[internalId];
-            const iauId = info?.iau || '';
-            const comment =
-                constellationBasicComments[iauId] ||
-                'この星座の基本コメントはまだ登録されていません。';
-
-            // Core presentation first. This must not depend on manga/media modules.
-            text.textContent = comment;
-            panel.dataset.constellationId = internalId;
-            panel.dataset.iauId = iauId;
-            panel.dataset.mangaSrc = '';
-            panel.dataset.mangaCategory = '';
-            setQuickCommentVisibleV84(true);
-
-            // Optional enrichment only.
-            try {
-                const links = document.getElementById('constellationQuickLinksV56');
-                const mangaButton = document.getElementById('constellationMangaButtonV56');
-
-                const manager = window.constellationMangaManagerV66;
-                const mangaEntry =
-                    manager && typeof manager.get === 'function'
-                        ? manager.get(internalId)
-                        : null;
-
-                const hasManga = Boolean(mangaEntry);
-
-                if (links) {
-                    links.classList.toggle('visible', hasManga);
-                }
-
-                if (mangaButton) {
-                    mangaButton.hidden = !hasManga;
-                    if (hasManga) {
-                        mangaButton.textContent =
-                            mangaEntry.category === '雑学'
-                                ? 'マンガ・雑学'
-                                : 'マンガ';
-                    }
-                }
-
-                if (mangaEntry) {
-                    panel.dataset.mangaSrc = mangaEntry.src || '';
-                    panel.dataset.mangaCategory = mangaEntry.category || '';
-                }
-            } catch (error) {
-                console.warn(
-                    'Quick comment media enrichment failed; text comment remains visible.',
-                    error
-                );
-            }
-
-            return true;
-        }
-
-        function hideConstellationQuickCommentV53() {
-            setQuickCommentVisibleV84(false);
-        }
 
 
 
-        function openConstellationMangaV56() {
-            const panel = document.getElementById('constellationQuickCommentV53');
-            const overlay = document.getElementById('constellationMangaOverlayV56');
-            const image = document.getElementById('constellationMangaImageV56');
-            const src = panel?.dataset.mangaSrc || '';
-            if (!overlay || !image || !src) return;
 
-            image.src = src;
-            image.alt = `${constellationDisplayJaV65(panel?.dataset.constellationId || '')}マンガ`;
-            overlay.classList.add('visible');
-            overlay.setAttribute('aria-hidden', 'false');
-            document.body.classList.add('constellation-manga-open-v56');
-        }
 
         function closeConstellationMangaV56() {
             const overlay = document.getElementById('constellationMangaOverlayV56');
@@ -5610,49 +5191,18 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             document.body.classList.remove('constellation-manga-open-v56');
         }
 
+        
+
+        
+
+
         document.addEventListener('DOMContentLoaded', () => {
-            setQuickCommentVisibleV84(false);
-
-            const close = document.getElementById('constellationQuickCommentCloseV53');
-            const mangaButton = document.getElementById('constellationMangaButtonV56');
             const mangaOverlay = document.getElementById('constellationMangaOverlayV56');
-
-            if (close) {
-                const closeQuickCommentV84 = (event) => {
-                    event?.preventDefault?.();
-                    event?.stopPropagation?.();
-                    hideConstellationQuickCommentV53();
-                };
-
-                close.addEventListener('pointerdown', closeQuickCommentV84, {
-                    capture: true,
-                    passive: false
-                });
-                close.addEventListener('click', closeQuickCommentV84, {
-                    capture: true
-                });
-            }
-
-            mangaButton?.addEventListener('click', (event) => {
-                event.preventDefault();
-                event.stopPropagation();
-                openConstellationMangaV56();
-            });
-
-            // Full-screen manga is intentionally minimal:
-            // touch/click anywhere closes it and returns to the 3-line comment state.
             mangaOverlay?.addEventListener('pointerup', (event) => {
                 event.preventDefault();
                 closeConstellationMangaV56();
             });
         });
-
-        window.addEventListener('resize', () => {
-            if (quickCommentStateV84.visible) {
-                layoutQuickCommentV84_2();
-            }
-        });
-
 
         function bindTapAction(button, handler) {
             let activePointerId = null;
@@ -5982,14 +5532,19 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             if (candidate.type === 'star') {
                 const hit = window.highlightSearchStar?.(candidate.key);
                 if (hit) {
-                    const starRecord = skyTapStarCandidates.find(item => item.starName === candidate.key);
-                    const info = resolveConstellationLabelInfo(starRecord?.constellationId);
-                    infoSheetTitle.innerHTML =
-                        `<span class="info-title-ja">${candidate.name}</span>` +
-                        `<span class="info-title-en">${info?.ja || starRecord?.constellation || ''} / 星</span>`;
-                    infoSheetText.textContent =
+                    const starRecord = skyTapStarCandidates.find(
+                        item => item.starName === candidate.key
+                    );
+                    const info = resolveConstellationLabelInfo(
+                        starRecord?.constellationId
+                    );
+                    const title = info?.ja
+                        ? `${candidate.name} / ${info.ja}`
+                        : candidate.name;
+                    const text =
                         starBasicComments[candidate.commentId] ||
                         'この星の基本コメントはまだ登録されていません。';
+                    showDescriptionTextV87(title, text, '星');
                 }
             }
         }
@@ -6424,7 +5979,6 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
         function resetConstellationHighlight() {
             ViewerStateV80.selectedConstellationId = null;
-            if (constellationSelect) constellationSelect.value = '';
             hideConstellationDescriptionV85();
 
             Object.values(runtimeConstellationsV80).forEach(runtime => {
@@ -6470,12 +6024,12 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
             ViewerStateV80.selectedConstellationId = id || null;
 
-            if (constellationSelect && constellationSelect.value !== (id || '')) {
-                constellationSelect.value = id || '';
-            }
-
             if (!id) {
+                hideConstellationDescriptionV85();
                 hideSelectedConstellationGuidance();
+                requestAnimationFrame(() => {
+                    try { syncV2ConstellationPicker(); } catch (_) {}
+                });
                 return false;
             }
 
@@ -6491,6 +6045,10 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             } else if (currentViewMode === 'ground') {
                 updateSelectedConstellationGuidance(true);
             }
+
+            requestAnimationFrame(() => {
+                try { syncV2ConstellationPicker(); } catch (_) {}
+            });
 
             return true;
         }
@@ -6530,7 +6088,6 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
             // 通常の単独選択とは別の「複数星座選択」なので単独選択状態を解除する。
             ViewerStateV80.selectedConstellationId = null;
-            if (constellationSelect) constellationSelect.value = '';
             hideConstellationDescriptionV85();
             hideSelectedConstellationGuidance();
             return true;
@@ -7037,7 +6594,10 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             if (!force && now - lastConstellationGuidanceUpdate < 120) return;
             lastConstellationGuidanceUpdate = now;
 
-            if (!constellationSelect?.value || (currentViewMode !== 'ground' && currentViewMode !== 'center')) {
+            if (
+                !ViewerStateV80.selectedConstellationId ||
+                (currentViewMode !== 'ground' && currentViewMode !== 'center')
+            ) {
                 hideSelectedConstellationGuidance();
                 return;
             }
@@ -7427,23 +6987,9 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             Array.from(constellations)
                 .sort((a, b) => CONSTELLATIONS_V2[a].ja.localeCompare(CONSTELLATIONS_V2[b].ja, 'ja'))
                 .forEach(id => {
-                    const option = document.createElement('option');
-                    option.value = id;
-                    option.textContent = CONSTELLATIONS_V2[id].ja;
-                    constellationSelect.appendChild(option);
-
                     const runtime = ensureRuntimeConstellationV80(id);
                     runtime.labelElement = createConstellationLabel(id);
                 });
-
-            constellationSelect.addEventListener('change', () => {
-                const id = ConstellationRegistryV80.normalizeId(constellationSelect.value);
-                selectConstellationV80(id, {
-                    focus: currentViewMode !== 'ground',
-                    showComment: false,
-                    source: 'legacy-select'
-                });
-            });
 
             buildBackgroundStarLayers(parseFloat(backgroundMagnitudeSlider.value));
         }
@@ -7891,7 +7437,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 }
             } catch (_) {}
 
-            const selectedConstellation = document.getElementById('constellationSelect')?.value || null;
+            const selectedConstellation = ViewerStateV80.selectedConstellationId || null;
             return {
                 format: 'star-viewer-sky-export',
                 formatVersion: 2,
@@ -8397,7 +7943,6 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                     typeof THREE === 'undefined' ||
                     typeof celestialGroup === 'undefined' ||
                     typeof runtimeConstellationsV80 === 'undefined' ||
-                    typeof constellationSelect === 'undefined' ||
                     typeof camera === 'undefined' ||
                     typeof SKY_RADIUS === 'undefined'
                 ) {
@@ -9104,9 +8649,6 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 }
 
                 discoverServerArtworkV63();
-                if (constellationSelect && typeof constellationSelect.addEventListener === 'function') {
-                    constellationSelect.addEventListener('change', () => entries.forEach(updateState));
-                }
                 const tick = () => {
                     entries.forEach(updateState);
                     requestAnimationFrame(tick);
@@ -9176,10 +8718,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                         return true;
                     },
                     resolveSelectedArtworkIdV68() {
-                        const selectedValue =
-                            ViewerStateV80.selectedConstellationId ||
-                            ConstellationRegistryV80.normalizeId(constellationSelect?.value) ||
-                            ConstellationRegistryV80.normalizeId(document.getElementById('v2ConstellationSelect')?.value);
+                        const selectedValue = ViewerStateV80.selectedConstellationId;
                         if (!selectedValue) return null;
 
                         let found = null;
@@ -9601,10 +9140,6 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             downloadAlignmentJsonV60();
         });
 
-        constellationSelect?.addEventListener('change', () => {
-            updateActiveId();
-        });
-
         window.addEventListener('constellation-art-discovered-v63', () => {
             updateActiveId();
         });
@@ -9663,29 +9198,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         return `${item.name}_${item.category}.png`;
     }
 
-    function refreshCurrentCommentLink() {
-        const panel = document.getElementById('constellationQuickCommentV53');
-        if (!panel?.classList.contains('visible')) return;
-        const id = panel.dataset.constellationId || '';
-        if (!id) return;
 
-        const entry = found.get(id) || null;
-        const links = document.getElementById('constellationQuickLinksV56');
-        const button = document.getElementById('constellationMangaButtonV56');
-        if (!links || !button) return;
-
-        links.classList.toggle('visible', Boolean(entry));
-        button.hidden = !entry;
-
-        if (entry) {
-            panel.dataset.mangaSrc = entry.src;
-            panel.dataset.mangaCategory = entry.category;
-            button.textContent = entry.category === '雑学' ? 'マンガ・雑学' : 'マンガ';
-        } else {
-            panel.dataset.mangaSrc = '';
-            panel.dataset.mangaCategory = '';
-        }
-    }
 
     function probe(item) {
         const filename = filenameOf(item);
@@ -9694,7 +9207,6 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
         img.onload = () => {
             found.set(item.id, { ...item, filename, src });
-            refreshCurrentCommentLink();
             window.dispatchEvent(new CustomEvent('constellation-manga-found-v66', {
                 detail: { id:item.id, filename, category:item.category }
             }));
