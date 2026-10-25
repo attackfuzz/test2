@@ -175,11 +175,11 @@
             color: #a8cfff;
         }
         .ground-only,
-        .center-only {
+        .celestial-only {
             display: none;
         }
         .ground-only.visible,
-        .center-only.visible {
+        .celestial-only.visible {
             display: flex;
         }
         .stack-row {
@@ -2808,7 +2808,7 @@
 
         /* ===== V54 Search constellation -> center + default 3-line comment ===== */
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV89 {
+        #settingsVersionV90 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3177,7 +3177,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV89" aria-label="バージョン">V89</div>
+        <div id="settingsVersionV90" aria-label="バージョン">V90</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -3186,7 +3186,7 @@
             <h3>表示モード</h3>
             <div class="settingsV2ModeGrid" role="group" aria-label="表示モード">
                 <button type="button" class="settingsV2ModeButton active" data-view-mode="ground">地上</button>
-                <button type="button" class="settingsV2ModeButton" data-view-mode="center">天球中心</button>
+                <button type="button" class="settingsV2ModeButton" data-view-mode="celestial">天球</button>
                 <button type="button" class="settingsV2ModeButton" data-view-mode="overview">地球俯瞰</button>
             </div>
 
@@ -3200,7 +3200,7 @@
                 <div class="settingsV2ZoomCenter">ボタンでも調整</div>
                 <button type="button" class="settingsV2ZoomButton" id="v2ZoomInButton" aria-label="ズームイン">＋</button>
             </div>
-            <p class="settingsV2ModeHint">地上ではレンズ、天球中心では画角、俯瞰では距離を調整します。</p>
+            <p class="settingsV2ModeHint">地上ではレンズ、天球では画角、俯瞰では距離を調整します。</p>
         </section>
         <section class="settingsV2Section">
             <h3>星座を選ぶ</h3>
@@ -3414,7 +3414,7 @@
 <div class="control-row view-mode-row">
             <span class="row-label">視点</span>
             <button type="button" class="view-button active" data-view="ground" aria-pressed="true">地上</button>
-            <button type="button" class="view-button" data-view="center" aria-pressed="false">天球中心</button>
+            <button type="button" class="view-button" data-view="celestial" aria-pressed="false">天球</button>
             <button type="button" class="view-button" data-view="overview" aria-pressed="false">地球俯瞰</button>
         </div>
 
@@ -3794,7 +3794,7 @@
                         setCameraFocalLength(focal);
                     }
                     v2ZoomValue.textContent = `${focal.toFixed(1).replace('.0','')}mm`;
-                } else if (currentViewMode === 'center') {
+                } else if (currentViewMode === 'celestial') {
                     const fov = 100 + (20 - 100) * normalized;
                     camera.fov = fov;
                     camera.updateProjectionMatrix();
@@ -3840,7 +3840,7 @@
 
                     value = ((focal - minFocal) / (maxFocal - minFocal)) * 100;
                     v2ZoomValue.textContent = `${focal.toFixed(1).replace('.0','')}mm`;
-                } else if (currentViewMode === 'center') {
+                } else if (currentViewMode === 'celestial') {
                     value = ((100 - camera.fov) / 80) * 100;
                     v2ZoomValue.textContent = `${camera.fov.toFixed(0)}°`;
                 } else {
@@ -4680,7 +4680,7 @@
         const lensValue = document.getElementById('lensValue');
         const viewButtons = Array.from(document.querySelectorAll('.view-button'));
         const groundOnlyElements = Array.from(document.querySelectorAll('.ground-only'));
-        const centerOnlyElements = Array.from(document.querySelectorAll('.center-only'));
+        const celestialOnlyElements = Array.from(document.querySelectorAll('.celestial-only'));
         const constellationLinesToggle = document.getElementById('constellationLinesToggle');
         const backgroundStarsToggle = document.getElementById('backgroundStarsToggle');
         const backgroundMagnitudeSlider = document.getElementById('backgroundMagnitudeSlider');
@@ -4817,7 +4817,7 @@
         let groundAzimuth = 0;
         let groundAltitude = THREE.MathUtils.degToRad(30);
         let currentViewMode = 'ground';
-        let activeViewPreset = 'center';
+        let activeViewPreset = 'celestial';
         let cameraAnimation = null;
         let isDragging = false;
         let previousPointerPosition = { x: 0, y: 0 };
@@ -5751,7 +5751,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             const incrementalDelta = getDragDelta(currentPosition, previousPosition);
             const totalDelta = getDragDelta(currentPosition, dragStartPosition);
 
-            if (currentViewMode === 'ground' || currentViewMode === 'center') {
+            if (currentViewMode === 'ground' || currentViewMode === 'celestial') {
                 rotateSkyCamera(incrementalDelta);
             } else if (currentViewMode === 'overview') {
                 orbitAroundEarth(incrementalDelta);
@@ -5933,7 +5933,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 camera.updateProjectionMatrix();
                 earthMaterial.opacity = targetEarthOpacity;
                 groundMaterial.opacity = targetGroundOpacity;
-                if (name === 'ground' || name === 'center') {
+                if (name === 'ground' || name === 'celestial') {
                     applySkyCameraOrientation();
                 } else {
                     syncCameraQuaternion();
@@ -5957,7 +5957,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
         function updateModeSpecificControls() {
             groundOnlyElements.forEach(element => element.classList.toggle('visible', currentViewMode === 'ground'));
-            centerOnlyElements.forEach(element => element.classList.toggle('visible', currentViewMode === 'center'));
+            celestialOnlyElements.forEach(element => element.classList.toggle('visible', currentViewMode === 'celestial'));
         }
 
         function setActiveViewPreset(name) {
@@ -6756,14 +6756,14 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
             if (
                 !ViewerStateV80.selectedConstellationId ||
-                (currentViewMode !== 'ground' && currentViewMode !== 'center')
+                (currentViewMode !== 'ground' && currentViewMode !== 'celestial')
             ) {
                 hideSelectedConstellationGuidance();
                 return;
             }
 
             // While a camera transition is already moving toward the target, keep the ribbon out of the way.
-            if (currentViewMode === 'center' && cameraAnimation) {
+            if (currentViewMode === 'celestial' && cameraAnimation) {
                 hideSelectedConstellationGuidance();
                 return;
             }
@@ -6782,7 +6782,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             const name = selectedConstellationDisplayName(selected);
             constellationGuidanceActions.innerHTML = '';
 
-            // Only ground mode has a horizon. Celestial-center mode skips this branch completely.
+            // Only ground mode has a horizon. Celestial mode skips this branch completely.
             if (currentViewMode === 'ground' && state.altitudeDeg <= 0) {
                 constellationEdgeIndicator.classList.remove('visible');
                 constellationGuidanceMessage.textContent = `⚠️ 現在、${name}は地平線の下にあります ⚠️`;
@@ -6898,7 +6898,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             // mode deterministically, then animate only the final look-at toward the target.
             cancelCameraAnimation();
             hideSelectedConstellationGuidance();
-            applyViewPreset('center', false);
+            applyViewPreset('celestial', false);
             focusCameraOnConstellation(constellation);
             requestAnimationFrame(() => updateSelectedConstellationGuidance(true));
         }
