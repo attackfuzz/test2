@@ -2891,7 +2891,7 @@
 
 
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV84 {
+        #settingsVersionV84_1 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3243,7 +3243,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV84" aria-label="バージョン">V84</div>
+        <div id="settingsVersionV84_1" aria-label="バージョン">V84.1</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -4272,11 +4272,20 @@
         function pickConstellation(valueOrId){
             const id = ConstellationRegistryV80.normalizeId(valueOrId);
             if (!id) return false;
-            return Boolean(window.selectConstellationV80?.(id, {
-                focus: true,
-                showComment: true,
-                source: 'search'
-            }));
+
+            try {
+                window.selectConstellationV80?.(id, {
+                    focus: true,
+                    showComment: true,
+                    source: 'search'
+                });
+            } catch (error) {
+                console.error('Constellation search selection failed:', error);
+            }
+
+            // A valid constellation result has been consumed.
+            // Search-sheet closing must not depend on optional presentation code.
+            return true;
         }
 
         document.addEventListener('DOMContentLoaded',()=>{
@@ -5400,33 +5409,64 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         function showConstellationQuickCommentV53(constellationId) {
             const panel = document.getElementById('constellationQuickCommentV53');
             const text = document.getElementById('constellationQuickCommentTextV53');
-            const links = document.getElementById('constellationQuickLinksV56');
-            const mangaButton = document.getElementById('constellationMangaButtonV56');
-            if (!panel || !text) return;
+            if (!panel || !text) return false;
 
-            const info = window.constellationMasterV74?.getInfo(constellationId)
-                || resolveConstellationLabelInfo(constellationId);
+            const internalId = ConstellationRegistryV80.normalizeId(constellationId);
+            if (!internalId) return false;
 
-            const internalId = info?.internalId || String(constellationId || '').toLowerCase();
-            const iauId = info?.iauId || info?.id || constellationId || '';
-
-            const comment = constellationBasicComments[iauId] ||
+            const info = CONSTELLATIONS_V2[internalId];
+            const iauId = info?.iau || '';
+            const comment =
+                constellationBasicComments[iauId] ||
                 'この星座の基本コメントはまだ登録されていません。';
+
+            // Core presentation first. This must not depend on manga/media modules.
             text.textContent = comment;
-
-            const mangaEntry = window.constellationMangaManagerV66?.get(internalId) || null;
-            const hasManga = Boolean(mangaEntry);
-            if (links) links.classList.toggle('visible', hasManga);
-            if (mangaButton) {
-                mangaButton.hidden = !hasManga;
-                mangaButton.textContent = mangaEntry?.category === '雑学' ? 'マンガ・雑学' : 'マンガ';
-            }
-
             panel.dataset.constellationId = internalId;
             panel.dataset.iauId = iauId;
-            panel.dataset.mangaSrc = mangaEntry?.src || '';
-            panel.dataset.mangaCategory = mangaEntry?.category || '';
+            panel.dataset.mangaSrc = '';
+            panel.dataset.mangaCategory = '';
             setQuickCommentVisibleV84(true);
+
+            // Optional enrichment only.
+            try {
+                const links = document.getElementById('constellationQuickLinksV56');
+                const mangaButton = document.getElementById('constellationMangaButtonV56');
+
+                const manager = window.constellationMangaManagerV66;
+                const mangaEntry =
+                    manager && typeof manager.get === 'function'
+                        ? manager.get(internalId)
+                        : null;
+
+                const hasManga = Boolean(mangaEntry);
+
+                if (links) {
+                    links.classList.toggle('visible', hasManga);
+                }
+
+                if (mangaButton) {
+                    mangaButton.hidden = !hasManga;
+                    if (hasManga) {
+                        mangaButton.textContent =
+                            mangaEntry.category === '雑学'
+                                ? 'マンガ・雑学'
+                                : 'マンガ';
+                    }
+                }
+
+                if (mangaEntry) {
+                    panel.dataset.mangaSrc = mangaEntry.src || '';
+                    panel.dataset.mangaCategory = mangaEntry.category || '';
+                }
+            } catch (error) {
+                console.warn(
+                    'Quick comment media enrichment failed; text comment remains visible.',
+                    error
+                );
+            }
+
+            return true;
         }
 
         function hideConstellationQuickCommentV53() {
@@ -5806,11 +5846,15 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             if (!candidate) return;
 
             if (candidate.type === 'constellation') {
-                selectConstellationV80(candidate.key, {
-                    focus: false,
-                    showComment: true,
-                    source: 'tap'
-                });
+                try {
+                    selectConstellationV80(candidate.key, {
+                        focus: false,
+                        showComment: true,
+                        source: 'tap'
+                    });
+                } catch (error) {
+                    console.error('Sky-tap constellation selection failed:', error);
+                }
                 return;
             }
 
@@ -6317,7 +6361,14 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             clearSkySearchHighlight();
 
             if (options.showComment) {
-                showConstellationQuickCommentV53(id);
+                try {
+                    showConstellationQuickCommentV53(id);
+                } catch (error) {
+                    console.warn(
+                        'Quick comment display failed; constellation selection continues.',
+                        error
+                    );
+                }
             }
 
             if (options.focus) {
