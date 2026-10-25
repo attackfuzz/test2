@@ -2808,7 +2808,7 @@
 
         /* ===== V54 Search constellation -> center + default 3-line comment ===== */
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV88_1 {
+        #settingsVersionV88_2 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3158,7 +3158,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV88_1" aria-label="バージョン">V88.1</div>
+        <div id="settingsVersionV88_2" aria-label="バージョン">V88.2</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -6470,22 +6470,28 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             constellationDescriptionMangaV85.addEventListener('click', (event) => {
                 event.preventDefault();
                 event.stopPropagation();
-
-                const src = constellationDescriptionRibbonV85?.dataset.mangaSrc || '';
-                if (!src) return;
-
-                const overlay = document.getElementById('constellationMangaOverlayV56');
-                const image = document.getElementById('constellationMangaImageV56');
-                if (!overlay || !image) return;
-
-                image.src = src;
-                image.alt = `${constellationDisplayJaV65(
-                    constellationDescriptionRibbonV85.dataset.constellationId || ''
-                )}マンガ`;
-                overlay.classList.add('visible');
-                overlay.setAttribute('aria-hidden', 'false');
-                document.body.classList.add('constellation-manga-open-v56');
+                openConstellationMangaV88_2();
             });
+        }
+
+        function openConstellationMangaV88_2() {
+            const ribbon = constellationDescriptionRibbonV85;
+            const src = ribbon?.dataset.mangaSrc || '';
+            const id = ribbon?.dataset.constellationId || '';
+            if (!src || !id) return false;
+
+            const overlay = document.getElementById('constellationMangaOverlayV56');
+            const image = document.getElementById('constellationMangaImageV56');
+            if (!overlay || !image) return false;
+
+            const info = CONSTELLATIONS_V2[id];
+            image.src = src;
+            image.alt = `${info?.ja || '星座'}マンガ`;
+
+            overlay.classList.add('visible');
+            overlay.setAttribute('aria-hidden', 'false');
+            document.body.classList.add('constellation-manga-open-v56');
+            return true;
         }
 
         function layoutConstellationDescriptionV85() {
