@@ -2891,7 +2891,7 @@
 
 
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV84_1 {
+        #settingsVersionV84_2 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3243,7 +3243,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV84_1" aria-label="バージョン">V84.1</div>
+        <div id="settingsVersionV84_2" aria-label="バージョン">V84.2</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -5397,13 +5397,60 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             visible: false
         };
 
+        function layoutQuickCommentV84_2() {
+            const panel = document.getElementById('constellationQuickCommentV53');
+            if (!panel) return;
+
+            const dock = document.getElementById('bottomDock');
+            const safeGap = 10;
+            let bottomPx = safeGap;
+
+            if (dock) {
+                const rect = dock.getBoundingClientRect();
+                if (
+                    Number.isFinite(rect.top) &&
+                    Number.isFinite(rect.bottom) &&
+                    rect.height > 0
+                ) {
+                    bottomPx = Math.max(
+                        safeGap,
+                        window.innerHeight - rect.top + safeGap
+                    );
+                }
+            }
+
+            panel.style.bottom = `${bottomPx}px`;
+        }
+
         function setQuickCommentVisibleV84(visible) {
             const panel = document.getElementById('constellationQuickCommentV53');
             if (!panel) return;
 
             quickCommentStateV84.visible = Boolean(visible);
-            panel.classList.toggle('visible', quickCommentStateV84.visible);
-            panel.setAttribute('aria-hidden', String(!quickCommentStateV84.visible));
+
+            if (quickCommentStateV84.visible) {
+                layoutQuickCommentV84_2();
+
+                // Explicit presentation state.
+                // Do not depend on historical CSS class interactions.
+                panel.style.display = 'block';
+                panel.style.visibility = 'visible';
+                panel.style.opacity = '1';
+                panel.style.pointerEvents = 'auto';
+                panel.style.transform = 'translate(-50%, 0)';
+                panel.style.zIndex = '5200';
+
+                panel.classList.add('visible');
+                panel.setAttribute('aria-hidden', 'false');
+            } else {
+                panel.style.opacity = '0';
+                panel.style.pointerEvents = 'none';
+                panel.style.visibility = 'hidden';
+                panel.style.display = 'none';
+
+                panel.classList.remove('visible');
+                panel.setAttribute('aria-hidden', 'true');
+            }
         }
 
         function showConstellationQuickCommentV53(constellationId) {
@@ -5499,6 +5546,8 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         }
 
         document.addEventListener('DOMContentLoaded', () => {
+            setQuickCommentVisibleV84(false);
+
             const close = document.getElementById('constellationQuickCommentCloseV53');
             const mangaButton = document.getElementById('constellationMangaButtonV56');
             const mangaOverlay = document.getElementById('constellationMangaOverlayV56');
@@ -5532,6 +5581,13 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 closeConstellationMangaV56();
             });
         });
+
+        window.addEventListener('resize', () => {
+            if (quickCommentStateV84.visible) {
+                layoutQuickCommentV84_2();
+            }
+        });
+
 
         function bindTapAction(button, handler) {
             let activePointerId = null;
