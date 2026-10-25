@@ -2889,7 +2889,7 @@
 
 
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV82 {
+        #settingsVersionV83 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3241,7 +3241,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV82" aria-label="バージョン">V82</div>
+        <div id="settingsVersionV83" aria-label="バージョン">V83</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -5318,10 +5318,9 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             infoSheet?.setAttribute('aria-hidden', 'true');
 
             if (open) {
-                const selected = constellationSelect?.value || '';
+                const selected = ViewerStateV80.selectedConstellationId;
                 if (selected) {
-                    const resolvedId = ConstellationRegistryV80.normalizeId(selected);
-                    showConstellationQuickCommentV53(resolvedId);
+                    showConstellationQuickCommentV53(selected);
                 }
             }
 
@@ -5374,7 +5373,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
             infoSheetTitle.innerHTML =
                 `<span class="info-title-ja">${info.displayJa || info.ja}</span>` +
-                `<span class="info-title-en">${info.en} / ${info.internalId || String(info.id).toLowerCase()}</span>`;
+                `<span class="info-title-en">${info.en} / ${info.id}</span>`;
 
             infoSheetText.textContent =
                 constellationBasicComments[info.id] ||
@@ -6238,8 +6237,17 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         }
 
         function resetConstellationHighlight() {
+            const previousId = ViewerStateV80.selectedConstellationId;
             ViewerStateV80.selectedConstellationId = null;
             if (constellationSelect) constellationSelect.value = '';
+
+            window.dispatchEvent(new CustomEvent('viewer-constellation-selection', {
+                detail: {
+                    id: null,
+                    previousId,
+                    source: 'reset'
+                }
+            }));
 
             Object.values(runtimeConstellationsV80).forEach(runtime => {
                 runtime.labelElement?.classList.remove('selected');
@@ -6284,9 +6292,18 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
             ViewerStateV80.selectedConstellationId = id || null;
 
+            // Legacy select is presentation-only during migration.
             if (constellationSelect && constellationSelect.value !== (id || '')) {
                 constellationSelect.value = id || '';
             }
+
+            window.dispatchEvent(new CustomEvent('viewer-constellation-selection', {
+                detail: {
+                    id: ViewerStateV80.selectedConstellationId,
+                    previousId,
+                    source: options.source || 'unknown'
+                }
+            }));
 
             if (!id) {
                 hideSelectedConstellationGuidance();
@@ -6343,8 +6360,18 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             });
 
             // 通常の単独選択とは別の「複数星座選択」なので単独選択状態を解除する。
+            const previousId = ViewerStateV80.selectedConstellationId;
             ViewerStateV80.selectedConstellationId = null;
             if (constellationSelect) constellationSelect.value = '';
+
+            window.dispatchEvent(new CustomEvent('viewer-constellation-selection', {
+                detail: {
+                    id: null,
+                    previousId,
+                    source: 'multi-highlight'
+                }
+            }));
+
             hideSelectedConstellationGuidance();
             return true;
         };
@@ -6573,10 +6600,6 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         // Accepts internal lowercase ID (uma), official IAU ID (UMa),
         // Japanese/English display names, or a legacy renderer key.
         // Returns the canonical runtime constellation ID when runtime data exists.
-        function resolveRendererConstellationKeyV76(value) {
-            const id = ConstellationRegistryV80.normalizeId(value);
-            return id && runtimeConstellationsV80[id]?.starPositions?.length ? id : null;
-        }
 
         function getConstellationCenter(value) {
             const id = ConstellationRegistryV80.normalizeId(value);
@@ -6701,7 +6724,10 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             if (!force && now - lastConstellationGuidanceUpdate < 120) return;
             lastConstellationGuidanceUpdate = now;
 
-            if (!constellationSelect?.value || (currentViewMode !== 'ground' && currentViewMode !== 'center')) {
+            if (
+                !ViewerStateV80.selectedConstellationId ||
+                (currentViewMode !== 'ground' && currentViewMode !== 'center')
+            ) {
                 hideSelectedConstellationGuidance();
                 return;
             }
@@ -7150,13 +7176,24 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
 
         function resolveConstellationLabelInfo(value) {
-            return ConstellationRegistryV80.compatibilityInfo(value);
+            const id = ConstellationRegistryV80.normalizeId(value);
+            if (!id) return null;
+
+            const info = CONSTELLATIONS_V2[id];
+            return {
+                id,
+                iau: info.iau,
+                en: info.en,
+                ja: info.ja,
+                aliases: info.aliases,
+                groups: info.groups
+            };
         }
 
         function getConstellationLabelText(value) {
             const info = resolveConstellationLabelInfo(value);
             if (!info) return String(value || '');
-            return labelDisplayMode === 'constellation-en' ? info.en : (info.displayJa || info.ja);
+            return labelDisplayMode === 'constellation-en' ? info.en : info.ja;
         }
 
         function applySmartConstellationLabelSize(element, text) {
@@ -7554,7 +7591,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 }
             } catch (_) {}
 
-            const selectedConstellation = document.getElementById('constellationSelect')?.value || null;
+            const selectedConstellation = ViewerStateV80.selectedConstellationId || null;
             return {
                 format: 'star-viewer-sky-export',
                 formatVersion: 2,
@@ -8060,7 +8097,6 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                     typeof THREE === 'undefined' ||
                     typeof celestialGroup === 'undefined' ||
                     typeof runtimeConstellationsV80 === 'undefined' ||
-                    typeof constellationSelect === 'undefined' ||
                     typeof camera === 'undefined' ||
                     typeof SKY_RADIUS === 'undefined'
                 ) {
@@ -8767,9 +8803,11 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 }
 
                 discoverServerArtworkV63();
-                if (constellationSelect && typeof constellationSelect.addEventListener === 'function') {
-                    constellationSelect.addEventListener('change', () => entries.forEach(updateState));
-                }
+
+                window.addEventListener('viewer-constellation-selection', () => {
+                    entries.forEach(updateState);
+                });
+
                 const tick = () => {
                     entries.forEach(updateState);
                     requestAnimationFrame(tick);
@@ -8839,10 +8877,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                         return true;
                     },
                     resolveSelectedArtworkIdV68() {
-                        const selectedValue =
-                            ViewerStateV80.selectedConstellationId ||
-                            ConstellationRegistryV80.normalizeId(constellationSelect?.value) ||
-                            ConstellationRegistryV80.normalizeId(document.getElementById('v2ConstellationSelect')?.value);
+                        const selectedValue = ViewerStateV80.selectedConstellationId;
                         if (!selectedValue) return null;
 
                         let found = null;
@@ -9264,7 +9299,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             downloadAlignmentJsonV60();
         });
 
-        constellationSelect?.addEventListener('change', () => {
+        window.addEventListener('viewer-constellation-selection', () => {
             updateActiveId();
         });
 
