@@ -2808,7 +2808,7 @@
 
         /* ===== V54 Search constellation -> center + default 3-line comment ===== */
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV88_2 {
+        #settingsVersionV88_3 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -2897,6 +2897,25 @@
             -webkit-user-select: none;
             -webkit-user-drag: none;
             pointer-events: none;
+        }
+
+        #constellationMangaErrorV88_3 {
+            display: none;
+            max-width: min(88vw, 720px);
+            padding: 16px 18px;
+            color: #ffe3e3;
+            background: rgba(50, 8, 8, .92);
+            border: 1px solid rgba(255, 120, 120, .55);
+            border-radius: 12px;
+            font: 600 14px/1.6 system-ui, sans-serif;
+            text-align: center;
+            white-space: pre-wrap;
+        }
+        #constellationMangaOverlayV56.load-error #constellationMangaImageV56 {
+            display: none;
+        }
+        #constellationMangaOverlayV56.load-error #constellationMangaErrorV88_3 {
+            display: block;
         }
 
         body.constellation-manga-open-v56 {
@@ -3158,7 +3177,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV88_2" aria-label="バージョン">V88.2</div>
+        <div id="settingsVersionV88_3" aria-label="バージョン">V88.3</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -3362,7 +3381,8 @@
 <section id="constellationMangaOverlayV56" aria-hidden="true" aria-label="星座マンガ">
         <img id="constellationMangaImageV56"
              src=""
-             alt="アンドロメダ座マンガ">
+             alt="星座マンガ">
+        <div id="constellationMangaErrorV88_3" role="status"></div>
     </section>
 <nav id="bottomDock" aria-label="星空クイック操作">
         <div class="dock-row dock-top">
@@ -5255,8 +5275,17 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             const overlay = document.getElementById('constellationMangaOverlayV56');
             if (!overlay) return;
 
-            overlay.classList.remove('visible');
+            overlay.classList.remove('visible', 'load-error');
             overlay.setAttribute('aria-hidden', 'true');
+
+            const image = document.getElementById('constellationMangaImageV56');
+            const errorBox = document.getElementById('constellationMangaErrorV88_3');
+            if (image) {
+                image.onload = null;
+                image.onerror = null;
+            }
+            if (errorBox) errorBox.textContent = '';
+
             document.body.classList.remove('constellation-manga-open-v56');
         }
 
@@ -6470,11 +6499,11 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             constellationDescriptionMangaV85.addEventListener('click', (event) => {
                 event.preventDefault();
                 event.stopPropagation();
-                openConstellationMangaV88_2();
+                openConstellationMangaV88_3();
             });
         }
 
-        function openConstellationMangaV88_2() {
+        function openConstellationMangaV88_3() {
             const ribbon = constellationDescriptionRibbonV85;
             const src = ribbon?.dataset.mangaSrc || '';
             const id = ribbon?.dataset.constellationId || '';
@@ -6482,11 +6511,30 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
             const overlay = document.getElementById('constellationMangaOverlayV56');
             const image = document.getElementById('constellationMangaImageV56');
+            const errorBox = document.getElementById('constellationMangaErrorV88_3');
             if (!overlay || !image) return false;
 
             const info = CONSTELLATIONS_V2[id];
-            image.src = src;
+            const filename = src.split('/').pop() || `${info?.iau || id}_manga.png`;
+
+            overlay.classList.remove('load-error');
+            if (errorBox) errorBox.textContent = '';
+
+            image.onload = () => {
+                overlay.classList.remove('load-error');
+                if (errorBox) errorBox.textContent = '';
+            };
+
+            image.onerror = () => {
+                overlay.classList.add('load-error');
+                if (errorBox) {
+                    errorBox.textContent =
+                        `マンガ画像を読み込めませんでした。\n${filename}`;
+                }
+            };
+
             image.alt = `${info?.ja || '星座'}マンガ`;
+            image.src = src;
 
             overlay.classList.add('visible');
             overlay.setAttribute('aria-hidden', 'false');
@@ -9301,6 +9349,16 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
     const BASE_PATH = './constellation_manga/';
 
+    function resolveMangaAssetUrl(filename) {
+        if (!filename) return '';
+        try {
+            return new URL(filename, new URL(BASE_PATH, document.baseURI)).href;
+        } catch (_) {
+            return BASE_PATH + filename;
+        }
+    }
+
+
     const CANDIDATES = Object.entries(CONSTELLATIONS_V2)
         .map(([id, info]) => ({
             id,
@@ -9323,7 +9381,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                     {
                         ...item,
                         filename,
-                        src: BASE_PATH + filename
+                        src: resolveMangaAssetUrl(filename)
                     }
                 ];
             })
@@ -9335,7 +9393,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
     function probe(item) {
         const filename = filenameOf(item);
-        const src = BASE_PATH + filename;
+        const src = resolveMangaAssetUrl(filename);
         const img = new Image();
 
         img.onload = () => {
@@ -9379,7 +9437,8 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         list() { return Array.from(found.values()); },
         candidates: CANDIDATES.slice(),
         availableIau: Array.from(AVAILABLE_MANGA_IAU),
-        basePath: BASE_PATH
+        basePath: BASE_PATH,
+        resolveAssetUrl: resolveMangaAssetUrl
     };
 })();
 </script>
