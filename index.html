@@ -2889,7 +2889,7 @@
 
 
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV81 {
+        #settingsVersionV81_1 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3241,7 +3241,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV81" aria-label="バージョン">V81</div>
+        <div id="settingsVersionV81_1" aria-label="バージョン">V81.1</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -6894,25 +6894,55 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             playTimeButton.textContent = '時間再生';
         }
 
+        let frameUiErrorReportedV81_1 = false;
+
+        function updateFrameUiV81_1() {
+            updateConstellationLabels();
+            updateStarLabels();
+            updateSelectedConstellationGuidance(false);
+        }
+
         function animate(currentTime) {
             requestAnimationFrame(animate);
-            const deltaSeconds = Math.max(0, Math.min((currentTime - lastAnimationTime) / 1000, 0.25));
+
+            const deltaSeconds = Math.max(
+                0,
+                Math.min((currentTime - lastAnimationTime) / 1000, 0.25)
+            );
             lastAnimationTime = currentTime;
 
             if (isTimePlaying) {
-                simulationUtcMs += deltaSeconds * 1000 * Number(timeSpeedSelect.value);
+                simulationUtcMs +=
+                    deltaSeconds * 1000 * Number(timeSpeedSelect.value);
+
                 updateObserverFromSimulation(false);
+
                 if (currentTime - lastSkyUiUpdate > 200) {
                     setDateInputFromUtc(simulationUtcMs);
                     lastSkyUiUpdate = currentTime;
                 }
             }
 
+            // Core 3D path.
+            // Camera updates and scene rendering must never depend on
+            // constellation-label / guidance UI succeeding.
             updateCameraAnimation(currentTime);
-            updateConstellationLabels();
-            updateStarLabels();
-            updateSelectedConstellationGuidance(false);
             renderer.render(scene, camera);
+
+            // Presentation-only frame UI.
+            // A label/guidance problem must not freeze camera movement.
+            try {
+                updateFrameUiV81_1();
+                frameUiErrorReportedV81_1 = false;
+            } catch (error) {
+                if (!frameUiErrorReportedV81_1) {
+                    console.error(
+                        'V81.1 frame UI update failed; 3D rendering continues.',
+                        error
+                    );
+                    frameUiErrorReportedV81_1 = true;
+                }
+            }
         }
 
         function initializeStarData() {
