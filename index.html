@@ -2808,7 +2808,7 @@
 
         /* ===== V54 Search constellation -> center + default 3-line comment ===== */
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV91 {
+        #settingsVersionV93 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3177,7 +3177,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV91" aria-label="バージョン">V91</div>
+        <div id="settingsVersionV93" aria-label="バージョン">V93</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -3723,8 +3723,26 @@
                 `${filterLabel}: ${visibleOptions.length}件 / 選択中: ${selectedText}`;
         }
 
-        function syncV2ConstellationPicker() {
-            renderV2ConstellationOptions();
+                function syncV2ConstellationPicker() {
+            const selectedValue = ViewerStateV80.selectedConstellationId || '';
+            const selectedInfo = selectedValue
+                ? CONSTELLATIONS_V2[selectedValue]
+                : null;
+
+            const optionExists = Array.from(v2ConstellationSelect.options)
+                .some(option => option.value === selectedValue);
+
+            v2ConstellationSelect.value =
+                selectedValue && optionExists ? selectedValue : '';
+
+            const visibleCount = Math.max(0, v2ConstellationSelect.options.length - 1);
+            const filterLabel =
+                v2ConstellationFilter === 'summer' ? '夏星座' :
+                v2ConstellationFilter === 'winter' ? '冬星座' :
+                v2ConstellationFilter === 'recommended' ? 'おすすめ' : '88星座';
+
+            v2ConstellationStatus.textContent =
+                `${filterLabel}: ${visibleCount}件 / 選択中: ${selectedInfo?.ja || '未選択'}`;
         }
 
         function syncV2StarDisplayFromViewer() {
@@ -3748,6 +3766,8 @@
             } catch (_) {}
         }
 
+        let v2StaticSelectOptionsReady = false;
+
         function syncLocationTimeFromViewer() {
             const locationPreset = oldControl('locationPreset');
             const latitudeInput = oldControl('latitudeInput');
@@ -3755,8 +3775,11 @@
             const timeZoneSelect = oldControl('timeZoneSelect');
             const observationDateTime = oldControl('observationDateTime');
 
-            cloneOptions(locationPreset, v2LocationPreset);
-            cloneOptions(timeZoneSelect, v2TimeZoneSelect);
+            if (!v2StaticSelectOptionsReady) {
+                cloneOptions(locationPreset, v2LocationPreset);
+                cloneOptions(timeZoneSelect, v2TimeZoneSelect);
+                v2StaticSelectOptionsReady = true;
+            }
 
             if (locationPreset) v2LocationPreset.value = locationPreset.value;
             if (latitudeInput) v2LatitudeInput.value = latitudeInput.value;
@@ -3856,6 +3879,9 @@
                 v2ZoomSlider.value = String(v2Clamp(value, 0, 100));
             } catch (_) {}
         }
+
+        // Build static constellation option DOM once.
+        renderV2ConstellationOptions();
 
         function setOpen(open) {
             sheet.classList.toggle('open', open);
@@ -6395,15 +6421,30 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
             if (currentViewMode === 'ground') {
                 const direction = targetPosition.clone().sub(camera.position).normalize();
-                skyAltitude = Math.asin(THREE.MathUtils.clamp(direction.dot(observerUp), -1, 1));
-                const horizontal = direction.clone().addScaledVector(observerUp, -direction.dot(observerUp));
+                skyAltitude = Math.asin(
+                    THREE.MathUtils.clamp(direction.dot(observerUp), -1, 1)
+                );
+                const horizontal = direction.clone()
+                    .addScaledVector(observerUp, -direction.dot(observerUp));
                 if (horizontal.lengthSq() > 1e-10) {
                     horizontal.normalize();
-                    skyAzimuth = Math.atan2(horizontal.dot(observerEast), horizontal.dot(observerNorth));
+                    skyAzimuth = Math.atan2(
+                        horizontal.dot(observerEast),
+                        horizontal.dot(observerNorth)
+                    );
                 }
-                skyAltitude = THREE.MathUtils.clamp(skyAltitude, GROUND_MIN_ALTITUDE, GROUND_MAX_ALTITUDE);
+                skyAltitude = THREE.MathUtils.clamp(
+                    skyAltitude,
+                    GROUND_MIN_ALTITUDE,
+                    GROUND_MAX_ALTITUDE
+                );
                 applySkyCameraOrientation();
                 updateSkyStatus();
+            } else if (currentViewMode === 'celestial') {
+                // Celestial mode shares skyAzimuth/skyAltitude with ground mode.
+                // Update that canonical state first so later drag/mode changes cannot jump.
+                syncSkyAnglesFromDirection(targetPosition.clone().normalize());
+                applySkyCameraOrientation();
             } else {
                 startCameraLookAtAnimation(targetPosition);
             }
@@ -6833,18 +6874,32 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         }
 
         function findNextVisibleConstellationTime(constellation, startUtcMs) {
-            // Future-only search. First find the earliest coarse 10-minute slot that reaches 10° altitude,
-            // then refine inside that interval to one-minute resolution.
+            // A fixed star field repeats its altitude cycle in one sidereal day.
+            // Searching hundreds of solar days only repeats the same work.
             const coarseStepMs = 10 * 60 * 1000;
             const fineStepMs = 60 * 1000;
-            const maxSearchMs = 370 * 24 * 60 * 60 * 1000;
-            const endUtcMs = startUtcMs + maxSearchMs;
+            const siderealDayMs = 23 * 60 * 60 * 1000 + 56 * 60 * 1000 + 4 * 1000;
+            const endUtcMs = startUtcMs + siderealDayMs + coarseStepMs;
 
             let previous = startUtcMs;
-            for (let t = startUtcMs + coarseStepMs; t <= endUtcMs; t += coarseStepMs) {
-                if (getConstellationAltitudeAtUtc(constellation, t) >= CONSTELLATION_VISIBLE_ALTITUDE_DEG) {
-                    for (let fine = previous + fineStepMs; fine <= t; fine += fineStepMs) {
-                        if (getConstellationAltitudeAtUtc(constellation, fine) >= CONSTELLATION_VISIBLE_ALTITUDE_DEG) {
+            for (
+                let t = startUtcMs + coarseStepMs;
+                t <= endUtcMs;
+                t += coarseStepMs
+            ) {
+                if (
+                    getConstellationAltitudeAtUtc(constellation, t) >=
+                    CONSTELLATION_VISIBLE_ALTITUDE_DEG
+                ) {
+                    for (
+                        let fine = previous + fineStepMs;
+                        fine <= t;
+                        fine += fineStepMs
+                    ) {
+                        if (
+                            getConstellationAltitudeAtUtc(constellation, fine) >=
+                            CONSTELLATION_VISIBLE_ALTITUDE_DEG
+                        ) {
                             return fine;
                         }
                     }
@@ -6852,6 +6907,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 }
                 previous = t;
             }
+
             return null;
         }
 
@@ -6864,7 +6920,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             if (nextUtcMs == null) {
                 ensureSelectedConstellationGuidanceUi();
                 const name = selectedConstellationDisplayName(constellation);
-                constellationGuidanceMessage.textContent = `⚠️ ${name}は、この観測地点では今後1年以内に高度${CONSTELLATION_VISIBLE_ALTITUDE_DEG}°以上になる時刻が見つかりませんでした`;
+                constellationGuidanceMessage.textContent = `⚠️ ${name}は、この観測地点では高度${CONSTELLATION_VISIBLE_ALTITUDE_DEG}°以上になる時刻が見つかりませんでした`;
                 constellationGuidanceActions.innerHTML = '';
                 constellationGuidanceActions.append(
                     makeConstellationGuidanceButton('🌐 天球で見る', () => showSelectedConstellationInCelestialMode(constellation))
@@ -8162,6 +8218,20 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                     return { key, normal, angularRadius };
                 }
 
+                function ensureArtworkBasisV93(state) {
+                    if (!state) return false;
+                    if (state.centerDirectionLocal && state.constellationKey) return true;
+
+                    const basis = getBasisForEntry(state.cfg);
+                    if (!basis) return false;
+
+                    state.constellationKey = basis.key;
+                    state.centerDirectionLocal = basis.normal.clone();
+                    state.angularRadius = basis.angularRadius || 0;
+                    return true;
+                }
+
+
                 function buildExportCamera(exportView) {
                     const cam = new THREE.PerspectiveCamera(exportView.fovDeg, exportView.aspect, exportView.near, exportView.far);
                     cam.position.fromArray(exportView.position);
@@ -8184,6 +8254,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                     }
                     state.mesh = null;
                     state.textureReady = false;
+                    state.textureMissing = false;
                     state.currentOpacity = 0;
                     state.targetOpacity = 0;
                     state.buildTried = false;
@@ -8304,19 +8375,58 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                     const basePath = manifest.imageBasePath || './constellation_art/';
                     const textureUrl = /^\.?\//.test(cfg.file) ? cfg.file : (basePath + cfg.file);
                     textureLoader.load(textureUrl, texture => {
-                        if (typeof THREE.sRGBEncoding !== 'undefined') texture.encoding = THREE.sRGBEncoding;
+                        if (typeof THREE.sRGBEncoding !== 'undefined') {
+                            texture.encoding = THREE.sRGBEncoding;
+                        }
                         texture.minFilter = THREE.LinearFilter;
                         texture.magFilter = THREE.LinearFilter;
                         texture.generateMipmaps = false;
                         texture.needsUpdate = true;
+
+                        const imageWidth = Number(
+                            texture.image?.naturalWidth ||
+                            texture.image?.width ||
+                            cfg.imageWidth ||
+                            1024
+                        );
+                        const imageHeight = Number(
+                            texture.image?.naturalHeight ||
+                            texture.image?.height ||
+                            cfg.imageHeight ||
+                            1024
+                        );
+
+                        if (
+                            imageWidth > 0 &&
+                            imageHeight > 0 &&
+                            (
+                                imageWidth !== state.exportWidth ||
+                                imageHeight !== state.exportHeight
+                            )
+                        ) {
+                            cfg.imageWidth = imageWidth;
+                            cfg.imageHeight = imageHeight;
+                            state.exportWidth = imageWidth;
+                            state.exportHeight = imageHeight;
+
+                            const aspect = Math.max(
+                                0.15,
+                                imageWidth / imageHeight
+                            );
+                            state.autoBaseHalfWidth =
+                                state.autoBaseHalfHeight * aspect;
+                            rebuildAutoAlignmentGeometryV63(state);
+                        }
+
                         material.map = texture;
                         material.needsUpdate = true;
+                        state.textureMissing = false;
                         state.textureReady = true;
                         state.mesh.visible = true;
-                    }, undefined, error => {
+                    }, undefined, () => {
                         state.textureReady = false;
+                        state.textureMissing = true;
                         state.mesh.visible = false;
-                        console.warn('V63 auto artwork texture load error:', cfg.id, textureUrl, error);
                     });
 
                     return true;
@@ -8535,11 +8645,11 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                         material.needsUpdate = true;
                         state.textureReady = true;
                         state.mesh.visible = true;
-                    }, undefined, error => {
+                    }, undefined, () => {
                         state.textureReady = false;
+                        state.textureMissing = true;
                         state.mesh.visible = false;
                         state.mesh.material.opacity = 0;
-                        console.warn('V46 artwork texture load error:', cfg.id, textureUrl, error);
                     });
                     return true;
                 }
@@ -8647,24 +8757,104 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
                 function updateState(state) {
                     try {
-                        if (!state.mesh && !buildEntry(state)) return;
-                        const selected = Boolean(state.constellationKey && ViewerStateV80.selectedConstellationId === state.constellationKey);
+                        const selected = Boolean(
+                            state.constellationKey &&
+                            ViewerStateV80.selectedConstellationId === state.constellationKey
+                        );
                         const editorForced = Boolean(
                             window.constellationArtEditorV59?.enabled &&
                             window.constellationArtEditorV59?.activeId === state.cfg.id
                         );
-                        const rangeBlend = editorForced ? 1 : computeVisibleRangeBlend(state);
+
+                        if (!ensureArtworkBasisV93(state)) return;
+
+                        if (!state.mesh) {
+                            if (state.textureMissing || state.buildTried) return;
+
+                            const forwardWorld = new THREE.Vector3();
+                            camera.getWorldDirection(forwardWorld);
+                            if (forwardWorld.lengthSq() < 1e-10) return;
+
+                            const centerWorld = state.centerDirectionLocal
+                                .clone()
+                                .transformDirection(celestialGroup.matrixWorld)
+                                .normalize();
+
+                            const angle = Math.acos(
+                                THREE.MathUtils.clamp(
+                                    forwardWorld.normalize().dot(centerWorld),
+                                    -1,
+                                    1
+                                )
+                            );
+
+                            const verticalHalfFov = THREE.MathUtils.degToRad(
+                                (camera.fov || 60) * 0.5
+                            );
+                            const horizontalHalfFov = Math.atan(
+                                Math.tan(verticalHalfFov) *
+                                Math.max(1e-6, camera.aspect || 1)
+                            );
+                            const halfView = Math.max(
+                                verticalHalfFov,
+                                horizontalHalfFov
+                            );
+
+                            // Preload shortly before artwork can enter the viewport.
+                            const preloadMargin = THREE.MathUtils.degToRad(30);
+                            const shouldLoad =
+                                selected ||
+                                editorForced ||
+                                angle <= (
+                                    halfView +
+                                    (state.angularRadius || 0) +
+                                    preloadMargin
+                                );
+
+                            if (!shouldLoad) return;
+                            if (!buildEntry(state)) return;
+                        }
+
+                        const rangeBlend = editorForced
+                            ? 1
+                            : computeVisibleRangeBlend(state);
+
                         const baseOpacity = editorForced
                             ? 0.94
-                            : (selected ? Number(state.cfg.selectedOpacity ?? 0.92) : Number(state.cfg.baseOpacity ?? 0.68));
-                        state.targetOpacity = state.textureReady ? (baseOpacity * rangeBlend) : 0;
-                        const smoothing = Number(state.cfg.fadeSmoothing ?? 0.16);
-                        state.currentOpacity += (state.targetOpacity - state.currentOpacity) * smoothing;
-                        if (Math.abs(state.targetOpacity - state.currentOpacity) < 0.002) state.currentOpacity = state.targetOpacity;
+                            : (
+                                selected
+                                    ? Number(state.cfg.selectedOpacity ?? 0.92)
+                                    : Number(state.cfg.baseOpacity ?? 0.68)
+                            );
+
+                        state.targetOpacity = state.textureReady
+                            ? (baseOpacity * rangeBlend)
+                            : 0;
+
+                        const smoothing = Number(
+                            state.cfg.fadeSmoothing ?? 0.16
+                        );
+
+                        state.currentOpacity +=
+                            (state.targetOpacity - state.currentOpacity) *
+                            smoothing;
+
+                        if (
+                            Math.abs(
+                                state.targetOpacity - state.currentOpacity
+                            ) < 0.002
+                        ) {
+                            state.currentOpacity = state.targetOpacity;
+                        }
+
                         state.mesh.visible = state.currentOpacity > 0.01;
                         state.mesh.material.opacity = state.currentOpacity;
                     } catch (error) {
-                        console.warn('V46 artwork visibility error:', state.cfg.id, error);
+                        console.warn(
+                            'Artwork visibility error:',
+                            state.cfg.id,
+                            error
+                        );
                         if (state.mesh) state.mesh.visible = false;
                     }
                 }
@@ -8705,6 +8895,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                         mesh:null,
                         buildTried:false,
                         textureReady:false,
+                        textureMissing:false,
                         currentOpacity:0,
                         targetOpacity:0,
                         constellationKey:null,
@@ -8713,117 +8904,70 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 });
                 entries.forEach(state => buildEntry(state));
 
-                // V63: Automatically look for server-side constellation art named by
-                // the three-letter constellation code, e.g. Ori.png, Sco.png, Lyr.png.
-                // Existing manifest entries keep their original metadata-based placement.
-                function discoverServerArtworkV63() {
-                    const basePath = manifest.imageBasePath || './constellation_art/';
-                    const catalogItems = Object.entries(CONSTELLATIONS_V2)
-                        .map(([id, info]) => ({ id, ...info }));
+                // Final artwork registry:
+                // every constellation always has one deterministic artwork filename.
+                // No manifest list or directory scan is required.
+                function registerCanonicalArtworkV93() {
+                    Object.entries(CONSTELLATIONS_V2).forEach(([id, info]) => {
+                        if (entries.has(id)) {
+                            const state = entries.get(id);
+                            state.cfg.id = id;
+                            state.cfg.iau = info.iau;
+                            state.cfg.file = `${info.iau}.png`;
+                            state.cfg.autoPlacement = true;
+                            return;
+                        }
 
-                    function buildCandidateFiles(info) {
-                        if (!info?.id || !info?.iau) return [];
-
-                        return [
-                            `${info.id}.png`,
-                            `${info.iau}.png`
-                        ].filter(
-                            (name, index, arr) =>
-                                name && arr.indexOf(name) === index
-                        );
-                    }
-
-                    catalogItems.forEach(info => {
-                        const constellationId = String(info?.id || '').trim();
-                        if (!/^[a-z]{3}$/.test(constellationId)) return;
-                        if (!info?.iau || entries.has(constellationId)) return;
-
-                        const candidates = buildCandidateFiles(info);
-                        if (!candidates.length) return;
-
-                        const tryCandidate = (index = 0) => {
-                            if (index >= candidates.length) return;
-                            if (entries.has(constellationId)) return;
-
-                            const filename = candidates[index];
-                            const url = basePath + filename;
-                            const probe = new Image();
-
-                            probe.onload = () => {
-                                if (entries.has(constellationId)) return;
-
-                                const cfg = {
-                                    id: constellationId,
-                                    iau: info.iau,
-                                    nameJa: info.ja || constellationId,
-                                    fallbackKey: `${info.en} (${info.ja})`,
-                                    enabled: true,
-                                    file: filename,
-                                    autoPlacement: true,
-                                    imageWidth: Number(probe.naturalWidth || 1024),
-                                    imageHeight: Number(probe.naturalHeight || 1024),
-                                    segX: 40,
-                                    segY: 40,
-                                    radiusScale: 1.0015,
-                                    baseOpacity: 0.68,
-                                    selectedOpacity: 0.94,
-                                    fullVisMarginDeg: 6,
-                                    fadeOutMarginDeg: 24,
-                                    fadeSmoothing: 0.16,
-                                    align: Object.assign({
-                                        offsetXPx: 0,
-                                        offsetYPx: 0,
-                                        scaleX: 1,
-                                        scaleY: 1,
-                                        rotationDeg: 0
-                                    },
-                                        registeredAlignmentsV64[constellationId] ||
-                                        registeredAlignmentsV64[info.iau] ||
-                                        {}
-                                    )
-                                };
-
-                                manifest.artworks.push(cfg);
-                                const state = {
-                                    cfg,
-                                    mesh:null,
-                                    buildTried:false,
-                                    textureReady:false,
-                                    currentOpacity:0,
-                                    targetOpacity:0,
-                                    constellationKey:null,
-                                    discoveredV63:true,
-                                    baseAlign: Object.assign({}, cfg.align || {})
-                                };
-                                entries.set(constellationId, state);
-                                buildEntry(state);
-
-                                console.info(
-                                    `V75 artwork discovered: ${filename} -> ${constellationId} (${info.iau})`
-                                );
-                                window.dispatchEvent(
-                                    new CustomEvent('constellation-art-discovered-v63', {
-                                        detail: {
-                                            id: constellationId,
-                                            iau: info.iau,
-                                            file: filename
-                                        }
-                                    })
-                                );
-                            };
-
-                            probe.onerror = () => {
-                                tryCandidate(index + 1);
-                            };
-
-                            probe.src = url;
+                        const cfg = {
+                            id,
+                            iau: info.iau,
+                            nameJa: info.ja,
+                            fallbackKey: `${info.en} (${info.ja})`,
+                            enabled: true,
+                            file: `${info.iau}.png`,
+                            autoPlacement: true,
+                            imageWidth: 1024,
+                            imageHeight: 1024,
+                            segX: 40,
+                            segY: 40,
+                            radiusScale: 1.0015,
+                            baseOpacity: 0.68,
+                            selectedOpacity: 0.94,
+                            fullVisMarginDeg: 6,
+                            fadeOutMarginDeg: 24,
+                            fadeSmoothing: 0.16,
+                            align: Object.assign(
+                                {
+                                    offsetXPx: 0,
+                                    offsetYPx: 0,
+                                    scaleX: 1,
+                                    scaleY: 1,
+                                    rotationDeg: 0
+                                },
+                                registeredAlignmentsV64[id] ||
+                                registeredAlignmentsV64[info.iau] ||
+                                {}
+                            )
                         };
 
-                        tryCandidate(0);
+                        manifest.artworks.push(cfg);
+                        entries.set(id, {
+                            cfg,
+                            mesh: null,
+                            buildTried: false,
+                            textureReady: false,
+                            textureMissing: false,
+                            currentOpacity: 0,
+                            targetOpacity: 0,
+                            constellationKey: id,
+                            centerDirectionLocal: null,
+                            angularRadius: 0,
+                            baseAlign: Object.assign({}, cfg.align || {})
+                        });
                     });
                 }
 
-                discoverServerArtworkV63();
+                registerCanonicalArtworkV93();
                 const tick = () => {
                     entries.forEach(updateState);
                     requestAnimationFrame(tick);
@@ -9426,10 +9570,8 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         img.src = src;
     }
 
-    CANDIDATES
-        .filter(item => !found.has(item.id))
-        .forEach(probe);
-
+    // Packaged manga availability is already known from the generated asset index.
+    // Do not probe every missing constellation at startup.
     try {
         window.refreshConstellationDescriptionMediaV87_1?.();
     } catch (_) {}
