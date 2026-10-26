@@ -2808,7 +2808,7 @@
 
         /* ===== V54 Search constellation -> center + default 3-line comment ===== */
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV90 {
+        #settingsVersionV91 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3177,7 +3177,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV90" aria-label="バージョン">V90</div>
+        <div id="settingsVersionV91" aria-label="バージョン">V91</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -4814,8 +4814,8 @@
         let observerLongitudeDeg = LOCATION_PRESETS.tokyo.lon;
         let simulationUtcMs = Date.now();
         let localSiderealDeg = 0;
-        let groundAzimuth = 0;
-        let groundAltitude = THREE.MathUtils.degToRad(30);
+        let skyAzimuth = 0;
+        let skyAltitude = THREE.MathUtils.degToRad(30);
         let currentViewMode = 'ground';
         let activeViewPreset = 'celestial';
         let cameraAnimation = null;
@@ -5776,12 +5776,12 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         }
 
         function rotateSkyCamera(delta) {
-            groundAzimuth -= delta.x * ROTATION_SPEED;
-            groundAltitude -= delta.y * ROTATION_SPEED;
+            skyAzimuth -= delta.x * ROTATION_SPEED;
+            skyAltitude -= delta.y * ROTATION_SPEED;
 
             const limits = getSkyAltitudeLimits();
-            groundAltitude = THREE.MathUtils.clamp(
-                groundAltitude,
+            skyAltitude = THREE.MathUtils.clamp(
+                skyAltitude,
                 limits.min,
                 limits.max
             );
@@ -5801,19 +5801,19 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         }
 
         function getSkyDirectionFromAngles() {
-            const cosAltitude = Math.cos(groundAltitude);
+            const cosAltitude = Math.cos(skyAltitude);
             return new THREE.Vector3()
                 .addScaledVector(
                     observerNorth,
-                    Math.cos(groundAzimuth) * cosAltitude
+                    Math.cos(skyAzimuth) * cosAltitude
                 )
                 .addScaledVector(
                     observerEast,
-                    Math.sin(groundAzimuth) * cosAltitude
+                    Math.sin(skyAzimuth) * cosAltitude
                 )
                 .addScaledVector(
                     observerUp,
-                    Math.sin(groundAltitude)
+                    Math.sin(skyAltitude)
                 )
                 .normalize();
         }
@@ -5894,11 +5894,11 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
             if (name === 'ground') {
                 targetPosition = observerPosition.clone();
-                const cosAltitude = Math.cos(groundAltitude);
+                const cosAltitude = Math.cos(skyAltitude);
                 const groundDirection = new THREE.Vector3()
-                    .addScaledVector(observerNorth, Math.cos(groundAzimuth) * cosAltitude)
-                    .addScaledVector(observerEast, Math.sin(groundAzimuth) * cosAltitude)
-                    .addScaledVector(observerUp, Math.sin(groundAltitude))
+                    .addScaledVector(observerNorth, Math.cos(skyAzimuth) * cosAltitude)
+                    .addScaledVector(observerEast, Math.sin(skyAzimuth) * cosAltitude)
+                    .addScaledVector(observerUp, Math.sin(skyAltitude))
                     .normalize();
                 targetLookAt = targetPosition.clone().add(groundDirection);
                 targetUp = observerUp.clone();
@@ -6194,13 +6194,13 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             if (!isFiniteVector3(targetPosition)) return;
             if (currentViewMode === 'ground') {
                 const direction = targetPosition.clone().sub(camera.position).normalize();
-                groundAltitude = Math.asin(THREE.MathUtils.clamp(direction.dot(observerUp), -1, 1));
+                skyAltitude = Math.asin(THREE.MathUtils.clamp(direction.dot(observerUp), -1, 1));
                 const horizontal = direction.clone().addScaledVector(observerUp, -direction.dot(observerUp));
                 if (horizontal.lengthSq() > 1e-10) {
                     horizontal.normalize();
-                    groundAzimuth = Math.atan2(horizontal.dot(observerEast), horizontal.dot(observerNorth));
+                    skyAzimuth = Math.atan2(horizontal.dot(observerEast), horizontal.dot(observerNorth));
                 }
-                groundAltitude = THREE.MathUtils.clamp(groundAltitude, GROUND_MIN_ALTITUDE, GROUND_MAX_ALTITUDE);
+                skyAltitude = THREE.MathUtils.clamp(skyAltitude, GROUND_MIN_ALTITUDE, GROUND_MAX_ALTITUDE);
                 applySkyCameraOrientation();
                 updateSkyStatus();
             } else {
@@ -6366,7 +6366,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         function syncSkyAnglesFromDirection(direction) {
             const normalized = direction.clone().normalize();
 
-            groundAltitude = Math.asin(
+            skyAltitude = Math.asin(
                 THREE.MathUtils.clamp(normalized.dot(observerUp), -1, 1)
             );
 
@@ -6375,15 +6375,15 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
             if (horizontal.lengthSq() > 1e-10) {
                 horizontal.normalize();
-                groundAzimuth = Math.atan2(
+                skyAzimuth = Math.atan2(
                     horizontal.dot(observerEast),
                     horizontal.dot(observerNorth)
                 );
             }
 
             const limits = getSkyAltitudeLimits();
-            groundAltitude = THREE.MathUtils.clamp(
-                groundAltitude,
+            skyAltitude = THREE.MathUtils.clamp(
+                skyAltitude,
                 limits.min,
                 limits.max
             );
@@ -6395,13 +6395,13 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
             if (currentViewMode === 'ground') {
                 const direction = targetPosition.clone().sub(camera.position).normalize();
-                groundAltitude = Math.asin(THREE.MathUtils.clamp(direction.dot(observerUp), -1, 1));
+                skyAltitude = Math.asin(THREE.MathUtils.clamp(direction.dot(observerUp), -1, 1));
                 const horizontal = direction.clone().addScaledVector(observerUp, -direction.dot(observerUp));
                 if (horizontal.lengthSq() > 1e-10) {
                     horizontal.normalize();
-                    groundAzimuth = Math.atan2(horizontal.dot(observerEast), horizontal.dot(observerNorth));
+                    skyAzimuth = Math.atan2(horizontal.dot(observerEast), horizontal.dot(observerNorth));
                 }
-                groundAltitude = THREE.MathUtils.clamp(groundAltitude, GROUND_MIN_ALTITUDE, GROUND_MAX_ALTITUDE);
+                skyAltitude = THREE.MathUtils.clamp(skyAltitude, GROUND_MIN_ALTITUDE, GROUND_MAX_ALTITUDE);
                 applySkyCameraOrientation();
                 updateSkyStatus();
             } else {
@@ -6942,8 +6942,8 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             const locationName = LOCATION_PRESETS[locationPreset.value]?.name || '入力地点';
             const localText = formatDateInZone(simulationUtcMs, timeZoneSelect.value);
             const siderealHours = localSiderealDeg / 15;
-            const azimuthDeg = normalizeDegrees(THREE.MathUtils.radToDeg(groundAzimuth));
-            const altitudeDeg = THREE.MathUtils.radToDeg(groundAltitude);
+            const azimuthDeg = normalizeDegrees(THREE.MathUtils.radToDeg(skyAzimuth));
+            const altitudeDeg = THREE.MathUtils.radToDeg(skyAltitude);
             skyStatus.innerHTML = [
                 `<strong>${escapeHtml(locationName)}</strong>　緯度 ${observerLatitudeDeg.toFixed(4)}° / 経度 ${observerLongitudeDeg.toFixed(4)}°`,
                 `${escapeHtml(localText)}　地方恒星時 ${formatHours(siderealHours)}`,
@@ -7597,8 +7597,8 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
             let azimuthDeg = null, altitudeDeg = null;
             try {
-                azimuthDeg = Number(normalizeDegrees(THREE.MathUtils.radToDeg(groundAzimuth)).toFixed(3));
-                altitudeDeg = Number(THREE.MathUtils.radToDeg(groundAltitude).toFixed(3));
+                azimuthDeg = Number(normalizeDegrees(THREE.MathUtils.radToDeg(skyAzimuth)).toFixed(3));
+                altitudeDeg = Number(THREE.MathUtils.radToDeg(skyAltitude).toFixed(3));
             } catch (_) {}
 
             let focalLengthMm = null;
@@ -8030,8 +8030,8 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 let headingDeg = 0;
 
                 try {
-                    if (typeof groundAzimuth !== 'undefined') {
-                        headingDeg = normalize360(THREE.MathUtils.radToDeg(groundAzimuth));
+                    if (typeof skyAzimuth !== 'undefined') {
+                        headingDeg = normalize360(THREE.MathUtils.radToDeg(skyAzimuth));
                     }
                 } catch (_) {
                     headingDeg = 0;
