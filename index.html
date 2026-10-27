@@ -2808,7 +2808,7 @@
 
         /* ===== V54 Search constellation -> center + default 3-line comment ===== */
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV95 {
+        #settingsVersionV97 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3176,7 +3176,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV96" aria-label="バージョン">V96</div>
+        <div id="settingsVersionV97" aria-label="バージョン">V97</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -3656,23 +3656,11 @@
         let v2ConstellationFilter = 'all';
         let v2ConstellationOptions = [];
 
-        function oldControl(id) {
-            return document.getElementById(id);
-        }
-
-        function cloneOptions(source, target) {
-            if (!source || !target || target.options.length) return;
-            target.innerHTML = source.innerHTML;
-        }
-
-        function dispatchChange(element) {
-            if (!element) return;
-            element.dispatchEvent(new Event('change', { bubbles: true }));
-        }
-
-        function clickOld(element) {
-            if (!element) return;
-            element.click();
+        function fillSettingsSelectOptions(select, options) {
+            if (select.options.length) return;
+            for (const item of options) {
+                select.add(new Option(item.label, item.value));
+            }
         }
 
         function setModeActive(mode) {
@@ -3837,8 +3825,7 @@
         }
 
         function syncV2StarDisplayFromViewer() {
-            const oldLinesToggle = oldControl('constellationLinesToggle');
-            const linesVisible = oldLinesToggle ? !!oldLinesToggle.checked : true;
+            const linesVisible = window.ViewerSettings.getSnapshot().constellationLinesVisible;
 
             if (v2SkyOnlyButton) v2SkyOnlyButton.classList.toggle('active', !linesVisible);
             v2ConstellationLinesButton.classList.toggle('active', linesVisible);
@@ -3860,31 +3847,26 @@
         let v2StaticSelectOptionsReady = false;
 
         function syncLocationTimeFromViewer() {
-            const locationPreset = oldControl('locationPreset');
-            const latitudeInput = oldControl('latitudeInput');
-            const longitudeInput = oldControl('longitudeInput');
-            const timeZoneSelect = oldControl('timeZoneSelect');
-            const observationDateTime = oldControl('observationDateTime');
-
+            const model = window.ViewerSettings;
             if (!v2StaticSelectOptionsReady) {
-                cloneOptions(locationPreset, v2LocationPreset);
-                cloneOptions(timeZoneSelect, v2TimeZoneSelect);
+                fillSettingsSelectOptions(v2LocationPreset, model.getLocationOptions());
+                fillSettingsSelectOptions(v2TimeZoneSelect, model.getTimeZoneOptions());
                 v2StaticSelectOptionsReady = true;
             }
+            const observation = model.getSnapshot();
+            v2LocationPreset.value = observation.locationPreset;
+            v2LatitudeInput.value = String(Number(observation.latitude.toFixed(4)));
+            v2LongitudeInput.value = String(Number(observation.longitude.toFixed(4)));
+            v2TimeZoneSelect.value = observation.timeZone;
+            v2ObservationDateTime.value = observation.localDateTime;
 
-            if (locationPreset) v2LocationPreset.value = locationPreset.value;
-            if (latitudeInput) v2LatitudeInput.value = latitudeInput.value;
-            if (longitudeInput) v2LongitudeInput.value = longitudeInput.value;
-            if (timeZoneSelect) v2TimeZoneSelect.value = timeZoneSelect.value;
-            if (observationDateTime) v2ObservationDateTime.value = observationDateTime.value;
-
-            if (v2LocationStatus && v2LatitudeInput.value && v2LongitudeInput.value) {
+            if (v2LocationStatus) {
                 v2LocationStatus.textContent =
                     `緯度 ${v2LatitudeInput.value}° / 経度 ${v2LongitudeInput.value}°`;
             }
-
-            if (v2TimeStatus && v2ObservationDateTime.value) {
-                v2TimeStatus.textContent = `観測日時: ${v2ObservationDateTime.value.replace('T', ' ')}`;
+            if (v2TimeStatus) {
+                v2TimeStatus.textContent =
+                    `観測日時: ${observation.localDateTime.replace('T', ' ')}`;
             }
         }
 
@@ -3996,66 +3978,45 @@
             });
         });
 
+        // UI actions update the viewer model directly, never by clicking hidden controls.
+        function runObservationAction(action) {
+            if (!action()) return;
+            syncLocationTimeFromViewer();
+        }
+
         v2LocationPreset.addEventListener('change', () => {
-            const old = oldControl('locationPreset');
-            if (!old) return;
-            old.value = v2LocationPreset.value;
-            dispatchChange(old);
-            requestAnimationFrame(syncLocationTimeFromViewer);
+            runObservationAction(() => window.ViewerSettings.setLocationPreset(v2LocationPreset.value));
         });
 
         function applyV2Coordinates() {
-            const oldLat = oldControl('latitudeInput');
-            const oldLon = oldControl('longitudeInput');
-            if (!oldLat || !oldLon) return;
-
-            oldLat.value = v2LatitudeInput.value;
-            oldLon.value = v2LongitudeInput.value;
-
-            // 既存ビューアでは各changeで同じ custom 座標適用関数が呼ばれる。
-            dispatchChange(oldLat);
-            dispatchChange(oldLon);
-            requestAnimationFrame(syncLocationTimeFromViewer);
+            runObservationAction(() => window.ViewerSettings.setCoordinates(
+                v2LatitudeInput.value,
+                v2LongitudeInput.value
+            ));
         }
-
         v2LatitudeInput.addEventListener('change', applyV2Coordinates);
         v2LongitudeInput.addEventListener('change', applyV2Coordinates);
 
         v2TimeZoneSelect.addEventListener('change', () => {
-            const old = oldControl('timeZoneSelect');
-            if (!old) return;
-            old.value = v2TimeZoneSelect.value;
-            dispatchChange(old);
-            requestAnimationFrame(syncLocationTimeFromViewer);
+            runObservationAction(() => window.ViewerSettings.setTimeZone(v2TimeZoneSelect.value));
         });
 
         v2ObservationDateTime.addEventListener('change', () => {
-            const old = oldControl('observationDateTime');
-            if (!old) return;
-            old.value = v2ObservationDateTime.value;
-            dispatchChange(old);
-            requestAnimationFrame(syncLocationTimeFromViewer);
+            runObservationAction(() => window.ViewerSettings.setLocalDateTime(v2ObservationDateTime.value));
         });
 
         v2NowButton.addEventListener('click', () => {
-            clickOld(oldControl('nowButton'));
-            requestAnimationFrame(() => {
-                requestAnimationFrame(syncLocationTimeFromViewer);
-            });
+            runObservationAction(() => window.ViewerSettings.useCurrentTime());
         });
 
         v2TimeStepButtons.forEach(stepButton => {
             stepButton.addEventListener('click', () => {
-                const value = stepButton.dataset.v2TimeStep;
-                const oldButton = document.querySelector(`[data-time-step="${value}"]`);
-                clickOld(oldButton);
-                requestAnimationFrame(() => {
-                    requestAnimationFrame(syncLocationTimeFromViewer);
-                });
+                runObservationAction(() => window.ViewerSettings.stepTime(Number(stepButton.dataset.v2TimeStep)));
             });
         });
 
-        // 旧UI側が時計やプリセットから更新された場合も、次回サイドシート表示時に同期。
+        // Clock, quick-season buttons and presets use this same viewer model.
+        // The modal only syncs the presentation values on open.
         v2ZoomSlider.addEventListener('input', () => {
             applyV2Zoom(v2ZoomSlider.value);
         });
@@ -4113,18 +4074,12 @@
         });
 
         v2SkyOnlyButton?.addEventListener('click', () => {
-            const oldToggle = oldControl('constellationLinesToggle');
-            if (!oldToggle) return;
-            oldToggle.checked = false;
-            dispatchChange(oldToggle);
+            window.ViewerSettings.setConstellationLinesVisible(false);
             syncV2StarDisplayFromViewer();
         });
 
         v2ConstellationLinesButton.addEventListener('click', () => {
-            const oldToggle = oldControl('constellationLinesToggle');
-            if (!oldToggle) return;
-            oldToggle.checked = true;
-            dispatchChange(oldToggle);
+            window.ViewerSettings.setConstellationLinesVisible(true);
             syncV2StarDisplayFromViewer();
         });
 
@@ -4659,6 +4614,15 @@
             southpole: { name: '南極', lat: -90, lon: 0, zone: 'Etc/UTC' }
         };
 
+        // Canonical choices for the observation-time-zone setting.
+        const TIME_ZONE_OPTIONS = Object.freeze([
+            { value: 'Asia/Tokyo', label: '日本標準時' },
+            { value: 'Europe/London', label: 'ロンドン' },
+            { value: 'America/New_York', label: 'ニューヨーク' },
+            { value: 'Australia/Sydney', label: 'シドニー' },
+            { value: 'Etc/UTC', label: 'UTC' }
+        ]);
+
         const earthGroup = new THREE.Group();
         const earthGeometry = new THREE.SphereGeometry(EARTH_RADIUS, 96, 64);
 
@@ -4844,6 +4808,8 @@
 
         let observerLatitudeDeg = LOCATION_PRESETS.tokyo.lat;
         let observerLongitudeDeg = LOCATION_PRESETS.tokyo.lon;
+        let observerPresetKey = 'tokyo';
+        let observerTimeZone = LOCATION_PRESETS.tokyo.zone;
         let simulationUtcMs = Date.now();
         let localSiderealDeg = 0;
         let skyAzimuth = 0;
@@ -4868,6 +4834,110 @@
 
         const northStarPosition = convertToCartesian(2.530301028 * 15, 89.26413889);
 
+        function formatLocalDateTimeInput(utcMs, zone) {
+            const parts = getZonedParts(new Date(utcMs), zone);
+            return [
+                String(parts.year).padStart(4, '0'), '-',
+                String(parts.month).padStart(2, '0'), '-',
+                String(parts.day).padStart(2, '0'), 'T',
+                String(parts.hour).padStart(2, '0'), ':',
+                String(parts.minute).padStart(2, '0')
+            ].join('');
+        }
+
+        // The existing controls are a secondary view until the remaining clock
+        // dependencies are retired. They are never used to relay new Settings actions.
+        function reflectObservationToExistingControls() {
+            locationPreset.value = observerPresetKey;
+            latitudeInput.value = formatCoordinate(observerLatitudeDeg);
+            longitudeInput.value = formatCoordinate(observerLongitudeDeg);
+            timeZoneSelect.value = observerTimeZone;
+            observationDateTime.value = formatLocalDateTimeInput(simulationUtcMs, observerTimeZone);
+        }
+
+        const ViewerSettings = Object.freeze({
+            getSnapshot() {
+                return {
+                    locationPreset: observerPresetKey,
+                    latitude: observerLatitudeDeg,
+                    longitude: observerLongitudeDeg,
+                    timeZone: observerTimeZone,
+                    localDateTime: formatLocalDateTimeInput(simulationUtcMs, observerTimeZone),
+                    utcMs: simulationUtcMs,
+                    constellationLinesVisible: lineGroup.visible
+                };
+            },
+            getLocationOptions() {
+                return [
+                    ...Object.entries(LOCATION_PRESETS).map(([value, site]) => ({
+                        value, label: site.name
+                    })),
+                    { value: 'custom', label: '緯度・経度を入力' }
+                ];
+            },
+            getTimeZoneOptions() {
+                return TIME_ZONE_OPTIONS;
+            },
+            setLocationPreset(value) {
+                const preset = LOCATION_PRESETS[value];
+                if (!preset) return false;
+                observerPresetKey = value;
+                observerLatitudeDeg = preset.lat;
+                observerLongitudeDeg = preset.lon;
+                observerTimeZone = preset.zone;
+                reflectObservationToExistingControls();
+                updateObserverFromSimulation(true);
+                return true;
+            },
+            setCoordinates(latitude, longitude) {
+                const lat = Number(latitude);
+                const lon = Number(longitude);
+                if (!Number.isFinite(lat) || !Number.isFinite(lon)) return false;
+                observerPresetKey = 'custom';
+                observerLatitudeDeg = THREE.MathUtils.clamp(lat, -90, 90);
+                observerLongitudeDeg = normalizeLongitude(lon);
+                reflectObservationToExistingControls();
+                updateObserverFromSimulation(true);
+                return true;
+            },
+            setTimeZone(zone) {
+                if (!TIME_ZONE_OPTIONS.some(item => item.value === zone)) return false;
+                observerTimeZone = zone;
+                observerPresetKey = 'custom';
+                reflectObservationToExistingControls();
+                updateSkyStatus();
+                return true;
+            },
+            setLocalDateTime(localValue) {
+                const utcDate = zonedLocalDateTimeToUtc(localValue, observerTimeZone);
+                if (!utcDate || !Number.isFinite(utcDate.getTime())) return false;
+                pauseTimePlayback();
+                simulationUtcMs = utcDate.getTime();
+                updateObserverFromSimulation(true);
+                return true;
+            },
+            setUtcTime(utcMs) {
+                if (!Number.isFinite(utcMs)) return false;
+                pauseTimePlayback();
+                simulationUtcMs = utcMs;
+                updateObserverFromSimulation(true);
+                return true;
+            },
+            stepTime(deltaMs) {
+                if (!Number.isFinite(deltaMs)) return false;
+                return this.setUtcTime(simulationUtcMs + deltaMs);
+            },
+            useCurrentTime() {
+                return this.setUtcTime(Date.now());
+            },
+            setConstellationLinesVisible(visible) {
+                lineGroup.visible = Boolean(visible);
+                constellationLinesToggle.checked = lineGroup.visible;
+                return true;
+            }
+        });
+        window.ViewerSettings = ViewerSettings;
+
         initializeStarData();
         initializeUi();
         setCameraFocalLength(GROUND_DEFAULT_FOCAL_LENGTH);
@@ -4876,9 +4946,7 @@
         animate(performance.now());
 
         function initializeUi() {
-            locationPreset.value = 'tokyo';
-            timeZoneSelect.value = LOCATION_PRESETS.tokyo.zone;
-            setDateInputFromUtc(simulationUtcMs);
+            reflectObservationToExistingControls();
             backgroundMagnitudeValue.textContent = `${parseFloat(backgroundMagnitudeSlider.value).toFixed(1)}等`;
             updateModeSpecificControls();
 
@@ -4899,7 +4967,7 @@
             });
 
             constellationLinesToggle.addEventListener('change', () => {
-                lineGroup.visible = constellationLinesToggle.checked;
+                ViewerSettings.setConstellationLinesVisible(constellationLinesToggle.checked);
             });
 
             backgroundStarsToggle.addEventListener('change', () => {
@@ -4913,46 +4981,31 @@
             });
 
             locationPreset.addEventListener('change', () => {
-                const preset = LOCATION_PRESETS[locationPreset.value];
-                if (!preset) return;
-                observerLatitudeDeg = preset.lat;
-                observerLongitudeDeg = preset.lon;
-                latitudeInput.value = formatCoordinate(preset.lat);
-                longitudeInput.value = formatCoordinate(preset.lon);
-                timeZoneSelect.value = preset.zone;
-                setDateInputFromUtc(simulationUtcMs);
-                updateObserverFromSimulation(true);
+                ViewerSettings.setLocationPreset(locationPreset.value);
             });
 
-            latitudeInput.addEventListener('change', applyCustomCoordinates);
-            longitudeInput.addEventListener('change', applyCustomCoordinates);
+            const applyExistingCoordinates = () => {
+                ViewerSettings.setCoordinates(latitudeInput.value, longitudeInput.value);
+            };
+            latitudeInput.addEventListener('change', applyExistingCoordinates);
+            longitudeInput.addEventListener('change', applyExistingCoordinates);
 
             timeZoneSelect.addEventListener('change', () => {
-                locationPreset.value = 'custom';
-                setDateInputFromUtc(simulationUtcMs);
-                updateSkyStatus();
+                ViewerSettings.setTimeZone(timeZoneSelect.value);
             });
 
             observationDateTime.addEventListener('change', () => {
-                const utcDate = zonedLocalDateTimeToUtc(observationDateTime.value, timeZoneSelect.value);
-                if (!utcDate || Number.isNaN(utcDate.getTime())) return;
-                pauseTimePlayback();
-                simulationUtcMs = utcDate.getTime();
-                updateObserverFromSimulation(true);
+                ViewerSettings.setLocalDateTime(observationDateTime.value);
             });
 
             document.querySelectorAll('[data-time-step]').forEach(button => {
                 bindTapAction(button, () => {
-                    pauseTimePlayback();
-                    simulationUtcMs += Number(button.dataset.timeStep);
-                    updateObserverFromSimulation(true);
+                    ViewerSettings.stepTime(Number(button.dataset.timeStep));
                 });
             });
 
             bindTapAction(nowButton, () => {
-                pauseTimePlayback();
-                simulationUtcMs = Date.now();
-                updateObserverFromSimulation(true);
+                ViewerSettings.useCurrentTime();
             });
 
             bindTapAction(playTimeButton, () => {
@@ -5014,7 +5067,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
         function setSeasonSkyPreset(season) {
             pauseTimePlayback();
-            const current = getZonedParts(new Date(simulationUtcMs), timeZoneSelect.value);
+            const current = getZonedParts(new Date(simulationUtcMs), observerTimeZone);
             const year = current.year;
             // 「季節らしい夜空」を見やすくする代表日時。夏至・冬至そのものではない。
             const preset = season === 'summer'
@@ -5027,7 +5080,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 String(preset.hour).padStart(2, '0'), ':',
                 String(preset.minute).padStart(2, '0')
             ].join('');
-            const utcDate = zonedLocalDateTimeToUtc(localValue, timeZoneSelect.value);
+            const utcDate = zonedLocalDateTimeToUtc(localValue, observerTimeZone);
             if (!utcDate || Number.isNaN(utcDate.getTime())) return;
             simulationUtcMs = utcDate.getTime();
             updateObserverFromSimulation(true);
@@ -5069,7 +5122,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
             const parts = getZonedParts(
                 new Date(simulationUtcMs),
-                timeZoneSelect.value
+                observerTimeZone
             );
 
             // 現在がAMならAM側、PMならPM側を維持する。
@@ -5077,20 +5130,11 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             const selected12 = hour === 12 ? 0 : hour;
             const selected24 = selected12 + (currentIsPm ? 12 : 0);
 
-            // 現在の観測地点ローカル日時を入力欄に反映し、
-            // 既存のローカル→UTC変換処理へ渡す。
-            if (observationDateTime) {
-                const y = String(parts.year).padStart(4, '0');
-                const m = String(parts.month).padStart(2, '0');
-                const d = String(parts.day).padStart(2, '0');
-                const hh = String(selected24).padStart(2, '0');
-
-                observationDateTime.value =
-                    `${y}-${m}-${d}T${hh}:00`;
-                observationDateTime.dispatchEvent(
-                    new Event('change', { bubbles: true })
-                );
-            }
+            const y = String(parts.year).padStart(4, '0');
+            const m = String(parts.month).padStart(2, '0');
+            const d = String(parts.day).padStart(2, '0');
+            const hh = String(selected24).padStart(2, '0');
+            ViewerSettings.setLocalDateTime(`${y}-${m}-${d}T${hh}:00`);
 
             updateClockHandFromSimulation();
         }
@@ -5118,7 +5162,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         function updateClockHandFromSimulation() {
             const parts = getZonedParts(
                 new Date(simulationUtcMs),
-                timeZoneSelect.value
+                observerTimeZone
             );
 
             const minute12h = (parts.hour % 12) * 60 + parts.minute;
@@ -5130,7 +5174,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         function updateSunMoonBoardV51() {
             const wrap = document.getElementById('sunMoonBoardWrapV51');
             if (!wrap) return;
-            const parts = getZonedParts(new Date(simulationUtcMs), timeZoneSelect.value);
+            const parts = getZonedParts(new Date(simulationUtcMs), observerTimeZone);
             const totalMinutes = parts.hour * 60 + parts.minute;
             const rotationDeg = totalMinutes * 0.25;
             wrap.style.transform = `rotate(${rotationDeg}deg)`;
@@ -5221,7 +5265,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         }
 
         function updateQuickTimeDisplay() {
-            const parts = getZonedParts(new Date(simulationUtcMs), timeZoneSelect.value);
+            const parts = getZonedParts(new Date(simulationUtcMs), observerTimeZone);
 
             const ampm = parts.hour < 12 ? 'AM' : 'PM';
             const hour12 = parts.hour % 12 || 12;
@@ -5746,14 +5790,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             renderer.setSize(width, height);
         }
 
-        function applyCustomCoordinates() {
-            locationPreset.value = 'custom';
-            observerLatitudeDeg = THREE.MathUtils.clamp(Number(latitudeInput.value) || 0, -90, 90);
-            observerLongitudeDeg = normalizeLongitude(Number(longitudeInput.value) || 0);
-            latitudeInput.value = formatCoordinate(observerLatitudeDeg);
-            longitudeInput.value = formatCoordinate(observerLongitudeDeg);
-            updateObserverFromSimulation(true);
-        }
+        
 
         function beginPointerDrag(x, y) {
             isDragging = true;
@@ -7077,8 +7114,8 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         }
 
         function updateSkyStatus() {
-            const locationName = LOCATION_PRESETS[locationPreset.value]?.name || '入力地点';
-            const localText = formatDateInZone(simulationUtcMs, timeZoneSelect.value);
+            const locationName = LOCATION_PRESETS[observerPresetKey]?.name || '入力地点';
+            const localText = formatDateInZone(simulationUtcMs, observerTimeZone);
             const siderealHours = localSiderealDeg / 15;
             const azimuthDeg = normalizeDegrees(THREE.MathUtils.radToDeg(skyAzimuth));
             const altitudeDeg = THREE.MathUtils.radToDeg(skyAltitude);
@@ -7279,7 +7316,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
                 runtime.lineMesh = segments;
             }
-            lineGroup.visible = constellationLinesToggle.checked;
+            // Line visibility is owned by ViewerSettings; mesh rebuild does not reset it.
 
             // Select options are presentation only. value is always the canonical internal ID.
             Array.from(constellations)
@@ -7589,14 +7626,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         }
 
         function setDateInputFromUtc(utcMs) {
-            const parts = getZonedParts(new Date(utcMs), timeZoneSelect.value);
-            observationDateTime.value = [
-                String(parts.year).padStart(4, '0'), '-',
-                String(parts.month).padStart(2, '0'), '-',
-                String(parts.day).padStart(2, '0'), 'T',
-                String(parts.hour).padStart(2, '0'), ':',
-                String(parts.minute).padStart(2, '0')
-            ].join('');
+            observationDateTime.value = formatLocalDateTimeInput(utcMs, observerTimeZone);
         }
 
         function zonedLocalDateTimeToUtc(value, timeZone) {
@@ -7731,7 +7761,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             try { locationName = LOCATION_PRESETS?.[locationKey]?.name || locationName; } catch (_) {}
 
             let localDateTime = null;
-            try { localDateTime = formatDateInZone(simulationUtcMs, timeZoneSelect.value); } catch (_) {}
+            try { localDateTime = formatDateInZone(simulationUtcMs, observerTimeZone); } catch (_) {}
 
             let azimuthDeg = null, altitudeDeg = null;
             try {
