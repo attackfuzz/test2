@@ -2808,7 +2808,7 @@
 
         /* ===== V54 Search constellation -> center + default 3-line comment ===== */
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV93 {
+        #settingsVersionV95 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3177,7 +3177,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV93" aria-label="バージョン">V93</div>
+        <div id="settingsVersionV95" aria-label="バージョン">V95</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -3533,6 +3533,50 @@
 
     <script>
     (() => {
+        // V95: single owner for settings/search visibility and aria state.
+        // This never reads constellation/camera data and therefore cannot be
+        // disabled by a failed constellation-option initialization.
+        const UiSheetsV95 = Object.freeze({
+            set(type, open) {
+                const names = ['settings', 'search'];
+                if (!names.includes(type)) return false;
+                for (const name of names) {
+                    const show = Boolean(open && name === type);
+                    const sheet = document.getElementById(
+                        name === 'settings' ? 'settingsSheetV2' : 'searchSheetV3'
+                    );
+                    const scrim = document.getElementById(
+                        name === 'settings' ? 'settingsScrimV2' : 'searchScrimV3'
+                    );
+                    const button = document.getElementById(
+                        name === 'settings' ? 'settingsButton' : 'searchButton'
+                    );
+                    sheet?.classList.toggle('open', show);
+                    scrim?.classList.toggle('open', show);
+                    sheet?.setAttribute('aria-hidden', String(!show));
+                    scrim?.setAttribute('aria-hidden', String(!show));
+                    button?.setAttribute('aria-expanded', String(show));
+                }
+                return true;
+            },
+            isOpen(type) {
+                const id = type === 'settings' ? 'settingsSheetV2'
+                    : type === 'search' ? 'searchSheetV3' : '';
+                return Boolean(id && document.getElementById(id)?.classList.contains('open'));
+            },
+            closeAll() {
+                this.set('settings', false);
+            }
+        });
+        window.UiSheetsV95 = UiSheetsV95;
+
+        // Bind settings controls once, after all document scripts and canonical
+        // registry declarations have finished. No per-open reinitialization.
+        let settingsInitializedV95 = false;
+        function initializeSettingsUiV95() {
+            if (settingsInitializedV95) return;
+            settingsInitializedV95 = true;
+
         const button = document.getElementById('settingsButton');
         const sheet = document.getElementById('settingsSheetV2');
         const close = document.getElementById('settingsCloseV2');
@@ -3880,16 +3924,11 @@
             } catch (_) {}
         }
 
-        // Build static constellation option DOM once.
-        renderV2ConstellationOptions();
+        // The option list is initialized at the end, after event registration.
+        // If it fails, the Settings open/close buttons still work.
 
         function setOpen(open) {
-            sheet.classList.toggle('open', open);
-            scrim.classList.toggle('open', open);
-            sheet.setAttribute('aria-hidden', String(!open));
-            scrim.setAttribute('aria-hidden', String(!open));
-            button.setAttribute('aria-expanded', String(open));
-
+            UiSheetsV95.set('settings', open);
             if (open) {
                 requestAnimationFrame(() => {
                     syncModeFromViewer();
@@ -3901,7 +3940,7 @@
             }
         }
 
-        button.addEventListener('click', () => setOpen(!sheet.classList.contains('open')));
+        button.addEventListener('click', () => setOpen(!UiSheetsV95.isOpen('settings')));
         close.addEventListener('click', () => setOpen(false));
         scrim.addEventListener('click', () => setOpen(false));
 
@@ -4059,48 +4098,27 @@
             });
         });
 
-        document.addEventListener('keydown', e => {
-            if (e.key === 'Escape') setOpen(false);
-        });
+        // Static options are rendered once, after the entire set of event
+        // handlers has been attached. Runtime errors stay localized.
+        try {
+            renderV2ConstellationOptions();
+            syncV2ConstellationPicker();
+        } catch (error) {
+            console.error('Settings option initialization failed:', error);
+        }
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeSettingsUiV95, { once: true });
+        } else {
+            initializeSettingsUiV95();
+        }
     })();
     </script>
 
 
     <script>
     (() => {
-        function setOpen(sheet, scrim, open) {
-            if (!sheet || !scrim) return;
-            sheet.classList.toggle('open', open);
-            scrim.classList.toggle('open', open);
-            sheet.setAttribute('aria-hidden', String(!open));
-            scrim.setAttribute('aria-hidden', String(!open));
-        }
-
-        function closeSettingsSheet() {
-            const sheet = document.getElementById('settingsSheetV2');
-            const scrim = document.getElementById('settingsScrimV2');
-            const button = document.getElementById('settingsButton');
-            setOpen(sheet, scrim, false);
-            if (button) button.setAttribute('aria-expanded', 'false');
-        }
-
-        function closeSearchSheet() {
-            const sheet = document.getElementById('searchSheetV3');
-            const scrim = document.getElementById('searchScrimV3');
-            const button = document.getElementById('searchButton');
-            setOpen(sheet, scrim, false);
-            if (button) button.setAttribute('aria-expanded', 'false');
-        }
-
-        function openSearchSheet() {
-            closeSettingsSheet();
-            const sheet = document.getElementById('searchSheetV3');
-            const scrim = document.getElementById('searchScrimV3');
-            const button = document.getElementById('searchButton');
-            setOpen(sheet, scrim, true);
-            if (button) button.setAttribute('aria-expanded', 'true');
-        }
-
         document.addEventListener('DOMContentLoaded', () => {
             const settingsButton = document.getElementById('settingsButton');
             const settingsSheet = document.getElementById('settingsSheetV2');
@@ -4135,22 +4153,14 @@
 
 
             searchButton?.addEventListener('click', () => {
-                const open = !searchSheet.classList.contains('open');
-                if (open) openSearchSheet();
-                else closeSearchSheet();
+                window.UiSheetsV95.set('search', !window.UiSheetsV95.isOpen('search'));
             });
 
-            searchClose?.addEventListener('click', closeSearchSheet);
-            searchScrim?.addEventListener('click', closeSearchSheet);
-
-            settingsButton?.addEventListener('click', () => {
-                closeSearchSheet();
-            }, true);
+            searchClose?.addEventListener('click', () => window.UiSheetsV95.set('search', false));
+            searchScrim?.addEventListener('click', () => window.UiSheetsV95.set('search', false));
 
             document.addEventListener('keydown', (event) => {
-                if (event.key !== 'Escape') return;
-                closeSearchSheet();
-                closeSettingsSheet();
+                if (event.key === 'Escape') window.UiSheetsV95.closeAll();
             });
         });
     })();
@@ -6476,6 +6486,10 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
 
         // ===== Selected constellation guidance V23 (startup-safe) =====
+        // Guide DOM nodes are stable for the lifetime of the viewer.
+        // ViewerStateV80.selectedConstellationId remains the only selection state.
+        var guidanceActionButtonsV95 = null;
+        var guidancePointerActiveV95 = false;
         var constellationGuidanceRibbon = null;
         var constellationGuidanceMessage = null;
         var constellationGuidanceActions = null;
@@ -6707,6 +6721,42 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             constellationGuidanceMessage.id = 'constellationGuidanceMessage';
             constellationGuidanceActions = document.createElement('div');
             constellationGuidanceActions.id = 'constellationGuidanceActions';
+            guidanceActionButtonsV95 = new Map();
+            for (const [action, label] of [
+                ['visible-time', '見える時間帯にする'],
+                ['celestial', '🌐 天球で見る'],
+                ['focus', '星座を見る']
+            ]) {
+                const actionButton = document.createElement('button');
+                actionButton.type = 'button';
+                actionButton.className = 'constellationGuidanceButton';
+                actionButton.dataset.guidanceAction = action;
+                actionButton.textContent = label;
+                actionButton.hidden = true;
+                constellationGuidanceActions.appendChild(actionButton);
+                guidanceActionButtonsV95.set(action, actionButton);
+            }
+            // One delegated event listener; UI repainting never unregisters it.
+            constellationGuidanceActions.addEventListener('click', event => {
+                const button = event.target.closest('[data-guidance-action]');
+                if (!button || button.hidden || !constellationGuidanceActions.contains(button)) return;
+                navigateToConstellationV95(button.dataset.guidanceAction);
+            });
+            constellationGuidanceActions.addEventListener('pointerdown', event => {
+                if (event.target.closest('[data-guidance-action]')) {
+                    guidancePointerActiveV95 = true;
+                }
+            });
+            const releasePointer = () => {
+                if (!guidancePointerActiveV95) return;
+                // A native click follows pointerup. Re-evaluate only after that click.
+                setTimeout(() => {
+                    guidancePointerActiveV95 = false;
+                    updateSelectedConstellationGuidance(true);
+                }, 0);
+            };
+            window.addEventListener('pointerup', releasePointer);
+            window.addEventListener('pointercancel', releasePointer);
             constellationGuidanceRibbon.append(constellationGuidanceMessage, constellationGuidanceActions);
             document.body.appendChild(constellationGuidanceRibbon);
 
@@ -6719,20 +6769,49 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             return ConstellationRegistryV80.get(value)?.ja || '選択した星座';
         }
 
-        function hideSelectedConstellationGuidance() {
+        function hideSelectedConstellationGuidance(force = false) {
             ensureSelectedConstellationGuidanceUi();
+            // Do not remove/hide a button while the user is pressing it.
+            if (guidancePointerActiveV95 && !force) return;
             constellationGuidanceRibbon.classList.remove('visible');
             constellationEdgeIndicator.classList.remove('visible');
-            constellationGuidanceActions.innerHTML = '';
         }
 
-        function makeConstellationGuidanceButton(label, handler) {
-            const button = document.createElement('button');
-            button.type = 'button';
-            button.className = 'constellationGuidanceButton';
-            button.textContent = label;
-            button.addEventListener('click', handler);
-            return button;
+        function showGuidanceActionsV95(actions) {
+            ensureSelectedConstellationGuidanceUi();
+            // Keep button identities and listeners stable. Repaint means toggling
+            // visibility, never replacing buttons or rebinding event handlers.
+            if (guidancePointerActiveV95) return;
+            const visible = new Set(actions);
+            guidanceActionButtonsV95.forEach((button, action) => {
+                button.hidden = !visible.has(action);
+            });
+        }
+
+        function navigateToConstellationV95(action) {
+            const selectedId = ViewerStateV80.selectedConstellationId;
+            const id = ConstellationRegistryV80.normalizeId(selectedId);
+            if (!id || id !== selectedId || !getConstellationCenter(id)) return false;
+
+            // Actions are commands; no new selection variable or alternate ID
+            // resolver is introduced here.
+            if (action === 'visible-time') {
+                if (currentViewMode !== 'ground') return false;
+                return moveSelectedConstellationToNextVisibleTime(id);
+            }
+            if (action === 'celestial') {
+                return showSelectedConstellationInCelestialMode(id);
+            }
+            if (action === 'focus') {
+                hideSelectedConstellationGuidance(true);
+                focusCameraOnConstellation(id);
+                setTimeout(
+                    () => updateSelectedConstellationGuidance(true),
+                    VIEW_TRANSITION_DURATION + 100
+                );
+                return true;
+            }
+            return false;
         }
 
         function getConstellationViewState(constellation, includeGroundAltitude = false) {
@@ -6789,48 +6868,57 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             return { edge, arrow };
         }
 
+        let lastInvisibleTimeFailureV95 = null;
+
         function updateSelectedConstellationGuidance(force = false) {
             ensureSelectedConstellationGuidanceUi();
             const now = performance.now();
             if (!force && now - lastConstellationGuidanceUpdate < 120) return;
             lastConstellationGuidanceUpdate = now;
 
+            const selected = ViewerStateV80.selectedConstellationId;
             if (
-                !ViewerStateV80.selectedConstellationId ||
+                !selected ||
                 (currentViewMode !== 'ground' && currentViewMode !== 'celestial')
             ) {
                 hideSelectedConstellationGuidance();
                 return;
             }
 
-            // While a camera transition is already moving toward the target, keep the ribbon out of the way.
             if (currentViewMode === 'celestial' && cameraAnimation) {
                 hideSelectedConstellationGuidance();
                 return;
             }
 
-            const selected = ViewerStateV80.selectedConstellationId;
-            if (!selected) {
-                hideSelectedConstellationGuidance();
-                return;
-            }
-            const state = getConstellationViewState(selected, currentViewMode === 'ground');
+            const state = getConstellationViewState(
+                selected, currentViewMode === 'ground'
+            );
             if (!state) {
                 hideSelectedConstellationGuidance();
                 return;
             }
 
             const name = selectedConstellationDisplayName(selected);
-            constellationGuidanceActions.innerHTML = '';
 
-            // Only ground mode has a horizon. Celestial mode skips this branch completely.
             if (currentViewMode === 'ground' && state.altitudeDeg <= 0) {
                 constellationEdgeIndicator.classList.remove('visible');
-                constellationGuidanceMessage.textContent = `⚠️ 現在、${name}は地平線の下にあります ⚠️`;
-                constellationGuidanceActions.append(
-                    makeConstellationGuidanceButton('見える時間帯にする', () => moveSelectedConstellationToNextVisibleTime(selected)),
-                    makeConstellationGuidanceButton('🌐 天球で見る', () => showSelectedConstellationInCelestialMode(selected))
-                );
+                const message = `⚠️ 現在、${name}は地平線の下にあります ⚠️`;
+                if (constellationGuidanceMessage.textContent !== message) {
+                    constellationGuidanceMessage.textContent = message;
+                }
+                const failure = lastInvisibleTimeFailureV95;
+                const cannotReachAltitude = failure &&
+                    failure.id === selected &&
+                    failure.latitude === observerLatitudeDeg &&
+                    failure.longitude === observerLongitudeDeg;
+                if (cannotReachAltitude) {
+                    constellationGuidanceMessage.textContent =
+                        `⚠️ ${name}は、この観測地点では高度${CONSTELLATION_VISIBLE_ALTITUDE_DEG}°以上になりません`;
+                    showGuidanceActionsV95(['celestial']);
+                    constellationGuidanceRibbon.classList.add('visible');
+                    return;
+                }
+                showGuidanceActionsV95(['visible-time', 'celestial']);
                 constellationGuidanceRibbon.classList.add('visible');
                 return;
             }
@@ -6842,17 +6930,17 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
             const edgeInfo = getEdgeIndicatorInfo(state.sx, state.sy);
             constellationEdgeIndicator.dataset.edge = edgeInfo.edge;
-            constellationEdgeIndicator.textContent = `${edgeInfo.arrow} ${name}`;
+            const edgeText = `${edgeInfo.arrow} ${name}`;
+            if (constellationEdgeIndicator.textContent !== edgeText) {
+                constellationEdgeIndicator.textContent = edgeText;
+            }
             constellationEdgeIndicator.classList.add('visible');
 
-            constellationGuidanceMessage.textContent = `⚠️ ${name}は画面外にあります ⚠️`;
-            constellationGuidanceActions.append(
-                makeConstellationGuidanceButton('星座を見る', () => {
-                    hideSelectedConstellationGuidance();
-                    focusCameraOnConstellation(selected);
-                    setTimeout(() => updateSelectedConstellationGuidance(true), VIEW_TRANSITION_DURATION + 100);
-                })
-            );
+            const message = `⚠️ ${name}は画面外にあります ⚠️`;
+            if (constellationGuidanceMessage.textContent !== message) {
+                constellationGuidanceMessage.textContent = message;
+            }
+            showGuidanceActionsV95(['focus']);
             constellationGuidanceRibbon.classList.add('visible');
         }
 
@@ -6918,17 +7006,20 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             cancelCameraAnimation();
             const nextUtcMs = findNextVisibleConstellationTime(constellation, simulationUtcMs);
             if (nextUtcMs == null) {
+                lastInvisibleTimeFailureV95 = {
+                    id: constellation,
+                    latitude: observerLatitudeDeg,
+                    longitude: observerLongitudeDeg
+                };
                 ensureSelectedConstellationGuidanceUi();
                 const name = selectedConstellationDisplayName(constellation);
                 constellationGuidanceMessage.textContent = `⚠️ ${name}は、この観測地点では高度${CONSTELLATION_VISIBLE_ALTITUDE_DEG}°以上になる時刻が見つかりませんでした`;
-                constellationGuidanceActions.innerHTML = '';
-                constellationGuidanceActions.append(
-                    makeConstellationGuidanceButton('🌐 天球で見る', () => showSelectedConstellationInCelestialMode(constellation))
-                );
+                showGuidanceActionsV95(['celestial']);
                 constellationGuidanceRibbon.classList.add('visible');
-                return;
+                return false;
             }
 
+            lastInvisibleTimeFailureV95 = null;
             pauseTimePlayback();
             simulationUtcMs = nextUtcMs;
 
@@ -6946,6 +7037,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             requestAnimationFrame(() => {
                 requestAnimationFrame(() => updateSelectedConstellationGuidance(true));
             });
+            return true;
         }
 
         function showSelectedConstellationInCelestialMode(constellation) {
@@ -6957,6 +7049,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             applyViewPreset('celestial', false);
             focusCameraOnConstellation(constellation);
             requestAnimationFrame(() => updateSelectedConstellationGuidance(true));
+            return true;
         }
 
         function updateObserverFromSimulation(updateDateField) {
