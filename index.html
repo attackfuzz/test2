@@ -3172,12 +3172,11 @@
     <small>1本指: 移動　2本指: 拡大縮小・回転</small>
 </div>
 
-<div id="settingsScrim" aria-hidden="true"></div>
 
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV95" aria-label="バージョン">V95</div>
+        <div id="settingsVersionV96" aria-label="バージョン">V96</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -3399,8 +3398,9 @@
             <button type="button" id="quickSummerSky">夏の空</button>
             <button type="button" id="quickWinterSky">冬の空</button>
         </div>
-        <div class="dock-row dock-bottom">
-            <button type="button" id="settingsButton" aria-expanded="false">🔧 設定</button>
+        <div class="dock-row dock-bottom" id="bottomDockActions">
+            <button type="button" id="settingsButton" aria-expanded="false" aria-controls="settingsSheetV2" aria-label="設定">🔧 設定</button>
+            <button type="button" id="searchButton" aria-expanded="false" aria-controls="searchSheetV3" aria-label="探す">🔎 探す</button>
             <button type="button" id="infoToggleButton" aria-expanded="false">✦ 解説を見る</button>
         </div>
     </nav>
@@ -3533,42 +3533,93 @@
 
     <script>
     (() => {
-        // V95: single owner for settings/search visibility and aria state.
-        // This never reads constellation/camera data and therefore cannot be
-        // disabled by a failed constellation-option initialization.
-        const UiSheetsV95 = Object.freeze({
-            set(type, open) {
-                const names = ['settings', 'search'];
-                if (!names.includes(type)) return false;
-                for (const name of names) {
-                    const show = Boolean(open && name === type);
-                    const sheet = document.getElementById(
-                        name === 'settings' ? 'settingsSheetV2' : 'searchSheetV3'
-                    );
-                    const scrim = document.getElementById(
-                        name === 'settings' ? 'settingsScrimV2' : 'searchScrimV3'
-                    );
-                    const button = document.getElementById(
-                        name === 'settings' ? 'settingsButton' : 'searchButton'
-                    );
+        // V96: single registry and single event-init for modal side panels.
+        // The domain content of each panel remains independent.
+        const PANEL_REGISTRY = Object.freeze({
+            settings: Object.freeze({
+                triggerId: 'settingsButton',
+                sheetId: 'settingsSheetV2',
+                scrimId: 'settingsScrimV2',
+                closeId: 'settingsCloseV2'
+            }),
+            search: Object.freeze({
+                triggerId: 'searchButton',
+                sheetId: 'searchSheetV3',
+                scrimId: 'searchScrimV3',
+                closeId: 'searchCloseV3'
+            })
+        });
+        const panelOpenHooks = new Map();
+        let panelEventsBound = false;
+        const UiPanels = Object.freeze({
+            isOpen(name) {
+                const def = PANEL_REGISTRY[name];
+                return Boolean(def && document.getElementById(def.sheetId)?.classList.contains('open'));
+            },
+            set(name, open) {
+                if (!PANEL_REGISTRY[name]) return false;
+                const wasOpen = this.isOpen(name);
+                for (const [panelName, def] of Object.entries(PANEL_REGISTRY)) {
+                    const show = Boolean(open && panelName === name);
+                    const sheet = document.getElementById(def.sheetId);
+                    const scrim = document.getElementById(def.scrimId);
+                    const trigger = document.getElementById(def.triggerId);
                     sheet?.classList.toggle('open', show);
                     scrim?.classList.toggle('open', show);
                     sheet?.setAttribute('aria-hidden', String(!show));
                     scrim?.setAttribute('aria-hidden', String(!show));
-                    button?.setAttribute('aria-expanded', String(show));
+                    trigger?.setAttribute('aria-expanded', String(show));
+                }
+                if (open && !wasOpen) {
+                    const onOpen = panelOpenHooks.get(name);
+                    if (onOpen) {
+                        requestAnimationFrame(() => {
+                            if (!this.isOpen(name)) return;
+                            try { onOpen(); }
+                            catch (error) { console.error('Panel content sync failed:', name, error); }
+                        });
+                    }
                 }
                 return true;
             },
-            isOpen(type) {
-                const id = type === 'settings' ? 'settingsSheetV2'
-                    : type === 'search' ? 'searchSheetV3' : '';
-                return Boolean(id && document.getElementById(id)?.classList.contains('open'));
+            toggle(name) {
+                return this.set(name, !this.isOpen(name));
+            },
+            close(name) {
+                return this.set(name, false);
             },
             closeAll() {
-                this.set('settings', false);
+                for (const def of Object.values(PANEL_REGISTRY)) {
+                    const sheet = document.getElementById(def.sheetId);
+                    const scrim = document.getElementById(def.scrimId);
+                    const trigger = document.getElementById(def.triggerId);
+                    sheet?.classList.remove('open');
+                    scrim?.classList.remove('open');
+                    sheet?.setAttribute('aria-hidden', 'true');
+                    scrim?.setAttribute('aria-hidden', 'true');
+                    trigger?.setAttribute('aria-expanded', 'false');
+                }
+            },
+            onOpen(name, handler) {
+                if (!PANEL_REGISTRY[name] || typeof handler !== 'function') return false;
+                panelOpenHooks.set(name, handler);
+                return true;
+            },
+            init() {
+                if (panelEventsBound) return;
+                panelEventsBound = true;
+                for (const [name, def] of Object.entries(PANEL_REGISTRY)) {
+                    document.getElementById(def.triggerId)?.addEventListener('click', () => this.toggle(name));
+                    document.getElementById(def.closeId)?.addEventListener('click', () => this.close(name));
+                    document.getElementById(def.scrimId)?.addEventListener('click', () => this.close(name));
+                }
+                document.addEventListener('keydown', (event) => {
+                    if (event.key === 'Escape') this.closeAll();
+                });
+                this.closeAll();
             }
         });
-        window.UiSheetsV95 = UiSheetsV95;
+        window.UiPanels = UiPanels;
 
         // Bind settings controls once, after all document scripts and canonical
         // registry declarations have finished. No per-open reinitialization.
@@ -3577,10 +3628,6 @@
             if (settingsInitializedV95) return;
             settingsInitializedV95 = true;
 
-        const button = document.getElementById('settingsButton');
-        const sheet = document.getElementById('settingsSheetV2');
-        const close = document.getElementById('settingsCloseV2');
-        const scrim = document.getElementById('settingsScrimV2');
         const modeButtons = Array.from(document.querySelectorAll('.settingsV2ModeButton'));
 
         const v2LocationPreset = document.getElementById('v2LocationPreset');
@@ -3924,25 +3971,19 @@
             } catch (_) {}
         }
 
-        // The option list is initialized at the end, after event registration.
-        // If it fails, the Settings open/close buttons still work.
-
-        function setOpen(open) {
-            UiSheetsV95.set('settings', open);
-            if (open) {
-                requestAnimationFrame(() => {
-                    syncModeFromViewer();
-                    syncLocationTimeFromViewer();
-                    syncV2ZoomFromViewer();
-                    syncV2StarDisplayFromViewer();
-                    syncV2ConstellationPicker();
-                });
+        // Settings owns only its data synchronization; UiPanels owns all open/close events.
+        UiPanels.onOpen('settings', () => {
+            for (const sync of [
+                syncModeFromViewer,
+                syncLocationTimeFromViewer,
+                syncV2ZoomFromViewer,
+                syncV2StarDisplayFromViewer,
+                syncV2ConstellationPicker
+            ]) {
+                try { sync(); }
+                catch (error) { console.warn('Settings content sync failed:', error); }
             }
-        }
-
-        button.addEventListener('click', () => setOpen(!UiSheetsV95.isOpen('settings')));
-        close.addEventListener('click', () => setOpen(false));
-        scrim.addEventListener('click', () => setOpen(false));
+        });
 
         modeButtons.forEach(modeButton => {
             modeButton.addEventListener('click', () => {
@@ -4108,61 +4149,18 @@
         }
         }
 
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initializeSettingsUiV95, { once: true });
-        } else {
-            initializeSettingsUiV95();
+        function initializePanelsV96() {
+            // Bind both shells before any content-specific initialization can fail.
+            UiPanels.init();
+            try { initializeSettingsUiV95(); }
+            catch (error) { console.error('Settings content initialization failed:', error); }
+            // Search domain content is initialized independently in its own script.
         }
-    })();
-    </script>
-
-
-    <script>
-    (() => {
-        document.addEventListener('DOMContentLoaded', () => {
-            const settingsButton = document.getElementById('settingsButton');
-            const settingsSheet = document.getElementById('settingsSheetV2');
-            const settingsHeaderTitle = settingsSheet?.querySelector('.settingsV2Title');
-
-            if (settingsButton) {
-                settingsButton.textContent = '🔧 設定';
-                settingsButton.setAttribute('aria-label', '設定');
-            }
-            if (settingsHeaderTitle) {
-                settingsHeaderTitle.textContent = '設定';
-            }
-
-            let searchButton = document.getElementById('searchButton');
-            if (!searchButton && settingsButton && settingsButton.parentElement) {
-                const parent = settingsButton.parentElement;
-                parent.id = 'bottomDockActions';
-
-                searchButton = document.createElement('button');
-                searchButton.id = 'searchButton';
-                searchButton.type = 'button';
-                searchButton.textContent = '🔎 探す';
-                searchButton.setAttribute('aria-expanded', 'false');
-                searchButton.setAttribute('aria-label', '探す');
-                parent.appendChild(searchButton);
-            }
-
-            const searchSheet = document.getElementById('searchSheetV3');
-            const searchScrim = document.getElementById('searchScrimV3');
-            const searchClose = document.getElementById('searchCloseV3');
-            const searchContent = document.getElementById('searchContentV3');
-
-
-            searchButton?.addEventListener('click', () => {
-                window.UiSheetsV95.set('search', !window.UiSheetsV95.isOpen('search'));
-            });
-
-            searchClose?.addEventListener('click', () => window.UiSheetsV95.set('search', false));
-            searchScrim?.addEventListener('click', () => window.UiSheetsV95.set('search', false));
-
-            document.addEventListener('keydown', (event) => {
-                if (event.key === 'Escape') window.UiSheetsV95.closeAll();
-            });
-        });
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializePanelsV96, { once: true });
+        } else {
+            initializePanelsV96();
+        }
     })();
     </script>
 
@@ -4326,7 +4324,7 @@
                         }else if(item.constellationId){
                             handled=pickConstellation(item.constellationId);
                         }
-                        if(handled) document.getElementById('searchCloseV3')?.click();
+                        if (handled) window.UiPanels.close('search');
                     });
                     list.appendChild(b);
                 }
@@ -4770,8 +4768,6 @@
         ]);
 
         const infoToggleButton = document.getElementById('infoToggleButton');
-        const settingsButton = document.getElementById('settingsButton');
-        const settingsScrim = document.getElementById('settingsScrim');
         const sideSheetClose = document.getElementById('sideSheetClose');
         const quickNow = document.getElementById('quickNow');
         const quickSummerSky = document.getElementById('quickSummerSky');
@@ -5035,13 +5031,6 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             if (!utcDate || Number.isNaN(utcDate.getTime())) return;
             simulationUtcMs = utcDate.getTime();
             updateObserverFromSimulation(true);
-        }
-
-        function setSettingsSheetOpen(open) {
-            controlsPanel.classList.toggle('open', open);
-            settingsScrim.classList.toggle('open', open);
-            settingsScrim.setAttribute('aria-hidden', String(!open));
-            settingsButton.setAttribute('aria-expanded', String(open));
         }
 
         function setClockPanelOpen() {
@@ -9349,12 +9338,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         document.body.classList.toggle('constellation-art-editor-v59', enabled);
         if (enabled) {
             updateActiveId();
-            const sheet = document.getElementById('settingsSheetV2');
-            const scrim = document.getElementById('settingsScrimV2');
-            sheet?.classList.remove('open');
-            sheet?.setAttribute('aria-hidden', 'true');
-            scrim?.classList.remove('open');
-            scrim?.setAttribute('aria-hidden', 'true');
+            window.UiPanels.close('settings');
         }
         updateToggle();
         updateHud();
