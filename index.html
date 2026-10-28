@@ -2808,7 +2808,7 @@
 
         /* ===== V54 Search constellation -> center + default 3-line comment ===== */
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV97 {
+        #settingsVersionV98 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3176,7 +3176,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV97" aria-label="バージョン">V97</div>
+        <div id="settingsVersionV98" aria-label="バージョン">V98</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -3421,59 +3421,7 @@
         <div class="section ground-only" id="groundSettings">
             <div class="section-title">地上観測</div>
 
-            <div class="stack-row">
-                <label for="locationPreset">観測地点</label>
-                <select id="locationPreset">
-                    <option value="tokyo">東京</option>
-                    <option value="sapporo">札幌</option>
-                    <option value="naha">那覇</option>
-                    <option value="osaka">大阪</option>
-                    <option value="london">ロンドン</option>
-                    <option value="newyork">ニューヨーク</option>
-                    <option value="sydney">シドニー</option>
-                    <option value="equator">赤道・経度0°</option>
-                    <option value="northpole">北極</option>
-                    <option value="southpole">南極</option>
-                    <option value="custom">緯度・経度を入力</option>
-                </select>
-            </div>
-
-            <div class="coordinate-grid">
-                <label class="coordinate-field">
-                    <span>緯度</span>
-                    <input id="latitudeInput" type="number" min="-90" max="90" step="0.0001" value="35.6812">
-                </label>
-                <label class="coordinate-field">
-                    <span>経度</span>
-                    <input id="longitudeInput" type="number" min="-180" max="180" step="0.0001" value="139.7671">
-                </label>
-            </div>
-
-            <div class="stack-row">
-                <label for="timeZoneSelect">時間帯</label>
-                <select id="timeZoneSelect">
-                    <option value="Asia/Tokyo">日本標準時</option>
-                    <option value="Europe/London">ロンドン</option>
-                    <option value="America/New_York">ニューヨーク</option>
-                    <option value="Australia/Sydney">シドニー</option>
-                    <option value="Etc/UTC">UTC</option>
-                </select>
-            </div>
-
-            <div class="stack-row">
-                <label for="observationDateTime">現地日時</label>
-                <input id="observationDateTime" type="datetime-local" step="60">
-            </div>
-
-            <div class="time-step-row">
-                <button type="button" data-time-step="-86400000">−1日</button>
-                <button type="button" data-time-step="-3600000">−1時間</button>
-                <button type="button" data-time-step="3600000">＋1時間</button>
-                <button type="button" data-time-step="86400000">＋1日</button>
-            </div>
-
             <div class="play-row">
-                <button type="button" id="nowButton">現在時刻</button>
                 <button type="button" id="playTimeButton" aria-pressed="false">時間再生</button>
             </div>
 
@@ -3500,10 +3448,6 @@
 
         <div class="section">
             <div class="section-title">星の表示</div>
-            <label class="check-label">
-                <input type="checkbox" id="constellationLinesToggle" checked>
-                星座線を表示
-            </label>
             <label class="check-label">
                 <input type="checkbox" id="backgroundStarsToggle" checked>
                 背景星を表示
@@ -4679,16 +4623,9 @@
         const viewButtons = Array.from(document.querySelectorAll('.view-button'));
         const groundOnlyElements = Array.from(document.querySelectorAll('.ground-only'));
         const celestialOnlyElements = Array.from(document.querySelectorAll('.celestial-only'));
-        const constellationLinesToggle = document.getElementById('constellationLinesToggle');
         const backgroundStarsToggle = document.getElementById('backgroundStarsToggle');
         const backgroundMagnitudeSlider = document.getElementById('backgroundMagnitudeSlider');
         const backgroundMagnitudeValue = document.getElementById('backgroundMagnitudeValue');
-        const locationPreset = document.getElementById('locationPreset');
-        const latitudeInput = document.getElementById('latitudeInput');
-        const longitudeInput = document.getElementById('longitudeInput');
-        const timeZoneSelect = document.getElementById('timeZoneSelect');
-        const observationDateTime = document.getElementById('observationDateTime');
-        const nowButton = document.getElementById('nowButton');
         const playTimeButton = document.getElementById('playTimeButton');
         const timeSpeedSelect = document.getElementById('timeSpeedSelect');
         const skyStatus = document.getElementById('skyStatus');
@@ -4829,7 +4766,6 @@
         let touchHintTimer = null;
         let isTimePlaying = false;
         let lastAnimationTime = performance.now();
-        let lastSkyUiUpdate = 0;
         const cameraQuaternion = new THREE.Quaternion();
 
         const northStarPosition = convertToCartesian(2.530301028 * 15, 89.26413889);
@@ -4843,16 +4779,6 @@
                 String(parts.hour).padStart(2, '0'), ':',
                 String(parts.minute).padStart(2, '0')
             ].join('');
-        }
-
-        // The existing controls are a secondary view until the remaining clock
-        // dependencies are retired. They are never used to relay new Settings actions.
-        function reflectObservationToExistingControls() {
-            locationPreset.value = observerPresetKey;
-            latitudeInput.value = formatCoordinate(observerLatitudeDeg);
-            longitudeInput.value = formatCoordinate(observerLongitudeDeg);
-            timeZoneSelect.value = observerTimeZone;
-            observationDateTime.value = formatLocalDateTimeInput(simulationUtcMs, observerTimeZone);
         }
 
         const ViewerSettings = Object.freeze({
@@ -4885,8 +4811,7 @@
                 observerLatitudeDeg = preset.lat;
                 observerLongitudeDeg = preset.lon;
                 observerTimeZone = preset.zone;
-                reflectObservationToExistingControls();
-                updateObserverFromSimulation(true);
+                updateObserverFromSimulation();
                 return true;
             },
             setCoordinates(latitude, longitude) {
@@ -4896,15 +4821,13 @@
                 observerPresetKey = 'custom';
                 observerLatitudeDeg = THREE.MathUtils.clamp(lat, -90, 90);
                 observerLongitudeDeg = normalizeLongitude(lon);
-                reflectObservationToExistingControls();
-                updateObserverFromSimulation(true);
+                updateObserverFromSimulation();
                 return true;
             },
             setTimeZone(zone) {
                 if (!TIME_ZONE_OPTIONS.some(item => item.value === zone)) return false;
                 observerTimeZone = zone;
                 observerPresetKey = 'custom';
-                reflectObservationToExistingControls();
                 updateSkyStatus();
                 return true;
             },
@@ -4913,14 +4836,14 @@
                 if (!utcDate || !Number.isFinite(utcDate.getTime())) return false;
                 pauseTimePlayback();
                 simulationUtcMs = utcDate.getTime();
-                updateObserverFromSimulation(true);
+                updateObserverFromSimulation();
                 return true;
             },
             setUtcTime(utcMs) {
                 if (!Number.isFinite(utcMs)) return false;
                 pauseTimePlayback();
                 simulationUtcMs = utcMs;
-                updateObserverFromSimulation(true);
+                updateObserverFromSimulation();
                 return true;
             },
             stepTime(deltaMs) {
@@ -4932,7 +4855,6 @@
             },
             setConstellationLinesVisible(visible) {
                 lineGroup.visible = Boolean(visible);
-                constellationLinesToggle.checked = lineGroup.visible;
                 return true;
             }
         });
@@ -4941,12 +4863,11 @@
         initializeStarData();
         initializeUi();
         setCameraFocalLength(GROUND_DEFAULT_FOCAL_LENGTH);
-        updateObserverFromSimulation(true);
+        updateObserverFromSimulation();
         applyViewPreset('ground', false);
         animate(performance.now());
 
         function initializeUi() {
-            reflectObservationToExistingControls();
             backgroundMagnitudeValue.textContent = `${parseFloat(backgroundMagnitudeSlider.value).toFixed(1)}等`;
             updateModeSpecificControls();
 
@@ -4966,10 +4887,6 @@
                 clearActiveViewPreset();
             });
 
-            constellationLinesToggle.addEventListener('change', () => {
-                ViewerSettings.setConstellationLinesVisible(constellationLinesToggle.checked);
-            });
-
             backgroundStarsToggle.addEventListener('change', () => {
                 backgroundStarGroup.visible = backgroundStarsToggle.checked;
             });
@@ -4978,34 +4895,6 @@
                 const limit = parseFloat(backgroundMagnitudeSlider.value);
                 backgroundMagnitudeValue.textContent = `${limit.toFixed(1)}等`;
                 buildBackgroundStarLayers(limit);
-            });
-
-            locationPreset.addEventListener('change', () => {
-                ViewerSettings.setLocationPreset(locationPreset.value);
-            });
-
-            const applyExistingCoordinates = () => {
-                ViewerSettings.setCoordinates(latitudeInput.value, longitudeInput.value);
-            };
-            latitudeInput.addEventListener('change', applyExistingCoordinates);
-            longitudeInput.addEventListener('change', applyExistingCoordinates);
-
-            timeZoneSelect.addEventListener('change', () => {
-                ViewerSettings.setTimeZone(timeZoneSelect.value);
-            });
-
-            observationDateTime.addEventListener('change', () => {
-                ViewerSettings.setLocalDateTime(observationDateTime.value);
-            });
-
-            document.querySelectorAll('[data-time-step]').forEach(button => {
-                bindTapAction(button, () => {
-                    ViewerSettings.stepTime(Number(button.dataset.timeStep));
-                });
-            });
-
-            bindTapAction(nowButton, () => {
-                ViewerSettings.useCurrentTime();
             });
 
             bindTapAction(playTimeButton, () => {
@@ -5028,7 +4917,7 @@
             bindTapAction(quickNow, () => {
                 pauseTimePlayback();
                 simulationUtcMs = Date.now();
-                updateObserverFromSimulation(true);
+                updateObserverFromSimulation();
             });
             bindTapAction(quickSummerSky, () => {
                 setSeasonSkyPreset('summer');
@@ -5083,7 +4972,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             const utcDate = zonedLocalDateTimeToUtc(localValue, observerTimeZone);
             if (!utcDate || Number.isNaN(utcDate.getTime())) return;
             simulationUtcMs = utcDate.getTime();
-            updateObserverFromSimulation(true);
+            updateObserverFromSimulation();
         }
 
         function setClockPanelOpen() {
@@ -5235,7 +5124,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 snappedMinutes * 60 * 1000;
 
             pauseTimePlayback();
-            updateObserverFromSimulation(true);
+            updateObserverFromSimulation();
             updateClockHandFromSimulation();
         }
 
@@ -7051,7 +6940,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
             // Rebuild the observer basis first, then put the ground camera at that new observer
             // position before asking it to face the selected constellation.
-            updateObserverFromSimulation(true);
+            updateObserverFromSimulation();
             if (currentViewMode !== 'ground') applyViewPreset('ground', false);
             else applySkyCameraOrientation();
             updateQuickTimeDisplay();
@@ -7078,7 +6967,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             return true;
         }
 
-        function updateObserverFromSimulation(updateDateField) {
+        function updateObserverFromSimulation() {
             observerLatitudeDeg = THREE.MathUtils.clamp(Number(observerLatitudeDeg) || 0, -90, 90);
             observerLongitudeDeg = normalizeLongitude(Number(observerLongitudeDeg) || 0);
             localSiderealDeg = calculateLocalSiderealTimeDeg(simulationUtcMs, observerLongitudeDeg);
@@ -7099,7 +6988,6 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
             if (currentViewMode === 'ground' && !cameraAnimation) applySkyCameraOrientation();
             refreshConstellationLineGeometry(false);
-            if (updateDateField) setDateInputFromUtc(simulationUtcMs);
             updateSkyStatus();
         }
 
@@ -7154,12 +7042,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 simulationUtcMs +=
                     deltaSeconds * 1000 * Number(timeSpeedSelect.value);
 
-                updateObserverFromSimulation(false);
-
-                if (currentTime - lastSkyUiUpdate > 200) {
-                    setDateInputFromUtc(simulationUtcMs);
-                    lastSkyUiUpdate = currentTime;
-                }
+                updateObserverFromSimulation();
             }
 
             // Core 3D path.
@@ -7625,10 +7508,6 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             lensValue.textContent = `${focalLengthMm.toFixed(1).replace('.0', '')}mm / ${verticalFovDeg.toFixed(1)}°`;
         }
 
-        function setDateInputFromUtc(utcMs) {
-            observationDateTime.value = formatLocalDateTimeInput(utcMs, observerTimeZone);
-        }
-
         function zonedLocalDateTimeToUtc(value, timeZone) {
             const match = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2}))?$/.exec(value);
             if (!match) return null;
@@ -7756,7 +7635,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         }
 
         function getSkyExportMetadata() {
-            const locationKey = document.getElementById('locationPreset')?.value || '';
+            const locationKey = observerPresetKey;
             let locationName = '入力地点';
             try { locationName = LOCATION_PRESETS?.[locationKey]?.name || locationName; } catch (_) {}
 
@@ -7790,7 +7669,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 observation: {
                     utc: new Date(simulationUtcMs).toISOString(),
                     local: localDateTime,
-                    timeZone: document.getElementById('timeZoneSelect')?.value || null,
+                    timeZone: observerTimeZone,
                     locationPreset: locationKey || null,
                     locationName,
                     latitudeDeg: Number(Number(observerLatitudeDeg).toFixed(6)),
@@ -7828,7 +7707,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                         : null
                 },
                 display: {
-                    constellationLines: !!document.getElementById('constellationLinesToggle')?.checked,
+                    constellationLines: lineGroup.visible,
                     labelMode: typeof labelDisplayMode !== 'undefined' ? labelDisplayMode : null,
                     selectedConstellation
                 },
