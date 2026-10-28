@@ -2808,7 +2808,7 @@
 
         /* ===== V54 Search constellation -> center + default 3-line comment ===== */
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV98 {
+        #settingsVersionV99 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3176,7 +3176,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV98" aria-label="バージョン">V98</div>
+        <div id="settingsVersionV99" aria-label="バージョン">V99</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -4635,6 +4635,7 @@
         const skyTapPicker = document.getElementById('skyTapPicker');
         const skyTapPickerList = document.getElementById('skyTapPickerList');
         const skyTapPickerClose = document.getElementById('skyTapPickerClose');
+        let skyTapPickerCandidatesV99 = [];
         const skyTapExplainedStars = new Map([
             ["16αBoo", { id: "Arcturus", ja: "アークトゥルス" }],
             ["67αVir", { id: "Spica", ja: "スピカ" }],
@@ -5432,12 +5433,44 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             if (!skyTapPicker) return;
             skyTapPicker.classList.remove('open');
             skyTapPicker.setAttribute('aria-hidden', 'true');
+            skyTapPickerCandidatesV99 = [];
         }
 
-        skyTapPickerClose?.addEventListener('click', event => {
-            event.preventDefault();
+        function handleSkyTapPickerAction(event) {
+            const closeButton = event.target.closest('#skyTapPickerClose');
+            if (closeButton && skyTapPicker?.contains(closeButton)) {
+                event.preventDefault();
+                event.stopPropagation();
+                closeSkyTapPicker();
+                return true;
+            }
+
+            const itemButton = event.target.closest('.skyTapPickerItem[data-candidate-index]');
+            if (itemButton && skyTapPickerList?.contains(itemButton)) {
+                event.preventDefault();
+                event.stopPropagation();
+                const index = Number(itemButton.dataset.candidateIndex);
+                const candidate = skyTapPickerCandidatesV99[index];
+                if (candidate) selectSkyTapCandidate(candidate);
+                return true;
+            }
+            return false;
+        }
+
+        // One stable event surface for the whole popover.  This keeps close and
+        // candidate actions independent from repeated list rendering.
+        skyTapPicker?.addEventListener('pointerdown', event => {
             event.stopPropagation();
-            closeSkyTapPicker();
+        });
+        skyTapPicker?.addEventListener('pointerup', event => {
+            if (event.target.closest('#skyTapPickerClose')) {
+                handleSkyTapPickerAction(event);
+            }
+        });
+        skyTapPicker?.addEventListener('click', event => {
+            // Close may already have been handled on pointerup. Re-closing is harmless;
+            // keyboard activation still reaches this click path.
+            handleSkyTapPickerAction(event);
         });
 
         function projectSkyPointToScreen(localPosition) {
@@ -5606,7 +5639,8 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
         function openSkyTapPicker(x, y) {
             if (!skyTapPicker || !skyTapPickerList) return;
-            const candidates = getSkyTapCandidates(x, y);
+            skyTapPickerCandidatesV99 = getSkyTapCandidates(x, y);
+            const candidates = skyTapPickerCandidatesV99;
             skyTapPickerList.innerHTML = '';
 
             if (!candidates.length) {
@@ -5615,22 +5649,18 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 empty.textContent = 'この近くには、解説できる天体がありません。';
                 skyTapPickerList.appendChild(empty);
             } else {
-                for (const candidate of candidates) {
+                candidates.forEach((candidate, index) => {
                     const button = document.createElement('button');
                     button.type = 'button';
                     button.className = 'skyTapPickerItem';
+                    button.dataset.candidateIndex = String(index);
                     button.innerHTML =
                         `<span class="skyTapPickerIcon">${candidate.type === 'constellation' ? '◇' : '✦'}</span>` +
                         `<span><span class="skyTapPickerName"></span><span class="skyTapPickerSub"></span></span>`;
                     button.querySelector('.skyTapPickerName').textContent = candidate.name;
                     button.querySelector('.skyTapPickerSub').textContent = candidate.sub;
-                    button.addEventListener('click', event => {
-                        event.preventDefault();
-                        event.stopPropagation();
-                        selectSkyTapCandidate(candidate);
-                    });
                     skyTapPickerList.appendChild(button);
-                }
+                });
             }
 
             skyTapPicker.classList.add('open');
@@ -5681,11 +5711,51 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
         
 
+        function synchronizeActiveCameraControllerV99() {
+            if (currentViewMode === 'ground' || currentViewMode === 'celestial') {
+                const direction = new THREE.Vector3();
+                camera.getWorldDirection(direction);
+                if (direction.lengthSq() > 1e-10) {
+                    syncSkyAnglesFromDirection(direction.normalize());
+                }
+                return;
+            }
+
+            if (currentViewMode === 'overview') {
+                // Overview is an Earth-orbit controller. Its invariant is that the
+                // camera always looks at the Earth center; selection must not leave
+                // an arbitrary sky-facing quaternion behind for the next drag.
+                camera.up.set(0, 1, 0);
+                camera.lookAt(0, 0, 0);
+                syncCameraQuaternion();
+            }
+        }
+
+        function settleCameraForInteractionV99() {
+            if (cameraAnimation) {
+                if (cameraAnimation.type === 'transition') {
+                    // A pointer takeover during a mode transition should start from a
+                    // valid controller state, not a half-way pose that belongs to no mode.
+                    camera.position.copy(cameraAnimation.endPosition);
+                    camera.quaternion.copy(cameraAnimation.endQuaternion);
+                    camera.fov = cameraAnimation.endFov;
+                    camera.updateProjectionMatrix();
+                    earthMaterial.opacity = cameraAnimation.endEarthOpacity;
+                    groundMaterial.opacity = cameraAnimation.endGroundOpacity;
+                    camera.up.copy(cameraAnimation.endUp);
+                    cameraAnimation = null;
+                } else {
+                    cameraAnimation = null;
+                }
+            }
+            synchronizeActiveCameraControllerV99();
+        }
+
         function beginPointerDrag(x, y) {
+            settleCameraForInteractionV99();
             isDragging = true;
             previousPointerPosition = { x, y };
             dragStartPosition = { x, y };
-            if (currentViewMode === 'ground') syncGroundAnglesFromCamera();
             dragStartQuaternion.copy(camera.quaternion);
             dragStartUp.set(0, 1, 0).applyQuaternion(dragStartQuaternion).normalize();
             dragStartRight.set(1, 0, 0).applyQuaternion(dragStartQuaternion).normalize();
@@ -5996,15 +6066,21 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 const endUp = cameraAnimation.endUp.clone();
                 cameraAnimation = null;
                 camera.up.copy(endUp);
-                if (currentViewMode === 'ground') applySkyCameraOrientation();
-                else syncCameraQuaternion();
+                if (currentViewMode === 'ground' || currentViewMode === 'celestial') {
+                    synchronizeActiveCameraControllerV99();
+                    applySkyCameraOrientation();
+                } else if (currentViewMode === 'overview') {
+                    synchronizeActiveCameraControllerV99();
+                } else {
+                    syncCameraQuaternion();
+                }
             }
         }
 
         function cancelCameraAnimation() {
             if (!cameraAnimation) return;
             cameraAnimation = null;
-            syncCameraQuaternion();
+            synchronizeActiveCameraControllerV99();
         }
 
         function syncCameraQuaternion() {
@@ -6370,8 +6446,11 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 // Update that canonical state first so later drag/mode changes cannot jump.
                 syncSkyAnglesFromDirection(targetPosition.clone().normalize());
                 applySkyCameraOrientation();
-            } else {
-                startCameraLookAtAnimation(targetPosition);
+            } else if (currentViewMode === 'overview') {
+                // Overview is Earth-centered orbit mode. Selecting a constellation may
+                // change highlight/description, but must not rotate the orbit camera away
+                // from Earth; doing so breaks the next orbit drag.
+                synchronizeActiveCameraControllerV99();
             }
             clearActiveViewPreset();
         }
