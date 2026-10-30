@@ -2808,7 +2808,7 @@
 
         /* ===== V54 Search constellation -> center + default 3-line comment ===== */
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV104 {
+        #settingsVersionV106 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3176,7 +3176,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV104" aria-label="バージョン">V104</div>
+        <div id="settingsVersionV106" aria-label="バージョン">V106</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -6072,14 +6072,40 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         function selectConstellationIntent(value, source = 'unknown') {
             const id = ConstellationRegistryV80.normalizeId(value);
             if (!id || !getConstellationCenter(id)) return false;
-            let focus = false;
-            if (currentViewMode === 'celestial') focus = true;
-            else if (currentViewMode === 'ground') {
-                const viewState = getConstellationViewState(id, true);
-                focus = Boolean(viewState && Number.isFinite(viewState.altitudeDeg) && viewState.altitudeDeg >= 0);
+
+            if (currentViewMode === 'celestial') {
+                return selectConstellationV80(id, {
+                    focus: true,
+                    showComment: true,
+                    source
+                });
             }
-            const selected = selectConstellationV80(id, { focus, showComment: true, source });
-            if (selected && currentViewMode === 'ground' && !focus) updateSelectedConstellationGuidance(true);
+
+            if (currentViewMode !== 'ground') {
+                return selectConstellationV80(id, {
+                    focus: false,
+                    showComment: true,
+                    source
+                });
+            }
+
+            const visibility = getConstellationVisibilityStateV106(id);
+            if (!visibility) return false;
+
+            const shouldFocus =
+                visibility.status === 'visible' ||
+                visibility.status === 'offscreen';
+
+            const selected = selectConstellationV80(id, {
+                focus: shouldFocus,
+                showComment: true,
+                source
+            });
+
+            if (selected && !shouldFocus) {
+                updateSelectedConstellationGuidance(true);
+            }
+
             return selected;
         }
 
@@ -6688,6 +6714,16 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             // resolver is introduced here.
             if (action === 'visible-time') {
                 if (currentViewMode !== 'ground') return false;
+                const visibility =
+                    getConstellationVisibilityStateV106(id);
+                if (
+                    !visibility ||
+                    visibility.status === 'never-rises' ||
+                    !visibility.reachesRecommendedAltitude
+                ) {
+                    updateSelectedConstellationGuidance(true);
+                    return false;
+                }
                 return moveSelectedConstellationToNextVisibleTime(id);
             }
             if (action === 'celestial') {
@@ -6727,6 +6763,98 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             return { target, direction, altitudeDeg, onScreen, sx, sy };
         }
 
+        const constellationVisibilityEnvelopeCacheV106 = new Map();
+
+        function getConstellationVisibilityEnvelopeV106(constellation) {
+            const id = ConstellationRegistryV80.normalizeId(constellation);
+            if (!id) return null;
+
+            // Maximum altitude over one sidereal rotation depends on the
+            // constellation direction and observer latitude.  Cache it so the
+            // frame UI never repeats a full-day search.
+            const latitudeKey = Number(observerLatitudeDeg).toFixed(4);
+            const cacheKey = `${id}|${latitudeKey}`;
+            const cached = constellationVisibilityEnvelopeCacheV106.get(cacheKey);
+            if (cached) return cached;
+
+            const siderealDayMs =
+                23 * 60 * 60 * 1000 +
+                56 * 60 * 1000 +
+                4 * 1000;
+            const stepMs = 10 * 60 * 1000;
+
+            let maxAltitudeDeg = -90;
+            let minAltitudeDeg = 90;
+
+            for (
+                let dt = 0;
+                dt <= siderealDayMs;
+                dt += stepMs
+            ) {
+                const altitudeDeg = getConstellationAltitudeAtUtc(
+                    id,
+                    simulationUtcMs + dt
+                );
+                if (!Number.isFinite(altitudeDeg)) continue;
+                maxAltitudeDeg = Math.max(maxAltitudeDeg, altitudeDeg);
+                minAltitudeDeg = Math.min(minAltitudeDeg, altitudeDeg);
+            }
+
+            const envelope = {
+                id,
+                maxAltitudeDeg,
+                minAltitudeDeg,
+                everAboveHorizon: maxAltitudeDeg > 0,
+                reachesRecommendedAltitude:
+                    maxAltitudeDeg >= CONSTELLATION_VISIBLE_ALTITUDE_DEG
+            };
+
+            constellationVisibilityEnvelopeCacheV106.set(cacheKey, envelope);
+            return envelope;
+        }
+
+        function getConstellationVisibilityStateV106(constellation) {
+            const id = ConstellationRegistryV80.normalizeId(constellation);
+            if (!id) return null;
+
+            const viewState = getConstellationViewState(id, true);
+            if (!viewState || !Number.isFinite(viewState.altitudeDeg)) return null;
+
+            const envelope = getConstellationVisibilityEnvelopeV106(id);
+            if (!envelope) return null;
+
+            let status;
+            if (!envelope.everAboveHorizon) {
+                status = 'never-rises';
+            } else if (viewState.altitudeDeg <= 0) {
+                status = 'below-horizon';
+            } else if (viewState.onScreen) {
+                status = 'visible';
+            } else {
+                status = 'offscreen';
+            }
+
+            return {
+                id,
+                status,
+                altitudeDeg: viewState.altitudeDeg,
+                onScreen: viewState.onScreen,
+                sx: viewState.sx,
+                sy: viewState.sy,
+                target: viewState.target,
+                direction: viewState.direction,
+                maxAltitudeDeg: envelope.maxAltitudeDeg,
+                minAltitudeDeg: envelope.minAltitudeDeg,
+                everAboveHorizon: envelope.everAboveHorizon,
+                reachesRecommendedAltitude:
+                    envelope.reachesRecommendedAltitude
+            };
+        }
+
+        window.getConstellationVisibilityStateV106 =
+            getConstellationVisibilityStateV106;
+
+
         function getEdgeIndicatorInfo(sx, sy) {
             const ax = Math.abs(sx);
             const ay = Math.abs(sy);
@@ -6750,9 +6878,6 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             }
             return { edge, arrow };
         }
-
-        let lastInvisibleTimeFailureV95 = null;
-
         function updateSelectedConstellationGuidance(force = false) {
             ensureSelectedConstellationGuidanceUi();
             const now = performance.now();
@@ -6768,61 +6893,92 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 return;
             }
 
-            if (currentViewMode === 'celestial' && cameraAnimation) {
-                hideSelectedConstellationGuidance();
+            if (currentViewMode === 'celestial') {
+                if (cameraAnimation) {
+                    hideSelectedConstellationGuidance();
+                    return;
+                }
+
+                const state = getConstellationViewState(selected, false);
+                if (!state) {
+                    hideSelectedConstellationGuidance();
+                    return;
+                }
+
+                if (state.onScreen) {
+                    hideSelectedConstellationGuidance();
+                    return;
+                }
+
+                const name = selectedConstellationDisplayName(selected);
+                const edgeInfo = getEdgeIndicatorInfo(state.sx, state.sy);
+                constellationEdgeIndicator.dataset.edge = edgeInfo.edge;
+                constellationEdgeIndicator.textContent =
+                    `${edgeInfo.arrow} ${name}`;
+                constellationEdgeIndicator.classList.add('visible');
+
+                constellationGuidanceMessage.textContent =
+                    `⚠️ ${name}は画面外にあります ⚠️`;
+                showGuidanceActionsV95(['focus']);
+                constellationGuidanceRibbon.classList.add('visible');
                 return;
             }
 
-            const state = getConstellationViewState(
-                selected, currentViewMode === 'ground'
-            );
-            if (!state) {
+            const visibility =
+                getConstellationVisibilityStateV106(selected);
+            if (!visibility) {
                 hideSelectedConstellationGuidance();
                 return;
             }
 
             const name = selectedConstellationDisplayName(selected);
 
-            if (currentViewMode === 'ground' && state.altitudeDeg <= 0) {
+            if (visibility.status === 'never-rises') {
                 constellationEdgeIndicator.classList.remove('visible');
-                const message = `⚠️ 現在、${name}は地平線の下にあります ⚠️`;
-                if (constellationGuidanceMessage.textContent !== message) {
-                    constellationGuidanceMessage.textContent = message;
-                }
-                const failure = lastInvisibleTimeFailureV95;
-                const cannotReachAltitude = failure &&
-                    failure.id === selected &&
-                    failure.latitude === observerLatitudeDeg &&
-                    failure.longitude === observerLongitudeDeg;
-                if (cannotReachAltitude) {
-                    constellationGuidanceMessage.textContent =
-                        `⚠️ ${name}は、この観測地点では高度${CONSTELLATION_VISIBLE_ALTITUDE_DEG}°以上になりません`;
-                    showGuidanceActionsV95(['celestial']);
-                    constellationGuidanceRibbon.classList.add('visible');
-                    return;
-                }
-                showGuidanceActionsV95(['visible-time', 'celestial']);
+                constellationGuidanceMessage.textContent =
+                    `⚠️ ${name}は現在の観測地点からは見えません ⚠️`;
+                showGuidanceActionsV95(['celestial']);
                 constellationGuidanceRibbon.classList.add('visible');
                 return;
             }
 
-            if (state.onScreen) {
+            if (visibility.status === 'below-horizon') {
+                constellationEdgeIndicator.classList.remove('visible');
+
+                if (visibility.reachesRecommendedAltitude) {
+                    constellationGuidanceMessage.textContent =
+                        `⚠️ 現在、${name}は地平線の下にあります ⚠️`;
+                    showGuidanceActionsV95([
+                        'visible-time',
+                        'celestial'
+                    ]);
+                } else {
+                    constellationGuidanceMessage.textContent =
+                        `⚠️ ${name}は地平線上には出ますが、この観測地点では高度${CONSTELLATION_VISIBLE_ALTITUDE_DEG}°以上になりません`;
+                    showGuidanceActionsV95(['celestial']);
+                }
+
+                constellationGuidanceRibbon.classList.add('visible');
+                return;
+            }
+
+            if (visibility.status === 'visible') {
                 hideSelectedConstellationGuidance();
                 return;
             }
 
-            const edgeInfo = getEdgeIndicatorInfo(state.sx, state.sy);
+            // OFFSCREEN: above the horizon, but outside the current camera view.
+            const edgeInfo = getEdgeIndicatorInfo(
+                visibility.sx,
+                visibility.sy
+            );
             constellationEdgeIndicator.dataset.edge = edgeInfo.edge;
-            const edgeText = `${edgeInfo.arrow} ${name}`;
-            if (constellationEdgeIndicator.textContent !== edgeText) {
-                constellationEdgeIndicator.textContent = edgeText;
-            }
+            constellationEdgeIndicator.textContent =
+                `${edgeInfo.arrow} ${name}`;
             constellationEdgeIndicator.classList.add('visible');
 
-            const message = `⚠️ ${name}は画面外にあります ⚠️`;
-            if (constellationGuidanceMessage.textContent !== message) {
-                constellationGuidanceMessage.textContent = message;
-            }
+            constellationGuidanceMessage.textContent =
+                `⚠️ ${name}は画面外にあります ⚠️`;
             showGuidanceActionsV95(['focus']);
             constellationGuidanceRibbon.classList.add('visible');
         }
@@ -6883,42 +7039,46 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         }
 
         function moveSelectedConstellationToNextVisibleTime(constellation) {
-            // Guidance actions are direct navigation commands.  Any camera animation left by a
-            // previous operation can otherwise overwrite the new observer/camera state on its
-            // next animation frame, so stop it before changing time.
             cancelCameraAnimation();
-            const nextUtcMs = findNextVisibleConstellationTime(constellation, simulationUtcMs);
-            if (nextUtcMs == null) {
-                lastInvisibleTimeFailureV95 = {
-                    id: constellation,
-                    latitude: observerLatitudeDeg,
-                    longitude: observerLongitudeDeg
-                };
-                ensureSelectedConstellationGuidanceUi();
-                const name = selectedConstellationDisplayName(constellation);
-                constellationGuidanceMessage.textContent = `⚠️ ${name}は、この観測地点では高度${CONSTELLATION_VISIBLE_ALTITUDE_DEG}°以上になる時刻が見つかりませんでした`;
-                showGuidanceActionsV95(['celestial']);
-                constellationGuidanceRibbon.classList.add('visible');
+
+            const visibility =
+                getConstellationVisibilityStateV106(constellation);
+            if (
+                !visibility ||
+                visibility.status === 'never-rises' ||
+                !visibility.reachesRecommendedAltitude
+            ) {
+                updateSelectedConstellationGuidance(true);
                 return false;
             }
 
-            lastInvisibleTimeFailureV95 = null;
+            const nextUtcMs = findNextVisibleConstellationTime(
+                constellation,
+                simulationUtcMs
+            );
+            if (nextUtcMs == null) {
+                updateSelectedConstellationGuidance(true);
+                return false;
+            }
+
             pauseTimePlayback();
             simulationUtcMs = nextUtcMs;
 
-            // Rebuild the observer basis first, then put the ground camera at that new observer
-            // position before asking it to face the selected constellation.
             updateObserverFromSimulation();
-            if (currentViewMode !== 'ground') applyViewPreset('ground', false);
-            else applySkyCameraOrientation();
+            if (currentViewMode !== 'ground') {
+                applyViewPreset('ground', false);
+            } else {
+                applySkyCameraOrientation();
+            }
+
             updateQuickTimeDisplay();
             focusCameraOnConstellation(constellation);
 
-            // The target should now be on screen.  Re-evaluate on the next frames instead of
-            // relying on an old cached state/ribbon.
             hideSelectedConstellationGuidance();
             requestAnimationFrame(() => {
-                requestAnimationFrame(() => updateSelectedConstellationGuidance(true));
+                requestAnimationFrame(
+                    () => updateSelectedConstellationGuidance(true)
+                );
             });
             return true;
         }
@@ -6936,7 +7096,17 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         }
 
         function updateObserverFromSimulation() {
+            const previousLatitudeKeyV106 =
+                Number(observerLatitudeDeg).toFixed(4);
             observerLatitudeDeg = THREE.MathUtils.clamp(Number(observerLatitudeDeg) || 0, -90, 90);
+            const nextLatitudeKeyV106 =
+                Number(observerLatitudeDeg).toFixed(4);
+            if (
+                previousLatitudeKeyV106 !== nextLatitudeKeyV106 &&
+                typeof constellationVisibilityEnvelopeCacheV106 !== 'undefined'
+            ) {
+                constellationVisibilityEnvelopeCacheV106.clear();
+            }
             observerLongitudeDeg = normalizeLongitude(Number(observerLongitudeDeg) || 0);
             localSiderealDeg = calculateLocalSiderealTimeDeg(simulationUtcMs, observerLongitudeDeg);
 
@@ -8824,6 +8994,12 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                         ? alignmentData.alignments
                         : {};
 
+                function constellationArtworkFilenameV105(value) {
+                    const key = ConstellationRegistryV80.normalizeId(value);
+                    if (!key) return '';
+                    return `${key.charAt(0).toUpperCase()}${key.slice(1).toLowerCase()}.png`;
+                }
+
                 // V64: alignment.json is the persistent baseline.
                 // Apply it to manifest-based artwork before any geometry is built.
                 manifest.artworks.forEach(cfg => {
@@ -8837,6 +9013,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
                     cfg.id = constellationId;
                     cfg.iau = info.iau;
+                    cfg.file = constellationArtworkFilenameV105(constellationId);
 
                     const saved =
                         registeredAlignmentsV64[constellationId] ||
@@ -8866,20 +9043,13 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 // Final artwork registry:
                 // every constellation always has one deterministic artwork filename.
                 // No manifest list or directory scan is required.
-
-                function constellationArtworkFilenameV104(id) {
-                    const key = ConstellationRegistryV80.normalizeId(id);
-                    if (!key) return '';
-                    return `${key.charAt(0).toUpperCase()}${key.slice(1).toLowerCase()}.png`;
-                }
-
                 function registerCanonicalArtworkV93() {
                     Object.entries(CONSTELLATIONS_V2).forEach(([id, info]) => {
                         if (entries.has(id)) {
                             const state = entries.get(id);
                             state.cfg.id = id;
                             state.cfg.iau = info.iau;
-                            state.cfg.file = constellationArtworkFilenameV104(id);
+                            state.cfg.file = constellationArtworkFilenameV105(id);
                             state.cfg.autoPlacement = true;
                             return;
                         }
@@ -8890,7 +9060,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                             nameJa: info.ja,
                             fallbackKey: `${info.en} (${info.ja})`,
                             enabled: true,
-                            file: constellationArtworkFilenameV104(id),
+                            file: constellationArtworkFilenameV105(id),
                             autoPlacement: true,
                             imageWidth: 1024,
                             imageHeight: 1024,
