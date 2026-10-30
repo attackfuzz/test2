@@ -2808,7 +2808,7 @@
 
         /* ===== V54 Search constellation -> center + default 3-line comment ===== */
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV100 {
+        #settingsVersionV101 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3176,7 +3176,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV100" aria-label="バージョン">V100</div>
+        <div id="settingsVersionV101" aria-label="バージョン">V101</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -3974,7 +3974,7 @@
             );
 
             if (id) {
-                window.selectConstellationIntentV100?.(id, 'settings-v2');
+                window.selectConstellationIntent?.(id, 'settings-v2');
             }
 
             requestAnimationFrame(syncV2ConstellationPicker);
@@ -4102,7 +4102,7 @@
             if (!id) return false;
 
             try {
-                window.selectConstellationIntentV100?.(id, 'search');
+                window.selectConstellationIntent?.(id, 'search');
             } catch (error) {
                 console.error('Constellation search selection failed:', error);
             }
@@ -4602,7 +4602,7 @@
         const skyTapPicker = document.getElementById('skyTapPicker');
         const skyTapPickerList = document.getElementById('skyTapPickerList');
         const skyTapPickerClose = document.getElementById('skyTapPickerClose');
-        let skyTapPickerCandidatesV100 = [];
+        let skyTapPickerCandidatesV101 = [];
         const skyTapExplainedStars = new Map([
             ["16αBoo", { id: "Arcturus", ja: "アークトゥルス" }],
             ["67αVir", { id: "Spica", ja: "スピカ" }],
@@ -5400,7 +5400,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             if (!skyTapPicker) return;
             skyTapPicker.classList.remove('open');
             skyTapPicker.setAttribute('aria-hidden', 'true');
-            skyTapPickerCandidatesV100 = [];
+            skyTapPickerCandidatesV101 = [];
         }
 
         function handleSkyTapPickerAction(event) {
@@ -5417,7 +5417,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 event.preventDefault();
                 event.stopPropagation();
                 const index = Number(itemButton.dataset.candidateIndex);
-                const candidate = skyTapPickerCandidatesV100[index];
+                const candidate = skyTapPickerCandidatesV101[index];
                 if (candidate) selectSkyTapCandidate(candidate);
                 return true;
             }
@@ -5573,7 +5573,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
             if (candidate.type === 'constellation') {
                 try {
-                    selectConstellationIntentV100(candidate.key, 'tap');
+                    selectConstellationIntent(candidate.key, 'tap');
                 } catch (error) {
                     console.error('Sky-tap constellation selection failed:', error);
                 }
@@ -5602,8 +5602,8 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
         function openSkyTapPicker(x, y) {
             if (!skyTapPicker || !skyTapPickerList) return;
-            skyTapPickerCandidatesV100 = getSkyTapCandidates(x, y);
-            const candidates = skyTapPickerCandidatesV100;
+            skyTapPickerCandidatesV101 = getSkyTapCandidates(x, y);
+            const candidates = skyTapPickerCandidatesV101;
             skyTapPickerList.innerHTML = '';
 
             if (!candidates.length) {
@@ -5674,7 +5674,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
         
 
-        function synchronizeActiveCameraControllerV100() {
+        function synchronizeActiveCameraControllerV101() {
             if (currentViewMode !== 'ground' && currentViewMode !== 'celestial') return;
             const direction = new THREE.Vector3();
             camera.getWorldDirection(direction);
@@ -5683,7 +5683,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             }
         }
 
-        function settleCameraForInteractionV100() {
+        function settleCameraForInteractionV101() {
             if (cameraAnimation) {
                 if (cameraAnimation.type === 'transition') {
                     // A pointer takeover during a mode transition should start from a
@@ -5700,11 +5700,11 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                     cameraAnimation = null;
                 }
             }
-            synchronizeActiveCameraControllerV100();
+            synchronizeActiveCameraControllerV101();
         }
 
         function beginPointerDrag(x, y) {
-            settleCameraForInteractionV100();
+            settleCameraForInteractionV101();
             isDragging = true;
             previousPointerPosition = { x, y };
             dragStartPosition = { x, y };
@@ -5977,7 +5977,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 const endUp = cameraAnimation.endUp.clone();
                 cameraAnimation = null;
                 camera.up.copy(endUp);
-                synchronizeActiveCameraControllerV100();
+                synchronizeActiveCameraControllerV101();
                 applySkyCameraOrientation();
             }
         }
@@ -5985,7 +5985,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         function cancelCameraAnimation() {
             if (!cameraAnimation) return;
             cameraAnimation = null;
-            synchronizeActiveCameraControllerV100();
+            synchronizeActiveCameraControllerV101();
         }
 
         function syncCameraQuaternion() {
@@ -6009,50 +6009,33 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         function resetConstellationHighlight() {
             ViewerStateV80.selectedConstellationId = null;
             hideConstellationDescriptionV85();
+            hideSelectedConstellationGuidance();
+            applyConstellationSelectionVisualsV101();
+        }
 
-            Object.values(runtimeConstellationsV80).forEach(runtime => {
-                runtime.labelElement?.classList.remove('selected');
-
+        function applyConstellationSelectionVisualsV101() {
+            const selectedId = ViewerStateV80.selectedConstellationId;
+            Object.entries(runtimeConstellationsV80).forEach(([id, runtime]) => {
+                const selected = Boolean(selectedId && id === selectedId);
+                runtime.labelElement?.classList.toggle('selected', selected);
                 if (runtime.starMesh?.material) {
-                    runtime.starMesh.material.color.set(0xffffff);
-                    runtime.starMesh.material.size = 2;
+                    runtime.starMesh.material.color.set(selected ? 0xff3344 : 0xffffff);
+                    runtime.starMesh.material.size = selected ? 5 : 2;
+                    runtime.starMesh.material.needsUpdate = true;
                 }
-
                 if (runtime.lineMesh?.material) {
-                    runtime.lineMesh.material.color.set(0x00ff66);
-                    runtime.lineMesh.material.opacity = 0.75;
+                    runtime.lineMesh.material.color.set(selected ? 0xff3344 : 0x00ff66);
+                    runtime.lineMesh.material.opacity = selected ? 1 : 0.75;
+                    runtime.lineMesh.material.needsUpdate = true;
                 }
             });
         }
 
-        function setConstellationVisualSelectedV80(id, selected) {
-            if (!id) return;
-            const runtime = runtimeConstellationsV80[id];
-            if (!runtime) return;
-
-            runtime.labelElement?.classList.toggle('selected', selected);
-
-            if (runtime.starMesh?.material) {
-                runtime.starMesh.material.color.set(selected ? 0xff3344 : 0xffffff);
-                runtime.starMesh.material.size = selected ? 5 : 2;
-            }
-
-            if (runtime.lineMesh?.material) {
-                runtime.lineMesh.material.color.set(selected ? 0xff3344 : 0x00ff66);
-                runtime.lineMesh.material.opacity = selected ? 1 : 0.75;
-            }
-        }
-
         function selectConstellationV80(value, options = {}) {
             const id = ConstellationRegistryV80.normalizeId(value);
-            const previousId = ViewerStateV80.selectedConstellationId;
-
-            if (previousId && previousId !== id) {
-                setConstellationVisualSelectedV80(previousId, false);
-            }
-
+            clearSkySearchHighlight();
             ViewerStateV80.selectedConstellationId = id || null;
-
+            applyConstellationSelectionVisualsV101();
             if (!id) {
                 hideConstellationDescriptionV85();
                 hideSelectedConstellationGuidance();
@@ -6061,50 +6044,33 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 });
                 return false;
             }
-
-            setConstellationVisualSelectedV80(id, true);
-            clearSkySearchHighlight();
-
-            if (options.showComment) {
-                showConstellationDescriptionV85(id);
-            }
-
-            if (options.focus) {
-                focusCameraOnConstellation(id);
-            } else if (currentViewMode === 'ground') {
-                updateSelectedConstellationGuidance(true);
-            }
-
+            if (options.showComment) showConstellationDescriptionV85(id);
+            if (options.focus) focusCameraOnConstellation(id);
+            else if (currentViewMode === 'ground') updateSelectedConstellationGuidance(true);
             requestAnimationFrame(() => {
+                applyConstellationSelectionVisualsV101();
                 try { syncV2ConstellationPicker(); } catch (_) {}
             });
-
             return true;
         }
 
         window.selectConstellationV80 = selectConstellationV80;
 
-        function selectConstellationIntentV100(value, source = 'unknown') {
+        function selectConstellationIntent(value, source = 'unknown') {
             const id = ConstellationRegistryV80.normalizeId(value);
-            if (!id) return false;
-
-            let focus = currentViewMode === 'celestial';
-            if (currentViewMode === 'ground') {
+            if (!id || !getConstellationCenter(id)) return false;
+            let focus = false;
+            if (currentViewMode === 'celestial') focus = true;
+            else if (currentViewMode === 'ground') {
                 const viewState = getConstellationViewState(id, true);
-                // If the constellation is above the physical horizon, honor the
-                // user's "show me this" intent immediately. If it is below the
-                // horizon, keep the selection and let the guidance offer time/celestial actions.
-                focus = Boolean(viewState && viewState.altitudeDeg >= 0);
+                focus = Boolean(viewState && Number.isFinite(viewState.altitudeDeg) && viewState.altitudeDeg >= 0);
             }
-
-            return selectConstellationV80(id, {
-                focus,
-                showComment: true,
-                source
-            });
+            const selected = selectConstellationV80(id, { focus, showComment: true, source });
+            if (selected && currentViewMode === 'ground' && !focus) updateSelectedConstellationGuidance(true);
+            return selected;
         }
 
-        window.selectConstellationIntentV100 = selectConstellationIntentV100;
+        window.selectConstellationIntent = selectConstellationIntent;
 
         function constellationKeyFromId(value) {
             return ConstellationRegistryV80.normalizeId(value);
@@ -6343,38 +6309,33 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             );
         }
 
-        function focusCameraOnConstellation(constellation) {
-            const targetPosition = getConstellationCenter(constellation);
-            if (!targetPosition) return false;
+        function getConstellationWorldCenterV101(value) {
+            const local = getConstellationCenter(value);
+            if (!local) return null;
+            celestialGroup.updateMatrixWorld(true);
+            return local.clone().applyMatrix4(celestialGroup.matrixWorld);
+        }
 
+        function focusCameraOnConstellation(constellation) {
+            const targetPosition = getConstellationWorldCenterV101(constellation);
+            if (!targetPosition) return false;
+            const direction = targetPosition.clone().sub(camera.position).normalize();
             if (currentViewMode === 'ground') {
-                const direction = targetPosition.clone().sub(camera.position).normalize();
-                skyAltitude = Math.asin(
-                    THREE.MathUtils.clamp(direction.dot(observerUp), -1, 1)
-                );
-                const horizontal = direction.clone()
-                    .addScaledVector(observerUp, -direction.dot(observerUp));
+                skyAltitude = Math.asin(THREE.MathUtils.clamp(direction.dot(observerUp), -1, 1));
+                const horizontal = direction.clone().addScaledVector(observerUp, -direction.dot(observerUp));
                 if (horizontal.lengthSq() > 1e-10) {
                     horizontal.normalize();
-                    skyAzimuth = Math.atan2(
-                        horizontal.dot(observerEast),
-                        horizontal.dot(observerNorth)
-                    );
+                    skyAzimuth = Math.atan2(horizontal.dot(observerEast), horizontal.dot(observerNorth));
                 }
-                skyAltitude = THREE.MathUtils.clamp(
-                    skyAltitude,
-                    GROUND_MIN_ALTITUDE,
-                    GROUND_MAX_ALTITUDE
-                );
+                skyAltitude = THREE.MathUtils.clamp(skyAltitude, GROUND_MIN_ALTITUDE, GROUND_MAX_ALTITUDE);
                 applySkyCameraOrientation();
                 updateSkyStatus();
             } else if (currentViewMode === 'celestial') {
-                syncSkyAnglesFromDirection(targetPosition.clone().normalize());
+                syncSkyAnglesFromDirection(direction);
                 applySkyCameraOrientation();
-            } else {
-                return false;
-            }
+            } else return false;
             clearActiveViewPreset();
+            applyConstellationSelectionVisualsV101();
             return true;
         }
 
@@ -6732,32 +6693,24 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         }
 
         function getConstellationViewState(constellation, includeGroundAltitude = false) {
-            const target = getConstellationCenter(constellation);
+            const target = getConstellationWorldCenterV101(constellation);
             if (!target) return null;
-
-            // Screen visibility must always be measured from the active camera.
-            // Ground mode previously used observerPosition, which happens to match the ground camera,
-            // but celestial mode needs camera.position so the same test works while rotating the sky sphere.
             const direction = target.clone().sub(camera.position).normalize();
-
             let altitudeDeg = null;
             if (includeGroundAltitude) {
                 const groundDirection = target.clone().sub(observerPosition).normalize();
                 const altitudeRad = Math.asin(THREE.MathUtils.clamp(groundDirection.dot(observerUp), -1, 1));
                 altitudeDeg = THREE.MathUtils.radToDeg(altitudeRad);
             }
-
             camera.updateMatrixWorld(true);
             const cameraForward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion).normalize();
             const inFront = direction.dot(cameraForward) > 0;
             const projected = target.clone().project(camera);
             const onScreen = inFront && projected.x >= -0.96 && projected.x <= 0.96 && projected.y >= -0.94 && projected.y <= 0.94 && projected.z >= -1 && projected.z <= 1;
-
             const cameraRight = new THREE.Vector3(1, 0, 0).applyQuaternion(camera.quaternion).normalize();
             const cameraUpDirection = new THREE.Vector3(0, 1, 0).applyQuaternion(camera.quaternion).normalize();
             const sx = direction.dot(cameraRight);
             const sy = direction.dot(cameraUpDirection);
-
             return { target, direction, altitudeDeg, onScreen, sx, sy };
         }
 
