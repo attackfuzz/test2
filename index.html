@@ -2808,7 +2808,7 @@
 
         /* ===== V54 Search constellation -> center + default 3-line comment ===== */
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV106 {
+        #settingsVersionV107 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3176,7 +3176,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV106" aria-label="バージョン">V106</div>
+        <div id="settingsVersionV107" aria-label="バージョン">V107</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -7096,18 +7096,14 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         }
 
         function updateObserverFromSimulation() {
-            const previousLatitudeKeyV106 =
-                Number(observerLatitudeDeg).toFixed(4);
-            observerLatitudeDeg = THREE.MathUtils.clamp(Number(observerLatitudeDeg) || 0, -90, 90);
-            const nextLatitudeKeyV106 =
-                Number(observerLatitudeDeg).toFixed(4);
-            if (
-                previousLatitudeKeyV106 !== nextLatitudeKeyV106 &&
-                typeof constellationVisibilityEnvelopeCacheV106 !== 'undefined'
-            ) {
-                constellationVisibilityEnvelopeCacheV106.clear();
-            }
-            observerLongitudeDeg = normalizeLongitude(Number(observerLongitudeDeg) || 0);
+            observerLatitudeDeg = THREE.MathUtils.clamp(
+                Number(observerLatitudeDeg) || 0,
+                -90,
+                90
+            );
+            observerLongitudeDeg = normalizeLongitude(
+                Number(observerLongitudeDeg) || 0
+            );
             localSiderealDeg = calculateLocalSiderealTimeDeg(simulationUtcMs, observerLongitudeDeg);
 
             const latitude = THREE.MathUtils.degToRad(observerLatitudeDeg);
