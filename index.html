@@ -2808,7 +2808,7 @@
 
         /* ===== V54 Search constellation -> center + default 3-line comment ===== */
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV101 {
+        #settingsVersionV102 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3176,7 +3176,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV101" aria-label="バージョン">V101</div>
+        <div id="settingsVersionV102" aria-label="バージョン">V102</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -5424,19 +5424,33 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             return false;
         }
 
-        // One stable event surface for the whole popover.  This keeps close and
-        // candidate actions independent from repeated list rendering.
+        // One stable event surface for the whole popover.
+        // Pointer activation is handled on pointerup for BOTH close and candidate items.
+        // Click remains only as the keyboard / accessibility fallback.
+        let skyTapLastPointerActionAtV102 = -Infinity;
+
         skyTapPicker?.addEventListener('pointerdown', event => {
             event.stopPropagation();
         });
+
         skyTapPicker?.addEventListener('pointerup', event => {
-            if (event.target.closest('#skyTapPickerClose')) {
-                handleSkyTapPickerAction(event);
-            }
+            const actionable = event.target.closest(
+                '#skyTapPickerClose, .skyTapPickerItem[data-candidate-index]'
+            );
+            if (!actionable || !skyTapPicker.contains(actionable)) return;
+
+            skyTapLastPointerActionAtV102 = performance.now();
+            handleSkyTapPickerAction(event);
         });
+
         skyTapPicker?.addEventListener('click', event => {
-            // Close may already have been handled on pointerup. Re-closing is harmless;
-            // keyboard activation still reaches this click path.
+            // A normal pointer sequence can emit click after pointerup.
+            // Do not execute the same user intent twice.
+            if (performance.now() - skyTapLastPointerActionAtV102 < 500) {
+                event.preventDefault();
+                event.stopPropagation();
+                return;
+            }
             handleSkyTapPickerAction(event);
         });
 
@@ -8373,6 +8387,12 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                         state.textureReady = false;
                         state.textureMissing = true;
                         state.mesh.visible = false;
+                        if (!state.missingLoggedV102) {
+                            state.missingLoggedV102 = true;
+                            console.info(
+                                `Constellation artwork not found: ${textureUrl}`
+                            );
+                        }
                     });
 
                     return true;
@@ -8848,19 +8868,34 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                         baseAlign: Object.assign({}, cfg.align || {})
                     });
                 });
-                entries.forEach(state => buildEntry(state));
+                // Artwork states are registered first and loaded lazily.
+                // Do not build manifest artwork eagerly at startup.
 
                 // Final artwork registry:
-                // every constellation always has one deterministic artwork filename.
-                // No manifest list or directory scan is required.
-                function registerCanonicalArtworkV93() {
+                // every constellation always has one deterministic lowercase-ID artwork filename.
+                // No manifest list or directory scan is required for artwork discovery.
+                function registerCanonicalArtworkV102() {
                     Object.entries(CONSTELLATIONS_V2).forEach(([id, info]) => {
+                        const canonicalFile = `${id}.png`;
+
                         if (entries.has(id)) {
                             const state = entries.get(id);
+
+                            // The internal lowercase three-letter ID is the canonical
+                            // artwork identity and filename.
                             state.cfg.id = id;
                             state.cfg.iau = info.iau;
-                            state.cfg.file = `${info.iau}.png`;
+                            state.cfg.file = canonicalFile;
                             state.cfg.autoPlacement = true;
+
+                            // Do not carry an earlier failed/eager load state into the
+                            // canonical lazy-loading path.
+                            if (!state.mesh) {
+                                state.buildTried = false;
+                                state.textureMissing = false;
+                            }
+
+                            state.constellationKey = id;
                             return;
                         }
 
@@ -8870,7 +8905,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                             nameJa: info.ja,
                             fallbackKey: `${info.en} (${info.ja})`,
                             enabled: true,
-                            file: `${info.iau}.png`,
+                            file: canonicalFile,
                             autoPlacement: true,
                             imageWidth: 1024,
                             imageHeight: 1024,
@@ -8913,7 +8948,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                     });
                 }
 
-                registerCanonicalArtworkV93();
+                registerCanonicalArtworkV102();
                 const tick = () => {
                     entries.forEach(updateState);
                     requestAnimationFrame(tick);
