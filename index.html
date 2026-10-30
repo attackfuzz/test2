@@ -2808,7 +2808,7 @@
 
         /* ===== V54 Search constellation -> center + default 3-line comment ===== */
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV103 {
+        #settingsVersionV104 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3176,7 +3176,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV103" aria-label="バージョン">V103</div>
+        <div id="settingsVersionV104" aria-label="バージョン">V104</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -8866,13 +8866,20 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 // Final artwork registry:
                 // every constellation always has one deterministic artwork filename.
                 // No manifest list or directory scan is required.
+
+                function constellationArtworkFilenameV104(id) {
+                    const key = ConstellationRegistryV80.normalizeId(id);
+                    if (!key) return '';
+                    return `${key.charAt(0).toUpperCase()}${key.slice(1).toLowerCase()}.png`;
+                }
+
                 function registerCanonicalArtworkV93() {
                     Object.entries(CONSTELLATIONS_V2).forEach(([id, info]) => {
                         if (entries.has(id)) {
                             const state = entries.get(id);
                             state.cfg.id = id;
                             state.cfg.iau = info.iau;
-                            state.cfg.file = `${info.iau}.png`;
+                            state.cfg.file = constellationArtworkFilenameV104(id);
                             state.cfg.autoPlacement = true;
                             return;
                         }
@@ -8883,7 +8890,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                             nameJa: info.ja,
                             fallbackKey: `${info.en} (${info.ja})`,
                             enabled: true,
-                            file: `${info.iau}.png`,
+                            file: constellationArtworkFilenameV104(id),
                             autoPlacement: true,
                             imageWidth: 1024,
                             imageHeight: 1024,
