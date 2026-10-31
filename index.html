@@ -2808,7 +2808,7 @@
 
         /* ===== V54 Search constellation -> center + default 3-line comment ===== */
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV108 {
+        #settingsVersionV109 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3176,7 +3176,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV108" aria-label="バージョン">V108</div>
+        <div id="settingsVersionV109" aria-label="バージョン">V109</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -5404,23 +5404,105 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         }
 
         function handleSkyTapPickerAction(event) {
-            const closeButton = event.target.closest('#skyTapPickerClose');
-            if (closeButton && skyTapPicker?.contains(closeButton)) {
+            const closeButton =
+                event.target.closest('#skyTapPickerClose');
+
+            if (
+                closeButton &&
+                skyTapPicker?.contains(closeButton)
+            ) {
                 event.preventDefault();
                 event.stopPropagation();
                 closeSkyTapPicker();
                 return true;
             }
 
-            const itemButton = event.target.closest('.skyTapPickerItem[data-candidate-index]');
-            if (itemButton && skyTapPickerList?.contains(itemButton)) {
-                event.preventDefault();
-                event.stopPropagation();
-                const index = Number(itemButton.dataset.candidateIndex);
-                const candidate = skyTapPickerCandidatesV101[index];
-                if (candidate) selectSkyTapCandidate(candidate);
+            const itemButton = event.target.closest(
+                '.skyTapPickerItem'
+            );
+
+            if (
+                !itemButton ||
+                !skyTapPickerList?.contains(itemButton)
+            ) {
+                return false;
+            }
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            const type = itemButton.dataset.candidateType;
+
+            if (type === 'constellation') {
+                const id =
+                    ConstellationRegistryV80.normalizeId(
+                        itemButton.dataset.constellationId
+                    );
+
+                closeSkyTapPicker();
+
+                if (!id) return true;
+
+                try {
+                    selectConstellationIntent(
+                        id,
+                        'tap'
+                    );
+                } catch (error) {
+                    console.error(
+                        'Sky-tap constellation selection failed:',
+                        error
+                    );
+                }
+
                 return true;
             }
+
+            if (type === 'star') {
+                const starKey =
+                    itemButton.dataset.starKey || '';
+
+                const commentId =
+                    itemButton.dataset.commentId || '';
+
+                closeSkyTapPicker();
+
+                const hit =
+                    window.highlightSearchStar?.(starKey);
+
+                if (hit) {
+                    const starRecord =
+                        skyTapStarCandidates.find(
+                            item =>
+                                item.starName === starKey
+                        );
+
+                    const info =
+                        resolveConstellationLabelInfo(
+                            starRecord?.constellationId
+                        );
+
+                    const explained =
+                        skyTapExplainedStars.get(starKey);
+
+                    const title = info?.ja
+                        ? `${explained?.ja || starKey} / ${info.ja}`
+                        : (explained?.ja || starKey);
+
+                    const text =
+                        starBasicComments[commentId] ||
+                        'この星の基本コメントはまだ登録されていません。';
+
+                    showDescriptionTextV87(
+                        title,
+                        text,
+                        '星'
+                    );
+                }
+
+                return true;
+            }
+
             return false;
         }
 
@@ -5436,7 +5518,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
         skyTapPicker?.addEventListener('pointerup', event => {
             const actionable = event.target.closest(
-                '#skyTapPickerClose, .skyTapPickerItem[data-candidate-index]'
+                '#skyTapPickerClose, .skyTapPickerItem'
             );
             if (!actionable || !skyTapPicker.contains(actionable)) return;
 
@@ -5615,26 +5697,54 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
         function openSkyTapPicker(x, y) {
             if (!skyTapPicker || !skyTapPickerList) return;
-            skyTapPickerCandidatesV101 = getSkyTapCandidates(x, y);
-            const candidates = skyTapPickerCandidatesV101;
+
+            const candidates = getSkyTapCandidates(x, y);
+            skyTapPickerCandidatesV101 = candidates;
             skyTapPickerList.innerHTML = '';
 
             if (!candidates.length) {
                 const empty = document.createElement('div');
                 empty.className = 'skyTapPickerEmpty';
-                empty.textContent = 'この近くには、解説できる天体がありません。';
+                empty.textContent =
+                    'この近くには、解説できる天体がありません。';
                 skyTapPickerList.appendChild(empty);
             } else {
-                candidates.forEach((candidate, index) => {
+                candidates.forEach(candidate => {
                     const button = document.createElement('button');
                     button.type = 'button';
                     button.className = 'skyTapPickerItem';
-                    button.dataset.candidateIndex = String(index);
+                    button.dataset.candidateType = candidate.type;
+
+                    if (candidate.type === 'constellation') {
+                        const id =
+                            ConstellationRegistryV80.normalizeId(candidate.key);
+                        if (!id) return;
+                        button.dataset.constellationId = id;
+                    } else if (candidate.type === 'star') {
+                        button.dataset.starKey = String(candidate.key || '');
+                        button.dataset.commentId =
+                            String(candidate.commentId || '');
+                    }
+
                     button.innerHTML =
-                        `<span class="skyTapPickerIcon">${candidate.type === 'constellation' ? '◇' : '✦'}</span>` +
-                        `<span><span class="skyTapPickerName"></span><span class="skyTapPickerSub"></span></span>`;
-                    button.querySelector('.skyTapPickerName').textContent = candidate.name;
-                    button.querySelector('.skyTapPickerSub').textContent = candidate.sub;
+                        `<span class="skyTapPickerIcon">${
+                            candidate.type === 'constellation'
+                                ? '◇'
+                                : '✦'
+                        }</span>` +
+                        `<span>` +
+                        `<span class="skyTapPickerName"></span>` +
+                        `<span class="skyTapPickerSub"></span>` +
+                        `</span>`;
+
+                    button.querySelector(
+                        '.skyTapPickerName'
+                    ).textContent = candidate.name;
+
+                    button.querySelector(
+                        '.skyTapPickerSub'
+                    ).textContent = candidate.sub;
+
                     skyTapPickerList.appendChild(button);
                 });
             }
@@ -5643,21 +5753,56 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             skyTapPicker.setAttribute('aria-hidden', 'false');
 
             const margin = 10;
-            const pickerWidth = Math.min(270, window.innerWidth - 24);
-            let left = x + 12;
-            if (left + pickerWidth > window.innerWidth - margin) left = x - pickerWidth - 12;
-            left = Math.max(margin, Math.min(left, window.innerWidth - pickerWidth - margin));
+            const pickerWidth = Math.min(
+                270,
+                window.innerWidth - 24
+            );
 
-            // まず表示して実寸を測り、下段UIに被りにくい位置へ補正。
+            let left = x + 12;
+            if (left + pickerWidth > window.innerWidth - margin) {
+                left = x - pickerWidth - 12;
+            }
+
+            left = Math.max(
+                margin,
+                Math.min(
+                    left,
+                    window.innerWidth - pickerWidth - margin
+                )
+            );
+
             skyTapPicker.style.left = `${left}px`;
-            skyTapPicker.style.top = `${Math.max(margin, y + 12)}px`;
+            skyTapPicker.style.top =
+                `${Math.max(margin, y + 12)}px`;
+
             requestAnimationFrame(() => {
-                const rect = skyTapPicker.getBoundingClientRect();
-                const reservedBottom = Math.min(190, window.innerHeight * 0.28);
-                const maxBottom = window.innerHeight - reservedBottom;
+                const rect =
+                    skyTapPicker.getBoundingClientRect();
+
+                const reservedBottom = Math.min(
+                    190,
+                    window.innerHeight * 0.28
+                );
+
+                const maxBottom =
+                    window.innerHeight - reservedBottom;
+
                 let top = y + 12;
-                if (top + rect.height > maxBottom) top = y - rect.height - 12;
-                top = Math.max(margin, Math.min(top, window.innerHeight - rect.height - margin));
+
+                if (top + rect.height > maxBottom) {
+                    top = y - rect.height - 12;
+                }
+
+                top = Math.max(
+                    margin,
+                    Math.min(
+                        top,
+                        window.innerHeight -
+                            rect.height -
+                            margin
+                    )
+                );
+
                 skyTapPicker.style.top = `${top}px`;
             });
         }
@@ -6752,47 +6897,59 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         }
 
         let lastInvisibleTimeFailureV95 = null;
+        function getConstellationRiseStateV109(constellation) {
+            const id =
+                ConstellationRegistryV80.normalizeId(
+                    constellation
+                );
 
-        const constellationRiseCacheV108 = new Map();
-
-        function getConstellationRiseStateV108(constellation) {
-            const id = ConstellationRegistryV80.normalizeId(constellation);
             if (!id) return null;
 
-            const latitudeKey = Number(observerLatitudeDeg).toFixed(4);
-            const cacheKey = `${id}|${latitudeKey}`;
-            const cached = constellationRiseCacheV108.get(cacheKey);
-            if (cached) return cached;
-
-            const siderealDayMs =
-                23 * 60 * 60 * 1000 +
-                56 * 60 * 1000 +
-                4 * 1000;
-            const stepMs = 10 * 60 * 1000;
-
-            let maxAltitudeDeg = -90;
-
-            for (let dt = 0; dt <= siderealDayMs; dt += stepMs) {
-                const altitudeDeg = getConstellationAltitudeAtUtc(
-                    id,
-                    simulationUtcMs + dt
-                );
-                if (!Number.isFinite(altitudeDeg)) continue;
-                if (altitudeDeg > maxAltitudeDeg) {
-                    maxAltitudeDeg = altitudeDeg;
-                }
+            const center = getConstellationCenter(id);
+            if (!center || center.lengthSq() < 1e-12) {
+                return null;
             }
 
-            const result = {
-                id,
-                maxAltitudeDeg,
-                everRises: maxAltitudeDeg > 0,
-                reachesRecommendedAltitude:
-                    maxAltitudeDeg >= CONSTELLATION_VISIBLE_ALTITUDE_DEG
-            };
+            const direction =
+                center.clone().normalize();
 
-            constellationRiseCacheV108.set(cacheKey, result);
-            return result;
+            // In this viewer's celestial coordinate system,
+            // +Y is celestial north, so declination is asin(Y).
+            const declinationDeg =
+                THREE.MathUtils.radToDeg(
+                    Math.asin(
+                        THREE.MathUtils.clamp(
+                            direction.y,
+                            -1,
+                            1
+                        )
+                    )
+                );
+
+            const latitudeDeg =
+                THREE.MathUtils.clamp(
+                    Number(observerLatitudeDeg) || 0,
+                    -90,
+                    90
+                );
+
+            const maxAltitudeDeg =
+                90 -
+                Math.abs(
+                    latitudeDeg -
+                    declinationDeg
+                );
+
+            return {
+                id,
+                declinationDeg,
+                maxAltitudeDeg,
+                everRises:
+                    maxAltitudeDeg > 0,
+                reachesRecommendedAltitude:
+                    maxAltitudeDeg >=
+                    CONSTELLATION_VISIBLE_ALTITUDE_DEG
+            };
         }
 
         function updateSelectedConstellationGuidance(force = false) {
@@ -6833,7 +6990,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             ) {
                 constellationEdgeIndicator.classList.remove('visible');
 
-                const riseState = getConstellationRiseStateV108(selected);
+                const riseState = getConstellationRiseStateV109(selected);
 
                 if (riseState && !riseState.everRises) {
                     constellationGuidanceMessage.textContent =
