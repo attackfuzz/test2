@@ -2808,7 +2808,7 @@
 
         /* ===== V54 Search constellation -> center + default 3-line comment ===== */
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV109 {
+        #settingsVersionV110 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3176,7 +3176,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV109" aria-label="バージョン">V109</div>
+        <div id="settingsVersionV110" aria-label="バージョン">V110</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -5444,7 +5444,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 if (!id) return true;
 
                 try {
-                    selectConstellationIntent(
+                    window.selectConstellationIntent?.(
                         id,
                         'tap'
                     );
@@ -5517,16 +5517,21 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         });
 
         skyTapPicker?.addEventListener('pointerup', event => {
-            const actionable = event.target.closest(
-                '#skyTapPickerClose, .skyTapPickerItem'
-            );
-            if (!actionable || !skyTapPicker.contains(actionable)) return;
+            const closeButton = event.target.closest('#skyTapPickerClose');
+            if (!closeButton || !skyTapPicker.contains(closeButton)) return;
 
             skyTapLastPointerActionAtV103 = performance.now();
             handleSkyTapPickerAction(event);
         });
 
         skyTapPicker?.addEventListener('click', event => {
+            // Constellation candidate buttons own their click command directly.
+            // Delegation remains for close and non-constellation candidates.
+            const constellationButton = event.target.closest(
+                '.skyTapPickerItem[data-candidate-type="constellation"]'
+            );
+            if (constellationButton) return;
+
             if (performance.now() - skyTapLastPointerActionAtV103 < 500) {
                 event.preventDefault();
                 event.stopPropagation();
@@ -5668,7 +5673,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
             if (candidate.type === 'constellation') {
                 try {
-                    selectConstellationIntent(candidate.key, 'tap');
+                    window.selectConstellationIntent?.(candidate.key, 'tap');
                 } catch (error) {
                     console.error('Sky-tap constellation selection failed:', error);
                 }
@@ -5720,6 +5725,14 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                             ConstellationRegistryV80.normalizeId(candidate.key);
                         if (!id) return;
                         button.dataset.constellationId = id;
+
+                        // Use the exact same public command surface as Search.
+                        button.addEventListener('click', event => {
+                            event.preventDefault();
+                            event.stopPropagation();
+                            closeSkyTapPicker();
+                            window.selectConstellationIntent?.(id, 'tap');
+                        });
                     } else if (candidate.type === 'star') {
                         button.dataset.starKey = String(candidate.key || '');
                         button.dataset.commentId =
