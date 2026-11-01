@@ -2808,7 +2808,7 @@
 
         /* ===== V54 Search constellation -> center + default 3-line comment ===== */
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV118 {
+        #settingsVersionV119 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3176,7 +3176,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV118" aria-label="バージョン">V118</div>
+        <div id="settingsVersionV119" aria-label="バージョン">V119</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -7147,6 +7147,13 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             const now = performance.now();
 
             if (
+                now <
+                visibleTimeDiagnosticUntilV119
+            ) {
+                return;
+            }
+
+            if (
                 !force &&
                 now - lastConstellationGuidanceUpdate < 120
             ) {
@@ -7352,12 +7359,53 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
         const CONSTELLATION_VISIBLE_TIME_ALTITUDE_DEG_V116 = 2.0;
 
+        let visibleTimeDiagnosticUntilV119 = 0;
+
+        function formatVisibleTimeDiagnosticDateV119(utcMs) {
+            const parts =
+                getZonedParts(
+                    new Date(utcMs),
+                    observerTimeZone
+                );
+
+            return [
+                String(parts.year).padStart(4, '0'),
+                '/',
+                String(parts.month).padStart(2, '0'),
+                '/',
+                String(parts.day).padStart(2, '0'),
+                ' ',
+                String(parts.hour).padStart(2, '0'),
+                ':',
+                String(parts.minute).padStart(2, '0')
+            ].join('');
+        }
+
+        function showVisibleTimeDiagnosticV119(message) {
+            ensureSelectedConstellationGuidanceUi();
+
+            constellationGuidanceMessage.textContent =
+                message;
+
+            constellationGuidanceRibbon.classList.add(
+                'visible'
+            );
+
+            visibleTimeDiagnosticUntilV119 =
+                performance.now() + 3000;
+        }
+
+
         function findNextVisibleConstellationTime(constellation, startUtcMs) {
             const targetAltitudeDeg =
                 CONSTELLATION_VISIBLE_TIME_ALTITUDE_DEG_V116;
 
-            const coarseStepMs = 10 * 60 * 1000;
-            const fineStepMs = 60 * 1000;
+            const coarseStepMs =
+                10 * 60 * 1000;
+
+            const fineStepMs =
+                60 * 1000;
+
             const siderealDayMs =
                 23 * 60 * 60 * 1000 +
                 56 * 60 * 1000 +
@@ -7368,41 +7416,85 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 siderealDayMs +
                 coarseStepMs;
 
-            let previous = startUtcMs;
+            let previous =
+                startUtcMs;
+
+            let maxAltitudeDeg =
+                -90;
+
+            let maxAltitudeUtcMs =
+                startUtcMs;
 
             for (
-                let t = startUtcMs + coarseStepMs;
+                let t =
+                    startUtcMs + coarseStepMs;
                 t <= endUtcMs;
                 t += coarseStepMs
             ) {
-                if (
+                const altitudeDeg =
                     getConstellationAltitudeAtUtc(
                         constellation,
                         t
-                    ) >= targetAltitudeDeg
+                    );
+
+                if (
+                    Number.isFinite(altitudeDeg) &&
+                    altitudeDeg > maxAltitudeDeg
+                ) {
+                    maxAltitudeDeg =
+                        altitudeDeg;
+
+                    maxAltitudeUtcMs =
+                        t;
+                }
+
+                if (
+                    altitudeDeg >=
+                    targetAltitudeDeg
                 ) {
                     for (
-                        let fine = previous + fineStepMs;
+                        let fine =
+                            previous + fineStepMs;
                         fine <= t;
                         fine += fineStepMs
                     ) {
-                        if (
+                        const fineAltitudeDeg =
                             getConstellationAltitudeAtUtc(
                                 constellation,
                                 fine
-                            ) >= targetAltitudeDeg
+                            );
+
+                        if (
+                            fineAltitudeDeg >=
+                            targetAltitudeDeg
                         ) {
-                            return fine;
+                            return {
+                                utcMs: fine,
+                                altitudeDeg:
+                                    fineAltitudeDeg,
+                                maxAltitudeDeg,
+                                maxAltitudeUtcMs
+                            };
                         }
                     }
 
-                    return t;
+                    return {
+                        utcMs: t,
+                        altitudeDeg,
+                        maxAltitudeDeg,
+                        maxAltitudeUtcMs
+                    };
                 }
 
                 previous = t;
             }
 
-            return null;
+            return {
+                utcMs: null,
+                altitudeDeg: null,
+                maxAltitudeDeg,
+                maxAltitudeUtcMs
+            };
         }
 
         function moveSelectedConstellationToNextVisibleTime(constellation) {
@@ -7411,58 +7503,90 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                     constellation
                 );
 
-            if (!id || !getConstellationCenter(id)) {
+            if (
+                !id ||
+                !getConstellationCenter(id)
+            ) {
+                showVisibleTimeDiagnosticV119(
+                    '診断: 星座ID/中心取得で停止'
+                );
                 return false;
             }
 
             cancelCameraAnimation();
 
-            const nextUtcMs =
+            const result =
                 findNextVisibleConstellationTime(
                     id,
                     simulationUtcMs
                 );
 
-            if (nextUtcMs == null) {
-                ensureSelectedConstellationGuidanceUi();
+            if (
+                !result ||
+                result.utcMs == null
+            ) {
+                const maxAlt =
+                    Number.isFinite(
+                        result?.maxAltitudeDeg
+                    )
+                        ? result.maxAltitudeDeg.toFixed(1)
+                        : '計算不能';
 
-                const name =
-                    selectedConstellationDisplayName(
-                        id
-                    );
+                const maxTime =
+                    Number.isFinite(
+                        result?.maxAltitudeUtcMs
+                    )
+                        ? formatVisibleTimeDiagnosticDateV119(
+                            result.maxAltitudeUtcMs
+                        )
+                        : '不明';
 
-                constellationGuidanceMessage.textContent =
-                    `⚠️ ${name}は現在の観測地点では地平線上に出る時刻が見つかりません`;
-
-                showGuidanceActionsV95([
-                    'celestial'
-                ]);
-
-                constellationGuidanceRibbon.classList.add(
-                    'visible'
+                showVisibleTimeDiagnosticV119(
+                    `診断: 時刻探索NG / 24h最高高度 ${maxAlt}° / ${maxTime}`
                 );
 
                 return false;
             }
 
+            showVisibleTimeDiagnosticV119(
+                `診断: 時刻探索OK / ${formatVisibleTimeDiagnosticDateV119(result.utcMs)} / 高度 ${result.altitudeDeg.toFixed(1)}°`
+            );
+
             const timeChanged =
                 ViewerSettings.setUtcTime(
-                    nextUtcMs
+                    result.utcMs
                 );
 
             if (!timeChanged) {
+                showVisibleTimeDiagnosticV119(
+                    '診断: setUtcTime が false を返しました'
+                );
                 return false;
             }
 
             updateQuickTimeDisplay();
 
-            return viewConstellation(
-                id,
-                {
-                    source: 'visible-time',
-                    forceFocus: true
-                }
+            const moved =
+                viewConstellation(
+                    id,
+                    {
+                        source: 'visible-time',
+                        forceFocus: true
+                    }
+                );
+
+            if (!moved) {
+                showVisibleTimeDiagnosticV119(
+                    '診断: 時刻変更成功 / viewConstellation が false'
+                );
+                return false;
+            }
+
+            showVisibleTimeDiagnosticV119(
+                `診断: 完了 / ${formatVisibleTimeDiagnosticDateV119(simulationUtcMs)}`
             );
+
+            return true;
         }
 
         function showSelectedConstellationInCelestialMode(constellation) {
