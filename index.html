@@ -2808,7 +2808,7 @@
 
         /* ===== V54 Search constellation -> center + default 3-line comment ===== */
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV117 {
+        #settingsVersionV118 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3176,7 +3176,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV117" aria-label="バージョン">V117</div>
+        <div id="settingsVersionV118" aria-label="バージョン">V118</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -7145,12 +7145,14 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             ensureSelectedConstellationGuidanceUi();
 
             const now = performance.now();
+
             if (
                 !force &&
                 now - lastConstellationGuidanceUpdate < 120
             ) {
                 return;
             }
+
             lastConstellationGuidanceUpdate = now;
 
             const selected =
@@ -7175,7 +7177,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             const state =
                 getConstellationViewState(
                     selected,
-                    currentViewMode === 'ground'
+                    false
                 );
 
             if (!state) {
@@ -7183,14 +7185,26 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 return;
             }
 
-            const name =
-                selectedConstellationDisplayName(selected);
+            const observation =
+                currentViewMode === 'ground'
+                    ? getConstellationObservationAtUtc(
+                        selected,
+                        simulationUtcMs
+                    )
+                    : null;
 
-            // Ground mode: below the physical horizon.
+            const name =
+                selectedConstellationDisplayName(
+                    selected
+                );
+
             if (
                 currentViewMode === 'ground' &&
-                Number.isFinite(state.altitudeDeg) &&
-                state.altitudeDeg <= 0
+                observation &&
+                Number.isFinite(
+                    observation.altitudeDeg
+                ) &&
+                observation.altitudeDeg <= 0
             ) {
                 constellationEdgeIndicator.classList.remove(
                     'visible'
@@ -7207,6 +7221,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 constellationGuidanceRibbon.classList.add(
                     'visible'
                 );
+
                 return;
             }
 
@@ -7215,7 +7230,6 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 return;
             }
 
-            // Above the horizon but outside the current camera view.
             const edgeInfo =
                 getEdgeIndicatorInfo(
                     state.sx,
@@ -7235,28 +7249,103 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             constellationGuidanceMessage.textContent =
                 `⚠️ ${name}は画面外です ⚠️`;
 
-            showGuidanceActionsV95(['focus']);
+            showGuidanceActionsV95([
+                'focus'
+            ]);
 
             constellationGuidanceRibbon.classList.add(
                 'visible'
             );
         }
 
-        function getConstellationAltitudeAtUtc(constellation, utcMs) {
-            const target = getConstellationCenter(constellation);
-            if (!target) return -90;
+        function getConstellationObservationAtUtc(constellation, utcMs) {
+            const id =
+                ConstellationRegistryV80.normalizeId(
+                    constellation
+                );
 
-            const latitude = THREE.MathUtils.degToRad(observerLatitudeDeg);
-            const sidereal = THREE.MathUtils.degToRad(calculateLocalSiderealTimeDeg(utcMs, observerLongitudeDeg));
+            if (!id || !Number.isFinite(utcMs)) {
+                return null;
+            }
+
+            const localCenter =
+                getConstellationCenter(id);
+
+            if (!localCenter) {
+                return null;
+            }
+
+            // Use the same world transform as the renderer/navigation path.
+            celestialGroup.updateMatrixWorld(true);
+
+            const target =
+                localCenter.clone().applyMatrix4(
+                    celestialGroup.matrixWorld
+                );
+
+            const latitude =
+                THREE.MathUtils.degToRad(
+                    observerLatitudeDeg
+                );
+
+            const sidereal =
+                THREE.MathUtils.degToRad(
+                    calculateLocalSiderealTimeDeg(
+                        utcMs,
+                        observerLongitudeDeg
+                    )
+                );
+
             const sinLat = Math.sin(latitude);
             const cosLat = Math.cos(latitude);
             const sinLst = Math.sin(sidereal);
             const cosLst = Math.cos(sidereal);
 
-            const up = new THREE.Vector3(cosLat * cosLst, sinLat, -cosLat * sinLst).normalize();
-            const observer = up.clone().multiplyScalar(EARTH_RADIUS + OBSERVER_HEIGHT);
-            const direction = target.clone().sub(observer).normalize();
-            return THREE.MathUtils.radToDeg(Math.asin(THREE.MathUtils.clamp(direction.dot(up), -1, 1)));
+            const up =
+                new THREE.Vector3(
+                    cosLat * cosLst,
+                    sinLat,
+                    -cosLat * sinLst
+                ).normalize();
+
+            const observer =
+                up.clone().multiplyScalar(
+                    EARTH_RADIUS + OBSERVER_HEIGHT
+                );
+
+            const direction =
+                target.clone()
+                    .sub(observer)
+                    .normalize();
+
+            const altitudeDeg =
+                THREE.MathUtils.radToDeg(
+                    Math.asin(
+                        THREE.MathUtils.clamp(
+                            direction.dot(up),
+                            -1,
+                            1
+                        )
+                    )
+                );
+
+            return {
+                id,
+                utcMs,
+                altitudeDeg,
+                aboveHorizon:
+                    altitudeDeg > 0
+            };
+        }
+
+        function getConstellationAltitudeAtUtc(constellation, utcMs) {
+            return (
+                getConstellationObservationAtUtc(
+                    constellation,
+                    utcMs
+                )?.altitudeDeg ??
+                -90
+            );
         }
 
         const CONSTELLATION_HORIZON_TARGET_DEG_V114 = 1.0;
@@ -7322,10 +7411,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                     constellation
                 );
 
-            if (
-                !id ||
-                !getConstellationCenter(id)
-            ) {
+            if (!id || !getConstellationCenter(id)) {
                 return false;
             }
 
@@ -7341,10 +7427,12 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 ensureSelectedConstellationGuidanceUi();
 
                 const name =
-                    selectedConstellationDisplayName(id);
+                    selectedConstellationDisplayName(
+                        id
+                    );
 
                 constellationGuidanceMessage.textContent =
-                    `⚠️ ${name}は現在の観測地点では地平線上に出ません`;
+                    `⚠️ ${name}は現在の観測地点では地平線上に出る時刻が見つかりません`;
 
                 showGuidanceActionsV95([
                     'celestial'
