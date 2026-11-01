@@ -2824,7 +2824,7 @@
 
         /* ===== V54 Search constellation -> center + default 3-line comment ===== */
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV122 {
+        #settingsVersionV123 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3192,7 +3192,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV122" aria-label="バージョン">V122</div>
+        <div id="settingsVersionV123" aria-label="バージョン">V123</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -7425,8 +7425,6 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
         const CONSTELLATION_VISIBLE_TIME_ALTITUDE_DEG_V116 = 2.0;
 
-        let visibleTimeDebugTimerV121 = null;
-
         function showVisibleTimeDebugV121(message) {
             let box =
                 document.getElementById(
@@ -7451,15 +7449,18 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             box.hidden =
                 false;
 
-            if (visibleTimeDebugTimerV121) {
+            // Diagnostic state lives on window so there is no temporal
+            // dead-zone / script-order dependency.
+            if (window.visibleTimeDebugTimerV121) {
                 clearTimeout(
-                    visibleTimeDebugTimerV121
+                    window.visibleTimeDebugTimerV121
                 );
             }
 
-            visibleTimeDebugTimerV121 =
+            window.visibleTimeDebugTimerV121 =
                 setTimeout(() => {
                     box.hidden = true;
+                    window.visibleTimeDebugTimerV121 = null;
                 }, 6000);
         }
 
