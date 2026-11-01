@@ -2808,7 +2808,7 @@
 
         /* ===== V54 Search constellation -> center + default 3-line comment ===== */
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV111 {
+        #settingsVersionV112 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3176,7 +3176,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV111" aria-label="バージョン">V111</div>
+        <div id="settingsVersionV112" aria-label="バージョン">V112</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -6988,8 +6988,6 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 return;
             }
 
-            // During an active camera animation, do not flash an
-            // off-screen warning from an intermediate camera pose.
             if (cameraAnimation) {
                 hideSelectedConstellationGuidance();
                 return;
@@ -6998,7 +6996,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             const state =
                 getConstellationViewState(
                     selected,
-                    false
+                    currentViewMode === 'ground'
                 );
 
             if (!state) {
@@ -7006,17 +7004,39 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 return;
             }
 
-            // V111 scope:
-            // only answer one question:
-            // "Is the selected constellation inside the current view?"
+            const name =
+                selectedConstellationDisplayName(selected);
+
+            // Ground mode: below the physical horizon.
+            if (
+                currentViewMode === 'ground' &&
+                Number.isFinite(state.altitudeDeg) &&
+                state.altitudeDeg <= 0
+            ) {
+                constellationEdgeIndicator.classList.remove(
+                    'visible'
+                );
+
+                constellationGuidanceMessage.textContent =
+                    `⚠️ 現在、${name}は地平線の下にあります ⚠️`;
+
+                showGuidanceActionsV95([
+                    'visible-time',
+                    'celestial'
+                ]);
+
+                constellationGuidanceRibbon.classList.add(
+                    'visible'
+                );
+                return;
+            }
+
             if (state.onScreen) {
                 hideSelectedConstellationGuidance();
                 return;
             }
 
-            const name =
-                selectedConstellationDisplayName(selected);
-
+            // Above the horizon but outside the current camera view.
             const edgeInfo =
                 getEdgeIndicatorInfo(
                     state.sx,
@@ -7099,43 +7119,63 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         }
 
         function moveSelectedConstellationToNextVisibleTime(constellation) {
-            // Guidance actions are direct navigation commands.  Any camera animation left by a
-            // previous operation can otherwise overwrite the new observer/camera state on its
-            // next animation frame, so stop it before changing time.
             cancelCameraAnimation();
-            const nextUtcMs = findNextVisibleConstellationTime(constellation, simulationUtcMs);
+
+            const nextUtcMs =
+                findNextVisibleConstellationTime(
+                    constellation,
+                    simulationUtcMs
+                );
+
             if (nextUtcMs == null) {
-                lastInvisibleTimeFailureV95 = {
-                    id: constellation,
-                    latitude: observerLatitudeDeg,
-                    longitude: observerLongitudeDeg
-                };
                 ensureSelectedConstellationGuidanceUi();
-                const name = selectedConstellationDisplayName(constellation);
-                constellationGuidanceMessage.textContent = `⚠️ ${name}は、この観測地点では高度${CONSTELLATION_VISIBLE_ALTITUDE_DEG}°以上になる時刻が見つかりませんでした`;
-                showGuidanceActionsV95(['celestial']);
-                constellationGuidanceRibbon.classList.add('visible');
+
+                const name =
+                    selectedConstellationDisplayName(
+                        constellation
+                    );
+
+                constellationGuidanceMessage.textContent =
+                    `⚠️ ${name}は、この観測地点では高度${CONSTELLATION_VISIBLE_ALTITUDE_DEG}°以上になる時刻が見つかりませんでした`;
+
+                showGuidanceActionsV95([
+                    'celestial'
+                ]);
+
+                constellationGuidanceRibbon.classList.add(
+                    'visible'
+                );
                 return false;
             }
 
-            lastInvisibleTimeFailureV95 = null;
             pauseTimePlayback();
+
+            // 1. Change simulation time.
             simulationUtcMs = nextUtcMs;
 
-            // Rebuild the observer basis first, then put the ground camera at that new observer
-            // position before asking it to face the selected constellation.
+            // 2. Rebuild observer position/orientation for that time.
             updateObserverFromSimulation();
-            if (currentViewMode !== 'ground') applyViewPreset('ground', false);
-            else applySkyCameraOrientation();
+
+            // 3. Keep the user in ground mode.
+            if (currentViewMode !== 'ground') {
+                applyViewPreset('ground', false);
+            } else {
+                applySkyCameraOrientation();
+            }
+
             updateQuickTimeDisplay();
+
+            // 4. Move the camera to the selected constellation.
             focusCameraOnConstellation(constellation);
 
-            // The target should now be on screen.  Re-evaluate on the next frames instead of
-            // relying on an old cached state/ribbon.
-            hideSelectedConstellationGuidance();
+            hideSelectedConstellationGuidance(true);
+
             requestAnimationFrame(() => {
-                requestAnimationFrame(() => updateSelectedConstellationGuidance(true));
+                requestAnimationFrame(() => {
+                    updateSelectedConstellationGuidance(true);
+                });
             });
+
             return true;
         }
 
