@@ -2808,7 +2808,7 @@
 
         /* ===== V54 Search constellation -> center + default 3-line comment ===== */
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV110 {
+        #settingsVersionV111 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3176,7 +3176,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV110" aria-label="バージョン">V110</div>
+        <div id="settingsVersionV111" aria-label="バージョン">V111</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -6852,13 +6852,10 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 return showSelectedConstellationInCelestialMode(id);
             }
             if (action === 'focus') {
-                hideSelectedConstellationGuidance(true);
-                focusCameraOnConstellation(id);
-                setTimeout(
-                    () => updateSelectedConstellationGuidance(true),
-                    VIEW_TRANSITION_DURATION + 100
-                );
-                return true;
+                // V111: display-only button.
+                // Actual camera navigation is intentionally deferred
+                // to the next test version.
+                return false;
             }
             return false;
         }
@@ -6967,92 +6964,83 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
         function updateSelectedConstellationGuidance(force = false) {
             ensureSelectedConstellationGuidanceUi();
+
             const now = performance.now();
-            if (!force && now - lastConstellationGuidanceUpdate < 120) return;
+            if (
+                !force &&
+                now - lastConstellationGuidanceUpdate < 120
+            ) {
+                return;
+            }
             lastConstellationGuidanceUpdate = now;
 
-            const selected = ViewerStateV80.selectedConstellationId;
+            const selected =
+                ViewerStateV80.selectedConstellationId;
+
             if (
                 !selected ||
-                (currentViewMode !== 'ground' && currentViewMode !== 'celestial')
+                (
+                    currentViewMode !== 'ground' &&
+                    currentViewMode !== 'celestial'
+                )
             ) {
                 hideSelectedConstellationGuidance();
                 return;
             }
 
-            if (currentViewMode === 'celestial' && cameraAnimation) {
+            // During an active camera animation, do not flash an
+            // off-screen warning from an intermediate camera pose.
+            if (cameraAnimation) {
                 hideSelectedConstellationGuidance();
                 return;
             }
 
-            const state = getConstellationViewState(
-                selected,
-                currentViewMode === 'ground'
-            );
+            const state =
+                getConstellationViewState(
+                    selected,
+                    false
+                );
+
             if (!state) {
                 hideSelectedConstellationGuidance();
                 return;
             }
 
-            const name = selectedConstellationDisplayName(selected);
-
-            if (
-                currentViewMode === 'ground' &&
-                Number.isFinite(state.altitudeDeg) &&
-                state.altitudeDeg <= 0
-            ) {
-                constellationEdgeIndicator.classList.remove('visible');
-
-                const riseState = getConstellationRiseStateV109(selected);
-
-                if (riseState && !riseState.everRises) {
-                    constellationGuidanceMessage.textContent =
-                        `⚠️ ${name}は現在の観測地点からは見えません ⚠️`;
-                    showGuidanceActionsV95(['celestial']);
-                    constellationGuidanceRibbon.classList.add('visible');
-                    return;
-                }
-
-                if (
-                    riseState &&
-                    !riseState.reachesRecommendedAltitude
-                ) {
-                    constellationGuidanceMessage.textContent =
-                        `⚠️ ${name}は地平線上には出ますが、この観測地点では高度${CONSTELLATION_VISIBLE_ALTITUDE_DEG}°以上になりません`;
-                    showGuidanceActionsV95(['celestial']);
-                    constellationGuidanceRibbon.classList.add('visible');
-                    return;
-                }
-
-                constellationGuidanceMessage.textContent =
-                    `⚠️ 現在、${name}は地平線の下にあります ⚠️`;
-                showGuidanceActionsV95([
-                    'visible-time',
-                    'celestial'
-                ]);
-                constellationGuidanceRibbon.classList.add('visible');
-                return;
-            }
-
+            // V111 scope:
+            // only answer one question:
+            // "Is the selected constellation inside the current view?"
             if (state.onScreen) {
                 hideSelectedConstellationGuidance();
                 return;
             }
 
-            const edgeInfo = getEdgeIndicatorInfo(state.sx, state.sy);
-            constellationEdgeIndicator.dataset.edge = edgeInfo.edge;
-            const edgeText = `${edgeInfo.arrow} ${name}`;
-            if (constellationEdgeIndicator.textContent !== edgeText) {
-                constellationEdgeIndicator.textContent = edgeText;
-            }
-            constellationEdgeIndicator.classList.add('visible');
+            const name =
+                selectedConstellationDisplayName(selected);
 
-            const message = `⚠️ ${name}は画面外にあります ⚠️`;
-            if (constellationGuidanceMessage.textContent !== message) {
-                constellationGuidanceMessage.textContent = message;
-            }
+            const edgeInfo =
+                getEdgeIndicatorInfo(
+                    state.sx,
+                    state.sy
+                );
+
+            constellationEdgeIndicator.dataset.edge =
+                edgeInfo.edge;
+
+            constellationEdgeIndicator.textContent =
+                `${edgeInfo.arrow} ${name}`;
+
+            constellationEdgeIndicator.classList.add(
+                'visible'
+            );
+
+            constellationGuidanceMessage.textContent =
+                `⚠️ ${name}は画面外です ⚠️`;
+
             showGuidanceActionsV95(['focus']);
-            constellationGuidanceRibbon.classList.add('visible');
+
+            constellationGuidanceRibbon.classList.add(
+                'visible'
+            );
         }
 
         function getConstellationAltitudeAtUtc(constellation, utcMs) {
