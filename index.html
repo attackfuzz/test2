@@ -2544,7 +2544,7 @@
             left: 12px;
             right: 12px;
             top: 12px;
-            z-index: 99999;
+            z-index: 90000;
             padding: 10px 12px;
             border-radius: 10px;
             background: rgba(120, 0, 0, 0.94);
@@ -2824,7 +2824,7 @@
 
         /* ===== V54 Search constellation -> center + default 3-line comment ===== */
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV123 {
+        #settingsVersionV124 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3192,7 +3192,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV123" aria-label="バージョン">V123</div>
+        <div id="settingsVersionV124" aria-label="バージョン">V124</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -4505,6 +4505,125 @@
     <script src="starline.js"></script>
     <script src="background_stars.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+
+    <script id="earlyRuntimeMonitorV124">
+    (function () {
+        window.__earlyRuntimeErrorsV124 =
+            window.__earlyRuntimeErrorsV124 || [];
+
+        window.__showEarlyRuntimeErrorV124 =
+            function (message) {
+                var box =
+                    document.getElementById(
+                        'earlyRuntimeErrorV124'
+                    );
+
+                if (!box) {
+                    box =
+                        document.createElement('div');
+
+                    box.id =
+                        'earlyRuntimeErrorV124';
+
+                    box.style.position = 'fixed';
+                    box.style.left = '12px';
+                    box.style.right = '12px';
+                    box.style.top = '12px';
+                    box.style.zIndex = '1000000';
+                    box.style.padding = '12px';
+                    box.style.borderRadius = '12px';
+                    box.style.background = 'rgba(120,0,0,.96)';
+                    box.style.color = '#fff';
+                    box.style.font =
+                        '700 14px/1.45 system-ui,sans-serif';
+                    box.style.whiteSpace = 'pre-wrap';
+                    box.style.pointerEvents = 'none';
+
+                    document.documentElement.appendChild(
+                        box
+                    );
+                }
+
+                box.textContent =
+                    message;
+            };
+
+        window.addEventListener(
+            'error',
+            function (event) {
+                var text =
+                    '起動時例外\n' +
+                    (event.error &&
+                     event.error.name
+                        ? event.error.name + ': '
+                        : '') +
+                    (
+                        event.message ||
+                        (
+                            event.error &&
+                            event.error.message
+                        ) ||
+                        'unknown error'
+                    ) +
+                    '\n' +
+                    (
+                        event.filename
+                            ? event.filename +
+                              ':' +
+                              event.lineno +
+                              ':' +
+                              event.colno
+                            : ''
+                    );
+
+                window.__earlyRuntimeErrorsV124.push(
+                    text
+                );
+
+                window.__showEarlyRuntimeErrorV124(
+                    window.__earlyRuntimeErrorsV124.join(
+                        '\n---\n'
+                    )
+                );
+            },
+            true
+        );
+
+        window.addEventListener(
+            'unhandledrejection',
+            function (event) {
+                var reason =
+                    event.reason;
+
+                var text =
+                    '起動時Promise例外\n' +
+                    (
+                        reason &&
+                        reason.name
+                            ? reason.name + ': '
+                            : ''
+                    ) +
+                    (
+                        reason &&
+                        reason.message
+                            ? reason.message
+                            : String(reason)
+                    );
+
+                window.__earlyRuntimeErrorsV124.push(
+                    text
+                );
+
+                window.__showEarlyRuntimeErrorV124(
+                    window.__earlyRuntimeErrorsV124.join(
+                        '\n---\n'
+                    )
+                );
+            }
+        );
+    })();
+    </script>
+
     <script>
         'use strict';
 
