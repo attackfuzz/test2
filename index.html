@@ -2808,7 +2808,7 @@
 
         /* ===== V54 Search constellation -> center + default 3-line comment ===== */
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV116 {
+        #settingsVersionV117 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3176,7 +3176,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV116" aria-label="バージョン">V116</div>
+        <div id="settingsVersionV117" aria-label="バージョン">V117</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -4883,9 +4883,9 @@
             // Settings V2 handles the settings button independently.
 
             bindTapAction(quickNow, () => {
-                pauseTimePlayback();
-                simulationUtcMs = Date.now();
-                updateObserverFromSimulation();
+                ViewerSettings.setUtcTime(
+                    Date.now()
+                );
             });
             bindTapAction(quickSummerSky, () => {
                 setSeasonSkyPreset('summer');
@@ -4923,24 +4923,57 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         }
 
         function setSeasonSkyPreset(season) {
-            pauseTimePlayback();
-            const current = getZonedParts(new Date(simulationUtcMs), observerTimeZone);
+            const current =
+                getZonedParts(
+                    new Date(simulationUtcMs),
+                    observerTimeZone
+                );
+
             const year = current.year;
-            // 「季節らしい夜空」を見やすくする代表日時。夏至・冬至そのものではない。
-            const preset = season === 'summer'
-                ? { month: 8, day: 1, hour: 21, minute: 0 }
-                : { month: 1, day: 15, hour: 21, minute: 0 };
+
+            const preset =
+                season === 'summer'
+                    ? {
+                        month: 8,
+                        day: 1,
+                        hour: 21,
+                        minute: 0
+                    }
+                    : {
+                        month: 1,
+                        day: 15,
+                        hour: 21,
+                        minute: 0
+                    };
+
             const localValue = [
-                String(year).padStart(4, '0'), '-',
-                String(preset.month).padStart(2, '0'), '-',
-                String(preset.day).padStart(2, '0'), 'T',
-                String(preset.hour).padStart(2, '0'), ':',
+                String(year).padStart(4, '0'),
+                '-',
+                String(preset.month).padStart(2, '0'),
+                '-',
+                String(preset.day).padStart(2, '0'),
+                'T',
+                String(preset.hour).padStart(2, '0'),
+                ':',
                 String(preset.minute).padStart(2, '0')
             ].join('');
-            const utcDate = zonedLocalDateTimeToUtc(localValue, observerTimeZone);
-            if (!utcDate || Number.isNaN(utcDate.getTime())) return;
-            simulationUtcMs = utcDate.getTime();
-            updateObserverFromSimulation();
+
+            const utcDate =
+                zonedLocalDateTimeToUtc(
+                    localValue,
+                    observerTimeZone
+                );
+
+            if (
+                !utcDate ||
+                Number.isNaN(utcDate.getTime())
+            ) {
+                return false;
+            }
+
+            return ViewerSettings.setUtcTime(
+                utcDate.getTime()
+            );
         }
 
         function setClockPanelOpen() {
@@ -7289,7 +7322,10 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                     constellation
                 );
 
-            if (!id || !getConstellationCenter(id)) {
+            if (
+                !id ||
+                !getConstellationCenter(id)
+            ) {
                 return false;
             }
 
@@ -7321,11 +7357,15 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 return false;
             }
 
-            pauseTimePlayback();
+            const timeChanged =
+                ViewerSettings.setUtcTime(
+                    nextUtcMs
+                );
 
-            simulationUtcMs = nextUtcMs;
+            if (!timeChanged) {
+                return false;
+            }
 
-            updateObserverFromSimulation();
             updateQuickTimeDisplay();
 
             return viewConstellation(
