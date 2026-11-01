@@ -2824,7 +2824,7 @@
 
         /* ===== V54 Search constellation -> center + default 3-line comment ===== */
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV124 {
+        #settingsVersionV125 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3192,7 +3192,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV124" aria-label="バージョン">V124</div>
+        <div id="settingsVersionV125" aria-label="バージョン">V125</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -4576,9 +4576,15 @@
                             : ''
                     );
 
-                window.__earlyRuntimeErrorsV124.push(
-                    text
-                );
+                if (
+                    window.__earlyRuntimeErrorsV124[
+                        window.__earlyRuntimeErrorsV124.length - 1
+                    ] !== text
+                ) {
+                    window.__earlyRuntimeErrorsV124.push(
+                        text
+                    );
+                }
 
                 window.__showEarlyRuntimeErrorV124(
                     window.__earlyRuntimeErrorsV124.join(
@@ -4968,7 +4974,6 @@
         setCameraFocalLength(GROUND_DEFAULT_FOCAL_LENGTH);
         updateObserverFromSimulation();
         applyViewPreset('ground', false);
-        animate(performance.now());
 
         function initializeUi() {
             backgroundMagnitudeValue.textContent = `${parseFloat(backgroundMagnitudeSlider.value).toFixed(1)}等`;
@@ -8447,7 +8452,21 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 .replaceAll('"', '&quot;')
                 .replaceAll("'", '&#039;');
         }
-    </script>
+    
+
+        function startViewerRuntimeV125() {
+            lastAnimationTime =
+                performance.now();
+
+            animate(
+                lastAnimationTime
+            );
+        }
+
+        // V125:
+        // Start the frame loop only after this entire script has initialized.
+        startViewerRuntimeV125();
+</script>
 
 
     <script>
