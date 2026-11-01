@@ -2824,7 +2824,7 @@
 
         /* ===== V54 Search constellation -> center + default 3-line comment ===== */
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV121 {
+        #settingsVersionV122 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3192,7 +3192,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV121" aria-label="バージョン">V121</div>
+        <div id="settingsVersionV122" aria-label="バージョン">V122</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -7008,6 +7008,73 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         }
 
         function navigateToConstellationV95(action) {
+            if (action === 'visible-time') {
+                try {
+                    const selectedId =
+                        ViewerStateV80.selectedConstellationId;
+
+                    const id =
+                        ConstellationRegistryV80.normalizeId(
+                            selectedId
+                        );
+
+                    showVisibleTimeDebugV121(
+                        `1/6 visible-time受信\nselected=${selectedId}\nnormalized=${id}\nmode=${currentViewMode}`
+                    );
+
+                    const center =
+                        getConstellationCenter(id);
+
+                    showVisibleTimeDebugV121(
+                        `2/6 ID検証OK\ncenter=${center ? 'OK' : 'NULL'}`
+                    );
+
+                    if (
+                        !id ||
+                        id !== selectedId ||
+                        !center
+                    ) {
+                        showVisibleTimeDebugV121(
+                            `停止: ID検証NG\nselected=${selectedId}\nnormalized=${id}\ncenter=${center ? 'OK' : 'NULL'}`
+                        );
+                        return false;
+                    }
+
+                    if (currentViewMode !== 'ground') {
+                        showVisibleTimeDebugV121(
+                            `停止: mode=${currentViewMode}`
+                        );
+                        return false;
+                    }
+
+                    showVisibleTimeDebugV121(
+                        '3/6 move関数を呼びます'
+                    );
+
+                    const result =
+                        moveSelectedConstellationToNextVisibleTime(
+                            id
+                        );
+
+                    showVisibleTimeDebugV121(
+                        `6/6 move戻り値=${result}`
+                    );
+
+                    return result;
+                } catch (error) {
+                    showVisibleTimeDebugV121(
+                        `例外発生\n${error?.name || 'Error'}: ${error?.message || String(error)}`
+                    );
+
+                    console.error(
+                        '[V122 visible-time error]',
+                        error
+                    );
+
+                    return false;
+                }
+            }
+
             const selectedId =
                 ViewerStateV80.selectedConstellationId;
 
@@ -7016,36 +7083,12 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                     selectedId
                 );
 
-            if (action === 'visible-time') {
-                showVisibleTimeDebugV121(
-                    `1/5 visible-time受信\nselected=${selectedId}\nnormalized=${id}\nmode=${currentViewMode}`
-                );
-            }
-
             if (
                 !id ||
                 id !== selectedId ||
                 !getConstellationCenter(id)
             ) {
-                if (action === 'visible-time') {
-                    showVisibleTimeDebugV121(
-                        `停止: ID検証NG\nselected=${selectedId}\nnormalized=${id}`
-                    );
-                }
                 return false;
-            }
-
-            if (action === 'visible-time') {
-                if (currentViewMode !== 'ground') {
-                    showVisibleTimeDebugV121(
-                        `停止: mode=${currentViewMode}`
-                    );
-                    return false;
-                }
-
-                return moveSelectedConstellationToNextVisibleTime(
-                    id
-                );
             }
 
             if (action === 'celestial') {
