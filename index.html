@@ -2808,7 +2808,7 @@
 
         /* ===== V54 Search constellation -> center + default 3-line comment ===== */
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV114 {
+        #settingsVersionV115 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3176,7 +3176,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV114" aria-label="バージョン">V114</div>
+        <div id="settingsVersionV115" aria-label="バージョン">V115</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -5673,7 +5673,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
             if (candidate.type === 'constellation') {
                 try {
-                    window.selectConstellationIntent?.(candidate.key, 'tap');
+                    window.viewConstellation?.(candidate.key, { source: 'tap' });
                 } catch (error) {
                     console.error('Sky-tap constellation selection failed:', error);
                 }
@@ -5731,7 +5731,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                             event.preventDefault();
                             event.stopPropagation();
                             closeSkyTapPicker();
-                            window.selectConstellationIntent?.(id, 'tap');
+                            window.viewConstellation?.(id, { source: 'tap' });
                         });
                     } else if (candidate.type === 'star') {
                         button.dataset.starKey = String(candidate.key || '');
@@ -6227,18 +6227,55 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
         window.selectConstellationV80 = selectConstellationV80;
 
-        function selectConstellationIntent(value, source = 'unknown') {
+        function viewConstellation(value, options = {}) {
             const id = ConstellationRegistryV80.normalizeId(value);
-            if (!id || !getConstellationCenter(id)) return false;
-            let focus = false;
-            if (currentViewMode === 'celestial') focus = true;
-            else if (currentViewMode === 'ground') {
-                const viewState = getConstellationViewState(id, true);
-                focus = Boolean(viewState && Number.isFinite(viewState.altitudeDeg) && viewState.altitudeDeg >= 0);
+
+            if (!id || !getConstellationCenter(id)) {
+                return false;
             }
-            const selected = selectConstellationV80(id, { focus, showComment: true, source });
-            if (selected && currentViewMode === 'ground' && !focus) updateSelectedConstellationGuidance(true);
+
+            const {
+                source = 'unknown',
+                showComment = true,
+                forceFocus = false
+            } = options;
+
+            let focus = false;
+
+            if (forceFocus) {
+                focus = true;
+            } else if (currentViewMode === 'celestial') {
+                focus = true;
+            } else if (currentViewMode === 'ground') {
+                const viewState = getConstellationViewState(id, true);
+                focus = Boolean(
+                    viewState &&
+                    Number.isFinite(viewState.altitudeDeg) &&
+                    viewState.altitudeDeg >= 0
+                );
+            }
+
+            const selected = selectConstellationV80(id, {
+                focus,
+                showComment,
+                source
+            });
+
+            if (
+                selected &&
+                currentViewMode === 'ground' &&
+                !focus
+            ) {
+                updateSelectedConstellationGuidance(true);
+            }
+
             return selected;
+        }
+
+        window.viewConstellation = viewConstellation;
+
+        function selectConstellationIntent(value, source = 'unknown') {
+            return viewConstellation(value, { source });
         }
 
         window.selectConstellationIntent = selectConstellationIntent;
@@ -6922,50 +6959,28 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         }
 
         function navigateToConstellationV95(action) {
-            const selectedId =
-                ViewerStateV80.selectedConstellationId;
+            const selectedId = ViewerStateV80.selectedConstellationId;
+            const id = ConstellationRegistryV80.normalizeId(selectedId);
 
-            const id =
-                ConstellationRegistryV80.normalizeId(
-                    selectedId
-                );
-
-            if (
-                !id ||
-                id !== selectedId ||
-                !getConstellationCenter(id)
-            ) {
+            if (!id || id !== selectedId || !getConstellationCenter(id)) {
                 return false;
             }
 
             if (action === 'visible-time') {
-                if (currentViewMode !== 'ground') {
-                    return false;
-                }
-
-                return moveSelectedConstellationToNextVisibleTime(
-                    id
-                );
+                if (currentViewMode !== 'ground') return false;
+                return moveSelectedConstellationToNextVisibleTime(id);
             }
 
             if (action === 'celestial') {
-                return showSelectedConstellationInCelestialMode(
-                    id
-                );
+                return showSelectedConstellationInCelestialMode(id);
             }
 
             if (action === 'focus') {
                 hideSelectedConstellationGuidance(true);
-
-                // Same canonical selection/focus path as Search.
-                return selectConstellationV80(
-                    id,
-                    {
-                        focus: true,
-                        showComment: true,
-                        source: 'guidance-focus'
-                    }
-                );
+                return viewConstellation(id, {
+                    source: 'guidance-focus',
+                    forceFocus: true
+                });
             }
 
             return false;
