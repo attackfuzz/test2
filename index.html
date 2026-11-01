@@ -2538,6 +2538,22 @@
             }
         }
 
+
+        #visibleTimeDebugV121 {
+            position: fixed;
+            left: 12px;
+            right: 12px;
+            top: 12px;
+            z-index: 99999;
+            padding: 10px 12px;
+            border-radius: 10px;
+            background: rgba(120, 0, 0, 0.94);
+            color: #fff;
+            font: 700 14px/1.4 system-ui, sans-serif;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.35);
+            pointer-events: none;
+            white-space: pre-wrap;
+        }
 </style>
 <style>
     /* ===== Selected constellation guidance V22 ===== */
@@ -2808,7 +2824,7 @@
 
         /* ===== V54 Search constellation -> center + default 3-line comment ===== */
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV120 {
+        #settingsVersionV121 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3176,7 +3192,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV120" aria-label="バージョン">V120</div>
+        <div id="settingsVersionV121" aria-label="バージョン">V121</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -7000,16 +7016,30 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                     selectedId
                 );
 
+            if (action === 'visible-time') {
+                showVisibleTimeDebugV121(
+                    `1/5 visible-time受信\nselected=${selectedId}\nnormalized=${id}\nmode=${currentViewMode}`
+                );
+            }
+
             if (
                 !id ||
                 id !== selectedId ||
                 !getConstellationCenter(id)
             ) {
+                if (action === 'visible-time') {
+                    showVisibleTimeDebugV121(
+                        `停止: ID検証NG\nselected=${selectedId}\nnormalized=${id}`
+                    );
+                }
                 return false;
             }
 
             if (action === 'visible-time') {
                 if (currentViewMode !== 'ground') {
+                    showVisibleTimeDebugV121(
+                        `停止: mode=${currentViewMode}`
+                    );
                     return false;
                 }
 
@@ -7352,6 +7382,44 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
         const CONSTELLATION_VISIBLE_TIME_ALTITUDE_DEG_V116 = 2.0;
 
+        let visibleTimeDebugTimerV121 = null;
+
+        function showVisibleTimeDebugV121(message) {
+            let box =
+                document.getElementById(
+                    'visibleTimeDebugV121'
+                );
+
+            if (!box) {
+                box =
+                    document.createElement('div');
+
+                box.id =
+                    'visibleTimeDebugV121';
+
+                document.body.appendChild(
+                    box
+                );
+            }
+
+            box.textContent =
+                message;
+
+            box.hidden =
+                false;
+
+            if (visibleTimeDebugTimerV121) {
+                clearTimeout(
+                    visibleTimeDebugTimerV121
+                );
+            }
+
+            visibleTimeDebugTimerV121 =
+                setTimeout(() => {
+                    box.hidden = true;
+                }, 6000);
+        }
+
         function formatVisibleTimeDiagnosticDateV120(utcMs) {
             const parts =
                 getZonedParts(
@@ -7491,12 +7559,16 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                     constellation
                 );
 
+            showVisibleTimeDebugV121(
+                `2/5 move関数到達\nid=${id}`
+            );
+
             if (
                 !id ||
                 !getConstellationCenter(id)
             ) {
-                showVisibleTimeDiagnosticV120(
-                    '診断: 星座ID/中心取得で停止'
+                showVisibleTimeDebugV121(
+                    '停止: 星座中心取得NG'
                 );
                 return false;
             }
@@ -7529,15 +7601,15 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                         )
                         : '不明';
 
-                showVisibleTimeDiagnosticV120(
-                    `診断: 時刻探索NG / 24h最高高度 ${maxAlt}° / ${maxTime}`
+                showVisibleTimeDebugV121(
+                    `3/5 時刻探索NG\n最高高度=${maxAlt}°\n時刻=${maxTime}`
                 );
 
                 return false;
             }
 
-            showVisibleTimeDiagnosticV120(
-                `診断: 時刻探索OK / ${formatVisibleTimeDiagnosticDateV120(result.utcMs)} / 高度 ${result.altitudeDeg.toFixed(1)}°`
+            showVisibleTimeDebugV121(
+                `3/5 時刻探索OK\n${formatVisibleTimeDiagnosticDateV120(result.utcMs)}\n高度=${result.altitudeDeg.toFixed(1)}°`
             );
 
             const timeChanged =
@@ -7546,13 +7618,17 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 );
 
             if (!timeChanged) {
-                showVisibleTimeDiagnosticV120(
-                    '診断: setUtcTime が false'
+                showVisibleTimeDebugV121(
+                    '4/5 setUtcTime=false'
                 );
                 return false;
             }
 
             updateQuickTimeDisplay();
+
+            showVisibleTimeDebugV121(
+                `4/5 時刻変更OK\n現在=${formatVisibleTimeDiagnosticDateV120(simulationUtcMs)}`
+            );
 
             const moved =
                 viewConstellation(
@@ -7564,14 +7640,14 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 );
 
             if (!moved) {
-                showVisibleTimeDiagnosticV120(
-                    '診断: 時刻変更成功 / viewConstellation が false'
+                showVisibleTimeDebugV121(
+                    '5/5 viewConstellation=false'
                 );
                 return false;
             }
 
-            showVisibleTimeDiagnosticV120(
-                `診断: 完了 / ${formatVisibleTimeDiagnosticDateV120(simulationUtcMs)}`
+            showVisibleTimeDebugV121(
+                `5/5 完了\n${formatVisibleTimeDiagnosticDateV120(simulationUtcMs)}`
             );
 
             return true;
