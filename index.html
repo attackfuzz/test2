@@ -2808,7 +2808,7 @@
 
         /* ===== V54 Search constellation -> center + default 3-line comment ===== */
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV115 {
+        #settingsVersionV116 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3176,7 +3176,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV115" aria-label="バージョン">V115</div>
+        <div id="settingsVersionV116" aria-label="バージョン">V116</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -6959,28 +6959,48 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         }
 
         function navigateToConstellationV95(action) {
-            const selectedId = ViewerStateV80.selectedConstellationId;
-            const id = ConstellationRegistryV80.normalizeId(selectedId);
+            const selectedId =
+                ViewerStateV80.selectedConstellationId;
 
-            if (!id || id !== selectedId || !getConstellationCenter(id)) {
+            const id =
+                ConstellationRegistryV80.normalizeId(
+                    selectedId
+                );
+
+            if (
+                !id ||
+                id !== selectedId ||
+                !getConstellationCenter(id)
+            ) {
                 return false;
             }
 
             if (action === 'visible-time') {
-                if (currentViewMode !== 'ground') return false;
-                return moveSelectedConstellationToNextVisibleTime(id);
+                if (currentViewMode !== 'ground') {
+                    return false;
+                }
+
+                return moveSelectedConstellationToNextVisibleTime(
+                    id
+                );
             }
 
             if (action === 'celestial') {
-                return showSelectedConstellationInCelestialMode(id);
+                return showSelectedConstellationInCelestialMode(
+                    id
+                );
             }
 
             if (action === 'focus') {
                 hideSelectedConstellationGuidance(true);
-                return viewConstellation(id, {
-                    source: 'guidance-focus',
-                    forceFocus: true
-                });
+
+                return viewConstellation(
+                    id,
+                    {
+                        source: 'guidance-focus',
+                        forceFocus: true
+                    }
+                );
             }
 
             return false;
@@ -7208,16 +7228,14 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
         const CONSTELLATION_HORIZON_TARGET_DEG_V114 = 1.0;
 
+        const CONSTELLATION_VISIBLE_TIME_ALTITUDE_DEG_V116 = 2.0;
+
         function findNextVisibleConstellationTime(constellation, startUtcMs) {
-            // "見える時間帯にする" means physically above the horizon,
-            // not "comfortably high in the sky".
-            // Use 1 degree to avoid numerical jitter exactly on the horizon.
             const targetAltitudeDeg =
-                CONSTELLATION_HORIZON_TARGET_DEG_V114;
+                CONSTELLATION_VISIBLE_TIME_ALTITUDE_DEG_V116;
 
             const coarseStepMs = 10 * 60 * 1000;
             const fineStepMs = 60 * 1000;
-
             const siderealDayMs =
                 23 * 60 * 60 * 1000 +
                 56 * 60 * 1000 +
@@ -7228,8 +7246,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 siderealDayMs +
                 coarseStepMs;
 
-            let previous =
-                startUtcMs;
+            let previous = startUtcMs;
 
             for (
                 let t = startUtcMs + coarseStepMs;
@@ -7243,8 +7260,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                     ) >= targetAltitudeDeg
                 ) {
                     for (
-                        let fine =
-                            previous + fineStepMs;
+                        let fine = previous + fineStepMs;
                         fine <= t;
                         fine += fineStepMs
                     ) {
@@ -7268,25 +7284,29 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         }
 
         function moveSelectedConstellationToNextVisibleTime(constellation) {
-            cancelCameraAnimation();
-
-            ensureSelectedConstellationGuidanceUi();
-
-            const name =
-                selectedConstellationDisplayName(
+            const id =
+                ConstellationRegistryV80.normalizeId(
                     constellation
                 );
 
-            constellationGuidanceMessage.textContent =
-                `⏱ ${name}が見える時間帯へ移動します`;
+            if (!id || !getConstellationCenter(id)) {
+                return false;
+            }
+
+            cancelCameraAnimation();
 
             const nextUtcMs =
                 findNextVisibleConstellationTime(
-                    constellation,
+                    id,
                     simulationUtcMs
                 );
 
             if (nextUtcMs == null) {
+                ensureSelectedConstellationGuidanceUi();
+
+                const name =
+                    selectedConstellationDisplayName(id);
+
                 constellationGuidanceMessage.textContent =
                     `⚠️ ${name}は現在の観測地点では地平線上に出ません`;
 
@@ -7303,47 +7323,18 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
             pauseTimePlayback();
 
-            simulationUtcMs =
-                nextUtcMs;
+            simulationUtcMs = nextUtcMs;
 
             updateObserverFromSimulation();
-
-            if (currentViewMode !== 'ground') {
-                applyViewPreset(
-                    'ground',
-                    false
-                );
-            } else {
-                applySkyCameraOrientation();
-            }
-
             updateQuickTimeDisplay();
 
-            hideSelectedConstellationGuidance(
-                true
+            return viewConstellation(
+                id,
+                {
+                    source: 'visible-time',
+                    forceFocus: true
+                }
             );
-
-            // Same canonical selection/focus path as Search.
-            const moved =
-                selectConstellationV80(
-                    constellation,
-                    {
-                        focus: true,
-                        showComment: true,
-                        source: 'visible-time'
-                    }
-                );
-
-            requestAnimationFrame(() => {
-                requestAnimationFrame(() => {
-                    updateQuickTimeDisplay();
-                    updateSelectedConstellationGuidance(
-                        true
-                    );
-                });
-            });
-
-            return moved;
         }
 
         function showSelectedConstellationInCelestialMode(constellation) {
