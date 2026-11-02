@@ -4751,20 +4751,14 @@
         function setSimulationUtcTimeV127(utcMs, options = {}) {
             if (!Number.isFinite(utcMs)) return false;
 
-            const {
-                pausePlayback = true,
-                refreshQuickTime = true,
-                refreshClockHand = false
-            } = options;
+            const { pausePlayback = true } = options;
 
-            if (pausePlayback) pauseTimePlayback();
+            if (pausePlayback) {
+                pauseTimePlayback();
+            }
 
             simulationUtcMs = utcMs;
             updateObserverFromSimulation();
-
-            if (refreshQuickTime) updateQuickTimeDisplay();
-            if (refreshClockHand) updateClockHandFromSimulation();
-
             return true;
         }
 
@@ -4821,14 +4815,17 @@
             setLocalDateTime(localValue) {
                 const utcDate = zonedLocalDateTimeToUtc(localValue, observerTimeZone);
                 if (!utcDate || !Number.isFinite(utcDate.getTime())) return false;
-                return setSimulationUtcTimeV127(utcDate.getTime());
+                return setSimulationUtcTimeV127(utcDate.getTime(), { pausePlayback: true });
             },
             setUtcTime(utcMs) {
-                return setSimulationUtcTimeV127(utcMs);
+                return setSimulationUtcTimeV127(utcMs, { pausePlayback: true });
             },
             stepTime(deltaMs) {
                 if (!Number.isFinite(deltaMs)) return false;
-                return this.setUtcTime(simulationUtcMs + deltaMs);
+                return setSimulationUtcTimeV127(
+                    simulationUtcMs + deltaMs,
+                    { pausePlayback: true }
+                );
             },
             useCurrentTime() {
                 return this.setUtcTime(Date.now());
@@ -5134,12 +5131,9 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             setSimulationUtcTimeV127(
                 clockDragStartSimulationUtcMs +
                 snappedMinutes * 60 * 1000,
-                {
-                    pausePlayback: true,
-                    refreshQuickTime: true,
-                    refreshClockHand: true
-                }
+                { pausePlayback: false }
             );
+            updateClockHandFromSimulation();
         }
 
         function handleClockPointerUp(event) {
@@ -5490,7 +5484,10 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 if (!id) return true;
 
                 try {
-                    window.viewConstellation?.(id, { source: 'tap' });
+                    window.viewConstellation?.(
+                        id,
+                        { source: 'tap' }
+                    );
                 } catch (error) {
                     console.error(
                         'Sky-tap constellation selection failed:',
@@ -6316,7 +6313,8 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         }
 
         window.viewConstellation = viewConstellation;
-function constellationKeyFromId(value) {
+
+        function constellationKeyFromId(value) {
             return ConstellationRegistryV80.normalizeId(value);
         }
 
@@ -6607,7 +6605,8 @@ function constellationKeyFromId(value) {
         // Guide DOM nodes are stable for the lifetime of the viewer.
         // ViewerStateV80.selectedConstellationId remains the only selection state.
         var guidanceActionButtonsV95 = null;
-var constellationGuidanceRibbon = null;
+
+        var constellationGuidanceRibbon = null;
         var constellationGuidanceMessage = null;
         var constellationGuidanceActions = null;
         var constellationEdgeIndicator = null;
@@ -7085,6 +7084,7 @@ var constellationGuidanceRibbon = null;
             return { edge, arrow };
         }
 
+
         function updateSelectedConstellationGuidance(force = false) {
             ensureSelectedConstellationGuidanceUi();
 
@@ -7291,7 +7291,8 @@ var constellationGuidanceRibbon = null;
                 -90
             );
         }
-const CONSTELLATION_VISIBLE_TIME_ALTITUDE_DEG_V116 = 2.0;
+
+        const CONSTELLATION_VISIBLE_TIME_ALTITUDE_DEG_V116 = 2.0;
 function findNextVisibleConstellationTime(constellation, startUtcMs) {
             const targetAltitudeDeg =
                 CONSTELLATION_VISIBLE_TIME_ALTITUDE_DEG_V116;
