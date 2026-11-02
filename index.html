@@ -2807,7 +2807,7 @@
 
         /* ===== V54 Search constellation -> center + default 3-line comment ===== */
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV127 {
+        #settingsVersionV128 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3175,7 +3175,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV127" aria-label="バージョン">V127</div>
+        <div id="settingsVersionV128" aria-label="バージョン">V128</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -3595,7 +3595,6 @@
         const v2FilterButtons = Array.from(document.querySelectorAll('[data-v2-filter]'));
         let v2ConstellationSort = 'ja';
         let v2ConstellationFilter = 'all';
-        let v2ConstellationOptions = [];
 
         function fillSettingsSelectOptions(select, options) {
             if (select.options.length) return;
@@ -3627,56 +3626,7 @@
                 button.setAttribute('aria-pressed', String(active));
             });
         }
-
-        function normalizeConstellationName(name) {
-            return String(name || '')
-                .trim()
-                .replace(/\s+/g, '')
-                .replace(/座$/u, '');
-        }
-
-        const V2_SUMMER_CONSTELLATIONS = new Set([
-            'こと','わし','はくちょう','りゅう','ヘルクレス','へびつかい','へび',
-            'いて','さそり','てんびん','みなみのかんむり','たて','こぎつね','や','いるか'
-        ]);
-
-        const V2_WINTER_CONSTELLATIONS = new Set([
-            'オリオン','おうし','ふたご','ぎょしゃ','おおいぬ','こいぬ','うさぎ',
-            'いっかくじゅう','エリダヌス','ろ','ちょうこくぐ','はと'
-        ]);
-
-        const V2_RECOMMENDED_CONSTELLATIONS = new Set([
-            'オリオン','おおぐま','こぐま','カシオペヤ','はくちょう','こと','わし',
-            'さそり','いて','おうし','ふたご','ぎょしゃ','おおいぬ','こいぬ',
-            'ペガスス','アンドロメダ'
-        ]);
-
-        function matchesV2ConstellationFilter(option) {
-            if (v2ConstellationFilter === 'all') return true;
-
-            const normalized = normalizeConstellationName(option.text);
-            if (v2ConstellationFilter === 'summer') return V2_SUMMER_CONSTELLATIONS.has(normalized);
-            if (v2ConstellationFilter === 'winter') return V2_WINTER_CONSTELLATIONS.has(normalized);
-            if (v2ConstellationFilter === 'recommended') return V2_RECOMMENDED_CONSTELLATIONS.has(normalized);
-            return true;
-        }
-
-        function compareV2Constellations(a, b) {
-            if (v2ConstellationSort === 'abc') {
-                return String(a.value || a.text).localeCompare(
-                    String(b.value || b.text),
-                    'en',
-                    { sensitivity: 'base', numeric: true }
-                );
-            }
-            return String(a.text).localeCompare(
-                String(b.text),
-                'ja',
-                { sensitivity: 'base', numeric: true }
-            );
-        }
-
-        function renderV2ConstellationOptions() {
+function renderV2ConstellationOptions() {
             const selectedValue = ViewerStateV80.selectedConstellationId || '';
             const selectedInfo = selectedValue ? CONSTELLATIONS_V2[selectedValue] : null;
 
@@ -4311,9 +4261,6 @@
     window.ViewerStateV80 = ViewerStateV80;
     window.runtimeConstellationsV80 = runtimeConstellationsV80;
 
-    function constellationDisplayJaV65(value) {
-        return ConstellationRegistryV80.get(value)?.ja || String(value || '');
-    }
     </script>
 
 
@@ -4735,8 +4682,6 @@
         let lastAnimationTime = performance.now();
         const cameraQuaternion = new THREE.Quaternion();
 
-        const northStarPosition = convertToCartesian(2.530301028 * 15, 89.26413889);
-
         function formatLocalDateTimeInput(utcMs, zone) {
             const parts = getZonedParts(new Date(utcMs), zone);
             return [
@@ -4992,28 +4937,6 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             if (clockDayRow) clockDayRow.classList.add('clock-open');
         }
 
-        function setClockPreviewFromMinutes(totalMinutes, isDragging = false) {
-            const normalized = ((Math.round(totalMinutes / 5) * 5) % 720 + 720) % 720;
-            clockSelectedMinutes12h = normalized;
-
-            const angle = normalized * 0.5;
-            clockHandWrap.style.transform = `translate(-50%,-50%) rotate(${angle}deg)`;
-
-            const hour12 = Math.floor(normalized / 60) || 12;
-            const minute = normalized % 60;
-            const exactHour = minute === 0 ? hour12 : null;
-
-            clockNumberButtons.forEach(button => {
-                button.classList.toggle(
-                    'selected',
-                    exactHour !== null && Number(button.dataset.hour) === exactHour
-                );
-            });
-
-            if (clockPreview) clockPreview.textContent =
-                `${String(hour12).padStart(2, '0')}:${String(minute).padStart(2, '0')}` +
-                (isDragging ? '　ドラッグ中' : '');
-        }
 
         function selectClockHour(hour) {
             pauseTimePlayback();
@@ -5604,11 +5527,6 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             return Math.hypot(px - (a.x + vx * t), py - (a.y + vy * t));
         }
 
-        function resolveTapStarFriendlyName(candidate) {
-            const raw = String(candidate?.displayName || candidate?.starName || '星');
-            // targetStar形式しかない場合でも、識別可能な名称として表示する。
-            return raw;
-        }
 
         function getSkyTapCandidates(x, y) {
             const candidates = [];
@@ -5707,38 +5625,6 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             return candidates.slice(0, 6);
         }
 
-        function selectSkyTapCandidate(candidate) {
-            closeSkyTapPicker();
-            if (!candidate) return;
-
-            if (candidate.type === 'constellation') {
-                try {
-                    window.viewConstellation?.(candidate.key, { source: 'tap' });
-                } catch (error) {
-                    console.error('Sky-tap constellation selection failed:', error);
-                }
-                return;
-            }
-
-            if (candidate.type === 'star') {
-                const hit = window.highlightSearchStar?.(candidate.key);
-                if (hit) {
-                    const starRecord = skyTapStarCandidates.find(
-                        item => item.starName === candidate.key
-                    );
-                    const info = resolveConstellationLabelInfo(
-                        starRecord?.constellationId
-                    );
-                    const title = info?.ja
-                        ? `${candidate.name} / ${info.ja}`
-                        : candidate.name;
-                    const text =
-                        starBasicComments[candidate.commentId] ||
-                        'この星の基本コメントはまだ登録されていません。';
-                    showDescriptionTextV87(title, text, '星');
-                }
-            }
-        }
 
         function openSkyTapPicker(x, y) {
             if (!skyTapPicker || !skyTapPickerList) return;
@@ -6580,12 +6466,6 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             applyConstellationSelectionVisualsV101();
             return true;
         }
-
-        // ===== V76: one constellation resolver for all navigation =====
-        // Accepts internal lowercase ID (uma), official IAU ID (UMa),
-        // Japanese/English display names, or a legacy renderer key.
-        // Returns the canonical runtime constellation ID when runtime data exists.
-
         function getConstellationCenter(value) {
             const id = ConstellationRegistryV80.normalizeId(value);
             if (!id) return null;
@@ -6616,7 +6496,6 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         var constellationDescriptionLinksV85 = null;
         var constellationDescriptionMangaV85 = null;
         var constellationDescriptionVisibleV85 = false;
-        const CONSTELLATION_VISIBLE_ALTITUDE_DEG = 10;
 
         function ensureConstellationDescriptionUiV85() {
             if (constellationDescriptionRibbonV85) return;
@@ -7489,8 +7368,6 @@ function findNextVisibleConstellationTime(constellation, startUtcMs) {
             observerEast.set(-sinLst, 0, -cosLst).normalize();
             observerPosition.copy(observerUp).multiplyScalar(EARTH_RADIUS + OBSERVER_HEIGHT);
 
-            const basisMatrix = new THREE.Matrix4().makeBasis(observerEast, observerNorth, observerUp);
-
             if (currentViewMode === 'ground' && !cameraAnimation) applySkyCameraOrientation();
             refreshConstellationLineGeometry(false);
             updateSkyStatus();
@@ -7770,11 +7647,6 @@ function findNextVisibleConstellationTime(constellation, startUtcMs) {
             };
         }
 
-        function getConstellationLabelText(value) {
-            const info = resolveConstellationLabelInfo(value);
-            if (!info) return String(value || '');
-            return labelDisplayMode === 'constellation-en' ? info.en : info.ja;
-        }
 
         function applySmartConstellationLabelSize(element, text) {
             if (!element) return;
@@ -8063,9 +7935,6 @@ function findNextVisibleConstellationTime(constellation, startUtcMs) {
             return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
         }
 
-        function formatCoordinate(value) {
-            return Number(value).toFixed(4).replace(/\.0000$/, '');
-        }
 
         function normalizeDegrees(value) {
             return ((value % 360) + 360) % 360;
