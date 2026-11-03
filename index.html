@@ -2409,6 +2409,52 @@
         .settingsV2NameModeGrid .settingsV2LabelButton { min-height:38px !important; padding:6px 7px !important; font-size:10.5px !important; line-height:1.15 !important; text-align:center !important; }
         .settingsV2NameModeGrid .settingsV2NameNone { grid-column:1/-1; }
 
+
+        /* ===== V129 display toggles ===== */
+        .settingsV129DisplayGrid {
+            display:grid;
+            grid-template-columns:repeat(2,minmax(0,1fr));
+            gap:10px 8px;
+        }
+        .settingsV129DisplayItem {
+            display:grid;
+            gap:5px;
+            min-width:0;
+        }
+        .settingsV129DisplayLabel {
+            color:rgba(218,252,255,.88);
+            font-size:11px;
+            line-height:1.2;
+            text-align:center;
+        }
+        .settingsV129ToggleButton,
+        .settingsV129LanguageButton {
+            min-height:40px;
+            border:1px solid rgba(103,247,255,.20);
+            border-radius:9px;
+            background:rgba(3,18,34,.84);
+            color:rgba(218,252,255,.72);
+            font-weight:800;
+            letter-spacing:.06em;
+        }
+        .settingsV129ToggleButton.active,
+        .settingsV129LanguageButton.active {
+            border-color:rgba(103,247,255,.72);
+            background:rgba(14,72,92,.66);
+            color:#eaffff;
+            box-shadow:inset 0 0 14px rgba(25,234,255,.09),0 0 10px rgba(25,234,255,.08);
+        }
+        .settingsV129LanguageWrap {
+            margin-top:10px;
+            display:grid;
+            grid-template-columns:1fr;
+            gap:5px;
+        }
+        .settingsV129LanguageButton {
+            width:100%;
+            text-align:center;
+        }
+
         .settingsV2CoordinateInline { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin-top:10px; }
         .settingsV2CoordinateInline label { display:grid; grid-template-columns:auto minmax(0,1fr); gap:5px; align-items:center; min-width:0; }
         .settingsV2CoordinateInline span { color:rgba(194,249,252,.72); font-size:11px; white-space:nowrap; }
@@ -2807,7 +2853,7 @@
 
         /* ===== V54 Search constellation -> center + default 3-line comment ===== */
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV128 {
+        #settingsVersionV129 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3175,7 +3221,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV128" aria-label="バージョン">V128</div>
+        <div id="settingsVersionV129" aria-label="バージョン">V129</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -3233,23 +3279,30 @@
         </section>
 
         <section class="settingsV2Section">
-            <h3>星の表示の仕方</h3>
-            <div class="settingsV2SkyModeGrid" role="group" aria-label="星の表示の仕方">
-                <button type="button" class="settingsV2ChoiceButton" id="v2SkyOnlyButton">星空のみ表示</button>
-                <button type="button" class="settingsV2ChoiceButton active" id="v2ConstellationLinesButton">星空に星座線の表示</button>
+            <h3>表示</h3>
+            <div class="settingsV129DisplayGrid" role="group" aria-label="表示項目">
+                <div class="settingsV129DisplayItem">
+                    <div class="settingsV129DisplayLabel">星座絵</div>
+                    <button type="button" class="settingsV129ToggleButton active" id="v2ArtworkToggleButton" aria-pressed="true">ON</button>
+                </div>
+                <div class="settingsV129DisplayItem">
+                    <div class="settingsV129DisplayLabel">星座線</div>
+                    <button type="button" class="settingsV129ToggleButton active" id="v2ConstellationLinesToggleButton" aria-pressed="true">ON</button>
+                </div>
+                <div class="settingsV129DisplayItem">
+                    <div class="settingsV129DisplayLabel">星名ラベル</div>
+                    <button type="button" class="settingsV129ToggleButton" id="v2StarLabelsToggleButton" aria-pressed="false">OFF</button>
+                </div>
+                <div class="settingsV129DisplayItem">
+                    <div class="settingsV129DisplayLabel">星座名ラベル</div>
+                    <button type="button" class="settingsV129ToggleButton active" id="v2ConstellationLabelsToggleButton" aria-pressed="true">ON</button>
+                </div>
             </div>
-
-            <div class="settingsV2Divider" aria-hidden="true"></div>
-            <h3 class="settingsV2InnerTitle">名前の表示の仕方</h3>
-            <div class="settingsV2NameModeGrid" role="group" aria-label="名前の表示の仕方">
-                <button type="button" class="settingsV2LabelButton settingsV2NameNone" data-v2-label-mode="none">名前表示なし</button>
-                <button type="button" class="settingsV2LabelButton" data-v2-label-mode="star-en">星名（ABC表記）</button>
-                <button type="button" class="settingsV2LabelButton" data-v2-label-mode="star-ja">星名（カナ表記）</button>
-                <button type="button" class="settingsV2LabelButton" data-v2-label-mode="constellation-en">星座名（ABC表記）</button>
-                <button type="button" class="settingsV2LabelButton active" data-v2-label-mode="constellation-ja">星座名（カナ表記）</button>
+            <div class="settingsV129LanguageWrap">
+                <div class="settingsV129DisplayLabel">表記</div>
+                <button type="button" class="settingsV129LanguageButton active" id="v2LabelLanguageButton" aria-pressed="true">カナ ↔ 英字</button>
             </div>
-
-            <div class="settingsV2Status settingsV2HiddenUi" id="v2StarDisplayStatus">デフォルト: 星空に星座線の表示 / 星座名（カナ表記）</div>
+            <div class="settingsV2Status settingsV2HiddenUi" id="v2StarDisplayStatus"></div>
         </section>
 
         <section class="settingsV2Section">
@@ -3584,9 +3637,11 @@
         const v2ZoomValue = document.getElementById('v2ZoomValue');
         const v2ZoomOutButton = document.getElementById('v2ZoomOutButton');
         const v2ZoomInButton = document.getElementById('v2ZoomInButton');
-        const v2SkyOnlyButton = document.getElementById('v2SkyOnlyButton');
-        const v2ConstellationLinesButton = document.getElementById('v2ConstellationLinesButton');
-        const v2LabelButtons = Array.from(document.querySelectorAll('.settingsV2LabelButton'));
+        const v2ArtworkToggleButton = document.getElementById('v2ArtworkToggleButton');
+        const v2ConstellationLinesToggleButton = document.getElementById('v2ConstellationLinesToggleButton');
+        const v2StarLabelsToggleButton = document.getElementById('v2StarLabelsToggleButton');
+        const v2ConstellationLabelsToggleButton = document.getElementById('v2ConstellationLabelsToggleButton');
+        const v2LabelLanguageButton = document.getElementById('v2LabelLanguageButton');
         const v2StarDisplayStatus = document.getElementById('v2StarDisplayStatus');
         const v2ConstellationSelect = document.getElementById('v2ConstellationSelect');
         const v2ConstellationClear = document.getElementById('v2ConstellationClear');
@@ -3617,14 +3672,6 @@
                     setModeActive(currentViewMode);
                 }
             } catch (_) {}
-        }
-
-        function setV2LabelModeActive(mode) {
-            v2LabelButtons.forEach(button => {
-                const active = button.dataset.v2LabelMode === mode;
-                button.classList.toggle('active', active);
-                button.setAttribute('aria-pressed', String(active));
-            });
         }
 function renderV2ConstellationOptions() {
             const selectedValue = ViewerStateV80.selectedConstellationId || '';
@@ -3715,24 +3762,39 @@ function renderV2ConstellationOptions() {
                 `${filterLabel}: ${visibleCount}件 / 選択中: ${selectedInfo?.ja || '未選択'}`;
         }
 
+        function setV129ToggleState(button, enabled) {
+            if (!button) return;
+            button.classList.toggle('active', Boolean(enabled));
+            button.setAttribute('aria-pressed', String(Boolean(enabled)));
+            button.textContent = enabled ? 'ON' : 'OFF';
+        }
+
         function syncV2StarDisplayFromViewer() {
-            const linesVisible = window.ViewerSettings.getSnapshot().constellationLinesVisible;
+            const snapshot = window.ViewerSettings.getSnapshot();
 
-            if (v2SkyOnlyButton) v2SkyOnlyButton.classList.toggle('active', !linesVisible);
-            v2ConstellationLinesButton.classList.toggle('active', linesVisible);
+            setV129ToggleState(
+                v2ArtworkToggleButton,
+                snapshot.constellationArtworkVisible
+            );
+            setV129ToggleState(
+                v2ConstellationLinesToggleButton,
+                snapshot.constellationLinesVisible
+            );
+            setV129ToggleState(
+                v2StarLabelsToggleButton,
+                snapshot.starLabelsVisible
+            );
+            setV129ToggleState(
+                v2ConstellationLabelsToggleButton,
+                snapshot.constellationLabelsVisible
+            );
 
-            try {
-                if (typeof labelDisplayMode !== 'undefined') {
-                    setV2LabelModeActive(labelDisplayMode);
-                    const labelText =
-                        labelDisplayMode === 'none' ? '名前表示なし' :
-                        labelDisplayMode === 'star-en' ? '星名（ABC表記）' :
-                        labelDisplayMode === 'star-ja' ? '星名（カナ表記）' :
-                        labelDisplayMode === 'constellation-en' ? '星座名（ABC表記）' :
-                        '星座名（カナ表記）';
-                    v2StarDisplayStatus.textContent = `${linesVisible ? '星空に星座線の表示' : '星空のみ表示'} / ${labelText}`;
-                }
-            } catch (_) {}
+            const isKana = snapshot.labelLanguage !== 'en';
+            v2LabelLanguageButton.classList.toggle('active', isKana);
+            v2LabelLanguageButton.setAttribute('aria-pressed', String(isKana));
+            v2LabelLanguageButton.textContent = isKana
+                ? 'カナ ↔ 英字'
+                : '英字 ↔ カナ';
         }
 
         let v2StaticSelectOptionsReady = false;
@@ -3939,25 +4001,44 @@ function renderV2ConstellationOptions() {
             requestAnimationFrame(syncV2ConstellationPicker);
         });
 
-        v2SkyOnlyButton?.addEventListener('click', () => {
-            window.ViewerSettings.setConstellationLinesVisible(false);
+        v2ArtworkToggleButton.addEventListener('click', () => {
+            const snapshot = window.ViewerSettings.getSnapshot();
+            window.ViewerSettings.setConstellationArtworkVisible(
+                !snapshot.constellationArtworkVisible
+            );
             syncV2StarDisplayFromViewer();
         });
 
-        v2ConstellationLinesButton.addEventListener('click', () => {
-            window.ViewerSettings.setConstellationLinesVisible(true);
+        v2ConstellationLinesToggleButton.addEventListener('click', () => {
+            const snapshot = window.ViewerSettings.getSnapshot();
+            window.ViewerSettings.setConstellationLinesVisible(
+                !snapshot.constellationLinesVisible
+            );
             syncV2StarDisplayFromViewer();
         });
 
-        v2LabelButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const mode = button.dataset.v2LabelMode;
-                try {
-                    labelDisplayMode = mode;
-                } catch (_) {}
-                setV2LabelModeActive(mode);
-                syncV2StarDisplayFromViewer();
-            });
+        v2StarLabelsToggleButton.addEventListener('click', () => {
+            const snapshot = window.ViewerSettings.getSnapshot();
+            window.ViewerSettings.setStarLabelsVisible(
+                !snapshot.starLabelsVisible
+            );
+            syncV2StarDisplayFromViewer();
+        });
+
+        v2ConstellationLabelsToggleButton.addEventListener('click', () => {
+            const snapshot = window.ViewerSettings.getSnapshot();
+            window.ViewerSettings.setConstellationLabelsVisible(
+                !snapshot.constellationLabelsVisible
+            );
+            syncV2StarDisplayFromViewer();
+        });
+
+        v2LabelLanguageButton.addEventListener('click', () => {
+            const snapshot = window.ViewerSettings.getSnapshot();
+            window.ViewerSettings.setLabelLanguage(
+                snapshot.labelLanguage === 'en' ? 'ja' : 'en'
+            );
+            syncV2StarDisplayFromViewer();
         });
 
         // Static options are rendered once, after the entire set of event
@@ -4648,7 +4729,10 @@ function renderV2ConstellationOptions() {
 
         const skyTapStarCandidates = [];
         let canvasDragMaxDistance = 0;
-        let labelDisplayMode = 'constellation-ja';
+        let starLabelsVisibleV129 = false;
+        let constellationLabelsVisibleV129 = true;
+        let labelLanguageV129 = 'ja';
+        window.constellationArtworkVisibleV129 = true;
         let backgroundStarLayers = [];
         let lastConstellationLineClipKey = '';
 
@@ -4677,6 +4761,7 @@ function renderV2ConstellationOptions() {
         const activePointers = new Map();
         let dragPointerId = null;
         let pinchStartDistance = null;
+        const PINCH_ZOOM_SENSITIVITY_V129 = 1.7;
         let touchHintTimer = null;
         let isTimePlaying = false;
         let lastAnimationTime = performance.now();
@@ -4716,7 +4801,11 @@ function renderV2ConstellationOptions() {
                     timeZone: observerTimeZone,
                     localDateTime: formatLocalDateTimeInput(simulationUtcMs, observerTimeZone),
                     utcMs: simulationUtcMs,
-                    constellationLinesVisible: lineGroup.visible
+                    constellationLinesVisible: lineGroup.visible,
+                    constellationArtworkVisible: window.constellationArtworkVisibleV129 !== false,
+                    starLabelsVisible: starLabelsVisibleV129,
+                    constellationLabelsVisible: constellationLabelsVisibleV129,
+                    labelLanguage: labelLanguageV129
                 };
             },
             getLocationOptions() {
@@ -4777,6 +4866,24 @@ function renderV2ConstellationOptions() {
             },
             setConstellationLinesVisible(visible) {
                 lineGroup.visible = Boolean(visible);
+                return true;
+            },
+            setConstellationArtworkVisible(visible) {
+                window.constellationArtworkVisibleV129 = Boolean(visible);
+                window.constellationArtManagerV46?.setVisible?.(Boolean(visible));
+                return true;
+            },
+            setStarLabelsVisible(visible) {
+                starLabelsVisibleV129 = Boolean(visible);
+                return true;
+            },
+            setConstellationLabelsVisible(visible) {
+                constellationLabelsVisibleV129 = Boolean(visible);
+                return true;
+            },
+            setLabelLanguage(language) {
+                if (language !== 'ja' && language !== 'en') return false;
+                labelLanguageV129 = language;
                 return true;
             }
         });
@@ -5307,7 +5414,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 dragPointerId = null;
                 const distance = getActivePointerDistance();
                 if (distance > 0 && pinchStartDistance !== null && pinchStartDistance > 0) {
-                    const zoomAmount = Math.log(pinchStartDistance / distance) * 0.9;
+                    const zoomAmount = Math.log(pinchStartDistance / distance) * PINCH_ZOOM_SENSITIVITY_V129;
                     applyZoom(zoomAmount);
                 }
                 pinchStartDistance = distance;
@@ -7684,17 +7791,14 @@ function findNextVisibleConstellationTime(constellation, startUtcMs) {
                 const element = runtime.labelElement;
                 if (!element) return;
 
-                if (
-                    labelDisplayMode !== 'constellation-en' &&
-                    labelDisplayMode !== 'constellation-ja'
-                ) {
+                if (!constellationLabelsVisibleV129) {
                     element.style.display = 'none';
                     return;
                 }
 
                 const info = CONSTELLATIONS_V2[id];
                 const labelText =
-                    labelDisplayMode === 'constellation-en'
+                    labelLanguageV129 === 'en'
                         ? info?.en || id
                         : info?.ja || id;
 
@@ -7743,14 +7847,14 @@ function findNextVisibleConstellationTime(constellation, startUtcMs) {
         function getStarLabelText(meta) {
             const displayName = meta?.displayName || STAR_DISPLAY_NAMES[String(meta?.starName || '')];
             if (!displayName) return '';
-            return labelDisplayMode === 'star-ja' ? displayName.ja : displayName.en;
+            return labelLanguageV129 === 'ja' ? displayName.ja : displayName.en;
         }
 
         function updateStarLabels() {
             const cameraForward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion).normalize();
 
             Object.entries(starLabelElements).forEach(([key, element]) => {
-                if (labelDisplayMode !== 'star-en' && labelDisplayMode !== 'star-ja') {
+                if (!starLabelsVisibleV129) {
                     element.style.display = 'none';
                     return;
                 }
@@ -8096,7 +8200,9 @@ function findNextVisibleConstellationTime(constellation, startUtcMs) {
                 },
                 display: {
                     constellationLines: lineGroup.visible,
-                    labelMode: typeof labelDisplayMode !== 'undefined' ? labelDisplayMode : null,
+                    starLabelsVisible: starLabelsVisibleV129,
+                    constellationLabelsVisible: constellationLabelsVisibleV129,
+                    labelLanguage: labelLanguageV129,
                     selectedConstellation
                 },
                 celestial: {
@@ -8559,6 +8665,7 @@ function findNextVisibleConstellationTime(constellation, startUtcMs) {
                 const artworkGroup = new THREE.Group();
                 artworkGroup.name = 'ConstellationArtworkGroupV45';
                 celestialGroup.add(artworkGroup);
+                artworkGroup.visible = window.constellationArtworkVisibleV129 !== false;
 
                 const textureLoader = new THREE.TextureLoader();
                 const entries = new Map();
@@ -9363,6 +9470,14 @@ function findNextVisibleConstellationTime(constellation, startUtcMs) {
                 window.constellationArtManagerV46 = {
                     manifest,
                     entries,
+                    setVisible(visible) {
+                        window.constellationArtworkVisibleV129 = Boolean(visible);
+                        artworkGroup.visible = Boolean(visible);
+                        return true;
+                    },
+                    getVisible() {
+                        return artworkGroup.visible;
+                    },
                     getState() {
                         const summary = {};
                         entries.forEach((state, id) => {
