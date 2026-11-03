@@ -2857,7 +2857,7 @@
 
         /* ===== V54 Search constellation -> center + default 3-line comment ===== */
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV130 {
+        #settingsVersionV131 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3225,7 +3225,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV130" aria-label="バージョン">V130</div>
+        <div id="settingsVersionV131" aria-label="バージョン">V131</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -4847,6 +4847,16 @@ function renderV2ConstellationOptions() {
             ].join('');
         }
 
+        const DISPLAY_MODES_V131 = Object.freeze([
+            'all',
+            'selected',
+            'off'
+        ]);
+
+        function isDisplayModeV131(mode) {
+            return DISPLAY_MODES_V131.includes(mode);
+        }
+
         function setSimulationUtcTimeV127(utcMs, options = {}) {
             if (!Number.isFinite(utcMs)) return false;
 
@@ -4934,7 +4944,7 @@ function renderV2ConstellationOptions() {
                 return this.setUtcTime(Date.now());
             },
             setConstellationLinesMode(mode) {
-                if (!DISPLAY_MODE_ORDER_V130.includes(mode)) {
+                if (!isDisplayModeV131(mode)) {
                     return false;
                 }
 
@@ -4943,7 +4953,7 @@ function renderV2ConstellationOptions() {
                 return true;
             },
             setConstellationArtworkMode(mode) {
-                if (!DISPLAY_MODE_ORDER_V130.includes(mode)) {
+                if (!isDisplayModeV131(mode)) {
                     return false;
                 }
 
@@ -4952,7 +4962,7 @@ function renderV2ConstellationOptions() {
                 return true;
             },
             setStarLabelsMode(mode) {
-                if (!DISPLAY_MODE_ORDER_V130.includes(mode)) {
+                if (!isDisplayModeV131(mode)) {
                     return false;
                 }
 
@@ -4960,7 +4970,7 @@ function renderV2ConstellationOptions() {
                 return true;
             },
             setConstellationLabelsMode(mode) {
-                if (!DISPLAY_MODE_ORDER_V130.includes(mode)) {
+                if (!isDisplayModeV131(mode)) {
                     return false;
                 }
 
@@ -9580,7 +9590,7 @@ function findNextVisibleConstellationTime(constellation, startUtcMs) {
                     manifest,
                     entries,
                     setMode(mode) {
-                        if (!DISPLAY_MODE_ORDER_V130.includes(mode)) {
+                        if (!isDisplayModeV131(mode)) {
                             return false;
                         }
 
