@@ -2444,6 +2444,10 @@
             color:#eaffff;
             box-shadow:inset 0 0 14px rgba(25,234,255,.09),0 0 10px rgba(25,234,255,.08);
         }
+        .settingsV129ToggleButton.selected-mode {
+            border-style:dashed;
+            background:rgba(14,72,92,.42);
+        }
         .settingsV129LanguageWrap {
             margin-top:10px;
             display:grid;
@@ -2853,7 +2857,7 @@
 
         /* ===== V54 Search constellation -> center + default 3-line comment ===== */
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV129 {
+        #settingsVersionV130 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3221,7 +3225,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV129" aria-label="バージョン">V129</div>
+        <div id="settingsVersionV130" aria-label="バージョン">V130</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -3283,19 +3287,19 @@
             <div class="settingsV129DisplayGrid" role="group" aria-label="表示項目">
                 <div class="settingsV129DisplayItem">
                     <div class="settingsV129DisplayLabel">星座絵</div>
-                    <button type="button" class="settingsV129ToggleButton active" id="v2ArtworkToggleButton" aria-pressed="true">ON</button>
+                    <button type="button" class="settingsV129ToggleButton active" id="v2ArtworkToggleButton" aria-label="星座絵の表示モード">全て</button>
                 </div>
                 <div class="settingsV129DisplayItem">
                     <div class="settingsV129DisplayLabel">星座線</div>
-                    <button type="button" class="settingsV129ToggleButton active" id="v2ConstellationLinesToggleButton" aria-pressed="true">ON</button>
+                    <button type="button" class="settingsV129ToggleButton active" id="v2ConstellationLinesToggleButton" aria-label="星座線の表示モード">全て</button>
                 </div>
                 <div class="settingsV129DisplayItem">
                     <div class="settingsV129DisplayLabel">星名ラベル</div>
-                    <button type="button" class="settingsV129ToggleButton" id="v2StarLabelsToggleButton" aria-pressed="false">OFF</button>
+                    <button type="button" class="settingsV129ToggleButton" id="v2StarLabelsToggleButton" aria-label="星名ラベルの表示モード">OFF</button>
                 </div>
                 <div class="settingsV129DisplayItem">
                     <div class="settingsV129DisplayLabel">星座名ラベル</div>
-                    <button type="button" class="settingsV129ToggleButton active" id="v2ConstellationLabelsToggleButton" aria-pressed="true">ON</button>
+                    <button type="button" class="settingsV129ToggleButton active" id="v2ConstellationLabelsToggleButton" aria-label="星座名ラベルの表示モード">全て</button>
                 </div>
             </div>
             <div class="settingsV129LanguageWrap">
@@ -3762,31 +3766,57 @@ function renderV2ConstellationOptions() {
                 `${filterLabel}: ${visibleCount}件 / 選択中: ${selectedInfo?.ja || '未選択'}`;
         }
 
-        function setV129ToggleState(button, enabled) {
+        const DISPLAY_MODE_ORDER_V130 = ['all', 'selected', 'off'];
+
+        function nextDisplayModeV130(mode) {
+            const index = DISPLAY_MODE_ORDER_V130.indexOf(mode);
+            return DISPLAY_MODE_ORDER_V130[
+                (index + 1 + DISPLAY_MODE_ORDER_V130.length) %
+                DISPLAY_MODE_ORDER_V130.length
+            ];
+        }
+
+        function displayModeLabelV130(mode) {
+            if (mode === 'selected') return '選択中';
+            if (mode === 'off') return 'OFF';
+            return '全て';
+        }
+
+        function setV130ModeButtonState(button, mode) {
             if (!button) return;
-            button.classList.toggle('active', Boolean(enabled));
-            button.setAttribute('aria-pressed', String(Boolean(enabled)));
-            button.textContent = enabled ? 'ON' : 'OFF';
+            const normalized =
+                DISPLAY_MODE_ORDER_V130.includes(mode)
+                    ? mode
+                    : 'all';
+
+            button.dataset.displayMode = normalized;
+            button.textContent = displayModeLabelV130(normalized);
+            button.classList.toggle('active', normalized !== 'off');
+            button.classList.toggle('selected-mode', normalized === 'selected');
+            button.setAttribute(
+                'aria-pressed',
+                String(normalized !== 'off')
+            );
         }
 
         function syncV2StarDisplayFromViewer() {
             const snapshot = window.ViewerSettings.getSnapshot();
 
-            setV129ToggleState(
+            setV130ModeButtonState(
                 v2ArtworkToggleButton,
-                snapshot.constellationArtworkVisible
+                snapshot.constellationArtworkMode
             );
-            setV129ToggleState(
+            setV130ModeButtonState(
                 v2ConstellationLinesToggleButton,
-                snapshot.constellationLinesVisible
+                snapshot.constellationLinesMode
             );
-            setV129ToggleState(
+            setV130ModeButtonState(
                 v2StarLabelsToggleButton,
-                snapshot.starLabelsVisible
+                snapshot.starLabelsMode
             );
-            setV129ToggleState(
+            setV130ModeButtonState(
                 v2ConstellationLabelsToggleButton,
-                snapshot.constellationLabelsVisible
+                snapshot.constellationLabelsMode
             );
 
             const isKana = snapshot.labelLanguage !== 'en';
@@ -4003,32 +4033,40 @@ function renderV2ConstellationOptions() {
 
         v2ArtworkToggleButton.addEventListener('click', () => {
             const snapshot = window.ViewerSettings.getSnapshot();
-            window.ViewerSettings.setConstellationArtworkVisible(
-                !snapshot.constellationArtworkVisible
+            window.ViewerSettings.setConstellationArtworkMode(
+                nextDisplayModeV130(
+                    snapshot.constellationArtworkMode
+                )
             );
             syncV2StarDisplayFromViewer();
         });
 
         v2ConstellationLinesToggleButton.addEventListener('click', () => {
             const snapshot = window.ViewerSettings.getSnapshot();
-            window.ViewerSettings.setConstellationLinesVisible(
-                !snapshot.constellationLinesVisible
+            window.ViewerSettings.setConstellationLinesMode(
+                nextDisplayModeV130(
+                    snapshot.constellationLinesMode
+                )
             );
             syncV2StarDisplayFromViewer();
         });
 
         v2StarLabelsToggleButton.addEventListener('click', () => {
             const snapshot = window.ViewerSettings.getSnapshot();
-            window.ViewerSettings.setStarLabelsVisible(
-                !snapshot.starLabelsVisible
+            window.ViewerSettings.setStarLabelsMode(
+                nextDisplayModeV130(
+                    snapshot.starLabelsMode
+                )
             );
             syncV2StarDisplayFromViewer();
         });
 
         v2ConstellationLabelsToggleButton.addEventListener('click', () => {
             const snapshot = window.ViewerSettings.getSnapshot();
-            window.ViewerSettings.setConstellationLabelsVisible(
-                !snapshot.constellationLabelsVisible
+            window.ViewerSettings.setConstellationLabelsMode(
+                nextDisplayModeV130(
+                    snapshot.constellationLabelsMode
+                )
             );
             syncV2StarDisplayFromViewer();
         });
@@ -4729,10 +4767,41 @@ function renderV2ConstellationOptions() {
 
         const skyTapStarCandidates = [];
         let canvasDragMaxDistance = 0;
-        let starLabelsVisibleV129 = false;
-        let constellationLabelsVisibleV129 = true;
+        let starLabelsModeV130 = 'off';
+        let constellationLabelsModeV130 = 'all';
+        let constellationLinesModeV130 = 'all';
+        let constellationArtworkModeV130 = 'all';
         let labelLanguageV129 = 'ja';
-        window.constellationArtworkVisibleV129 = true;
+
+        function displayModeAllowsConstellationV130(mode, constellationId) {
+            if (mode === 'off') return false;
+            if (mode === 'all') return true;
+
+            const selected =
+                ViewerStateV80.selectedConstellationId;
+
+            return Boolean(
+                selected &&
+                constellationId &&
+                selected === constellationId
+            );
+        }
+
+        function updateConstellationLineVisibilityV130() {
+            Object.entries(runtimeConstellationsV80)
+                .forEach(([id, runtime]) => {
+                    if (!runtime.lineMesh) return;
+
+                    runtime.lineMesh.visible =
+                        displayModeAllowsConstellationV130(
+                            constellationLinesModeV130,
+                            id
+                        );
+                });
+
+            lineGroup.visible =
+                constellationLinesModeV130 !== 'off';
+        }
         let backgroundStarLayers = [];
         let lastConstellationLineClipKey = '';
 
@@ -4801,10 +4870,10 @@ function renderV2ConstellationOptions() {
                     timeZone: observerTimeZone,
                     localDateTime: formatLocalDateTimeInput(simulationUtcMs, observerTimeZone),
                     utcMs: simulationUtcMs,
-                    constellationLinesVisible: lineGroup.visible,
-                    constellationArtworkVisible: window.constellationArtworkVisibleV129 !== false,
-                    starLabelsVisible: starLabelsVisibleV129,
-                    constellationLabelsVisible: constellationLabelsVisibleV129,
+                    constellationLinesMode: constellationLinesModeV130,
+                    constellationArtworkMode: constellationArtworkModeV130,
+                    starLabelsMode: starLabelsModeV130,
+                    constellationLabelsMode: constellationLabelsModeV130,
                     labelLanguage: labelLanguageV129
                 };
             },
@@ -4864,21 +4933,38 @@ function renderV2ConstellationOptions() {
             useCurrentTime() {
                 return this.setUtcTime(Date.now());
             },
-            setConstellationLinesVisible(visible) {
-                lineGroup.visible = Boolean(visible);
+            setConstellationLinesMode(mode) {
+                if (!DISPLAY_MODE_ORDER_V130.includes(mode)) {
+                    return false;
+                }
+
+                constellationLinesModeV130 = mode;
+                updateConstellationLineVisibilityV130();
                 return true;
             },
-            setConstellationArtworkVisible(visible) {
-                window.constellationArtworkVisibleV129 = Boolean(visible);
-                window.constellationArtManagerV46?.setVisible?.(Boolean(visible));
+            setConstellationArtworkMode(mode) {
+                if (!DISPLAY_MODE_ORDER_V130.includes(mode)) {
+                    return false;
+                }
+
+                constellationArtworkModeV130 = mode;
+                window.constellationArtManagerV46?.setMode?.(mode);
                 return true;
             },
-            setStarLabelsVisible(visible) {
-                starLabelsVisibleV129 = Boolean(visible);
+            setStarLabelsMode(mode) {
+                if (!DISPLAY_MODE_ORDER_V130.includes(mode)) {
+                    return false;
+                }
+
+                starLabelsModeV130 = mode;
                 return true;
             },
-            setConstellationLabelsVisible(visible) {
-                constellationLabelsVisibleV129 = Boolean(visible);
+            setConstellationLabelsMode(mode) {
+                if (!DISPLAY_MODE_ORDER_V130.includes(mode)) {
+                    return false;
+                }
+
+                constellationLabelsModeV130 = mode;
                 return true;
             },
             setLabelLanguage(language) {
@@ -6218,6 +6304,8 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         }
 
         function applyConstellationSelectionVisualsV101() {
+            updateConstellationLineVisibilityV130();
+
             const selectedId = ViewerStateV80.selectedConstellationId;
             Object.entries(runtimeConstellationsV80).forEach(([id, runtime]) => {
                 const selected = Boolean(selectedId && id === selectedId);
@@ -7688,7 +7776,9 @@ function findNextVisibleConstellationTime(constellation, startUtcMs) {
 
                 runtime.lineMesh = segments;
             }
-            // Line visibility is owned by ViewerSettings; mesh rebuild does not reset it.
+
+            updateConstellationLineVisibilityV130();
+            // Line visibility is owned by ViewerSettings modes.
 
             // Select options are presentation only. value is always the canonical internal ID.
             Array.from(constellations)
@@ -7791,7 +7881,12 @@ function findNextVisibleConstellationTime(constellation, startUtcMs) {
                 const element = runtime.labelElement;
                 if (!element) return;
 
-                if (!constellationLabelsVisibleV129) {
+                if (
+                    !displayModeAllowsConstellationV130(
+                        constellationLabelsModeV130,
+                        id
+                    )
+                ) {
                     element.style.display = 'none';
                     return;
                 }
@@ -7854,12 +7949,17 @@ function findNextVisibleConstellationTime(constellation, startUtcMs) {
             const cameraForward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion).normalize();
 
             Object.entries(starLabelElements).forEach(([key, element]) => {
-                if (!starLabelsVisibleV129) {
+                const meta = starLabelMeta[key];
+
+                if (
+                    !displayModeAllowsConstellationV130(
+                        starLabelsModeV130,
+                        meta?.constellationId
+                    )
+                ) {
                     element.style.display = 'none';
                     return;
                 }
-
-                const meta = starLabelMeta[key];
                 const starText = getStarLabelText(meta);
                 if (element.textContent !== starText) element.textContent = starText;
                 const worldPosition = meta?.position;
@@ -8199,9 +8299,10 @@ function findNextVisibleConstellationTime(constellation, startUtcMs) {
                         : null
                 },
                 display: {
-                    constellationLines: lineGroup.visible,
-                    starLabelsVisible: starLabelsVisibleV129,
-                    constellationLabelsVisible: constellationLabelsVisibleV129,
+                    constellationLinesMode: constellationLinesModeV130,
+                    constellationArtworkMode: constellationArtworkModeV130,
+                    starLabelsMode: starLabelsModeV130,
+                    constellationLabelsMode: constellationLabelsModeV130,
                     labelLanguage: labelLanguageV129,
                     selectedConstellation
                 },
@@ -8665,7 +8766,7 @@ function findNextVisibleConstellationTime(constellation, startUtcMs) {
                 const artworkGroup = new THREE.Group();
                 artworkGroup.name = 'ConstellationArtworkGroupV45';
                 celestialGroup.add(artworkGroup);
-                artworkGroup.visible = window.constellationArtworkVisibleV129 !== false;
+                artworkGroup.visible = constellationArtworkModeV130 !== 'off';
 
                 const textureLoader = new THREE.TextureLoader();
                 const entries = new Map();
@@ -9313,9 +9414,17 @@ function findNextVisibleConstellationTime(constellation, startUtcMs) {
                                     : Number(state.cfg.baseOpacity ?? 0.68)
                             );
 
-                        state.targetOpacity = state.textureReady
-                            ? (baseOpacity * rangeBlend)
-                            : 0;
+                        const modeAllowsArtwork =
+                            displayModeAllowsConstellationV130(
+                                constellationArtworkModeV130,
+                                state.constellationKey
+                            );
+
+                        state.targetOpacity =
+                            state.textureReady &&
+                            (modeAllowsArtwork || editorForced)
+                                ? (baseOpacity * rangeBlend)
+                                : 0;
 
                         const smoothing = Number(
                             state.cfg.fadeSmoothing ?? 0.16
@@ -9470,10 +9579,17 @@ function findNextVisibleConstellationTime(constellation, startUtcMs) {
                 window.constellationArtManagerV46 = {
                     manifest,
                     entries,
-                    setVisible(visible) {
-                        window.constellationArtworkVisibleV129 = Boolean(visible);
-                        artworkGroup.visible = Boolean(visible);
+                    setMode(mode) {
+                        if (!DISPLAY_MODE_ORDER_V130.includes(mode)) {
+                            return false;
+                        }
+
+                        constellationArtworkModeV130 = mode;
+                        artworkGroup.visible = mode !== 'off';
                         return true;
+                    },
+                    getMode() {
+                        return constellationArtworkModeV130;
                     },
                     getVisible() {
                         return artworkGroup.visible;
