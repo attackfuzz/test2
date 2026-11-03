@@ -2889,7 +2889,7 @@
 
         /* ===== V54 Search constellation -> center + default 3-line comment ===== */
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV134 {
+        #settingsVersionV135 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3257,7 +3257,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV134" aria-label="バージョン">V134</div>
+        <div id="settingsVersionV135" aria-label="バージョン">V135</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -4774,6 +4774,13 @@ function renderV2ConstellationOptions() {
         const ALL_SKY_MAX_SCALE_V134 = 2.4;
         let allSkyScaleV134 = ALL_SKY_INITIAL_SCALE_V134;
 
+        let allSkyPanXV135 = 0;
+        let allSkyPanYV135 = 0;
+        let allSkyDragStartXV135 = 0;
+        let allSkyDragStartYV135 = 0;
+        let allSkyDragOriginXV135 = 0;
+        let allSkyDragOriginYV135 = 0;
+
         const starPositions = {};
         const starLabelElements = {};
         const starLabelMeta = {};
@@ -5548,6 +5555,16 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 pinchStartDistance = null;
                 canvasDragMaxDistance = 0;
                 closeSkyTapPicker();
+
+                if (projectionModeV133 === 'allsky') {
+                    isDragging = true;
+                    allSkyDragStartXV135 = event.clientX;
+                    allSkyDragStartYV135 = event.clientY;
+                    allSkyDragOriginXV135 = allSkyPanXV135;
+                    allSkyDragOriginYV135 = allSkyPanYV135;
+                    return;
+                }
+
                 beginPointerDrag(event.clientX, event.clientY);
                 return;
             }
@@ -5583,6 +5600,25 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                     applyZoom(zoomAmount);
                 }
                 pinchStartDistance = distance;
+                return;
+            }
+
+            if (
+                projectionModeV133 === 'allsky' &&
+                activePointers.size === 1 &&
+                event.pointerId === dragPointerId &&
+                isDragging
+            ) {
+                allSkyPanXV135 =
+                    allSkyDragOriginXV135 +
+                    (event.clientX - allSkyDragStartXV135);
+
+                allSkyPanYV135 =
+                    allSkyDragOriginYV135 +
+                    (event.clientY - allSkyDragStartYV135);
+
+                clampAllSkyPanV135();
+                drawAllSkyPlaneV133();
                 return;
             }
 
@@ -5631,6 +5667,16 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 const [remainingId, pointer] = activePointers.entries().next().value;
                 dragPointerId = remainingId;
                 pinchStartDistance = null;
+
+                if (projectionModeV133 === 'allsky') {
+                    isDragging = true;
+                    allSkyDragStartXV135 = pointer.x;
+                    allSkyDragStartYV135 = pointer.y;
+                    allSkyDragOriginXV135 = allSkyPanXV135;
+                    allSkyDragOriginYV135 = allSkyPanYV135;
+                    return;
+                }
+
                 beginPointerDrag(pointer.x, pointer.y);
                 return;
             }
@@ -6053,8 +6099,8 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             const angularDistanceFromNorthPole =
                 Math.PI / 2 - dec;
 
-            const cx = width * 0.5;
-            const cy = height * 0.5;
+            const cx = width * 0.5 + allSkyPanXV135;
+            const cy = height * 0.5 + allSkyPanYV135;
 
             const fitRadius = Math.max(
                 10,
@@ -6075,6 +6121,44 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 radius,
                 fitRadius
             };
+        }
+
+        function clampAllSkyPanV135() {
+            const width = Math.max(320, window.innerWidth);
+            const height = Math.max(240, window.innerHeight);
+
+            const padX = Math.max(18, width * 0.04);
+            const padY = Math.max(48, height * 0.08);
+
+            const fitRadius = Math.max(
+                10,
+                Math.min(
+                    width - padX * 2,
+                    height - padY * 2
+                ) * 0.5
+            );
+
+            if (allSkyScaleV134 <= 1.0001) {
+                allSkyPanXV135 = 0;
+                allSkyPanYV135 = 0;
+                return;
+            }
+
+            const chartRadius = fitRadius * allSkyScaleV134;
+            const keepVisible = Math.min(fitRadius * 0.45, 120);
+            const maxPan = Math.max(0, chartRadius - keepVisible);
+
+            allSkyPanXV135 = THREE.MathUtils.clamp(
+                allSkyPanXV135,
+                -maxPan,
+                maxPan
+            );
+
+            allSkyPanYV135 = THREE.MathUtils.clamp(
+                allSkyPanYV135,
+                -maxPan,
+                maxPan
+            );
         }
 
         function drawAllSkyPlaneV133() {
@@ -6100,8 +6184,8 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
             const padX = Math.max(18, width * 0.04);
             const padY = Math.max(48, height * 0.08);
-            const cx = width * 0.5;
-            const cy = height * 0.5;
+            const cx = width * 0.5 + allSkyPanXV135;
+            const cy = height * 0.5 + allSkyPanYV135;
 
             const fitRadius = Math.max(
                 10,
@@ -6321,6 +6405,8 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             if (shouldShow) {
                 allSkyScaleV134 =
                     ALL_SKY_INITIAL_SCALE_V134;
+                allSkyPanXV135 = 0;
+                allSkyPanYV135 = 0;
             }
 
             allSkyPlaneV133?.classList.toggle('visible', shouldShow);
@@ -6364,6 +6450,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             renderer.setSize(width, height);
 
             if (projectionModeV133 === 'allsky') {
+                clampAllSkyPanV135();
                 drawAllSkyPlaneV133();
             }
         }
@@ -6537,6 +6624,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                             ALL_SKY_MAX_SCALE_V134
                         );
 
+                    clampAllSkyPanV135();
                     drawAllSkyPlaneV133();
                     clearActiveViewPreset();
                     return;
