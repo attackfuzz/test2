@@ -2587,6 +2587,39 @@
                 font-size: 8px;
             }
         }
+
+        /* ===== V132 celestial all-sky chart ===== */
+        #allSkyChartV132 {
+            position: fixed;
+            inset: 0;
+            z-index: 1200;
+            display: none;
+            background:
+                radial-gradient(circle at 50% 48%, rgba(10,28,52,.96), rgba(1,7,18,.985) 68%, #01040b 100%);
+            pointer-events: none;
+        }
+        #allSkyChartV132.visible {
+            display: block;
+        }
+        #allSkyChartV132 canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+        #allSkyChartBadgeV132 {
+            position: absolute;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 6px 11px;
+            border: 1px solid rgba(103,247,255,.45);
+            border-radius: 999px;
+            background: rgba(1,10,24,.78);
+            color: rgba(226,253,255,.94);
+            font: 800 12px/1.2 system-ui, sans-serif;
+            letter-spacing: .04em;
+            white-space: nowrap;
+        }
 </style>
 <style>
     /* ===== Selected constellation guidance V22 ===== */
@@ -2857,7 +2890,7 @@
 
         /* ===== V54 Search constellation -> center + default 3-line comment ===== */
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV131 {
+        #settingsVersionV132 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3225,7 +3258,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV131" aria-label="バージョン">V131</div>
+        <div id="settingsVersionV132" aria-label="バージョン">V132</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -4950,6 +4983,9 @@ function renderV2ConstellationOptions() {
 
                 constellationLinesModeV130 = mode;
                 updateConstellationLineVisibilityV130();
+                if (projectionModeV132 === 'allsky') {
+                    drawAllSkyChartV132();
+                }
                 return true;
             },
             setConstellationArtworkMode(mode) {
@@ -4958,6 +4994,9 @@ function renderV2ConstellationOptions() {
                 }
 
                 constellationArtworkModeV130 = mode;
+                if (projectionModeV132 === 'allsky') {
+                    drawAllSkyChartV132();
+                }
                 window.constellationArtManagerV46?.setMode?.(mode);
                 return true;
             },
@@ -4967,6 +5006,9 @@ function renderV2ConstellationOptions() {
                 }
 
                 starLabelsModeV130 = mode;
+                if (projectionModeV132 === 'allsky') {
+                    drawAllSkyChartV132();
+                }
                 return true;
             },
             setConstellationLabelsMode(mode) {
@@ -4975,11 +5017,17 @@ function renderV2ConstellationOptions() {
                 }
 
                 constellationLabelsModeV130 = mode;
+                if (projectionModeV132 === 'allsky') {
+                    drawAllSkyChartV132();
+                }
                 return true;
             },
             setLabelLanguage(language) {
                 if (language !== 'ja' && language !== 'en') return false;
                 labelLanguageV129 = language;
+                if (projectionModeV132 === 'allsky') {
+                    drawAllSkyChartV132();
+                }
                 return true;
             }
         });
@@ -5517,7 +5565,12 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 return;
             }
 
-            if (activePointers.size === 1 && event.pointerId === dragPointerId && isDragging) {
+            if (
+                projectionModeV132 !== 'allsky' &&
+                activePointers.size === 1 &&
+                event.pointerId === dragPointerId &&
+                isDragging
+            ) {
                 continuePointerDrag(event.clientX, event.clientY);
             }
         }
@@ -5538,7 +5591,11 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 isDragging = false;
                 dragPointerId = null;
                 pinchStartDistance = null;
-                openSkyTapPicker(tapX, tapY);
+
+                if (projectionModeV132 !== 'allsky') {
+                    openSkyTapPicker(tapX, tapY);
+                }
+
                 return;
             }
 
@@ -5949,6 +6006,277 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             });
         }
 
+
+        let projectionModeV132 = 'perspective';
+        let allSkyChartRootV132 = null;
+        let allSkyChartCanvasV132 = null;
+
+        function ensureAllSkyChartV132() {
+            if (allSkyChartRootV132) return;
+
+            const root = document.createElement('div');
+            root.id = 'allSkyChartV132';
+            root.setAttribute('aria-hidden', 'true');
+
+            const canvas = document.createElement('canvas');
+            const badge = document.createElement('div');
+            badge.id = 'allSkyChartBadgeV132';
+            badge.textContent = '全天星座図・88星座';
+
+            root.append(canvas, badge);
+            document.body.appendChild(root);
+
+            allSkyChartRootV132 = root;
+            allSkyChartCanvasV132 = canvas;
+        }
+
+        function skyVectorToFlatV132(vector, width, height, padX, padY) {
+            const n = vector.clone().normalize();
+
+            // Current sky coordinates:
+            // y = sin(dec), x/z carry right ascension around the celestial sphere.
+            const lon = Math.atan2(n.x, -n.z);
+            const lat = Math.asin(
+                THREE.MathUtils.clamp(n.y, -1, 1)
+            );
+
+            const innerW = Math.max(1, width - padX * 2);
+            const innerH = Math.max(1, height - padY * 2);
+
+            return {
+                x: padX + ((lon + Math.PI) / (Math.PI * 2)) * innerW,
+                y: padY + ((Math.PI / 2 - lat) / Math.PI) * innerH
+            };
+        }
+
+        function drawAllSkyChartV132() {
+            if (
+                projectionModeV132 !== 'allsky' ||
+                !allSkyChartCanvasV132
+            ) {
+                return;
+            }
+
+            const dpr = Math.min(window.devicePixelRatio || 1, 2);
+            const width = Math.max(320, window.innerWidth);
+            const height = Math.max(240, window.innerHeight);
+
+            allSkyChartCanvasV132.width =
+                Math.round(width * dpr);
+            allSkyChartCanvasV132.height =
+                Math.round(height * dpr);
+
+            const ctx =
+                allSkyChartCanvasV132.getContext('2d');
+
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            ctx.clearRect(0, 0, width, height);
+
+            const padX = Math.max(18, width * 0.035);
+            const padY = Math.max(42, height * 0.075);
+            const innerW = width - padX * 2;
+            const innerH = height - padY * 2;
+
+            // Frame and celestial coordinate guides.
+            ctx.strokeStyle = 'rgba(105,190,220,.20)';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(padX, padY, innerW, innerH);
+
+            ctx.setLineDash([4, 6]);
+            for (const deg of [-60, -30, 0, 30, 60]) {
+                const y =
+                    padY +
+                    ((90 - deg) / 180) * innerH;
+                ctx.beginPath();
+                ctx.moveTo(padX, y);
+                ctx.lineTo(width - padX, y);
+                ctx.stroke();
+            }
+            for (let hour = 0; hour < 24; hour += 3) {
+                const x =
+                    padX +
+                    (hour / 24) * innerW;
+                ctx.beginPath();
+                ctx.moveTo(x, padY);
+                ctx.lineTo(x, height - padY);
+                ctx.stroke();
+            }
+            ctx.setLineDash([]);
+
+            const selectedId =
+                ViewerStateV80.selectedConstellationId;
+
+            // Stars.
+            for (const [id, runtime] of Object.entries(runtimeConstellationsV80)) {
+                const selected =
+                    Boolean(selectedId && selectedId === id);
+
+                ctx.fillStyle =
+                    selected
+                        ? 'rgba(255,110,120,.95)'
+                        : 'rgba(245,250,255,.78)';
+
+                for (const star of runtime.starPositions || []) {
+                    const p =
+                        skyVectorToFlatV132(
+                            star,
+                            width,
+                            height,
+                            padX,
+                            padY
+                        );
+
+                    ctx.beginPath();
+                    ctx.arc(
+                        p.x,
+                        p.y,
+                        selected ? 1.8 : 1.05,
+                        0,
+                        Math.PI * 2
+                    );
+                    ctx.fill();
+                }
+            }
+
+            // Constellation lines.
+            for (const [id, runtime] of Object.entries(runtimeConstellationsV80)) {
+                const selected =
+                    Boolean(selectedId && selectedId === id);
+
+                if (
+                    !displayModeAllowsConstellationV130(
+                        constellationLinesModeV130,
+                        id
+                    )
+                ) {
+                    continue;
+                }
+
+                ctx.strokeStyle =
+                    selected
+                        ? 'rgba(255,78,88,.96)'
+                        : 'rgba(68,236,135,.66)';
+
+                ctx.lineWidth =
+                    selected ? 1.7 : 0.9;
+
+                for (const segment of runtime.segments || []) {
+                    const a =
+                        skyVectorToFlatV132(
+                            segment.start,
+                            width,
+                            height,
+                            padX,
+                            padY
+                        );
+                    const b =
+                        skyVectorToFlatV132(
+                            segment.end,
+                            width,
+                            height,
+                            padX,
+                            padY
+                        );
+
+                    // Do not draw a long false line across the RA seam.
+                    if (Math.abs(a.x - b.x) > innerW * 0.5) {
+                        continue;
+                    }
+
+                    ctx.beginPath();
+                    ctx.moveTo(a.x, a.y);
+                    ctx.lineTo(b.x, b.y);
+                    ctx.stroke();
+                }
+            }
+
+            // Constellation labels.
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+
+            for (const [id, runtime] of Object.entries(runtimeConstellationsV80)) {
+                if (
+                    !displayModeAllowsConstellationV130(
+                        constellationLabelsModeV130,
+                        id
+                    )
+                ) {
+                    continue;
+                }
+
+                const center =
+                    runtime.center ||
+                    calculateRuntimeConstellationCenterV80(runtime);
+
+                if (!center) continue;
+
+                const p =
+                    skyVectorToFlatV132(
+                        center,
+                        width,
+                        height,
+                        padX,
+                        padY
+                    );
+
+                const entry =
+                    ConstellationRegistryV80.get(id);
+
+                const label =
+                    labelLanguageV129 === 'en'
+                        ? (entry?.en || entry?.iau || id)
+                        : (entry?.ja || entry?.iau || id);
+
+                const selected =
+                    Boolean(selectedId && selectedId === id);
+
+                ctx.font =
+                    selected
+                        ? '800 11px system-ui, sans-serif'
+                        : '700 9px system-ui, sans-serif';
+
+                ctx.fillStyle =
+                    selected
+                        ? 'rgba(255,125,132,.98)'
+                        : 'rgba(198,236,246,.83)';
+
+                ctx.fillText(label, p.x, p.y);
+            }
+        }
+
+        function enterAllSkyChartV132() {
+            if (currentViewMode !== 'celestial') {
+                return false;
+            }
+
+            ensureAllSkyChartV132();
+
+            projectionModeV132 = 'allsky';
+            allSkyChartRootV132.classList.add('visible');
+            allSkyChartRootV132.setAttribute('aria-hidden', 'false');
+
+            closeSkyTapPicker();
+            drawAllSkyChartV132();
+            return true;
+        }
+
+        function exitAllSkyChartV132() {
+            if (projectionModeV132 !== 'allsky') {
+                return false;
+            }
+
+            projectionModeV132 = 'perspective';
+
+            if (allSkyChartRootV132) {
+                allSkyChartRootV132.classList.remove('visible');
+                allSkyChartRootV132.setAttribute('aria-hidden', 'true');
+            }
+
+            camera.fov = 100;
+            camera.updateProjectionMatrix();
+            return true;
+        }
+
         function getActivePointerDistance() {
             const points = Array.from(activePointers.values());
             if (points.length < 2) return 0;
@@ -5970,6 +6298,10 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             camera.updateProjectionMatrix();
             renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
             renderer.setSize(width, height);
+
+            if (projectionModeV132 === 'allsky') {
+                drawAllSkyChartV132();
+            }
         }
 
         
@@ -6108,9 +6440,37 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 groundLensSlider.value = String(focalLength);
                 updateLensDisplay(focalLength, camera.fov);
             } else if (currentViewMode === 'celestial') {
-                camera.fov = THREE.MathUtils.clamp(camera.fov + amount * 12, 20, 100);
+                if (projectionModeV132 === 'allsky') {
+                    // Pinch inward from the chart to return to the widest 3D sky.
+                    if (amount < -0.035) {
+                        exitAllSkyChartV132();
+                    }
+                    clearActiveViewPreset();
+                    return;
+                }
+
+                const nextFov =
+                    camera.fov + amount * 12;
+
+                if (
+                    camera.fov >= 99.5 &&
+                    nextFov > 100.4
+                ) {
+                    enterAllSkyChartV132();
+                    clearActiveViewPreset();
+                    return;
+                }
+
+                camera.fov =
+                    THREE.MathUtils.clamp(
+                        nextFov,
+                        20,
+                        100
+                    );
+
                 camera.updateProjectionMatrix();
             }
+
             clearActiveViewPreset();
         }
 
@@ -6118,6 +6478,14 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             if (name !== 'ground' && name !== 'celestial') return false;
 
             cancelCameraAnimation();
+
+            if (
+                projectionModeV132 === 'allsky' &&
+                name !== 'celestial'
+            ) {
+                exitAllSkyChartV132();
+            }
+
             currentViewMode = name;
             if (name === 'celestial') hideSelectedConstellationGuidance();
             else setTimeout(() => updateSelectedConstellationGuidance(true), 80);
@@ -6315,6 +6683,10 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
         function applyConstellationSelectionVisualsV101() {
             updateConstellationLineVisibilityV130();
+
+            if (projectionModeV132 === 'allsky') {
+                drawAllSkyChartV132();
+            }
 
             const selectedId = ViewerStateV80.selectedConstellationId;
             Object.entries(runtimeConstellationsV80).forEach(([id, runtime]) => {
