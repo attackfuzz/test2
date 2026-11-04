@@ -2889,7 +2889,7 @@
 
         /* ===== V54 Search constellation -> center + default 3-line comment ===== */
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV138 {
+        #settingsVersionV139 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3257,7 +3257,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV138" aria-label="バージョン">V138</div>
+        <div id="settingsVersionV139" aria-label="バージョン">V139</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -4706,6 +4706,7 @@ function renderV2ConstellationOptions() {
         const skyTapPickerList = document.getElementById('skyTapPickerList');
         const skyTapPickerClose = document.getElementById('skyTapPickerClose');
         let skyTapPickerCandidatesV101 = [];
+        let skyTapPickerContextV139 = 'perspective';
         const skyTapExplainedStars = new Map([
             ["16αBoo", { id: "Arcturus", ja: "アークトゥルス" }],
             ["67αVir", { id: "Spica", ja: "スピカ" }],
@@ -5650,8 +5651,26 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 dragPointerId = null;
                 pinchStartDistance = null;
 
-                if (!isFlatSkyModeV137()) {
-                    openSkyTapPicker(tapX, tapY);
+                if (isFlatSkyModeV137()) {
+                    const candidates =
+                        getFlatSkyTapCandidatesV139(
+                            tapX,
+                            tapY
+                        );
+
+                    openSkyTapPicker(
+                        tapX,
+                        tapY,
+                        {
+                            context: 'flat',
+                            candidates
+                        }
+                    );
+                } else {
+                    openSkyTapPicker(
+                        tapX,
+                        tapY
+                    );
                 }
 
                 return;
@@ -5692,6 +5711,33 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             skyTapPicker.classList.remove('open');
             skyTapPicker.setAttribute('aria-hidden', 'true');
             skyTapPickerCandidatesV101 = [];
+            skyTapPickerContextV139 = 'perspective';
+        }
+
+        function activateConstellationFromSkyTapV139(id) {
+            const normalized =
+                ConstellationRegistryV80.normalizeId(id);
+
+            if (!normalized) return false;
+
+            if (skyTapPickerContextV139 === 'flat') {
+                // Flat maps are already the overview destination.
+                // Keep the map in place and only update canonical selection,
+                // markup and the existing constellation comment.
+                return selectConstellationV80(
+                    normalized,
+                    {
+                        focus: false,
+                        showComment: true,
+                        source: 'flat-tap'
+                    }
+                );
+            }
+
+            return window.viewConstellation?.(
+                normalized,
+                { source: 'tap' }
+            );
         }
 
         function handleSkyTapPickerAction(event) {
@@ -5735,10 +5781,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 if (!id) return true;
 
                 try {
-                    window.viewConstellation?.(
-                        id,
-                        { source: 'tap' }
-                    );
+                    activateConstellationFromSkyTapV139(id);
                 } catch (error) {
                     console.error(
                         'Sky-tap constellation selection failed:',
@@ -5954,21 +5997,177 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         }
 
 
-        function openSkyTapPicker(x, y) {
+        function getFlatSkyTapCandidatesV139(x, y) {
+            if (!isFlatSkyModeV137()) {
+                return [];
+            }
+
+            const metrics =
+                getFlatSkyMetricsV137();
+
+            const candidates = [];
+            const seen = new Set();
+
+            // Scale hit radii slightly with chart zoom so the physical
+            // touch target stays comfortable rather than shrinking with data.
+            const lineRadius = 46;
+            const starRadius = 62;
+            const centerRadius = 84;
+
+            for (
+                const [id, runtime]
+                of Object.entries(runtimeConstellationsV80)
+            ) {
+                const info =
+                    resolveConstellationLabelInfo(id);
+
+                if (
+                    !info?.iau ||
+                    !constellationBasicComments[info.iau]
+                ) {
+                    continue;
+                }
+
+                let best = Infinity;
+
+                // 1. Nearest visible constellation segment.
+                for (const segment of runtime.segments || []) {
+                    const a =
+                        projectFlatSkyPointV137(
+                            segment.start,
+                            metrics
+                        );
+                    const b =
+                        projectFlatSkyPointV137(
+                            segment.end,
+                            metrics
+                        );
+
+                    if (!a || !b) continue;
+
+                    best = Math.min(
+                        best,
+                        pointToScreenSegmentDistance(
+                            x,
+                            y,
+                            a,
+                            b
+                        )
+                    );
+                }
+
+                // 2. Nearby constituent stars make tapping easier on phones.
+                for (const star of runtime.starPositions || []) {
+                    const p =
+                        projectFlatSkyPointV137(
+                            star,
+                            metrics
+                        );
+
+                    if (!p) continue;
+
+                    const distance =
+                        Math.hypot(
+                            p.x - x,
+                            p.y - y
+                        );
+
+                    if (distance <= starRadius) {
+                        best = Math.min(
+                            best,
+                            distance + 4
+                        );
+                    }
+                }
+
+                // 3. Constellation center as a fallback for sparse line art.
+                const center =
+                    runtime.center ||
+                    calculateRuntimeConstellationCenterV80(
+                        runtime
+                    );
+
+                if (center) {
+                    const p =
+                        projectFlatSkyPointV137(
+                            center,
+                            metrics
+                        );
+
+                    if (p) {
+                        const distance =
+                            Math.hypot(
+                                p.x - x,
+                                p.y - y
+                            );
+
+                        if (distance <= centerRadius) {
+                            best = Math.min(
+                                best,
+                                distance + 12
+                            );
+                        }
+                    }
+                }
+
+                if (best > lineRadius + 18) {
+                    continue;
+                }
+
+                if (seen.has(id)) continue;
+                seen.add(id);
+
+                candidates.push({
+                    type: 'constellation',
+                    key: id,
+                    name: info.ja || id,
+                    sub: `${info.en} / 星座`,
+                    score: best,
+                    distance: best
+                });
+            }
+
+            candidates.sort(
+                (a, b) =>
+                    a.score - b.score ||
+                    a.distance - b.distance
+            );
+
+            return candidates.slice(0, 6);
+        }
+
+
+        function openSkyTapPicker(
+            x,
+            y,
+            options = {}
+        ) {
             if (!skyTapPicker || !skyTapPickerList) return;
 
-            const candidates = getSkyTapCandidates(x, y);
-            skyTapPickerCandidatesV101 = candidates;
+            const {
+                context = 'perspective',
+                candidates = null
+            } = options;
+
+            skyTapPickerContextV139 = context;
+
+            const resolvedCandidates =
+                Array.isArray(candidates)
+                    ? candidates
+                    : getSkyTapCandidates(x, y);
+
+            skyTapPickerCandidatesV101 =
+                resolvedCandidates;
             skyTapPickerList.innerHTML = '';
 
-            if (!candidates.length) {
+            if (!resolvedCandidates.length) {
                 const empty = document.createElement('div');
                 empty.className = 'skyTapPickerEmpty';
                 empty.textContent =
                     'この近くには、解説できる天体がありません。';
                 skyTapPickerList.appendChild(empty);
             } else {
-                candidates.forEach(candidate => {
+                resolvedCandidates.forEach(candidate => {
                     const button = document.createElement('button');
                     button.type = 'button';
                     button.className = 'skyTapPickerItem';
@@ -5985,7 +6184,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                             event.preventDefault();
                             event.stopPropagation();
                             closeSkyTapPicker();
-                            window.viewConstellation?.(id, { source: 'tap' });
+                            activateConstellationFromSkyTapV139(id);
                         });
                     } else if (candidate.type === 'star') {
                         button.dataset.starKey = String(candidate.key || '');
@@ -6638,6 +6837,50 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                     p.x,
                     p.y
                 );
+            }
+
+
+            // Selected constellation markup: a simple map-space halo around
+            // the canonical constellation center. Lines/stars remain red too.
+            if (selectedId) {
+                const runtime =
+                    runtimeConstellationsV80[selectedId];
+
+                const center =
+                    runtime?.center ||
+                    (
+                        runtime
+                            ? calculateRuntimeConstellationCenterV80(
+                                runtime
+                            )
+                            : null
+                    );
+
+                if (center) {
+                    const p =
+                        projectFlatSkyPointV137(
+                            center,
+                            metrics
+                        );
+
+                    if (p) {
+                        ctx.save();
+                        ctx.setLineDash([6, 5]);
+                        ctx.strokeStyle =
+                            'rgba(255,105,120,.86)';
+                        ctx.lineWidth = 1.5;
+                        ctx.beginPath();
+                        ctx.arc(
+                            p.x,
+                            p.y,
+                            22,
+                            0,
+                            Math.PI * 2
+                        );
+                        ctx.stroke();
+                        ctx.restore();
+                    }
+                }
             }
 
             ctx.restore();
