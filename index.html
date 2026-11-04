@@ -2889,7 +2889,7 @@
 
         /* ===== V54 Search constellation -> center + default 3-line comment ===== */
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV135 {
+        #settingsVersionV136 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3257,7 +3257,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV135" aria-label="バージョン">V135</div>
+        <div id="settingsVersionV136" aria-label="バージョン">V136</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -6416,9 +6416,15 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             );
 
             // Keep this deliberately simple:
-            // one surface is visible, the other is hidden.
+            // perspective surface = WebGL canvas + its DOM label layer
+            // flat surface        = independent all-sky plane
             renderer.domElement.style.visibility =
                 shouldShow ? 'hidden' : 'visible';
+
+            if (constellationLabelsLayer) {
+                constellationLabelsLayer.style.visibility =
+                    shouldShow ? 'hidden' : 'visible';
+            }
 
             if (shouldShow) {
                 drawAllSkyPlaneV133();
@@ -8429,6 +8435,10 @@ function findNextVisibleConstellationTime(constellation, startUtcMs) {
         }
 
         function updateConstellationLabels() {
+            if (projectionModeV133 === 'allsky') {
+                return;
+            }
+
             const cameraForward = new THREE.Vector3(0, 0, -1)
                 .applyQuaternion(camera.quaternion)
                 .normalize();
@@ -8502,6 +8512,10 @@ function findNextVisibleConstellationTime(constellation, startUtcMs) {
         }
 
         function updateStarLabels() {
+            if (projectionModeV133 === 'allsky') {
+                return;
+            }
+
             const cameraForward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion).normalize();
 
             Object.entries(starLabelElements).forEach(([key, element]) => {
