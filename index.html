@@ -2889,7 +2889,7 @@
 
         /* ===== V54 Search constellation -> center + default 3-line comment ===== */
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV137 {
+        #settingsVersionV138 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3257,7 +3257,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV137" aria-label="バージョン">V137</div>
+        <div id="settingsVersionV138" aria-label="バージョン">V138</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -9833,21 +9833,51 @@ function findNextVisibleConstellationTime(constellation, startUtcMs) {
                     state.autoBaseHalfHeight = baseHalfHeight;
                     state.angularRadius = Math.max(basis.angularRadius || 0, Math.hypot(baseHalfWidth, baseHalfHeight));
 
-                    // Local tangent basis: X roughly follows celestial east/west,
-                    // Y roughly follows celestial north/south.
+                    // V138: define the artwork tangent basis explicitly from the
+                    // viewer's inside-the-celestial-sphere convention.
+                    //
+                    // IMPORTANT:
+                    // The old V69 path first created X, flipped X, and then derived Y
+                    // from that already-flipped X. That changed BOTH basis axes and
+                    // produced a 180-degree-like basis change instead of a true
+                    // horizontal mirror correction.
+                    //
+                    // Canonical artwork basis:
+                    //   image right = screen-right on the inside view
+                    //   image up    = projected celestial north
+                    //
+                    // X and Y are therefore solved independently from `normal`.
                     const north = new THREE.Vector3(0, 1, 0);
                     const normal = basis.normal.clone().normalize();
-                    let tangentX = new THREE.Vector3().crossVectors(north, normal);
+
+                    let tangentX = new THREE.Vector3().crossVectors(
+                        normal,
+                        north
+                    );
+
                     if (tangentX.lengthSq() < 1e-8) {
-                        tangentX = new THREE.Vector3(1, 0, 0).cross(normal);
+                        // Near the celestial pole, use a stable fallback reference.
+                        const fallbackNorth = new THREE.Vector3(0, 0, -1);
+                        tangentX.crossVectors(normal, fallbackNorth);
                     }
                     tangentX.normalize();
 
-                    // V69: auto-placed constellation art is viewed from inside the celestial sphere.
-                    // Invert the horizontal basis so the image no longer appears left-right mirrored.
-                    tangentX.multiplyScalar(-1);
+                    let tangentY = north.clone()
+                        .addScaledVector(
+                            normal,
+                            -north.dot(normal)
+                        );
 
-                    const tangentY = new THREE.Vector3().crossVectors(normal, tangentX).normalize();
+                    if (tangentY.lengthSq() < 1e-8) {
+                        tangentY = new THREE.Vector3()
+                            .crossVectors(tangentX, normal);
+                    }
+                    tangentY.normalize();
+
+                    // Re-orthogonalize X against the independently-defined up axis.
+                    tangentX = new THREE.Vector3()
+                        .crossVectors(normal, tangentY)
+                        .normalize();
 
                     state.autoNormal = normal;
                     state.autoTangentX = tangentX;
