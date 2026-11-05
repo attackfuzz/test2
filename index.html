@@ -2889,7 +2889,7 @@
 
         /* ===== V54 Search constellation -> center + default 3-line comment ===== */
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV139 {
+        #settingsVersionV140 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3257,7 +3257,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV139" aria-label="バージョン">V139</div>
+        <div id="settingsVersionV140" aria-label="バージョン">V140</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -5008,7 +5008,7 @@ function renderV2ConstellationOptions() {
                 constellationLinesModeV130 = mode;
                 updateConstellationLineVisibilityV130();
                 if (isFlatSkyModeV137()) {
-                    drawFlatSkyPlaneV137();
+                    requestFlatSkyRedrawV140();
                 }
                 return true;
             },
@@ -5028,7 +5028,7 @@ function renderV2ConstellationOptions() {
 
                 starLabelsModeV130 = mode;
                 if (isFlatSkyModeV137()) {
-                    drawFlatSkyPlaneV137();
+                    requestFlatSkyRedrawV140();
                 }
                 return true;
             },
@@ -5039,7 +5039,7 @@ function renderV2ConstellationOptions() {
 
                 constellationLabelsModeV130 = mode;
                 if (isFlatSkyModeV137()) {
-                    drawFlatSkyPlaneV137();
+                    requestFlatSkyRedrawV140();
                 }
                 return true;
             },
@@ -5047,7 +5047,7 @@ function renderV2ConstellationOptions() {
                 if (language !== 'ja' && language !== 'en') return false;
                 labelLanguageV129 = language;
                 if (isFlatSkyModeV137()) {
-                    drawFlatSkyPlaneV137();
+                    requestFlatSkyRedrawV140();
                 }
                 return true;
             }
@@ -5556,6 +5556,10 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 dragPointerId = event.pointerId;
                 pinchStartDistance = null;
                 canvasDragMaxDistance = 0;
+                dragStartPosition = {
+                    x: event.clientX,
+                    y: event.clientY
+                };
                 closeSkyTapPicker();
 
                 if (isFlatSkyModeV137()) {
@@ -5620,7 +5624,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                     (event.clientY - flatSkyDragStartYV137);
 
                 clampFlatSkyPanV137();
-                drawFlatSkyPlaneV137();
+                requestFlatSkyRedrawV140();
                 return;
             }
 
@@ -6580,6 +6584,19 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             }
         }
 
+        let flatSkyRedrawRequestV140 = 0;
+
+        function requestFlatSkyRedrawV140() {
+            if (!isFlatSkyModeV137()) return;
+            if (flatSkyRedrawRequestV140) return;
+
+            flatSkyRedrawRequestV140 =
+                requestAnimationFrame(() => {
+                    flatSkyRedrawRequestV140 = 0;
+                    drawFlatSkyPlaneV137();
+                });
+        }
+
         function drawFlatSkyPlaneV137() {
             if (
                 !isFlatSkyModeV137() ||
@@ -6597,10 +6614,18 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                     2
                 );
 
-            allSkyPlaneCanvasV133.width =
+            const pixelWidth =
                 Math.round(metrics.width * dpr);
-            allSkyPlaneCanvasV133.height =
+            const pixelHeight =
                 Math.round(metrics.height * dpr);
+
+            if (
+                allSkyPlaneCanvasV133.width !== pixelWidth ||
+                allSkyPlaneCanvasV133.height !== pixelHeight
+            ) {
+                allSkyPlaneCanvasV133.width = pixelWidth;
+                allSkyPlaneCanvasV133.height = pixelHeight;
+            }
 
             const ctx =
                 allSkyPlaneCanvasV133.getContext('2d');
@@ -7487,7 +7512,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             updateConstellationLineVisibilityV130();
 
             if (isFlatSkyModeV137()) {
-                drawFlatSkyPlaneV137();
+                requestFlatSkyRedrawV140();
             }
 
             const selectedId = ViewerStateV80.selectedConstellationId;
@@ -8754,7 +8779,7 @@ function findNextVisibleConstellationTime(constellation, startUtcMs) {
             if (
                 projectionModeV133 === 'groundsky'
             ) {
-                drawFlatSkyPlaneV137();
+                requestFlatSkyRedrawV140();
             }
         }
 
