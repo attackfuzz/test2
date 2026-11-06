@@ -2620,8 +2620,8 @@
             white-space: nowrap;
         }
 
-        /* ===== V141 startup preload screen ===== */
-        #startupLoadingV141 {
+        /* ===== V142 startup preload screen ===== */
+        #startupLoadingV142 {
             position: fixed;
             inset: 0;
             z-index: 40000;
@@ -2644,20 +2644,20 @@
                 visibility .34s ease;
         }
 
-        #startupLoadingV141.done {
+        #startupLoadingV142.done {
             opacity: 0;
             visibility: hidden;
             pointer-events: none;
         }
 
-        .startupLoadingInnerV141 {
+        .startupLoadingInnerV142 {
             width: min(620px, 94vw);
             display: grid;
             justify-items: center;
             gap: 16px;
         }
 
-        #startupLoadingImageV141 {
+        #startupLoadingImageV142 {
             display: block;
             width: min(560px, 90vw);
             max-height: 56vh;
@@ -2669,7 +2669,7 @@
             pointer-events: none;
         }
 
-        .startupLoadingPanelV141 {
+        .startupLoadingPanelV142 {
             width: min(460px, 90vw);
             padding: 13px 15px 14px;
             border: 1px solid rgba(83, 232, 244, .28);
@@ -2680,7 +2680,7 @@
             -webkit-backdrop-filter: blur(6px);
         }
 
-        .startupLoadingTitleV141 {
+        .startupLoadingTitleV142 {
             display: flex;
             align-items: baseline;
             justify-content: space-between;
@@ -2692,19 +2692,19 @@
             color: #bffaff;
         }
 
-        #startupLoadingPercentV141 {
+        #startupLoadingPercentV142 {
             color: #6ff7ff;
             font-variant-numeric: tabular-nums;
         }
 
-        .startupLoadingTrackV141 {
+        .startupLoadingTrackV142 {
             height: 6px;
             overflow: hidden;
             border-radius: 999px;
             background: rgba(121, 194, 219, .12);
         }
 
-        #startupLoadingBarV141 {
+        #startupLoadingBarV142 {
             width: 0%;
             height: 100%;
             border-radius: inherit;
@@ -2717,7 +2717,7 @@
             transition: width .12s linear;
         }
 
-        #startupLoadingStatusV141 {
+        #startupLoadingStatusV142 {
             min-height: 1.4em;
             margin-top: 9px;
             color: rgba(216, 249, 255, .78);
@@ -2726,7 +2726,7 @@
             text-align: center;
         }
 
-        .startupLoadingItemsV141 {
+        .startupLoadingItemsV142 {
             display: grid;
             grid-template-columns: 1fr;
             gap: 4px;
@@ -2735,25 +2735,25 @@
             color: rgba(204, 239, 246, .58);
         }
 
-        .startupLoadingItemV141 {
+        .startupLoadingItemV142 {
             display: flex;
             justify-content: space-between;
             gap: 12px;
         }
 
-        .startupLoadingItemV141.ready {
+        .startupLoadingItemV142.ready {
             color: rgba(153, 255, 223, .94);
         }
 
-        .startupLoadingItemV141.active {
+        .startupLoadingItemV142.active {
             color: rgba(220, 252, 255, .96);
         }
 
         @media (max-width: 520px) {
-            #startupLoadingImageV141 {
+            #startupLoadingImageV142 {
                 max-height: 48vh;
             }
-            .startupLoadingInnerV141 {
+            .startupLoadingInnerV142 {
                 gap: 12px;
             }
         }
@@ -3029,7 +3029,7 @@
 
         /* ===== V54 Search constellation -> center + default 3-line comment ===== */
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV141 {
+        #settingsVersionV142 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3388,28 +3388,28 @@
 </head>
 <body>
 
-<div id="startupLoadingV141" role="status" aria-live="polite" aria-label="星空データを準備しています">
-    <div class="startupLoadingInnerV141">
+<div id="startupLoadingV142" role="status" aria-live="polite" aria-label="星空データを準備しています">
+    <div class="startupLoadingInnerV142">
         <img
-            id="startupLoadingImageV141"
+            id="startupLoadingImageV142"
             src="./loading_screen.png"
             alt=""
             aria-hidden="true"
         >
-        <div class="startupLoadingPanelV141">
-            <div class="startupLoadingTitleV141">
+        <div class="startupLoadingPanelV142">
+            <div class="startupLoadingTitleV142">
                 <span>STAR MAP LOADING</span>
-                <span id="startupLoadingPercentV141">0%</span>
+                <span id="startupLoadingPercentV142">0%</span>
             </div>
-            <div class="startupLoadingTrackV141" aria-hidden="true">
-                <div id="startupLoadingBarV141"></div>
+            <div class="startupLoadingTrackV142" aria-hidden="true">
+                <div id="startupLoadingBarV142"></div>
             </div>
-            <div id="startupLoadingStatusV141">星空データを準備しています…</div>
-            <div class="startupLoadingItemsV141" aria-hidden="true">
-                <div class="startupLoadingItemV141" data-load-stage="stars"><span>星データ</span><span>待機</span></div>
-                <div class="startupLoadingItemV141" data-load-stage="lines"><span>星座線</span><span>待機</span></div>
-                <div class="startupLoadingItemV141" data-load-stage="names"><span>星座名データ</span><span>待機</span></div>
-                <div class="startupLoadingItemV141" data-load-stage="art"><span>星座絵</span><span>待機</span></div>
+            <div id="startupLoadingStatusV142">星空データを準備しています…</div>
+            <div class="startupLoadingItemsV142" aria-hidden="true">
+                <div class="startupLoadingItemV142" data-load-stage="stars"><span>星データ</span><span>待機</span></div>
+                <div class="startupLoadingItemV142" data-load-stage="lines"><span>星座線</span><span>待機</span></div>
+                <div class="startupLoadingItemV142" data-load-stage="names"><span>星座名データ</span><span>待機</span></div>
+                <div class="startupLoadingItemV142" data-load-stage="art"><span>星座絵</span><span>待機</span></div>
             </div>
         </div>
     </div>
@@ -3425,7 +3425,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV141" aria-label="バージョン">V141</div>
+        <div id="settingsVersionV142" aria-label="バージョン">V142</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -6248,8 +6248,8 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
                 // 3. Constellation center as a fallback for sparse line art.
                 const center =
-                    runtime.center ||
-                    calculateRuntimeConstellationCenterV80(
+                    getFlatConstellationCenterV142(
+                        id,
                         runtime
                     );
 
@@ -6470,6 +6470,152 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             };
         }
 
+        // V142: flat-sky coordinate cache.
+        // Expensive celestial/horizontal math is separated from cheap screen mapping.
+        // - allsky cache is stable for the lifetime of the star catalogue.
+        // - ground cache is invalidated only when observer time/location basis changes.
+        const flatSkyAllSkyCoordinateCacheV142 = new WeakMap();
+        const flatSkyGroundCoordinateCacheV142 = new WeakMap();
+        const flatSkyConstellationCenterCacheV142 = new Map();
+        let flatSkyGroundCoordinateRevisionV142 = 1;
+
+        function invalidateGroundFlatSkyCoordinateCacheV142() {
+            flatSkyGroundCoordinateRevisionV142++;
+            if (flatSkyGroundCoordinateRevisionV142 > 1000000000) {
+                flatSkyGroundCoordinateRevisionV142 = 1;
+                // WeakMap cannot be cleared; revision makes old entries inert.
+            }
+        }
+
+        function getFlatConstellationCenterV142(id, runtime) {
+            if (!runtime) return null;
+            if (runtime.center) return runtime.center;
+
+            const cached = flatSkyConstellationCenterCacheV142.get(id);
+            if (cached) return cached;
+
+            const center = calculateRuntimeConstellationCenterV80(runtime);
+            if (center) {
+                flatSkyConstellationCenterCacheV142.set(id, center);
+            }
+            return center || null;
+        }
+
+        function getAllSkyNormalizedCoordinateV142(vector) {
+            if (!vector) return null;
+
+            const cached = flatSkyAllSkyCoordinateCacheV142.get(vector);
+            if (cached) return cached;
+
+            const lengthSq = vector.lengthSq();
+            if (!(lengthSq > 1e-12)) return null;
+
+            const invLength = 1 / Math.sqrt(lengthSq);
+            const nx = vector.x * invLength;
+            const ny = vector.y * invLength;
+            const nz = vector.z * invLength;
+
+            const dec = Math.asin(
+                THREE.MathUtils.clamp(ny, -1, 1)
+            );
+            const ra = Math.atan2(nx, -nz);
+            const normalizedRadius =
+                (Math.PI / 2 - dec) / Math.PI;
+
+            const result = {
+                u: Math.sin(ra) * normalizedRadius,
+                v: -Math.cos(ra) * normalizedRadius,
+                visible: true
+            };
+
+            flatSkyAllSkyCoordinateCacheV142.set(vector, result);
+            return result;
+        }
+
+        function getGroundNormalizedCoordinateV142(vector) {
+            if (!vector) return null;
+
+            const cached = flatSkyGroundCoordinateCacheV142.get(vector);
+            if (
+                cached &&
+                cached.revision === flatSkyGroundCoordinateRevisionV142
+            ) {
+                return cached;
+            }
+
+            const dx = vector.x - observerPosition.x;
+            const dy = vector.y - observerPosition.y;
+            const dz = vector.z - observerPosition.z;
+            const lengthSq = dx * dx + dy * dy + dz * dz;
+            if (!(lengthSq > 1e-12)) return null;
+
+            const invLength = 1 / Math.sqrt(lengthSq);
+            const nx = dx * invLength;
+            const ny = dy * invLength;
+            const nz = dz * invLength;
+
+            const up = THREE.MathUtils.clamp(
+                nx * observerUp.x +
+                ny * observerUp.y +
+                nz * observerUp.z,
+                -1,
+                1
+            );
+            const altitude = Math.asin(up);
+            const visible = altitude >= 0;
+
+            let u = 0;
+            let v = 0;
+
+            if (visible) {
+                const north =
+                    nx * observerNorth.x +
+                    ny * observerNorth.y +
+                    nz * observerNorth.z;
+                const east =
+                    nx * observerEast.x +
+                    ny * observerEast.y +
+                    nz * observerEast.z;
+
+                let azimuth = Math.atan2(east, north);
+                if (azimuth < 0) azimuth += Math.PI * 2;
+
+                const normalizedRadius =
+                    (Math.PI / 2 - altitude) /
+                    (Math.PI / 2);
+
+                u = Math.sin(azimuth) * normalizedRadius;
+                v = -Math.cos(azimuth) * normalizedRadius;
+            }
+
+            const result = {
+                revision: flatSkyGroundCoordinateRevisionV142,
+                u,
+                v,
+                visible
+            };
+
+            flatSkyGroundCoordinateCacheV142.set(vector, result);
+            return result;
+        }
+
+        function projectFlatNormalizedCoordinateV142(coord, metrics) {
+            if (!coord || !coord.visible) return null;
+
+            const scale = metrics.fitRadius * flatSkyScaleV137;
+            const x = metrics.cx + coord.u * scale;
+            const y = metrics.cy + coord.v * scale;
+
+            return {
+                x,
+                y,
+                radius: Math.hypot(
+                    x - metrics.cx,
+                    y - metrics.cy
+                )
+            };
+        }
+
         function getGroundHorizontalV137(vector) {
             const direction =
                 vector.clone()
@@ -6506,72 +6652,15 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         }
 
         function projectFlatSkyPointV137(vector, metrics) {
-            if (projectionModeV133 === 'groundsky') {
-                const horizontal =
-                    getGroundHorizontalV137(vector);
+            const normalized =
+                projectionModeV133 === 'groundsky'
+                    ? getGroundNormalizedCoordinateV142(vector)
+                    : getAllSkyNormalizedCoordinateV142(vector);
 
-                if (!horizontal.visible) {
-                    return null;
-                }
-
-                // Zenith = center, horizon = outer rim.
-                const zenithDistance =
-                    Math.PI / 2 -
-                    horizontal.altitude;
-
-                const radius =
-                    metrics.fitRadius *
-                    (zenithDistance / (Math.PI / 2)) *
-                    flatSkyScaleV137;
-
-                return {
-                    x:
-                        metrics.cx +
-                        Math.sin(horizontal.azimuth) *
-                        radius,
-                    y:
-                        metrics.cy -
-                        Math.cos(horizontal.azimuth) *
-                        radius,
-                    radius
-                };
-            }
-
-            // Celestial all-sky map: north celestial pole = center,
-            // south celestial pole = rim.
-            const n = vector.clone().normalize();
-
-            const dec =
-                Math.asin(
-                    THREE.MathUtils.clamp(
-                        n.y,
-                        -1,
-                        1
-                    )
-                );
-
-            const ra =
-                Math.atan2(n.x, -n.z);
-
-            const poleDistance =
-                Math.PI / 2 - dec;
-
-            const radius =
-                metrics.fitRadius *
-                (poleDistance / Math.PI) *
-                flatSkyScaleV137;
-
-            return {
-                x:
-                    metrics.cx +
-                    Math.sin(ra) *
-                    radius,
-                y:
-                    metrics.cy -
-                    Math.cos(ra) *
-                    radius,
-                radius
-            };
+            return projectFlatNormalizedCoordinateV142(
+                normalized,
+                metrics
+            );
         }
 
         function clampFlatSkyPanV137() {
@@ -6972,8 +7061,8 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                 }
 
                 const center =
-                    runtime.center ||
-                    calculateRuntimeConstellationCenterV80(
+                    getFlatConstellationCenterV142(
+                        id,
                         runtime
                     );
 
@@ -7034,14 +7123,12 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
                     runtimeConstellationsV80[selectedId];
 
                 const center =
-                    runtime?.center ||
-                    (
-                        runtime
-                            ? calculateRuntimeConstellationCenterV80(
-                                runtime
-                            )
-                            : null
-                    );
+                    runtime
+                        ? getFlatConstellationCenterV142(
+                            selectedId,
+                            runtime
+                        )
+                        : null;
 
                 if (center) {
                     const p =
@@ -7096,6 +7183,29 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
         // flat projection is active.
         function drawAllSkyPlaneV133() {
             drawFlatSkyPlaneV137();
+        }
+
+        function warmFlatSkyCoordinateCacheV142() {
+            if (!isFlatSkyModeV137()) return;
+
+            const ground = projectionModeV133 === 'groundsky';
+            const getCoordinate = ground
+                ? getGroundNormalizedCoordinateV142
+                : getAllSkyNormalizedCoordinateV142;
+
+            for (const [id, runtime] of Object.entries(runtimeConstellationsV80)) {
+                for (const star of runtime.starPositions || []) {
+                    getCoordinate(star);
+                }
+
+                for (const segment of runtime.segments || []) {
+                    getCoordinate(segment.start);
+                    getCoordinate(segment.end);
+                }
+
+                const center = getFlatConstellationCenterV142(id, runtime);
+                if (center) getCoordinate(center);
+            }
         }
 
         function setFlatSkyModeV137(mode) {
@@ -7162,6 +7272,7 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             }
 
             if (shouldShow) {
+                warmFlatSkyCoordinateCacheV142();
                 drawFlatSkyPlaneV137();
             }
 
@@ -8934,6 +9045,10 @@ function findNextVisibleConstellationTime(constellation, startUtcMs) {
             observerEast.set(-sinLst, 0, -cosLst).normalize();
             observerPosition.copy(observerUp).multiplyScalar(EARTH_RADIUS + OBSERVER_HEIGHT);
 
+            // Ground flat projection depends on observer time/location basis.
+            // Pan/zoom do not call this, so their expensive coordinates remain cached.
+            invalidateGroundFlatSkyCoordinateCacheV142();
+
             if (currentViewMode === 'ground' && !cameraAnimation) applySkyCameraOrientation();
             refreshConstellationLineGeometry(false);
             updateSkyStatus();
@@ -9021,14 +9136,14 @@ function findNextVisibleConstellationTime(constellation, startUtcMs) {
             }
         }
 
-        async function initializeStarData(progressV141 = null) {
+        async function initializeStarData(progressV142 = null) {
             const mainStarData = typeof stars !== 'undefined' && Array.isArray(stars) ? stars : [];
             const lineData = typeof starlines !== 'undefined' && Array.isArray(starlines) ? starlines : [];
             const constellations = new Set();
 
-            const reportV141 = async (stage, detail = '') => {
+            const reportV142 = async (stage, detail = '') => {
                 try {
-                    progressV141?.(stage, detail);
+                    progressV142?.(stage, detail);
                 } catch (_) {}
                 await new Promise(resolve =>
                     requestAnimationFrame(() => resolve())
@@ -9119,7 +9234,7 @@ function findNextVisibleConstellationTime(constellation, startUtcMs) {
             buildBackgroundStarLayers(
                 parseFloat(backgroundMagnitudeSlider.value)
             );
-            await reportV141(
+            await reportV142(
                 'stars',
                 `${mainStarData.length} stars`
             );
@@ -9174,7 +9289,7 @@ function findNextVisibleConstellationTime(constellation, startUtcMs) {
             updateConstellationLineVisibilityV130();
             // Line visibility is owned by ViewerSettings modes.
 
-            await reportV141(
+            await reportV142(
                 'lines',
                 `${lineData.length} line records`
             );
@@ -9187,7 +9302,7 @@ function findNextVisibleConstellationTime(constellation, startUtcMs) {
                     runtime.labelElement = createConstellationLabel(id);
                 });
 
-            await reportV141(
+            await reportV142(
                 'names',
                 `${constellations.size} constellations`
             );
@@ -9585,7 +9700,7 @@ function findNextVisibleConstellationTime(constellation, startUtcMs) {
             );
         }
 
-        function setStartupLoadingStageV141(
+        function setStartupLoadingStageV142(
             stage,
             state,
             detail = ''
@@ -9620,7 +9735,7 @@ function findNextVisibleConstellationTime(constellation, startUtcMs) {
                     );
         }
 
-        function setStartupLoadingProgressV141(
+        function setStartupLoadingProgressV142(
             percent,
             status
         ) {
@@ -9633,15 +9748,15 @@ function findNextVisibleConstellationTime(constellation, startUtcMs) {
 
             const bar =
                 document.getElementById(
-                    'startupLoadingBarV141'
+                    'startupLoadingBarV142'
                 );
             const label =
                 document.getElementById(
-                    'startupLoadingPercentV141'
+                    'startupLoadingPercentV142'
                 );
             const statusEl =
                 document.getElementById(
-                    'startupLoadingStatusV141'
+                    'startupLoadingStatusV142'
                 );
 
             if (bar) {
@@ -9659,7 +9774,7 @@ function findNextVisibleConstellationTime(constellation, startUtcMs) {
             }
         }
 
-        function constellationArtworkUrlV141(id) {
+        function constellationArtworkUrlV142(id) {
             const key =
                 ConstellationRegistryV80.normalizeId(id);
 
@@ -9673,7 +9788,7 @@ function findNextVisibleConstellationTime(constellation, startUtcMs) {
             return `./constellation_art/${file}`;
         }
 
-        async function preloadImageUrlV141(url) {
+        async function preloadImageUrlV142(url) {
             if (!url) return false;
 
             return new Promise(resolve => {
@@ -9713,13 +9828,13 @@ function findNextVisibleConstellationTime(constellation, startUtcMs) {
             });
         }
 
-        async function preloadConstellationArtworkV141() {
+        async function preloadConstellationArtworkV142() {
             const ids =
                 Object.keys(CONSTELLATIONS_V2);
 
             const urls =
                 ids
-                    .map(constellationArtworkUrlV141)
+                    .map(constellationArtworkUrlV142)
                     .filter(Boolean);
 
             let completed = 0;
@@ -9738,12 +9853,12 @@ function findNextVisibleConstellationTime(constellation, startUtcMs) {
                 const percent =
                     45 + ratio * 55;
 
-                setStartupLoadingProgressV141(
+                setStartupLoadingProgressV142(
                     percent,
                     `星座絵を先読みしています ${completed}/${urls.length}`
                 );
 
-                setStartupLoadingStageV141(
+                setStartupLoadingStageV142(
                     'art',
                     completed >= urls.length
                         ? 'ready'
@@ -9764,7 +9879,7 @@ function findNextVisibleConstellationTime(constellation, startUtcMs) {
                     }
 
                     const ok =
-                        await preloadImageUrlV141(
+                        await preloadImageUrlV142(
                             urls[index]
                         );
 
@@ -9788,18 +9903,18 @@ function findNextVisibleConstellationTime(constellation, startUtcMs) {
             };
         }
 
-        async function runStartupPreloadV141() {
+        async function runStartupPreloadV142() {
             const loading =
                 document.getElementById(
-                    'startupLoadingV141'
+                    'startupLoadingV142'
                 );
 
             try {
-                setStartupLoadingProgressV141(
+                setStartupLoadingProgressV142(
                     2,
                     '星データを構築しています…'
                 );
-                setStartupLoadingStageV141(
+                setStartupLoadingStageV142(
                     'stars',
                     'active'
                 );
@@ -9807,41 +9922,41 @@ function findNextVisibleConstellationTime(constellation, startUtcMs) {
                 await initializeStarData(
                     (stage, detail) => {
                         if (stage === 'stars') {
-                            setStartupLoadingStageV141(
+                            setStartupLoadingStageV142(
                                 'stars',
                                 'ready'
                             );
-                            setStartupLoadingStageV141(
+                            setStartupLoadingStageV142(
                                 'lines',
                                 'active'
                             );
-                            setStartupLoadingProgressV141(
+                            setStartupLoadingProgressV142(
                                 17,
                                 '星座線を構築しています…'
                             );
                         } else if (
                             stage === 'lines'
                         ) {
-                            setStartupLoadingStageV141(
+                            setStartupLoadingStageV142(
                                 'lines',
                                 'ready'
                             );
-                            setStartupLoadingStageV141(
+                            setStartupLoadingStageV142(
                                 'names',
                                 'active'
                             );
-                            setStartupLoadingProgressV141(
+                            setStartupLoadingProgressV142(
                                 32,
                                 '星座名データを準備しています…'
                             );
                         } else if (
                             stage === 'names'
                         ) {
-                            setStartupLoadingStageV141(
+                            setStartupLoadingStageV142(
                                 'names',
                                 'ready'
                             );
-                            setStartupLoadingProgressV141(
+                            setStartupLoadingProgressV142(
                                 45,
                                 '星座絵を先読みします…'
                             );
@@ -9860,20 +9975,20 @@ function findNextVisibleConstellationTime(constellation, startUtcMs) {
                 );
 
                 const artworkResult =
-                    await preloadConstellationArtworkV141();
+                    await preloadConstellationArtworkV142();
 
                 if (artworkResult.failed > 0) {
                     console.warn(
-                        'V141 artwork preload completed with missing files:',
+                        'V142 artwork preload completed with missing files:',
                         artworkResult.failed
                     );
                 }
 
-                setStartupLoadingStageV141(
+                setStartupLoadingStageV142(
                     'art',
                     'ready'
                 );
-                setStartupLoadingProgressV141(
+                setStartupLoadingProgressV142(
                     100,
                     '準備完了'
                 );
@@ -9898,11 +10013,11 @@ function findNextVisibleConstellationTime(constellation, startUtcMs) {
                 return true;
             } catch (error) {
                 console.error(
-                    'V141 startup preload failed:',
+                    'V142 startup preload failed:',
                     error
                 );
 
-                setStartupLoadingProgressV141(
+                setStartupLoadingProgressV142(
                     100,
                     '一部の先読みを省略して起動します'
                 );
@@ -9923,8 +10038,8 @@ function findNextVisibleConstellationTime(constellation, startUtcMs) {
 
         // Shared startup readiness gate. Later feature modules (artwork manager,
         // editor, etc.) may wait on this instead of racing core initialization.
-        window.viewerCoreReadyV141 =
-            runStartupPreloadV141();
+        window.viewerCoreReadyV142 =
+            runStartupPreloadV142();
 </script>
 
 
@@ -11460,7 +11575,7 @@ function findNextVisibleConstellationTime(constellation, startUtcMs) {
     }
 
     Promise.resolve(
-        window.viewerCoreReadyV141
+        window.viewerCoreReadyV142
     ).finally(() => {
         requestAnimationFrame(
             initConstellationArtManagerV46
