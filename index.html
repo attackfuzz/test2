@@ -2619,6 +2619,146 @@
             font: 800 12px/1.2 system-ui, sans-serif;
             white-space: nowrap;
         }
+
+        /* ===== V141 startup preload screen ===== */
+        #startupLoadingV141 {
+            position: fixed;
+            inset: 0;
+            z-index: 40000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding:
+                max(18px, env(safe-area-inset-top))
+                max(18px, env(safe-area-inset-right))
+                max(18px, env(safe-area-inset-bottom))
+                max(18px, env(safe-area-inset-left));
+            background: #010611;
+            color: #eafcff;
+            overflow: hidden;
+            touch-action: none;
+            opacity: 1;
+            visibility: visible;
+            transition:
+                opacity .34s ease,
+                visibility .34s ease;
+        }
+
+        #startupLoadingV141.done {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .startupLoadingInnerV141 {
+            width: min(620px, 94vw);
+            display: grid;
+            justify-items: center;
+            gap: 16px;
+        }
+
+        #startupLoadingImageV141 {
+            display: block;
+            width: min(560px, 90vw);
+            max-height: 56vh;
+            object-fit: contain;
+            object-position: center;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-user-drag: none;
+            pointer-events: none;
+        }
+
+        .startupLoadingPanelV141 {
+            width: min(460px, 90vw);
+            padding: 13px 15px 14px;
+            border: 1px solid rgba(83, 232, 244, .28);
+            border-radius: 12px;
+            background: rgba(3, 13, 28, .82);
+            box-shadow: 0 12px 32px rgba(0,0,0,.24);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+        }
+
+        .startupLoadingTitleV141 {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: .08em;
+            color: #bffaff;
+        }
+
+        #startupLoadingPercentV141 {
+            color: #6ff7ff;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .startupLoadingTrackV141 {
+            height: 6px;
+            overflow: hidden;
+            border-radius: 999px;
+            background: rgba(121, 194, 219, .12);
+        }
+
+        #startupLoadingBarV141 {
+            width: 0%;
+            height: 100%;
+            border-radius: inherit;
+            background:
+                linear-gradient(
+                    90deg,
+                    rgba(68, 210, 232, .88),
+                    rgba(133, 255, 239, .98)
+                );
+            transition: width .12s linear;
+        }
+
+        #startupLoadingStatusV141 {
+            min-height: 1.4em;
+            margin-top: 9px;
+            color: rgba(216, 249, 255, .78);
+            font-size: 10.5px;
+            line-height: 1.4;
+            text-align: center;
+        }
+
+        .startupLoadingItemsV141 {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 4px;
+            margin-top: 9px;
+            font-size: 10px;
+            color: rgba(204, 239, 246, .58);
+        }
+
+        .startupLoadingItemV141 {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .startupLoadingItemV141.ready {
+            color: rgba(153, 255, 223, .94);
+        }
+
+        .startupLoadingItemV141.active {
+            color: rgba(220, 252, 255, .96);
+        }
+
+        @media (max-width: 520px) {
+            #startupLoadingImageV141 {
+                max-height: 48vh;
+            }
+            .startupLoadingInnerV141 {
+                gap: 12px;
+            }
+        }
+
+
 </style>
 <style>
     /* ===== Selected constellation guidance V22 ===== */
@@ -2889,7 +3029,7 @@
 
         /* ===== V54 Search constellation -> center + default 3-line comment ===== */
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV140 {
+        #settingsVersionV141 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3247,6 +3387,34 @@
 </style>
 </head>
 <body>
+
+<div id="startupLoadingV141" role="status" aria-live="polite" aria-label="星空データを準備しています">
+    <div class="startupLoadingInnerV141">
+        <img
+            id="startupLoadingImageV141"
+            src="./loading_screen.png"
+            alt=""
+            aria-hidden="true"
+        >
+        <div class="startupLoadingPanelV141">
+            <div class="startupLoadingTitleV141">
+                <span>STAR MAP LOADING</span>
+                <span id="startupLoadingPercentV141">0%</span>
+            </div>
+            <div class="startupLoadingTrackV141" aria-hidden="true">
+                <div id="startupLoadingBarV141"></div>
+            </div>
+            <div id="startupLoadingStatusV141">星空データを準備しています…</div>
+            <div class="startupLoadingItemsV141" aria-hidden="true">
+                <div class="startupLoadingItemV141" data-load-stage="stars"><span>星データ</span><span>待機</span></div>
+                <div class="startupLoadingItemV141" data-load-stage="lines"><span>星座線</span><span>待機</span></div>
+                <div class="startupLoadingItemV141" data-load-stage="names"><span>星座名データ</span><span>待機</span></div>
+                <div class="startupLoadingItemV141" data-load-stage="art"><span>星座絵</span><span>待機</span></div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div id="constellationArtEditorHudV59" aria-hidden="true">
     <strong>星座絵エディタ ON</strong>
     <span id="constellationArtEditorTargetV59">星座絵を選択してください</span>
@@ -3257,7 +3425,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV140" aria-label="バージョン">V140</div>
+        <div id="settingsVersionV141" aria-label="バージョン">V141</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -5053,12 +5221,6 @@ function renderV2ConstellationOptions() {
             }
         });
         window.ViewerSettings = ViewerSettings;
-
-        initializeStarData();
-        initializeUi();
-        setCameraFocalLength(GROUND_DEFAULT_FOCAL_LENGTH);
-        updateObserverFromSimulation();
-        applyViewPreset('ground', false);
 
         function initializeUi() {
             backgroundMagnitudeValue.textContent = `${parseFloat(backgroundMagnitudeSlider.value).toFixed(1)}等`;
@@ -8859,10 +9021,19 @@ function findNextVisibleConstellationTime(constellation, startUtcMs) {
             }
         }
 
-        function initializeStarData() {
+        async function initializeStarData(progressV141 = null) {
             const mainStarData = typeof stars !== 'undefined' && Array.isArray(stars) ? stars : [];
             const lineData = typeof starlines !== 'undefined' && Array.isArray(starlines) ? starlines : [];
             const constellations = new Set();
+
+            const reportV141 = async (stage, detail = '') => {
+                try {
+                    progressV141?.(stage, detail);
+                } catch (_) {}
+                await new Promise(resolve =>
+                    requestAnimationFrame(() => resolve())
+                );
+            };
 
             // Phase 1: build the runtime model from star data using ONLY lowercase internal IDs.
             mainStarData.forEach(star => {
@@ -8945,6 +9116,14 @@ function findNextVisibleConstellationTime(constellation, startUtcMs) {
                 runtime.starMesh = points;
             }
 
+            buildBackgroundStarLayers(
+                parseFloat(backgroundMagnitudeSlider.value)
+            );
+            await reportV141(
+                'stars',
+                `${mainStarData.length} stars`
+            );
+
             // Phase 1: normalize legacy starline constellation labels to the same internal ID.
             lineData.forEach(line => {
                 const id = ConstellationRegistryV80.normalizeId(line.constellation);
@@ -8995,6 +9174,11 @@ function findNextVisibleConstellationTime(constellation, startUtcMs) {
             updateConstellationLineVisibilityV130();
             // Line visibility is owned by ViewerSettings modes.
 
+            await reportV141(
+                'lines',
+                `${lineData.length} line records`
+            );
+
             // Select options are presentation only. value is always the canonical internal ID.
             Array.from(constellations)
                 .sort((a, b) => CONSTELLATIONS_V2[a].ja.localeCompare(CONSTELLATIONS_V2[b].ja, 'ja'))
@@ -9003,7 +9187,10 @@ function findNextVisibleConstellationTime(constellation, startUtcMs) {
                     runtime.labelElement = createConstellationLabel(id);
                 });
 
-            buildBackgroundStarLayers(parseFloat(backgroundMagnitudeSlider.value));
+            await reportV141(
+                'names',
+                `${constellations.size} constellations`
+            );
         }
 
         function isFiniteVector3(vector) {
@@ -9398,9 +9585,346 @@ function findNextVisibleConstellationTime(constellation, startUtcMs) {
             );
         }
 
-        // V125:
-        // Start the frame loop only after this entire script has initialized.
-        startViewerRuntimeV125();
+        function setStartupLoadingStageV141(
+            stage,
+            state,
+            detail = ''
+        ) {
+            const item =
+                document.querySelector(
+                    `[data-load-stage="${stage}"]`
+                );
+
+            if (!item) return;
+
+            item.classList.toggle(
+                'active',
+                state === 'active'
+            );
+            item.classList.toggle(
+                'ready',
+                state === 'ready'
+            );
+
+            const value =
+                item.lastElementChild;
+
+            if (!value) return;
+
+            value.textContent =
+                state === 'ready'
+                    ? '完了'
+                    : (
+                        detail ||
+                        (state === 'active' ? '読込中' : '待機')
+                    );
+        }
+
+        function setStartupLoadingProgressV141(
+            percent,
+            status
+        ) {
+            const safe =
+                THREE.MathUtils.clamp(
+                    Number(percent) || 0,
+                    0,
+                    100
+                );
+
+            const bar =
+                document.getElementById(
+                    'startupLoadingBarV141'
+                );
+            const label =
+                document.getElementById(
+                    'startupLoadingPercentV141'
+                );
+            const statusEl =
+                document.getElementById(
+                    'startupLoadingStatusV141'
+                );
+
+            if (bar) {
+                bar.style.width =
+                    `${safe.toFixed(1)}%`;
+            }
+
+            if (label) {
+                label.textContent =
+                    `${Math.round(safe)}%`;
+            }
+
+            if (statusEl && status) {
+                statusEl.textContent = status;
+            }
+        }
+
+        function constellationArtworkUrlV141(id) {
+            const key =
+                ConstellationRegistryV80.normalizeId(id);
+
+            if (!key) return null;
+
+            const file =
+                `${key.charAt(0).toUpperCase()}${key
+                    .slice(1)
+                    .toLowerCase()}.png`;
+
+            return `./constellation_art/${file}`;
+        }
+
+        async function preloadImageUrlV141(url) {
+            if (!url) return false;
+
+            return new Promise(resolve => {
+                const image = new Image();
+                let settled = false;
+
+                const finish = ok => {
+                    if (settled) return;
+                    settled = true;
+                    image.onload = null;
+                    image.onerror = null;
+                    resolve(ok);
+                };
+
+                image.onload = async () => {
+                    try {
+                        if (
+                            typeof image.decode === 'function'
+                        ) {
+                            await image.decode();
+                        }
+                    } catch (_) {
+                        // Decoded enough for the browser cache even if
+                        // explicit decode() rejects on a browser quirk.
+                    }
+                    finish(true);
+                };
+
+                image.onerror = () =>
+                    finish(false);
+
+                image.src = url;
+
+                if (image.complete) {
+                    image.onload?.();
+                }
+            });
+        }
+
+        async function preloadConstellationArtworkV141() {
+            const ids =
+                Object.keys(CONSTELLATIONS_V2);
+
+            const urls =
+                ids
+                    .map(constellationArtworkUrlV141)
+                    .filter(Boolean);
+
+            let completed = 0;
+            let failed = 0;
+            const concurrency = 6;
+            let nextIndex = 0;
+
+            const update = () => {
+                const ratio =
+                    urls.length
+                        ? completed / urls.length
+                        : 1;
+
+                // First three core stages occupy 45%.
+                // Artwork occupies the remaining 55%.
+                const percent =
+                    45 + ratio * 55;
+
+                setStartupLoadingProgressV141(
+                    percent,
+                    `星座絵を先読みしています ${completed}/${urls.length}`
+                );
+
+                setStartupLoadingStageV141(
+                    'art',
+                    completed >= urls.length
+                        ? 'ready'
+                        : 'active',
+                    completed >= urls.length
+                        ? ''
+                        : `${completed}/${urls.length}`
+                );
+            };
+
+            update();
+
+            async function worker() {
+                while (true) {
+                    const index = nextIndex++;
+                    if (index >= urls.length) {
+                        return;
+                    }
+
+                    const ok =
+                        await preloadImageUrlV141(
+                            urls[index]
+                        );
+
+                    if (!ok) failed += 1;
+                    completed += 1;
+                    update();
+                }
+            }
+
+            await Promise.all(
+                Array.from(
+                    { length: Math.min(concurrency, urls.length) },
+                    () => worker()
+                )
+            );
+
+            return {
+                total: urls.length,
+                completed,
+                failed
+            };
+        }
+
+        async function runStartupPreloadV141() {
+            const loading =
+                document.getElementById(
+                    'startupLoadingV141'
+                );
+
+            try {
+                setStartupLoadingProgressV141(
+                    2,
+                    '星データを構築しています…'
+                );
+                setStartupLoadingStageV141(
+                    'stars',
+                    'active'
+                );
+
+                await initializeStarData(
+                    (stage, detail) => {
+                        if (stage === 'stars') {
+                            setStartupLoadingStageV141(
+                                'stars',
+                                'ready'
+                            );
+                            setStartupLoadingStageV141(
+                                'lines',
+                                'active'
+                            );
+                            setStartupLoadingProgressV141(
+                                17,
+                                '星座線を構築しています…'
+                            );
+                        } else if (
+                            stage === 'lines'
+                        ) {
+                            setStartupLoadingStageV141(
+                                'lines',
+                                'ready'
+                            );
+                            setStartupLoadingStageV141(
+                                'names',
+                                'active'
+                            );
+                            setStartupLoadingProgressV141(
+                                32,
+                                '星座名データを準備しています…'
+                            );
+                        } else if (
+                            stage === 'names'
+                        ) {
+                            setStartupLoadingStageV141(
+                                'names',
+                                'ready'
+                            );
+                            setStartupLoadingProgressV141(
+                                45,
+                                '星座絵を先読みします…'
+                            );
+                        }
+                    }
+                );
+
+                initializeUi();
+                setCameraFocalLength(
+                    GROUND_DEFAULT_FOCAL_LENGTH
+                );
+                updateObserverFromSimulation();
+                applyViewPreset(
+                    'ground',
+                    false
+                );
+
+                const artworkResult =
+                    await preloadConstellationArtworkV141();
+
+                if (artworkResult.failed > 0) {
+                    console.warn(
+                        'V141 artwork preload completed with missing files:',
+                        artworkResult.failed
+                    );
+                }
+
+                setStartupLoadingStageV141(
+                    'art',
+                    'ready'
+                );
+                setStartupLoadingProgressV141(
+                    100,
+                    '準備完了'
+                );
+
+                // V125 invariant:
+                // start the frame loop only after all declarations,
+                // core initialization and startup preload are complete.
+                startViewerRuntimeV125();
+
+                await new Promise(resolve =>
+                    requestAnimationFrame(() =>
+                        requestAnimationFrame(resolve)
+                    )
+                );
+
+                loading?.classList.add('done');
+
+                window.setTimeout(() => {
+                    loading?.remove();
+                }, 480);
+
+                return true;
+            } catch (error) {
+                console.error(
+                    'V141 startup preload failed:',
+                    error
+                );
+
+                setStartupLoadingProgressV141(
+                    100,
+                    '一部の先読みを省略して起動します'
+                );
+
+                try {
+                    startViewerRuntimeV125();
+                } catch (_) {}
+
+                loading?.classList.add('done');
+
+                window.setTimeout(() => {
+                    loading?.remove();
+                }, 700);
+
+                return false;
+            }
+        }
+
+        // Shared startup readiness gate. Later feature modules (artwork manager,
+        // editor, etc.) may wait on this instead of racing core initialization.
+        window.viewerCoreReadyV141 =
+            runStartupPreloadV141();
 </script>
 
 
@@ -10935,7 +11459,13 @@ function findNextVisibleConstellationTime(constellation, startUtcMs) {
         });
     }
 
-    requestAnimationFrame(initConstellationArtManagerV46);
+    Promise.resolve(
+        window.viewerCoreReadyV141
+    ).finally(() => {
+        requestAnimationFrame(
+            initConstellationArtManagerV46
+        );
+    });
 })();
 </script>
 
