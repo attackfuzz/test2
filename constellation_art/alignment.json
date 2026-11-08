@@ -1,0 +1,623 @@
+{
+  "version": 60,
+  "exportedAt": "2026-11-08T10:10:32.360Z",
+  "type": "constellation-art-alignment",
+  "alignments": {
+    "and": {
+      "offsetXPx": 0,
+      "offsetYPx": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotationDeg": 0
+    },
+    "tau": {
+      "offsetXPx": 0,
+      "offsetYPx": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotationDeg": 0
+    },
+    "ari": {
+      "offsetXPx": 0,
+      "offsetYPx": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotationDeg": 0
+    },
+    "cnc": {
+      "offsetXPx": 0,
+      "offsetYPx": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotationDeg": 0
+    },
+    "ant": {
+      "offsetXPx": 0,
+      "offsetYPx": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotationDeg": 0
+    },
+    "aps": {
+      "offsetXPx": 487.62412256651857,
+      "offsetYPx": -157.27949577220704,
+      "scaleX": 0.5094775974630079,
+      "scaleY": 0.5094775974630079,
+      "rotationDeg": 11.002517227488838
+    },
+    "aqr": {
+      "offsetXPx": 104.9638534829864,
+      "offsetYPx": 152.02662271732737,
+      "scaleX": 1.3162400746582656,
+      "scaleY": 1.3162400746582656,
+      "rotationDeg": -109.01133068413236
+    },
+    "aql": {
+      "offsetXPx": 0,
+      "offsetYPx": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotationDeg": 0
+    },
+    "ara": {
+      "offsetXPx": 0,
+      "offsetYPx": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotationDeg": 0
+    },
+    "aur": {
+      "offsetXPx": 0,
+      "offsetYPx": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotationDeg": 0
+    },
+    "boo": {
+      "offsetXPx": -148.27896361196304,
+      "offsetYPx": 80.95828806682384,
+      "scaleX": 1.395277000026479,
+      "scaleY": 1.395277000026479,
+      "rotationDeg": -33.15792388467223
+    },
+    "cae": {
+      "offsetXPx": 457.31707317073165,
+      "offsetYPx": -67.2348484848485,
+      "scaleX": 0.4183241269464401,
+      "scaleY": 0.4183241269464401,
+      "rotationDeg": -30.97763819157572
+    },
+    "cam": {
+      "offsetXPx": -101.15730826782632,
+      "offsetYPx": 121.00461865069116,
+      "scaleX": 1.6762668514039665,
+      "scaleY": 1.6762668514039665,
+      "rotationDeg": -172.05977180351994
+    },
+    "cvn": {
+      "offsetXPx": 205.0973046950212,
+      "offsetYPx": -418.5550871012144,
+      "scaleX": 0.2788172325974268,
+      "scaleY": 0.2788172325974268,
+      "rotationDeg": 9.962723089249906
+    },
+    "cma": {
+      "offsetXPx": 0,
+      "offsetYPx": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotationDeg": 0
+    },
+    "cmi": {
+      "offsetXPx": 106.20419218642024,
+      "offsetYPx": 185.07068288607582,
+      "scaleX": 0.39323660709228253,
+      "scaleY": 0.39323660709228253,
+      "rotationDeg": 7.462987025886804
+    },
+    "cap": {
+      "offsetXPx": 0,
+      "offsetYPx": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotationDeg": 0
+    },
+    "car": {
+      "offsetXPx": 51.21951219512184,
+      "offsetYPx": 543.5606060606061,
+      "scaleX": 0.8383676619144564,
+      "scaleY": 0.8383676619144564,
+      "rotationDeg": 144.5253320863547
+    },
+    "cas": {
+      "offsetXPx": 87.80487804878044,
+      "offsetYPx": 342.8030303030303,
+      "scaleX": 0.42649328957548965,
+      "scaleY": 0.42649328957548965,
+      "rotationDeg": 19.747015578343095
+    },
+    "cen": {
+      "offsetXPx": 57.3170731707317,
+      "offsetYPx": -52.083333333333314,
+      "scaleX": 1.2898021791196663,
+      "scaleY": 1.2898021791196663,
+      "rotationDeg": -96.11259122382478
+    },
+    "cep": {
+      "offsetXPx": 0,
+      "offsetYPx": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotationDeg": 0
+    },
+    "cet": {
+      "offsetXPx": 176.45755273429018,
+      "offsetYPx": -18.54656921925698,
+      "scaleX": 1.3374818028200757,
+      "scaleY": 1.3374818028200757,
+      "rotationDeg": -147.91546966483207
+    },
+    "cha": {
+      "offsetXPx": 0,
+      "offsetYPx": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotationDeg": 0
+    },
+    "cir": {
+      "offsetXPx": 621.6727602675301,
+      "offsetYPx": 118.50847597462393,
+      "scaleX": 0.608704941839011,
+      "scaleY": 0.608704941839011,
+      "rotationDeg": -40.141320815279315
+    },
+    "col": {
+      "offsetXPx": 158.71586243559307,
+      "offsetYPx": -549.1569099817,
+      "scaleX": 0.7061985735914443,
+      "scaleY": 0.7061985735914443,
+      "rotationDeg": 7.479013371394032
+    },
+    "com": {
+      "offsetXPx": -226.9968354575628,
+      "offsetYPx": -185.577456705518,
+      "scaleX": 0.5660571104853435,
+      "scaleY": 0.5660571104853435,
+      "rotationDeg": 102.00224931520415
+    },
+    "cra": {
+      "offsetXPx": 1017.077928048136,
+      "offsetYPx": -823.8142364242508,
+      "scaleX": 0.4282981331897309,
+      "scaleY": 0.4282981331897309,
+      "rotationDeg": 113.74072525785864
+    },
+    "crb": {
+      "offsetXPx": -8.536585365853659,
+      "offsetYPx": -23.674242424242426,
+      "scaleX": 0.5224394647382479,
+      "scaleY": 0.5224394647382479,
+      "rotationDeg": 2.9001835211826688
+    },
+    "crv": {
+      "offsetXPx": -23.170731707317074,
+      "offsetYPx": -3.787878787878788,
+      "scaleX": 0.5539639807974583,
+      "scaleY": 0.5539639807974583,
+      "rotationDeg": 6.845763860211321
+    },
+    "crt": {
+      "offsetXPx": 213.421348019804,
+      "offsetYPx": 168.70207985228242,
+      "scaleX": 0.8162470789806189,
+      "scaleY": 0.8162470789806189,
+      "rotationDeg": -59.60064691200297
+    },
+    "cru": {
+      "offsetXPx": 0,
+      "offsetYPx": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotationDeg": 0
+    },
+    "cyg": {
+      "offsetXPx": -177.36073075654735,
+      "offsetYPx": -43.85930618907424,
+      "scaleX": 1.1792399516784775,
+      "scaleY": 1.1792399516784775,
+      "rotationDeg": -135.14136147000087
+    },
+    "del": {
+      "offsetXPx": -647.560975609756,
+      "offsetYPx": -117.42424242424244,
+      "scaleX": 0.3360751522047832,
+      "scaleY": 0.3360751522047832,
+      "rotationDeg": 36.07335345997167
+    },
+    "dor": {
+      "offsetXPx": 251.21951219512195,
+      "offsetYPx": 88.06818181818181,
+      "scaleX": 0.9364554943935737,
+      "scaleY": 0.9364554943935737,
+      "rotationDeg": -49.58207128994236
+    },
+    "dra": {
+      "offsetXPx": 362.1951219512195,
+      "offsetYPx": 130.6818181818182,
+      "scaleX": 0.9638037944002521,
+      "scaleY": 0.9638037944002521,
+      "rotationDeg": -52.593479438692015
+    },
+    "equ": {
+      "offsetXPx": 14.634146341463413,
+      "offsetYPx": -97.5378787878788,
+      "scaleX": 0.41677495890287636,
+      "scaleY": 0.41677495890287636,
+      "rotationDeg": 3.993837787697956
+    },
+    "eri": {
+      "offsetXPx": -31.7073170731708,
+      "offsetYPx": -160.98484848484856,
+      "scaleX": 0.9683867953111901,
+      "scaleY": 0.9683867953111901,
+      "rotationDeg": 105.0192135992102
+    },
+    "for": {
+      "offsetXPx": 0,
+      "offsetYPx": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotationDeg": 0
+    },
+    "gem": {
+      "offsetXPx": -212.1951219512195,
+      "offsetYPx": 49.242424242424235,
+      "scaleX": 1.0159547962709716,
+      "scaleY": 1.0159547962709716,
+      "rotationDeg": -45.54734243200803
+    },
+    "gru": {
+      "offsetXPx": 0,
+      "offsetYPx": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotationDeg": 0
+    },
+    "her": {
+      "offsetXPx": 424.98174645263856,
+      "offsetYPx": -92.13314650955817,
+      "scaleX": 0.9098611080451294,
+      "scaleY": 0.9098611080451294,
+      "rotationDeg": 9.574254222966651
+    },
+    "hor": {
+      "offsetXPx": 0,
+      "offsetYPx": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotationDeg": 0
+    },
+    "hya": {
+      "offsetXPx": -29.064465177828083,
+      "offsetYPx": -2101.8290277083756,
+      "scaleX": 1.5328522479174025,
+      "scaleY": 1.5328522479174025,
+      "rotationDeg": -111.36869792835559
+    },
+    "hyi": {
+      "offsetXPx": 0,
+      "offsetYPx": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotationDeg": 0
+    },
+    "ind": {
+      "offsetXPx": 0,
+      "offsetYPx": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotationDeg": 0
+    },
+    "lac": {
+      "offsetXPx": 110.76161275715191,
+      "offsetYPx": -825.9333775979949,
+      "scaleX": 0.6108431418268135,
+      "scaleY": 0.6108431418268135,
+      "rotationDeg": 68.55166414182688
+    },
+    "leo": {
+      "offsetXPx": 29.268292682926838,
+      "offsetYPx": 62.500000000000014,
+      "scaleX": 1.0803731205451819,
+      "scaleY": 1.0803731205451819,
+      "rotationDeg": -161.166884989598
+    },
+    "lmi": {
+      "offsetXPx": 743.654775193343,
+      "offsetYPx": -134.52562972076848,
+      "scaleX": 0.7014004916759465,
+      "scaleY": 0.7014004916759465,
+      "rotationDeg": -0.2568925643089184
+    },
+    "lep": {
+      "offsetXPx": -335.3658536585365,
+      "offsetYPx": 249.0530303030303,
+      "scaleX": 1.0674145514730302,
+      "scaleY": 1.0674145514730302,
+      "rotationDeg": -171.64008237142758
+    },
+    "lib": {
+      "offsetXPx": 0,
+      "offsetYPx": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotationDeg": 0
+    },
+    "lup": {
+      "offsetXPx": -192.39628852839178,
+      "offsetYPx": 28.695331862806256,
+      "scaleX": 1.2050893655377906,
+      "scaleY": 1.2050893655377906,
+      "rotationDeg": -164.62943528058008
+    },
+    "lyn": {
+      "offsetXPx": 189.02439024390242,
+      "offsetYPx": -17.045454545454547,
+      "scaleX": 1.8426482706912837,
+      "scaleY": 1.8426482706912837,
+      "rotationDeg": -4.8570852685365935
+    },
+    "lyr": {
+      "offsetXPx": -487.8048780487805,
+      "offsetYPx": -52.08333333333334,
+      "scaleX": 0.4844733242943383,
+      "scaleY": 0.4844733242943383,
+      "rotationDeg": 13.286583452453087
+    },
+    "men": {
+      "offsetXPx": 467.0731707317073,
+      "offsetYPx": 85.22727272727269,
+      "scaleX": 0.47692455086190144,
+      "scaleY": 0.47692455086190144,
+      "rotationDeg": -59.709174760631996
+    },
+    "mic": {
+      "offsetXPx": 0,
+      "offsetYPx": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotationDeg": 0
+    },
+    "mon": {
+      "offsetXPx": -212.1951219512195,
+      "offsetYPx": -36.93181818181813,
+      "scaleX": 1.4596059893634155,
+      "scaleY": 1.4596059893634155,
+      "rotationDeg": -197.10233201691037
+    },
+    "mus": {
+      "offsetXPx": 186.58536585365852,
+      "offsetYPx": 650.5681818181819,
+      "scaleX": 0.25,
+      "scaleY": 0.25,
+      "rotationDeg": -35.27178691808422
+    },
+    "nor": {
+      "offsetXPx": 76.14680538823853,
+      "offsetYPx": -32.496322947263124,
+      "scaleX": 0.8831080664188675,
+      "scaleY": 0.8831080664188675,
+      "rotationDeg": -105.76309918072545
+    },
+    "oct": {
+      "offsetXPx": 0,
+      "offsetYPx": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotationDeg": 0
+    },
+    "oph": {
+      "offsetXPx": 0,
+      "offsetYPx": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotationDeg": 0
+    },
+    "ori": {
+      "offsetXPx": -435.12426724514654,
+      "offsetYPx": -162.6158157657935,
+      "scaleX": 1.110237311688026,
+      "scaleY": 1.110237311688026,
+      "rotationDeg": -164.31040384941835
+    },
+    "pav": {
+      "offsetXPx": 0,
+      "offsetYPx": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotationDeg": 0
+    },
+    "peg": {
+      "offsetXPx": -320.7074740808741,
+      "offsetYPx": 153.31497710208302,
+      "scaleX": 1.825832216682872,
+      "scaleY": 1.825832216682872,
+      "rotationDeg": -166.2029147754834
+    },
+    "per": {
+      "offsetXPx": 0,
+      "offsetYPx": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotationDeg": 0
+    },
+    "phe": {
+      "offsetXPx": 0,
+      "offsetYPx": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotationDeg": 0
+    },
+    "pic": {
+      "offsetXPx": 0,
+      "offsetYPx": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotationDeg": 0
+    },
+    "psc": {
+      "offsetXPx": -36.37591853850185,
+      "offsetYPx": 208.32353448626034,
+      "scaleX": 1.168539351553406,
+      "scaleY": 1.168539351553406,
+      "rotationDeg": -134.7751430205754
+    },
+    "psa": {
+      "offsetXPx": 0,
+      "offsetYPx": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotationDeg": 0
+    },
+    "pup": {
+      "offsetXPx": 0,
+      "offsetYPx": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotationDeg": 0
+    },
+    "pyx": {
+      "offsetXPx": 185.3658536585366,
+      "offsetYPx": -86.17424242424242,
+      "scaleX": 0.5159732616820621,
+      "scaleY": 0.5159732616820621,
+      "rotationDeg": 2.9936882356394108
+    },
+    "ret": {
+      "offsetXPx": 0,
+      "offsetYPx": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotationDeg": 0
+    },
+    "sge": {
+      "offsetXPx": 76.1734103440556,
+      "offsetYPx": 325.0117247724341,
+      "scaleX": 0.42148681767746166,
+      "scaleY": 0.42148681767746166,
+      "rotationDeg": 28.974770867805375
+    },
+    "sgr": {
+      "offsetXPx": -70.4470115127431,
+      "offsetYPx": 48.96505196846698,
+      "scaleX": 1.1235418395823458,
+      "scaleY": 1.1235418395823458,
+      "rotationDeg": -153.24634535845485
+    },
+    "sco": {
+      "offsetXPx": -50.00000000000006,
+      "offsetYPx": 245.26515151515153,
+      "scaleX": 0.9980345182682874,
+      "scaleY": 0.9980345182682874,
+      "rotationDeg": -133.01397880780877
+    },
+    "scl": {
+      "offsetXPx": 34.206215512578424,
+      "offsetYPx": 3.1365172777347823,
+      "scaleX": 1.5192486694736669,
+      "scaleY": 1.5192486694736669,
+      "rotationDeg": -1.0049415221672433
+    },
+    "sct": {
+      "offsetXPx": 207.51289813751038,
+      "offsetYPx": 238.42877034217716,
+      "scaleX": 0.5826196834777467,
+      "scaleY": 0.5826196834777467,
+      "rotationDeg": -21.15603303466746
+    },
+    "ser": {
+      "offsetXPx": 0,
+      "offsetYPx": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotationDeg": 0
+    },
+    "sex": {
+      "offsetXPx": 0,
+      "offsetYPx": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotationDeg": 0
+    },
+    "tel": {
+      "offsetXPx": -275.609756097561,
+      "offsetYPx": -291.6666666666667,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotationDeg": 0.0
+    },
+    "tri": {
+      "offsetXPx": 0,
+      "offsetYPx": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotationDeg": 0
+    },
+    "tra": {
+      "offsetXPx": 0,
+      "offsetYPx": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotationDeg": 0
+    },
+    "tuc": {
+      "offsetXPx": 0,
+      "offsetYPx": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotationDeg": 0
+    },
+    "uma": {
+      "offsetXPx": -108.26633751838824,
+      "offsetYPx": 140.12233674107972,
+      "scaleX": 1.836773427912806,
+      "scaleY": 1.836773427912806,
+      "rotationDeg": -192.19447648330106
+    },
+    "umi": {
+      "offsetXPx": 0,
+      "offsetYPx": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotationDeg": 0
+    },
+    "vel": {
+      "offsetXPx": 0,
+      "offsetYPx": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotationDeg": 0
+    },
+    "vir": {
+      "offsetXPx": 117.07317073170732,
+      "offsetYPx": -6.62878787878788,
+      "scaleX": 1.0170421166959185,
+      "scaleY": 1.0170421166959185,
+      "rotationDeg": -78.32423599636462
+    },
+    "vol": {
+      "offsetXPx": 349.18571481647115,
+      "offsetYPx": 36.190617451493935,
+      "scaleX": 0.886835919255096,
+      "scaleY": 0.886835919255096,
+      "rotationDeg": -27.62400229454279
+    },
+    "vul": {
+      "offsetXPx": 0,
+      "offsetYPx": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "rotationDeg": 0
+    }
+  }
+}
