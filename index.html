@@ -3029,7 +3029,7 @@
 
         /* ===== V54 Search constellation -> center + default 3-line comment ===== */
         /* ===== V55 version badge + export at settings bottom ===== */
-        #settingsVersionV142 {
+        #settingsVersionV144 {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -3425,7 +3425,7 @@
     <div id="settingsScrimV2" aria-hidden="true"></div>
     <aside id="settingsSheetV2" aria-hidden="true">
         <div class="settingsV2Header">
-        <div id="settingsVersionV142" aria-label="バージョン">V142</div>
+        <div id="settingsVersionV144" aria-label="バージョン">V144</div>
 
             <strong class="settingsV2Title">星空設定</strong>
             <button id="settingsCloseV2" type="button" aria-label="閉じる">×</button>
@@ -7272,8 +7272,18 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
             }
 
             if (shouldShow) {
+                // V144: flat projection owns selection guidance while active.
+                // Clear any ribbon/edge arrow left by perspective mode before
+                // the hidden 3D camera can be consulted again.
+                hideSelectedConstellationGuidance();
                 warmFlatSkyCoordinateCacheV142();
                 drawFlatSkyPlaneV137();
+            } else {
+                // Returning to perspective hands guidance ownership back to
+                // the 3D camera and recalculates it once for the selection.
+                requestAnimationFrame(() => {
+                    updateSelectedConstellationGuidance(true);
+                });
             }
 
             return true;
@@ -8643,6 +8653,14 @@ renderer.domElement.addEventListener('pointerdown', handleCanvasPointerDown, { p
 
         function updateSelectedConstellationGuidance(force = false) {
             ensureSelectedConstellationGuidanceUi();
+
+            // V144: 3D guidance belongs only to perspective projection.
+            // Flat sky modes have their own selected-constellation markup and
+            // must never evaluate visibility against the hidden 3D camera.
+            if (isFlatSkyModeV137()) {
+                hideSelectedConstellationGuidance();
+                return;
+            }
 
             const now = performance.now();
 
@@ -11396,7 +11414,12 @@ function findNextVisibleConstellationTime(constellation, startUtcMs) {
                         baseAlign: Object.assign({}, cfg.align || {})
                     });
                 });
-                entries.forEach(state => buildEntry(state));
+                // V144: do NOT build manifest entries before canonicalization.
+                // The original four manifest artworks (And/Tau/Ari/Cnc) used to
+                // enter the legacy export-camera geometry path here, and only
+                // afterwards had autoPlacement=true assigned. By that point the
+                // legacy mesh already existed, so those four behaved differently
+                // from the other 84 constellations.
 
                 // Final artwork registry:
                 // every constellation always has one deterministic artwork filename.
@@ -11461,7 +11484,12 @@ function findNextVisibleConstellationTime(constellation, startUtcMs) {
                     });
                 }
 
+                // V144: canonicalize ALL entries first, then build them through
+                // one common geometry path. This removes the legacy four-entry
+                // manifest exception without constellation-specific patches.
                 registerCanonicalArtworkV93();
+                entries.forEach(state => buildEntry(state));
+
                 const tick = () => {
                     entries.forEach(updateState);
                     requestAnimationFrame(tick);
